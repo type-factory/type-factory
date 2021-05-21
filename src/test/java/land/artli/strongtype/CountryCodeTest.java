@@ -1,4 +1,4 @@
-package evantoli.type;
+package land.artli.strongtype;
 
 import java.text.ParseException;
 import org.assertj.core.api.Assertions;
