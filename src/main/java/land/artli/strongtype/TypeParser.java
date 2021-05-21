@@ -1,14 +1,14 @@
-package evantoli.type;
+package land.artli.strongtype;
 
 import static java.lang.Character.isWhitespace;
 
-import evantoli.type.TypeParser.AcceptedCodePointRanges.AcceptedCodePointRangesBuilder;
-import evantoli.type.TypeParser.CodePointConversions.CodePointConversionsBuilder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import land.artli.strongtype.TypeParser.AcceptedCodePointRanges.AcceptedCodePointRangesBuilder;
+import land.artli.strongtype.TypeParser.CodePointConversions.CodePointConversionsBuilder;
 
 public class TypeParser {
 
