@@ -1,0 +1,14 @@
+target
+*.log
+LOG_FILE_IS_UNDEFINED
+
+.springBeans
+.idea/
+.eclipse/
+*.iml
+.checkstyle
+.classpath
+.project
+.settings/
+
+swagger-codegen/
