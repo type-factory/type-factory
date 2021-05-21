@@ -1,4 +1,4 @@
-package evantoli.type;
+package land.artli.strongtype;
 
 import static java.lang.Character.isWhitespace;
 
