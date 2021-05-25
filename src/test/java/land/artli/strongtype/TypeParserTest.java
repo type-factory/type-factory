@@ -18,7 +18,7 @@ public class TypeParserTest {
   void should_parse_preserving_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .preserveCase()
@@ -37,7 +37,7 @@ public class TypeParserTest {
   void should_parse_to_lower_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toLowerCase()
@@ -56,7 +56,7 @@ public class TypeParserTest {
   void should_parse_to_upper_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toUpperCase()
@@ -75,7 +75,7 @@ public class TypeParserTest {
   void should_parse_to_title_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toTitleCase()
@@ -92,7 +92,7 @@ public class TypeParserTest {
   void should_parse_to_fixed_size(final String value) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .fixedNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -109,7 +109,7 @@ public class TypeParserTest {
   void should_parse_and_remove_all_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptAndRemoveAllWhitespace()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -126,7 +126,7 @@ public class TypeParserTest {
   void should_parse_and_remove_all_accepted_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .removeAllWhitespace()
             .acceptChars(' ', '\t')
             .acceptCharRange('a', 'z')
@@ -138,14 +138,14 @@ public class TypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Flood \t Plains|Cannot parse value into a 'Type', invalid character '\\u0009' in 'Flood\t Plains'",
-      "Deep \s  \t  \s Valley|Cannot parse value into a 'Type', invalid character '\\u0009' in 'Deep\t    Valley'",
+      "Flood \t Plains|Invalid CharType value - invalid white-space character '\\u0009'.",
+      "Deep \s  \t  \s Valley|Invalid CharType value - invalid white-space character '\\u0009'.",
   }, delimiter = '|')
   void should_throw_exception_when_removing_whitespace_and_whitespace_not_accepted(
       final String value, final String expectedMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .removeAllWhitespace()
             .acceptChars(' ') // we are not accepting tabs '\t'
             .acceptCharRange('a', 'z')
@@ -153,7 +153,7 @@ public class TypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
-        .isInstanceOf(ParseException.class)
+        .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage(expectedMessage);
   }
 
@@ -166,7 +166,7 @@ public class TypeParserTest {
   void should_parse_to_normalized_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptAllWhitespace()
             .normalizeWhitespace()
             .acceptCharRange('a', 'z')
@@ -189,7 +189,7 @@ public class TypeParserTest {
       final char convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptAllWhitespace()
             .normalizeAndConvertWhitespace(convertTo)
             .acceptCharRange('a', 'z')
@@ -207,7 +207,7 @@ public class TypeParserTest {
   void should_parse_to_preserved_whitespace(final String value) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptAllWhitespace()
             .preserveWhitespace()
             .acceptCharRange('a', 'z')
@@ -230,7 +230,7 @@ public class TypeParserTest {
       final char convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
             .acceptAllWhitespace()
             .preserveAndConvertWhitespace(convertTo)
             .acceptCharRange('a', 'z')
@@ -242,60 +242,66 @@ public class TypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Ox|Cannot parse value into a 'Type', value too small - 'Ox'",
-      "Cat|Cannot parse value into a 'Type', value too small - 'Cat'",
+      "Ox|Invalid CharType value - too short, min length must be '4'.",
+      "Cat|Invalid CharType value - too short, min length must be '4'.",
   }, delimiter = '|')
   void should_throw_exception_when_too_small(final String value, final String expectedMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
+            .errorMessage("Some type must be 4 alpha characters.")
             .fixedNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
-        .isInstanceOf(ParseException.class)
-        .hasMessage(expectedMessage);
+        .isInstanceOf(InvalidTypeValueException.class)
+        .hasMessage(expectedMessage)
+        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be 4 alpha characters.");
   }
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Tiger|Cannot parse value into a 'Type', value too large - 'Tiger'",
-      "Donkey|Cannot parse value into a 'Type', value too large - 'Donkey'",
-      "Mammoth|Cannot parse value into a 'Type', value too large - 'Mammoth'",
+      "Tiger|Invalid CharType value - too long, max length must be '4'.",
+      "Donkey|Invalid CharType value - too long, max length must be '4'.",
+      "Mammoth|Invalid CharType value - too long, max length must be '4'.",
   }, delimiter = '|')
   void should_throw_exception_when_too_large(final String value, final String expectedMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
+            .errorMessage("Some type must be 4 alpha characters.")
             .fixedNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
-        .isInstanceOf(ParseException.class)
-        .hasMessage(expectedMessage);
+        .isInstanceOf(InvalidTypeValueException.class)
+        .hasMessage(expectedMessage)
+        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be 4 alpha characters.");
   }
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Café au lait|Cannot parse value into a 'Type', invalid character 'é' in 'Café au lait'",
-      "Apple-tart|Cannot parse value into a 'Type', invalid character '-' in 'Apple-tart'",
-      "Apple-tart-with-a-really-very-long-name|Cannot parse value into a 'Type', invalid character '-' in 'Apple-tart-with-a-really-very-lo...'",
+      "Café au lait|Invalid CharType value - invalid character 'é'.",
+      "Apple-tart|Invalid CharType value - invalid character '-'.",
+      "Apple-tart-with-a-really-very-long-name|Invalid CharType value - invalid character '-'.",
   }, delimiter = '|')
   void should_throw_exception_when_invalid_character(final String value, final String expectedMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(Type.class)
+        TypeParser.builder(CharType.class)
+            .errorMessage("Some type must be 16 alpha characters.")
             .fixedNumberOfCodePoints(16)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
-        .isInstanceOf(ParseException.class)
-        .hasMessage(expectedMessage);
+        .isInstanceOf(InvalidTypeValueException.class)
+        .hasMessage(expectedMessage)
+        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be 16 alpha characters.");
   }
 }

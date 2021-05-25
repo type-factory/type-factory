@@ -1,12 +1,17 @@
 package land.artli.strongtype;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Type implements CharSequence {
+public abstract class CharType<T extends CharType> implements CharSequence, Comparable<T>, Serializable {
+
+  @Serial
+  private static final long serialVersionUID = -1263119529456254274L;
 
   private final String value;
 
-  protected Type(final String value) {
+  protected CharType(final String value) {
     this.value = value;
   }
 
@@ -31,6 +36,11 @@ public abstract class Type implements CharSequence {
   }
 
   @Override
+  public int compareTo(T o) {
+    return o == null ? 1 : this.value.compareTo(((CharType<T>)o).value);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -38,7 +48,7 @@ public abstract class Type implements CharSequence {
     if (o == null || !this.getClass().isAssignableFrom(o.getClass())) {
       return false;
     }
-    return Objects.equals(value, ((Type)o).value);
+    return Objects.equals(value, ((CharType<T>)o).value);
   }
 
   @Override
