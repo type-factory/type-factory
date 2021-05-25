@@ -15,6 +15,6 @@ class CountryCodeTest {
       "de|DE",
   }, delimiter = '|')
   void should_parse_valid_values(final String value, final String expected) throws ParseException {
-    Assertions.assertThat(CountryCode.of(value)).hasToString(expected);
+    Assertions.assertThatObject(CountryCode.of(value)).hasToString(expected);
   }
 }

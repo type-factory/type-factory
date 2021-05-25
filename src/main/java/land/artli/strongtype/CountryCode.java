@@ -2,7 +2,7 @@ package land.artli.strongtype;
 
 import java.text.ParseException;
 
-public final class CountryCode extends Type {
+public final class CountryCode extends CharType<CountryCode> {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder(CountryCode.class)
@@ -16,6 +16,6 @@ public final class CountryCode extends Type {
   }
 
   public static CountryCode of(final CharSequence value) throws ParseException {
-    return new CountryCode(TYPE_PARSER.parse(value));
+    return TYPE_PARSER.parse(value, CountryCode::new);
   }
 }
