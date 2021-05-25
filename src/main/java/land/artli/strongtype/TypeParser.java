@@ -7,45 +7,57 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import land.artli.strongtype.TypeParser.AcceptedCodePointRanges.AcceptedCodePointRangesBuilder;
 import land.artli.strongtype.TypeParser.CodePointConversions.CodePointConversionsBuilder;
 
 public class TypeParser {
 
-  private final Class<?> targetClass;
+  private final Class<? extends CharType> targetClass;
+  private final String errorMessage;
   private final TargetCase targetCase;
   private final WhiteSpace whiteSpace;
-  private final boolean defaultNullToEmpty;
+  private final NullHandling nullHandling;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
   private final AcceptedCodePointRanges acceptedCodePointRanges;
   private final CodePointConversions codePointConversions;
 
   private TypeParser(
-      final Class<? extends Type> targetClass,
+      final Class<? extends CharType> targetClass,
+      final String errorMessage,
       final TargetCase targetCase,
       final WhiteSpace whiteSpace,
-      final boolean defaultNullToEmpty,
+      final NullHandling nullHandling,
       final int minNumberOfCodePoints, final int maxNumberOfCodePoints,
       final AcceptedCodePointRanges acceptedCodePointRanges,
       final CodePointConversions codePointConversions) {
     this.targetClass = targetClass;
+    this.errorMessage = errorMessage;
     this.targetCase = targetCase;
     this.whiteSpace = whiteSpace;
-    this.defaultNullToEmpty = defaultNullToEmpty;
+    this.nullHandling = nullHandling;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
     this.acceptedCodePointRanges = acceptedCodePointRanges;
     this.codePointConversions = codePointConversions;
   }
 
-  public static TypeParserBuilder builder(final Class<? extends Type> targetClass) {
+  public static TypeParserBuilder builder(final Class<? extends CharType> targetClass) {
     return new TypeParserBuilder(targetClass);
+  }
+
+  public <T extends CharType<?>> T parse(final CharSequence value, Function<String, T> constructorOrFactoryMethod) throws ParseException {
+    return constructorOrFactoryMethod.apply(parse(value));
   }
 
   public String parse(final CharSequence value) throws ParseException {
     if (value == null) {
-      return defaultNullToEmpty ? "" : null;
+      return switch(nullHandling) {
+        case PRESERVE_NULL_AND_EMPTY -> null;
+        case CONVERT_EMPTY_TO_NULL -> null;
+        case CONVERT_NULL_TO_EMPTY -> "";
+      };
     }
     final int length = value.length();
     final int[] result = new int[length];
@@ -60,9 +72,10 @@ public class TypeParser {
     int codePoint;
     while (i < length) {
       ch = value.charAt(i);
+      // TODO handle case where surrogate is incomplete because ++i is greater than length
       codePoint = Character.isSurrogate(ch) ? Character.toCodePoint(ch, value.charAt(++i)) : (int) ch;
       if (acceptedCodePointRanges.isNotAcceptedCodePoint(codePoint)) {
-        throw invalidCharacterException(result, j, codePoint, value.subSequence(i, endIndex));
+        throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
       }
       if (Character.isWhitespace(codePoint)) {
         CodePointConversion codePointConversion;
@@ -100,11 +113,11 @@ public class TypeParser {
             break;
         }
         if (acceptedCodePointRanges.isNotAcceptedCodePoint(codePoint)) {
-          throw invalidCharacterException(result, j, codePoint, value.subSequence(i, endIndex));
+          throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
         }
       }
       if (j >= maxNumberOfCodePoints) {
-        throw tooLargeException(result, j, value.subSequence(i, endIndex));
+        throw InvalidTypeValueException.forValueTooLong(errorMessage, targetClass, value, maxNumberOfCodePoints);
       }
       result[j++] = switch (targetCase) {
         case PRESERVE_CASE -> codePoint;
@@ -115,49 +128,9 @@ public class TypeParser {
       ++i;
     }
     if (j < minNumberOfCodePoints) {
-      throw tooSmallException(result, j);
+      throw InvalidTypeValueException.forValueTooShort(errorMessage, targetClass, value, minNumberOfCodePoints);
     }
     return new String(result, 0, j);
-  }
-
-  private ParseException invalidCharacterException(
-      final int[] parsed, final int length, final int invalidCodePoint, final CharSequence value) {
-    final String invalid = Character.isWhitespace(invalidCodePoint)
-        ? String.format("\\u%04x", invalidCodePoint)
-        : new String(new int[]{invalidCodePoint}, 0, 1);
-    return new ParseException(String.format(
-        "Cannot parse value into a '%s', invalid character '%s' in '%s'",
-        targetClass.getSimpleName(), invalid,
-        truncateValueWithEllipsis(parsed, length, value)),
-        length);
-  }
-
-  private ParseException tooSmallException(final int[] parsed, final int length) {
-    return new ParseException(String.format(
-        "Cannot parse value into a '%s', value too small - '%s'",
-        targetClass.getSimpleName(), new String(parsed, 0, length)), length);
-
-  }
-
-  private ParseException tooLargeException(
-      final int[] parsed, final int length, final CharSequence value) {
-    return new ParseException(String.format(
-        "Cannot parse value into a '%s', value too large - '%s'",
-        targetClass.getSimpleName(), truncateValueWithEllipsis(parsed, length, value)), length);
-
-  }
-
-  private String truncateValueWithEllipsis(
-      final int[] parsed, final int length, final CharSequence value) {
-    final int actualCountRemaining = value.length();
-    final int displayCount = Math.min(actualCountRemaining, maxNumberOfCodePoints - length + 16);
-    final StringBuilder s = new StringBuilder();
-    for (int i = 0; i < length; ++i) {
-      s.appendCodePoint(parsed[i]);
-    }
-    return s.append(value, 0, displayCount)
-        .append(actualCountRemaining > displayCount ? "..." : "")
-        .toString();
   }
 
   /**
@@ -198,9 +171,10 @@ public class TypeParser {
 
   public static class TypeParserBuilder {
 
-    private final Class<? extends Type> targetClass;
+    private final Class<? extends CharType> targetClass;
+    private String errorMessage;
     private WhiteSpace whiteSpace = WhiteSpace.NORMALIZE_WHITESPACE;
-    private boolean defaultNullToEmpty = true;
+    private NullHandling nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
     private int minNumberOfCodePoints = 0;
     private int maxNumberOfCodePoints = 64;
     private TargetCase targetCase = TargetCase.PRESERVE_CASE;
@@ -208,8 +182,13 @@ public class TypeParser {
     private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
     private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
-    TypeParserBuilder(final Class<? extends Type> targetClass) {
+    TypeParserBuilder(final Class<? extends CharType> targetClass) {
       this.targetClass = targetClass;
+    }
+
+    public TypeParserBuilder errorMessage(final String errorMessage) {
+      this.errorMessage = errorMessage;
+      return this;
     }
 
     public TypeParserBuilder minNumberOfCodePoints(final int min) {
@@ -228,13 +207,18 @@ public class TypeParser {
       return this;
     }
 
-    public TypeParserBuilder defaultNullToEmpty() {
-      defaultNullToEmpty = true;
+    public TypeParserBuilder preserveNullAndEmpty() {
+      nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
       return this;
     }
 
-    public TypeParserBuilder preserveNull() {
-      defaultNullToEmpty = false;
+    public TypeParserBuilder convertNullToEmpty() {
+      nullHandling = NullHandling.CONVERT_NULL_TO_EMPTY;
+      return this;
+    }
+
+    public TypeParserBuilder convertEmptyToNull() {
+      nullHandling = NullHandling.CONVERT_EMPTY_TO_NULL;
       return this;
     }
 
@@ -349,7 +333,8 @@ public class TypeParser {
 
     public TypeParser build() {
       return new TypeParser(
-          targetClass, targetCase, whiteSpace, defaultNullToEmpty,
+          targetClass, errorMessage, targetCase,
+          whiteSpace, nullHandling,
           minNumberOfCodePoints, maxNumberOfCodePoints,
           acceptedCodePointRangesBuilder.build(),
           codePointConversionsBuilder.build());
@@ -679,6 +664,11 @@ public class TypeParser {
     REMOVE_WHITESPACE,
   }
 
+  enum NullHandling {
+    PRESERVE_NULL_AND_EMPTY,
+    CONVERT_NULL_TO_EMPTY,
+    CONVERT_EMPTY_TO_NULL;
+  }
   enum WhiteSpaceCharacters {
     CHARACTER_TABULATION('\u0009', "CHARACTER TABULATION"),
     LINE_FEED('\n', "LINE FEED"),
