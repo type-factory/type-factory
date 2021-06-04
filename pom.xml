@@ -4,30 +4,51 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
-  <artifactId>evantoli-type-library</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>land.artli</groupId>
+  <artifactId>easy-type-project</artifactId>
+  <version>develop</version>
+  <packaging>pom</packaging>
 
   <properties>
     <maven.compiler.source>15</maven.compiler.source>
     <maven.compiler.target>15</maven.compiler.target>
   </properties>
 
-  <dependencies>
+  <modules>
+    <module>easy-type-bom</module>
+    <module>easy-type-parent</module>
+    <module>easy-type</module>
+    <module>easy-type-unicode-code-generator</module>
+  </modules>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.7.2</version>
-      <scope>test</scope>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
 
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.19.0</version>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+        <groupId>land.artli</groupId>
+        <artifactId>easy-type</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
-  </dependencies>
+      <dependency>
+        <groupId>land.artli</groupId>
+        <artifactId>easy-type-bom</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>land.artli</groupId>
+        <artifactId>easy-type-parent</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>land.artli</groupId>
+        <artifactId>easy-type-unicode-code-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
 </project>
