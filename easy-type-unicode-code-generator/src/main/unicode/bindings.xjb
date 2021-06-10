@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings
+  xmlns:jaxb='http://java.sun.com/xml/ns/jaxb' version='2.1'
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/jaxb/bindingschema_2_0.xsd">
+
+    <jaxb:globalBindings
+      generateElementProperty="false">
+
+      <xjc:simple />
+    <!--
+    <jaxb:javaType name="java.math.BigDecimal"
+      xmlType="xs:float"
+      parseMethod="javax.xml.bind.DatatypeConverter.parseDecimal"
+      printMethod="javax.xml.bind.DatatypeConverter.printDecimal"/>
+
+    <jaxb:javaType name="java.math.BigDecimal"
+      xmlType="xs:double"
+      parseMethod="javax.xml.bind.DatatypeConverter.parseDecimal"
+      printMethod="javax.xml.bind.DatatypeConverter.printDecimal"/>
+    -->
+
+<!--    <xjc:serializable uid="-1"/>-->
+
+<!--    <xjc:superInterface name="au.com.qantas.loyalty.lsl.ifly.model.IflyModel"/>-->
+
+  </jaxb:globalBindings>
+
+  <!--
+  <jaxb:bindings xmlns:tns="http://www.w3.org/2001/XMLSchema" scd="x-schema::tns">
+    <jaxb:schemaBindings>
+      <jaxb:package name="com.ibsplc.iloyal.v38"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="/xs:schema[@targetNamespace='http://www.unicode.org/ns/2003/ucd/1.0']">
+    <jaxb:schemaBindings>
+      <jaxb:package name="com.ibsplc.iloyal.v38.member.acceptpayment.type"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  -->
+
+  <!--
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:description']">
+    <jaxb:property name="description"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:repertoire']">
+    <jaxb:property name="repertoire"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:blocks']">
+    <jaxb:property name="blocks"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:named-sequences']">
+    <jaxb:property name="namedSequences"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:provisional-named-sequences']">
+    <jaxb:property name="provisionalNamedSequences"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:normalization-corrections']">
+    <jaxb:property name="normalizationCorrections"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:standardized-variants']">
+    <jaxb:property name="standardizedVariants"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:cjk-radicals']">
+    <jaxb:property name="cjkRadicals"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='ucd.content']/xs:choice/xs:element[@ref='ucd:emoji-sources']">
+    <jaxb:property name="emojiSources"/>
+  </jaxb:bindings>
+  -->
+
+
+
+
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='na']">
+    <jaxb:property name="name" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='na1']">
+    <jaxb:property name="oldName" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='blk']">
+    <jaxb:property name="block" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='gc']">
+    <jaxb:property name="generalCategory" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='ccc']">
+    <jaxb:property name="canonicalCombiningClass" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bc']">
+    <jaxb:property name="bidirectionalClass" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Bidi_M']">
+    <jaxb:property name="bidirectionalMirrored" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bmg']">
+    <jaxb:property name="bidirectionalMirroringGlyph" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bpt']">
+    <jaxb:property name="bidirectionalPairedBracketType" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bpb']">
+    <jaxb:property name="bidirectionalPairedBracket" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='dt']">
+    <jaxb:property name="decompositionType" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='dm']">
+    <jaxb:property name="decompositionMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='suc']">
+    <jaxb:property name="simpleUpperCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='slc']">
+    <jaxb:property name="simpleLowerCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='stc']">
+    <jaxb:property name="simpleTitleCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='scf']">
+    <jaxb:property name="simpleCaseFolding" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='uc']">
+    <jaxb:property name="upperCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='lc']">
+    <jaxb:property name="lowerCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='tc']">
+    <jaxb:property name="titleCaseMapping" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='cf']">
+    <jaxb:property name="caseFolding" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Upper']">
+    <jaxb:property name="upperCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Lower']">
+    <jaxb:property name="lowerCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='OUpper']">
+    <jaxb:property name="otherUpperCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='OLower']">
+    <jaxb:property name="otherLowerCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Cased']">
+    <jaxb:property name="cased" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CI']">
+    <jaxb:property name="caseIgnorable" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWCF']">
+    <jaxb:property name="changesWhenCaseFolded" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWCM']">
+    <jaxb:property name="changesWhenCaseMapped" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWL']">
+    <jaxb:property name="changesWhenLowerCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWT']">
+    <jaxb:property name="changesWhenTitleCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWU']">
+    <jaxb:property name="changesWhenUpperCase" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWKCF']">
+    <jaxb:property name="changesWhenNfkcCaseFolded" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='nt']">
+    <jaxb:property name="numericType" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='nv']">
+    <jaxb:property name="numericValue" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Hex']">
+    <jaxb:property name="hexDigit" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='AHex']">
+    <jaxb:property name="asciiHexDigit" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='jt']">
+    <jaxb:property name="joiningType" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='jg']">
+    <jaxb:property name="joiningGroup" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='lb']">
+    <jaxb:property name="lineBreak" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='ea']">
+    <jaxb:property name="eastAsianWidth" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='sc']">
+    <jaxb:property name="script" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='scx']">
+    <jaxb:property name="scriptExtensions" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='hst']">
+    <jaxb:property name="hangulSyllableType" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='JSN']">
+    <jaxb:property name="jamoShortName" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Ideo']">
+    <jaxb:property name="ideographic" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='UIdeo']">
+    <jaxb:property name="unifiedIdeograph" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='EqUIdeo']">
+    <jaxb:property name="equivalentUnifiedIdeograph" generateIsSetMethod="true"/>
+  </jaxb:bindings>
+
+  <!--
+
+
+
+<jaxb:bindings schemaLocation="./AcceptPayment.xsd"
+  node="//xs:element[@name='AcceptPaymentResponse']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.payment.AcceptPaymentResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AcceptPayment.xsd"
+  node="//xs:complexType[@name='ChargeHead']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.payment.ChargeHead</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AcceptPayment.xsd"
+  node="//xs:complexType[@name='ChargeHeadDetail']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.payment.ChargeHeadDetail</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AccountSummary.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/accountsummary/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.accountsummary.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./ActivityDetail.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/activitydetail/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.activitydetail.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AddAccountNominee.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/addaccountnominee/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.addaccountnominee.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AddAccountNominee.xsd"
+  node="//xs:element[@name='AccountNominee']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.nominee.AccountNominee</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AddAccountNominee.xsd"
+  node="//xs:element[@name='AddAccountNomineeResponse']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.nominee.AddAccountNomineeResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./AdhocActivity.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/adhocactivity/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.adhocactivity.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./BuyPoint.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/buypoint/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.buypoint.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CancelAccrualActivity.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/cancelaccrual/activity/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.cancelaccrual.activity.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CommonType.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/common/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.common.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CommonType.xsd"
+  node="//xs:complexType[@name='WebServiceTransactionHeader']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.common.WebServiceTransactionHeader</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CommonType.xsd"
+  node="//xs:complexType[@name='WebServiceException']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.common.WebServiceException</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateAccrualActivity.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/accrual/activity/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.accrual.activity.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateServiceRequestPortal.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/servicerequestportal/createservicerequestportal/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.servicerequestportal.createservicerequestportal.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateServiceRequestPortal.xsd"
+  node="//xs:element[@name='CreateServiceRequestData']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.servicerequest.CreateServiceRequest</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateServiceRequestPortal.xsd"
+  node="//xs:element[@name='CreateServiceRequestResponseData']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.servicerequest.CreateServiceRequestResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateServiceRequestPortal.xsd"
+  node="//xs:complexType[@name='AttachmentInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.servicerequest.AttachmentInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./CreateServiceRequestPortal.xsd"
+  node="//xs:complexType[@name='remarkDetails']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.servicerequest.RemarkDetails</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EarnCalculator.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/accrual/accrualmileagecalculator/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.accrual.accrualmileagecalculator.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/enrolmember/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.enrolmember.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:element[@name='EnrolMemberRequest']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.EnrolMemberRequest</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:element[@name='EnrolMemberResponse']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.EnrolMemberResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='MemberAccount']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.MemberAccount</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='IndividualInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.IndividualInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='CorporateInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.CorporateInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='AccountReferralDetail']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.AccountReferralDetail</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='MemberProfile']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.MemberProfile</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='MemberDynamicAttribute']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.MemberDynamicAttribute</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='MemberPreference']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.MemberPreference</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='AccrualSegment']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.AccrualSegment</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./EnrolMember.xsd"
+  node="//xs:complexType[@name='MemberContactInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.enrolmember.MemberContactInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueCertificate.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/redemption/issuecertificate/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.redemption.issuecertificate.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueCertificate.xsd"
+  node="//xs:element[@name='IssueCertificateRequest']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.redemption.IssueCertificateRequest</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueCertificate.xsd"
+  node="//xs:element[@name='IssueCertificateResponse']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.redemption.IssueCertificateResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueCertificate.xsd"
+  node="//xs:complexType[@name='IssueCertificateStatus']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.redemption.IssueCertificateStatus</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueCertificate.xsd"
+  node="//xs:complexType[@name='ChargeHeadDetail']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.redemption.ChargeHeadDetail</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./IssueMemberCard.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/program/member/issuemembercard/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.program.member.issuemembercard.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./LookupTableDetails.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/ruleengine/lookuptable/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.ruleengine.lookuptable.type"/>
+  </jaxb:schemaBindings>
+
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/account/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.account.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="//xs:complexType[@name='MemberAccount']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.account.MemberAccount</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="//xs:complexType[@name='AccountReferralDetail']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.account.AccountReferralDetail</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="//xs:complexType[@name='MemberDynamicAttribute']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.account.MemberDynamicAttribute</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="//xs:complexType[@name='AccrualSegment']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.account.AccrualSegment</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberAccount.xsd"
+  node="//xs:complexType[@name='MemberPreference']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.account.MemberPreference</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfile.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/profile/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.profile.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfile.xsd"
+  node="//xs:complexType[@name='MemberProfile']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.MemberProfile</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfile.xsd"
+  node="//xs:complexType[@name='IndividualInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.IndividualInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfile.xsd"
+  node="//xs:complexType[@name='CorporateInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.CorporateInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfile.xsd"
+  node="//xs:complexType[@name='MemberContactInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.MemberContactInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfileDetail.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/memberprofiledetail/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.memberprofiledetail.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfileDetail.xsd"
+  node="//xs:element[@name='MemberProfileDetailsRequest']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.MemberProfileDetailsRequest</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./MemberProfileDetail.xsd"
+  node="//xs:element[@name='MemberProfileDetailsResponse']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.profile.MemberProfileDetailsResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./NominateTier.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/nominatetier/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.nominatetier.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./ProgramType.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/common/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.common.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RecreditPoints.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/redemption/RecreditPoints/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.redemption.recreditpoints.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveAccrualHistory.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/accrual/activity/retrieveaccrualhistory/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.accrual.activity.retrieveaccrualhistory.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveActivityDetails.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/activitystatement/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.activitystatement.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveCertificateDetailsService.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/redemption/retrievecertificatedetails/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.redemption.retrievecertificatedetails.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveLookupTableDetails.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/ruleengine/lookuptable/retrievelookuptabledetails/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.ruleengine.lookuptable.retrievelookuptabledetails.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/retrievememberdetailsforallprograms/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.retrievememberdetailsforallprograms.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:element[@name='RetrieveMemDetailsForAllProgramsReq']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.RetrieveMemberDetailsForAllProgramsRequest</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:element[@name='RetrieveMemberDetailsForAllProgramsRes']/xs:complexType">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.RetrieveMemberDetailsForAllProgramsResponse</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='ProfileDetails']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.ProfileDetails</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='ProgramDetails']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.ProgramDetails</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='IndividualInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.IndividualInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='ContactInfo']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.ContactInfo</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='Preference']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.Preference</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='DynamicAttribute']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.DynamicAttribute</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveMemberDetailsForAllPrograms.xsd"
+  node="//xs:complexType[@name='PointDetail']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.retrieve.PointDetail</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveQueryResults.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/crmcore/querybuilder/retrievequeryresults/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.crmcore.querybuilder.retrievequeryresults.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetrieveRewardPricing.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/redemption/retrieverewardpricing/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.redemption.retrieverewardpricing.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RetroClaimRequest.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/accrual/retroclaimrequest/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.accrual.retroclaimrequest.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RewardType.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/reward/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.reward.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RewardType.xsd"
+  node="//xs:complexType[@name='Certificate']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.reward.Certificate</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./RewardType.xsd"
+  node="//xs:complexType[@name='DynamicAttribute']">
+  <inheritance:implements>au.com.qantas.loyalty.lsl.ifly.model.member.reward.DynamicAttribute</inheritance:implements>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./SaveEmailBounceBack.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/saveemailbounceback/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.saveemailbounceback.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./TransferPoint.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/transferpoint/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.transferpoint.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./ValidateCertificate.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/redemption/validatecertificate/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.redemption.validatecertificate.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./ViewRetroClaimList.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/accrual/viewretroclaimlist/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.accrual.viewretroclaimlist.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+
+<jaxb:bindings schemaLocation="./TierChange.xsd"
+  node="/xs:schema[@targetNamespace='http://www.ibsplc.com/iloyal/member/changemembertier/type/']">
+  <jaxb:schemaBindings>
+    <jaxb:package name="com.ibsplc.iloyal.v38.member.tierchange.type"/>
+  </jaxb:schemaBindings>
+</jaxb:bindings>
+-->
+</jaxb:bindings>
