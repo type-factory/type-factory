@@ -1,5 +1,6 @@
 package land.artli.easytype.generator;
 
+import org.unicode.ns._2003.ucd._1.Boolean;
 import org.unicode.ns._2003.ucd._1.CodePoint;
 import org.unicode.ns._2003.ucd._1.Group;
 
@@ -30,13 +31,27 @@ public class UnicodeCodePoint {
     return null;
   }
 
-  public boolean hasCodePointRange() {
-    return codePoint.getFirstCp() != null && !codePoint.getFirstCp().isBlank() && codePoint.getLastCp() != null && !codePoint.getLastCp().isBlank();
+  public boolean hasFirstCodePoint() {
+    return codePoint.getFirstCp() != null && !codePoint.getFirstCp().isBlank();
   }
 
-  public CodePointRange getCodePointRange() {
-    if (hasCodePointRange()) {
-      return new CodePointRange(Integer.parseInt(codePoint.getFirstCp(), 16), Integer.parseInt(codePoint.getLastCp(), 16));
+  public boolean hasLastCodePoint() {
+    return codePoint.getLastCp() != null && !codePoint.getLastCp().isBlank();
+  }
+  public boolean hasCodePointRange() {
+    return hasFirstCodePoint() && hasLastCodePoint();
+  }
+
+  public Integer getFirstCodePoint() {
+    if (hasFirstCodePoint()) {
+      return Integer.parseInt(codePoint.getFirstCp(), 16);
+    }
+    return null;
+  }
+
+  public Integer getLastCodePoint() {
+    if (hasFirstCodePoint()) {
+      return Integer.parseInt(codePoint.getLastCp(), 16);
     }
     return null;
   }
@@ -70,5 +85,10 @@ public class UnicodeCodePoint {
     }
     return null;
   }
+
+  public boolean isWhitespace() {
+    return Boolean.Y == codePoint.getWhitespace() || Boolean.Y == group.getWhitespace();
+  }
+
 
 }

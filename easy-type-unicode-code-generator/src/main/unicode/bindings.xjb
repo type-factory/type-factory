@@ -96,238 +96,243 @@
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='na']">
-    <jaxb:property name="name" generateIsSetMethod="true"/>
+    <jaxb:property name="name"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='na1']">
-    <jaxb:property name="oldName" generateIsSetMethod="true"/>
+    <jaxb:property name="oldName"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='blk']">
-    <jaxb:property name="block" generateIsSetMethod="true"/>
+    <jaxb:property name="block"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='gc']">
-    <jaxb:property name="generalCategory" generateIsSetMethod="true"/>
+    <jaxb:property name="generalCategory"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='ccc']">
-    <jaxb:property name="canonicalCombiningClass" generateIsSetMethod="true"/>
+    <jaxb:property name="canonicalCombiningClass"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bc']">
-    <jaxb:property name="bidirectionalClass" generateIsSetMethod="true"/>
+    <jaxb:property name="bidirectionalClass"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Bidi_M']">
-    <jaxb:property name="bidirectionalMirrored" generateIsSetMethod="true"/>
+    <jaxb:property name="bidirectionalMirrored"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bmg']">
-    <jaxb:property name="bidirectionalMirroringGlyph" generateIsSetMethod="true"/>
+    <jaxb:property name="bidirectionalMirroringGlyph"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bpt']">
-    <jaxb:property name="bidirectionalPairedBracketType" generateIsSetMethod="true"/>
+    <jaxb:property name="bidirectionalPairedBracketType"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='bpb']">
-    <jaxb:property name="bidirectionalPairedBracket" generateIsSetMethod="true"/>
+    <jaxb:property name="bidirectionalPairedBracket"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='dt']">
-    <jaxb:property name="decompositionType" generateIsSetMethod="true"/>
+    <jaxb:property name="decompositionType"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='dm']">
-    <jaxb:property name="decompositionMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="decompositionMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='suc']">
-    <jaxb:property name="simpleUpperCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="simpleUpperCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='slc']">
-    <jaxb:property name="simpleLowerCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="simpleLowerCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='stc']">
-    <jaxb:property name="simpleTitleCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="simpleTitleCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='scf']">
-    <jaxb:property name="simpleCaseFolding" generateIsSetMethod="true"/>
+    <jaxb:property name="simpleCaseFolding"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='uc']">
-    <jaxb:property name="upperCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="upperCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='lc']">
-    <jaxb:property name="lowerCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="lowerCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='tc']">
-    <jaxb:property name="titleCaseMapping" generateIsSetMethod="true"/>
+    <jaxb:property name="titleCaseMapping"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='cf']">
-    <jaxb:property name="caseFolding" generateIsSetMethod="true"/>
+    <jaxb:property name="caseFolding"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Upper']">
-    <jaxb:property name="upperCase" generateIsSetMethod="true"/>
+    <jaxb:property name="upperCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Lower']">
-    <jaxb:property name="lowerCase" generateIsSetMethod="true"/>
+    <jaxb:property name="lowerCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='OUpper']">
-    <jaxb:property name="otherUpperCase" generateIsSetMethod="true"/>
+    <jaxb:property name="otherUpperCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='OLower']">
-    <jaxb:property name="otherLowerCase" generateIsSetMethod="true"/>
+    <jaxb:property name="otherLowerCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Cased']">
-    <jaxb:property name="cased" generateIsSetMethod="true"/>
+    <jaxb:property name="cased"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CI']">
-    <jaxb:property name="caseIgnorable" generateIsSetMethod="true"/>
+    <jaxb:property name="caseIgnorable"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWCF']">
-    <jaxb:property name="changesWhenCaseFolded" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenCaseFolded"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWCM']">
-    <jaxb:property name="changesWhenCaseMapped" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenCaseMapped"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWL']">
-    <jaxb:property name="changesWhenLowerCase" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenLowerCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWT']">
-    <jaxb:property name="changesWhenTitleCase" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenTitleCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWU']">
-    <jaxb:property name="changesWhenUpperCase" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenUpperCase"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='CWKCF']">
-    <jaxb:property name="changesWhenNfkcCaseFolded" generateIsSetMethod="true"/>
+    <jaxb:property name="changesWhenNfkcCaseFolded"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='nt']">
-    <jaxb:property name="numericType" generateIsSetMethod="true"/>
+    <jaxb:property name="numericType"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='nv']">
-    <jaxb:property name="numericValue" generateIsSetMethod="true"/>
+    <jaxb:property name="numericValue"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Hex']">
-    <jaxb:property name="hexDigit" generateIsSetMethod="true"/>
+    <jaxb:property name="hexDigit"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='AHex']">
-    <jaxb:property name="asciiHexDigit" generateIsSetMethod="true"/>
+    <jaxb:property name="asciiHexDigit"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='jt']">
-    <jaxb:property name="joiningType" generateIsSetMethod="true"/>
+    <jaxb:property name="joiningType"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='jg']">
-    <jaxb:property name="joiningGroup" generateIsSetMethod="true"/>
+    <jaxb:property name="joiningGroup"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='lb']">
-    <jaxb:property name="lineBreak" generateIsSetMethod="true"/>
+    <jaxb:property name="lineBreak"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='ea']">
-    <jaxb:property name="eastAsianWidth" generateIsSetMethod="true"/>
+    <jaxb:property name="eastAsianWidth"/>
   </jaxb:bindings>
 
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='sc']">
-    <jaxb:property name="script" generateIsSetMethod="true"/>
+    <jaxb:property name="script"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='scx']">
-    <jaxb:property name="scriptExtensions" generateIsSetMethod="true"/>
+    <jaxb:property name="scriptExtensions"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='hst']">
-    <jaxb:property name="hangulSyllableType" generateIsSetMethod="true"/>
+    <jaxb:property name="hangulSyllableType"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='JSN']">
-    <jaxb:property name="jamoShortName" generateIsSetMethod="true"/>
+    <jaxb:property name="jamoShortName"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='Ideo']">
-    <jaxb:property name="ideographic" generateIsSetMethod="true"/>
+    <jaxb:property name="ideographic"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='UIdeo']">
-    <jaxb:property name="unifiedIdeograph" generateIsSetMethod="true"/>
+    <jaxb:property name="unifiedIdeograph"/>
   </jaxb:bindings>
 
   <jaxb:bindings schemaLocation="./tr42-28.xsd"
     node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='EqUIdeo']">
-    <jaxb:property name="equivalentUnifiedIdeograph" generateIsSetMethod="true"/>
+    <jaxb:property name="equivalentUnifiedIdeograph"/>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="./tr42-28.xsd"
+    node="//xs:complexType[@name='code-point-attributes']/xs:attribute[@name='WSpace']">
+    <jaxb:property name="whitespace"/>
   </jaxb:bindings>
 
   <!--
