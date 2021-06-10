@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.function.Function;
 import land.artli.easytype.TypeParser.CodePointConversions.CodePointConversionsBuilder;
 import land.artli.easytype.TypeParser.CodePointRanges.CodePointRangesBuilder;
+import land.artli.easytype.Unicode.Category;
+import land.artli.easytype.Unicode.Other;
+import land.artli.easytype.Unicode.Subset;
 
 public class TypeParser {
 
@@ -337,12 +340,12 @@ public class TypeParser {
     }
 
     public TypeParserBuilder convertAllDashesTo(final int toCodePoint) {
-      codePointConversionsBuilder.addCodePointConversions(DashPunctuationCharacters.getAllDashPunctuationCodePoints(), toCodePoint);
+      codePointConversionsBuilder.addCodePointConversions(Category.DASH_PUNCTUATION, toCodePoint);
       return this;
     }
 
     public TypeParserBuilder convertAllDashesTo(final CharSequence toCharSequence) {
-      codePointConversionsBuilder.addCodePointConversions(DashPunctuationCharacters.getAllDashPunctuationCodePoints(), toCharSequence);
+      codePointConversionsBuilder.addCodePointConversions(Category.DASH_PUNCTUATION, toCharSequence);
       return this;
     }
 
@@ -369,19 +372,19 @@ public class TypeParser {
 
     public TypeParserBuilder normalizeAndConvertWhitespaceTo(final char toChar) {
       whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toChar);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toChar);
       return this;
     }
 
     public TypeParserBuilder normalizeAndConvertWhitespaceTo(final int toCodePoint) {
       whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toCodePoint);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toCodePoint);
       return this;
     }
 
     public TypeParserBuilder normalizeAndConvertWhitespaceTo(final CharSequence toCharSequence) {
       whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toCharSequence);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toCharSequence);
       return this;
     }
 
@@ -392,19 +395,19 @@ public class TypeParser {
 
     public TypeParserBuilder preserveAndConvertWhitespaceTo(final char toChar) {
       whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toChar);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toChar);
       return this;
     }
 
     public TypeParserBuilder preserveAndConvertWhitespaceTo(final int toCodePoint) {
       whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toCodePoint);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toCodePoint);
       return this;
     }
 
     public TypeParserBuilder preserveAndConvertWhitespaceTo(final CharSequence toCharSequence) {
       whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-      codePointConversionsBuilder.addCodePointConversions(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints(), toCharSequence);
+      codePointConversionsBuilder.addCodePointConversions(Other.WHITESPACE, toCharSequence);
       return this;
     }
 
@@ -574,18 +577,35 @@ public class TypeParser {
         addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
       }
 
-      void addCodePointConversions(final int[] fromCodePoints, final int toCodePoint) {
-        if (fromCodePoints != null) {
-          for (int i = 0; i < fromCodePoints.length; ++i) {
-            addCodePointConversion(fromCodePoints[i], new int[]{toCodePoint});
-          }
-        }
+      void addCodePointConversions(final Subset subset, final CharSequence toCharSequence) {
+        addCodePointConversions(subset, toCharSequence.codePoints().toArray());
       }
 
-      void addCodePointConversions(final int[] fromCodePoints, final CharSequence toCharSequence) {
-        if (fromCodePoints != null) {
-          for (int i = 0; i < fromCodePoints.length; ++i) {
-            addCodePointConversion(fromCodePoints[i], toCharSequence.codePoints().toArray());
+      void addCodePointConversions(final Subset subset, final char toChar) {
+        addCodePointConversions(subset, new int[]{toChar});
+      }
+
+      void addCodePointConversions(final Subset subset, final int toCodePoint) {
+        addCodePointConversions(subset, new int[]{toCodePoint});
+      }
+
+      void addCodePointConversions(final Subset subset, final int[] toCodePoints) {
+        if (subset != null) {
+          final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
+          for (int i = 0; i < lowerCodePointRanges.length; ++i) {
+            final int inclusiveFrom = CodePointRanges.getInclusiveFrom(lowerCodePointRanges[i]);
+            final int inclusiveTo = CodePointRanges.getInclusiveTo(lowerCodePointRanges[i]);
+            for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
+              addCodePointConversion(j, toCodePoints);
+            }
+          }
+          final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
+          for (int i = 0; i < upperCodePointRanges.length; ++i) {
+            final int inclusiveFrom = CodePointRanges.getInclusiveFrom(upperCodePointRanges[i]);
+            final int inclusiveTo = CodePointRanges.getInclusiveTo(upperCodePointRanges[i]);
+            for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
+              addCodePointConversion(j, toCodePoints);
+            }
           }
         }
       }
@@ -610,12 +630,12 @@ public class TypeParser {
 
   static class CodePointRanges {
 
-    private final int [] lowerCodePointRanges;
-    private final long [] upperCodePointRanges;
+    private final int[] lowerCodePointRanges;
+    private final long[] upperCodePointRanges;
 
     private CodePointRanges(
-        final int [] lowerCodePointRanges,
-        final long [] upperCodePointRanges) {
+        final int[] lowerCodePointRanges,
+        final long[] upperCodePointRanges) {
       this.lowerCodePointRanges = lowerCodePointRanges;
       this.upperCodePointRanges = upperCodePointRanges;
     }
@@ -636,8 +656,8 @@ public class TypeParser {
     private long getCodePointRange(final int codePoint) {
       if (codePoint > 0xffff) {
         if (upperCodePointRanges.length == 0 ||
-            codePoint < (int)(upperCodePointRanges[0] >>> 32) ||
-            codePoint > (int)(upperCodePointRanges[upperCodePointRanges.length - 1])) {
+            codePoint < CodePointRanges.getInclusiveFrom(upperCodePointRanges[0]) ||
+            codePoint > CodePointRanges.getInclusiveTo(upperCodePointRanges[upperCodePointRanges.length - 1])) {
           return Long.MAX_VALUE; // not found, outside of range
         }
         // Try to find using a binary search
@@ -660,8 +680,8 @@ public class TypeParser {
         }
       } else {
         if (lowerCodePointRanges.length == 0 ||
-            codePoint < (lowerCodePointRanges[0] >>> 16) ||
-            codePoint > (lowerCodePointRanges[lowerCodePointRanges.length - 1] & 0x0000ffff)) {
+            codePoint < CodePointRanges.getInclusiveFrom(lowerCodePointRanges[0]) ||
+            codePoint > CodePointRanges.getInclusiveTo(lowerCodePointRanges[lowerCodePointRanges.length - 1])) {
           return Long.MAX_VALUE; // not found, outside of range
         }
         // Try to find using a binary search
@@ -685,43 +705,62 @@ public class TypeParser {
       return Long.MAX_VALUE; // not found
     }
 
-    private static char getInclusiveFrom(final int codePaintRange) {
-      return (char)(codePaintRange >>> 16);
+    public static int getInclusiveFrom(final int codePointRange) {
+      return codePointRange >>> 16;
     }
 
-    private static char getInclusiveTo(final int codePaintRange) {
-      return (char)codePaintRange;
+    public static int getInclusiveTo(final int codePointRange) {
+      return codePointRange & 0x0000ffff;
     }
 
-    private static int getInclusiveFrom(final long codePaintRange) {
-      return (int)(codePaintRange >>> 32);
+    public static int getInclusiveFrom(final long codePointRange) {
+      return (int) (codePointRange >>> 32);
     }
 
-    private static int getInclusiveTo(final long codePaintRange) {
-      return (int)codePaintRange;
+    public static int getInclusiveTo(final long codePointRange) {
+      return (int) (codePointRange & 0x00000000_ffffffffL);
     }
 
-    private static int rangeToInt(final char inclusiveFrom, final char inclusiveTo) {
-      return (((int)inclusiveFrom) << 16) | (int)inclusiveTo;
+    private static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
+      return (inclusiveFrom << 16) | (inclusiveTo & 0x0000ffff);
     }
 
     private static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
-      return (((long)inclusiveFrom) << 32) | (long)inclusiveTo;
+      return (((long) inclusiveFrom) << 32) | inclusiveTo;
     }
 
     static class CodePointRangesBuilder {
 
-      private int [] lowerCodePointRanges = new int[16];
-      private long [] upperCodePointRanges = new long[4];
+      private int[] lowerCodePointRanges = new int[16];
+      private long[] upperCodePointRanges = new long[4];
       private int lowerEndIndex = 0;
       private int upperEndIndex = 0;
 
       void addAllWhiteSpace() {
-        addCodePoints(WhiteSpaceCharacters.getAllWhiteSpaceCodePoints());
+        addSubset(Other.WHITESPACE);
       }
 
       void addAllDashes() {
-        addCodePoints(DashPunctuationCharacters.getAllDashPunctuationCodePoints());
+        addSubset(Category.DASH_PUNCTUATION);
+      }
+
+      void addSubset(final Subset subset) {
+        if (subset != null) {
+          final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
+          ensureLowerCapacity(lowerCodePointRanges.length);
+          for (int i = 0; i < lowerCodePointRanges.length; ++i) {
+            addCodePointRange(
+                CodePointRanges.getInclusiveFrom(lowerCodePointRanges[i]),
+                CodePointRanges.getInclusiveTo(lowerCodePointRanges[i]));
+          }
+          final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
+          ensureUpperCapacity(upperCodePointRanges.length);
+          for (int i = 0; i < upperCodePointRanges.length; ++i) {
+            addCodePointRange(
+                CodePointRanges.getInclusiveFrom(upperCodePointRanges[i]),
+                CodePointRanges.getInclusiveTo(upperCodePointRanges[i]));
+          }
+        }
       }
 
       void addChar(final char ch) {
@@ -747,7 +786,7 @@ public class TypeParser {
         addCodePointRange(codePoint, codePoint);
       }
 
-      void addCodePoints(final int ... codePoints) {
+      void addCodePoints(final int... codePoints) {
         if (codePoints != null) {
           ensureLowerCapacity(codePoints.length);
           for (int i = 0; i < codePoints.length; ++i) {
@@ -756,36 +795,21 @@ public class TypeParser {
         }
       }
 
-      void addCodePointRange(final int [] codePointRanges) {
-        if (codePointRanges != null) {
-          ensureLowerCapacity(codePointRanges.length);
-          for (int i = 0; i < codePointRanges.length; ++i) {
-            addCodePointRange(codePointRanges[i]);
-          }
-        }
-      }
-
-      void addCodePointRange(final long [] codePointRanges) {
-        if (codePointRanges != null) {
-          ensureUpperCapacity(codePointRanges.length);
-          for (int i = 0; i < codePointRanges.length; ++i) {
-            addCodePointRange(codePointRanges[i]);
-          }
-        }
-      }
-
       void addCodePointRange(final long codePointRange) {
-        addCodePointRange((int)(codePointRange >>> 32), (int)codePointRange);
+        addCodePointRange((int) (codePointRange >>> 32), (int) codePointRange);
       }
 
       void addCodePointRange(final int inclusiveFrom, final int inclusiveTo) {
         if (inclusiveFrom < 0xffff) {
+          ensureLowerCapacity();
           if (inclusiveTo < 0xffff) {
-            addCharRange((char)inclusiveFrom, (char)inclusiveTo);
+            lowerCodePointRanges[lowerEndIndex] = rangeToInt(inclusiveFrom, inclusiveTo);
+            ++lowerEndIndex;
           } else {
-            addCharRange((char)inclusiveFrom, (char)0xffff);
+            lowerCodePointRanges[lowerEndIndex] = rangeToInt(inclusiveFrom, 0xffff);
+            ++lowerEndIndex;
             ensureUpperCapacity();
-            upperCodePointRanges[upperEndIndex] = rangeToLong(inclusiveFrom, inclusiveTo);
+            upperCodePointRanges[upperEndIndex] = rangeToLong(0x10000, inclusiveTo);
             ++upperEndIndex;
           }
         } else {
@@ -829,15 +853,27 @@ public class TypeParser {
         }
       }
 
-
+      private static void unsignedIntegerBubbleSort(final int [] values, int fromIndex, int toIndex) {
+        int temp;
+        for (int i = fromIndex; i < toIndex; i++) {
+          for (int j = fromIndex; j < toIndex - i - 1; j++) {
+            if ((0x00000000_ffffffffL & (long)values[j]) > (0x00000000_ffffffffL & (long)values[j + 1])) {
+              // swap the elements
+              temp = values[j];
+              values[j] = values[j + 1];
+              values[j + 1] = temp;
+            }
+          }
+        }
+      }
 
       CodePointRanges build() {
         {
-          Arrays.sort(lowerCodePointRanges, 0, lowerEndIndex);
-          char previousInclusiveFrom;
-          char previousInclusiveTo;
-          char currentInclusiveFrom;
-          char currentInclusiveTo;
+          unsignedIntegerBubbleSort(lowerCodePointRanges, 0, lowerEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
           int i = 0;
           int j = 1;
           while (j < lowerEndIndex) {
@@ -876,10 +912,10 @@ public class TypeParser {
               if (previousInclusiveTo <= currentInclusiveTo) {
                 upperCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
               }
-              removeLowerElement(j);
+              removeUpperElement(j);
             } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
               upperCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-              removeLowerElement(j);
+              removeUpperElement(j);
             } else {
               ++i;
               ++j;
@@ -913,110 +949,6 @@ public class TypeParser {
     PRESERVE_NULL_AND_EMPTY,
     CONVERT_NULL_TO_EMPTY,
     CONVERT_EMPTY_TO_NULL;
-  }
-
-  enum DashPunctuationCharacters {
-    HYPHEN_MINUS('\u002D', "HYPHEN-MINUS"),
-    ARMENIAN_HYPHEN('\u058A', "ARMENIAN HYPHEN"),
-    HEBREW_PUNCTUATION_MAQAF('\u05BE', "HEBREW PUNCTUATION MAQAF"),
-    CANADIAN_SYLLABICS_HYPHEN('\u1400', "CANADIAN SYLLABICS HYPHEN"),
-    MONGOLIAN_TODO_SOFT_HYPHEN('\u1806', "MONGOLIAN TODO SOFT HYPHEN"),
-    HYPHEN('\u2010', "HYPHEN"),
-    NON_BREAKING_HYPHEN('\u2011', "NON-BREAKING HYPHEN"),
-    FIGURE_DASH('\u2012', "FIGURE DASH"),
-    EN_DASH('\u2013', "EN DASH"),
-    EM_DASH('\u2014', "EM DASH"),
-    HORIZONTAL_BAR('\u2015', "HORIZONTAL BAR"),
-    DOUBLE_OBLIQUE_HYPHEN('\u2E17', "DOUBLE OBLIQUE HYPHEN"),
-    HYPHEN_WITH_DIAERESIS('\u2E1A', "HYPHEN WITH DIAERESIS"),
-    TWO_EM_DASH('\u2E3A', "TWO-EM DASH"),
-    THREE_EM_DASH('\u2E3B', "THREE-EM DASH"),
-    DOUBLE_HYPHEN('\u2E40', "DOUBLE HYPHEN"),
-    WAVE_DASH('\u301C', "WAVE DASH"),
-    WAVY_DASH('\u3030', "WAVY DASH"),
-    KATAKANA_HIRAGANA_DOUBLE_HYPHEN('\u30A0', "KATAKANA-HIRAGANA DOUBLE HYPHEN"),
-    PRESENTATION_FORM_FOR_VERTICAL_EM_DASH('\uFE31', "PRESENTATION FORM FOR VERTICAL EM DASH"),
-    PRESENTATION_FORM_FOR_VERTICAL_EN_DASH('\uFE32', "PRESENTATION FORM FOR VERTICAL EN DASH"),
-    SMALL_EM_DASH('\uFE58', "SMALL EM DASH"),
-    SMALL_HYPHEN_MINUS('\uFE63', "SMALL HYPHEN-MINUS"),
-    FULLWIDTH_HYPHEN_MINUS('\uFF0D', "FULLWIDTH HYPHEN-MINUS"),
-    YEZIDI_HYPHENATION_MARK(0x10EAD, "YEZIDI HYPHENATION MARK");
-
-    public final int codePoint;
-    public final String unicodeValue;
-    public final String unicodeName;
-
-    private static int[] allDashPunctuationCodePoints = null;
-
-    DashPunctuationCharacters(int codePoint, String unicodeName) {
-      this.codePoint = codePoint;
-      this.unicodeValue = Character.isSupplementaryCodePoint(codePoint)
-          ? String.format("\\u%08x", codePoint) : String.format("\\u%04x", codePoint);
-      this.unicodeName = unicodeName;
-    }
-
-    public static int[] getAllDashPunctuationCodePoints() {
-      if (allDashPunctuationCodePoints == null) {
-        final DashPunctuationCharacters[] values = values();
-        allDashPunctuationCodePoints = new int[values.length];
-        for (int i = 0; i < values.length; ++i) {
-          allDashPunctuationCodePoints[i] = values[i].codePoint;
-        }
-      }
-      return allDashPunctuationCodePoints;
-    }
-
-  }
-
-  enum WhiteSpaceCharacters {
-    CHARACTER_TABULATION('\u0009', "CHARACTER TABULATION"),
-    LINE_FEED('\n', "LINE FEED"),
-    LINE_TABULATION('\u000B', "LINE TABULATION"),
-    FORM_FEED('\u000C', "FORM FEED"),
-    CARRIAGE_RETURN('\r', "CARRIAGE RETURN"),
-    SPACE('\u0020', "SPACE"),
-    NEXT_LINE('\u0085', "NEXT LINE"),
-    NO_BREAK_SPACE('\u00A0', "NO BREAK SPACE"),
-    OGHAM_SPACE_MARK('\u1680', "OGHAM SPACE MARK"),
-    EN_QUAD('\u2000', "EN QUAD"),
-    EM_QUAD('\u2001', "EM QUAD"),
-    EN_SPACE('\u2002', "EN SPACE"),
-    EM_SPACE('\u2003', "EM SPACE"),
-    THREE_PER_EM_SPACE('\u2004', "THREE PER EM SPACE"),
-    FOUR_PER_EM_SPACE('\u2005', "FOUR PER EM SPACE"),
-    SIX_PER_EM_SPACE('\u2006', "SIX PER EM SPACE"),
-    FIGURE_SPACE('\u2007', "FIGURE SPACE"),
-    PUNCTUATION_SPACE('\u2008', "PUNCTUATION SPACE"),
-    THIN_SPACE('\u2009', "THIN SPACE"),
-    HAIR_SPACE('\u200A', "HAIR SPACE"),
-    LINE_SEPARATOR('\u2028', "LINE SEPARATOR"),
-    PARAGRAPH_SEPARATOR('\u2029', "PARAGRAPH SEPARATOR"),
-    NARROW_NO_BREAK_SPACE('\u202F', "NARROW NO BREAK SPACE"),
-    MEDIUM_MATHEMATICAL_SPACE('\u205F', "MEDIUM MATHEMATICAL SPACE"),
-    IDEOGRAPHIC_SPACE('\u3000', "IDEOGRAPHIC SPACE");
-
-    public final int codePoint;
-    public final String unicodeValue;
-    public final String unicodeName;
-
-    private static int[] allWhiteSpaceCodePoints = null;
-
-    WhiteSpaceCharacters(int codePoint, String unicodeName) {
-      this.codePoint = codePoint;
-      this.unicodeValue = String.format("\\u%04x", codePoint);
-      this.unicodeName = unicodeName;
-    }
-
-    public static int[] getAllWhiteSpaceCodePoints() {
-      if (allWhiteSpaceCodePoints == null) {
-        final WhiteSpaceCharacters[] values = values();
-        allWhiteSpaceCodePoints = new int[values.length];
-        for (int i = 0; i < values.length; ++i) {
-          allWhiteSpaceCodePoints[i] = values[i].codePoint;
-        }
-      }
-      return allWhiteSpaceCodePoints;
-    }
   }
 
 }
