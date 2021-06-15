@@ -12,6 +12,7 @@ import land.artli.easytype.TypeParser.CodePointConversions.CodePointConversionsB
 import land.artli.easytype.TypeParser.CodePointRanges.CodePointRangesBuilder;
 import land.artli.easytype.Unicode.Category;
 import land.artli.easytype.Unicode.Other;
+import land.artli.easytype.Unicode.RangedSubset;
 import land.artli.easytype.Unicode.Subset;
 
 public class TypeParser {
@@ -23,7 +24,7 @@ public class TypeParser {
   private final NullHandling nullHandling;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
-  private final CodePointRanges acceptedCodePointRanges;
+  private final Subset acceptedCodePoints;
   private final CodePointConversions codePointConversions;
 
   private TypeParser(
@@ -33,7 +34,7 @@ public class TypeParser {
       final WhiteSpace whiteSpace,
       final NullHandling nullHandling,
       final int minNumberOfCodePoints, final int maxNumberOfCodePoints,
-      final CodePointRanges acceptedCodePointRanges,
+      final Subset acceptedCodePoints,
       final CodePointConversions codePointConversions) {
     this.targetClass = targetClass;
     this.errorMessage = errorMessage;
@@ -42,7 +43,7 @@ public class TypeParser {
     this.nullHandling = nullHandling;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
-    this.acceptedCodePointRanges = acceptedCodePointRanges;
+    this.acceptedCodePoints = acceptedCodePoints;
     this.codePointConversions = codePointConversions;
   }
 
@@ -83,14 +84,14 @@ public class TypeParser {
       // TODO handle case where surrogate is incomplete because ++i is greater than length
       codePoint = Character.isSurrogate(ch) ? Character.toCodePoint(ch, value.charAt(++i)) : (int) ch;
 
-      if (acceptedCodePointRanges.isNotAcceptedCodePoint(codePoint)) {
+      if (acceptedCodePoints.isNotInSubset(codePoint)) {
         throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
       }
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case PRESERVE_WHITESPACE:
             result = appendCodePoint(result, k++, codePoint);
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePointRanges.isAcceptedCodePoint(codePoint)) {
+            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePoints.isInSubset(codePoint)) {
               result = appendCodePoint(result, k++, codePoint);
             }
             break;
@@ -99,7 +100,7 @@ public class TypeParser {
             for (int j = 0; j < toCodePoints.length; ++j) {
               result = appendCodePoint(result, k++, toCodePoints[j]);
             }
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePointRanges.isAcceptedCodePoint(codePoint)) {
+            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePoints.isInSubset(codePoint)) {
               toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
               for (int j = 0; j < toCodePoints.length; ++j) {
                 result = appendCodePoint(result, k++, toCodePoints[j]);
@@ -108,7 +109,7 @@ public class TypeParser {
             break;
           case NORMALIZE_WHITESPACE:
             result = appendCodePoint(result, k++, ' ');
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePointRanges.isAcceptedCodePoint(codePoint)) {
+            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePoints.isInSubset(codePoint)) {
               // ignore extra whitespace;
             }
             break;
@@ -117,18 +118,18 @@ public class TypeParser {
             for (int j = 0; j < toCodePoints.length; ++j) {
               result = appendCodePoint(result, k++, toCodePoints[j]);
             }
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePointRanges.isAcceptedCodePoint(codePoint)) {
+            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePoints.isInSubset(codePoint)) {
               // ignore extra whitespace;
             }
             break;
           case REMOVE_WHITESPACE:
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePointRanges.isAcceptedCodePoint(codePoint)) {
+            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i)) && acceptedCodePoints.isInSubset(codePoint)) {
               // ignore extra whitespace;
             }
             break;
         }
       }
-      if (acceptedCodePointRanges.isNotAcceptedCodePoint(codePoint)) {
+      if (acceptedCodePoints.isNotInSubset(codePoint)) {
         throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
       }
       toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
@@ -577,32 +578,32 @@ public class TypeParser {
         addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
       }
 
-      void addCodePointConversions(final Subset subset, final CharSequence toCharSequence) {
+      void addCodePointConversions(final RangedSubset subset, final CharSequence toCharSequence) {
         addCodePointConversions(subset, toCharSequence.codePoints().toArray());
       }
 
-      void addCodePointConversions(final Subset subset, final char toChar) {
+      void addCodePointConversions(final RangedSubset subset, final char toChar) {
         addCodePointConversions(subset, new int[]{toChar});
       }
 
-      void addCodePointConversions(final Subset subset, final int toCodePoint) {
+      void addCodePointConversions(final RangedSubset subset, final int toCodePoint) {
         addCodePointConversions(subset, new int[]{toCodePoint});
       }
 
-      void addCodePointConversions(final Subset subset, final int[] toCodePoints) {
+      void addCodePointConversions(final RangedSubset subset, final int[] toCodePoints) {
         if (subset != null) {
           final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
           for (int i = 0; i < lowerCodePointRanges.length; ++i) {
-            final int inclusiveFrom = CodePointRanges.getInclusiveFrom(lowerCodePointRanges[i]);
-            final int inclusiveTo = CodePointRanges.getInclusiveTo(lowerCodePointRanges[i]);
+            final int inclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]);
+            final int inclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[i]);
             for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
               addCodePointConversion(j, toCodePoints);
             }
           }
           final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
           for (int i = 0; i < upperCodePointRanges.length; ++i) {
-            final int inclusiveFrom = CodePointRanges.getInclusiveFrom(upperCodePointRanges[i]);
-            final int inclusiveTo = CodePointRanges.getInclusiveTo(upperCodePointRanges[i]);
+            final int inclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[i]);
+            final int inclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[i]);
             for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
               addCodePointConversion(j, toCodePoints);
             }
@@ -628,7 +629,7 @@ public class TypeParser {
     }
   }
 
-  static class CodePointRanges {
+  static class CodePointRanges implements RangedSubset {
 
     private final int[] lowerCodePointRanges;
     private final long[] upperCodePointRanges;
@@ -644,89 +645,14 @@ public class TypeParser {
       return new CodePointRangesBuilder();
     }
 
-
-    boolean isAcceptedCodePoint(final int codePoint) {
-      return getCodePointRange(codePoint) != Long.MAX_VALUE;
+    @Override
+    public int[] getLowerCodePointRanges() {
+      return lowerCodePointRanges;
     }
 
-    boolean isNotAcceptedCodePoint(final int codePoint) {
-      return !isAcceptedCodePoint(codePoint);
-    }
-
-    private long getCodePointRange(final int codePoint) {
-      if (codePoint > 0xffff) {
-        if (upperCodePointRanges.length == 0 ||
-            codePoint < CodePointRanges.getInclusiveFrom(upperCodePointRanges[0]) ||
-            codePoint > CodePointRanges.getInclusiveTo(upperCodePointRanges[upperCodePointRanges.length - 1])) {
-          return Long.MAX_VALUE; // not found, outside of range
-        }
-        // Try to find using a binary search
-        int low = 0;
-        int high = upperCodePointRanges.length - 1;
-        while (low <= high) {
-          final int mid = (low + high) >>> 1;
-          final long midVal = upperCodePointRanges[mid];
-          final int inclusiveFrom = getInclusiveFrom(midVal);
-          final int inclusiveTo = getInclusiveTo(midVal);
-          if (codePoint > inclusiveTo) {
-            low = mid + 1;
-          } else if (codePoint < inclusiveFrom) {
-            high = mid - 1;
-          } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
-            return midVal; // found
-          } else {
-            return Long.MAX_VALUE; // not found
-          }
-        }
-      } else {
-        if (lowerCodePointRanges.length == 0 ||
-            codePoint < CodePointRanges.getInclusiveFrom(lowerCodePointRanges[0]) ||
-            codePoint > CodePointRanges.getInclusiveTo(lowerCodePointRanges[lowerCodePointRanges.length - 1])) {
-          return Long.MAX_VALUE; // not found, outside of range
-        }
-        // Try to find using a binary search
-        int low = 0;
-        int high = lowerCodePointRanges.length - 1;
-        while (low <= high) {
-          final int mid = (low + high) >>> 1;
-          final int inclusiveFrom = getInclusiveFrom(lowerCodePointRanges[mid]);
-          final int inclusiveTo = getInclusiveTo(lowerCodePointRanges[mid]);
-          if (codePoint > inclusiveTo) {
-            low = mid + 1;
-          } else if (codePoint < inclusiveFrom) {
-            high = mid - 1;
-          } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
-            return rangeToLong(inclusiveFrom, inclusiveTo); // found
-          } else {
-            return Long.MAX_VALUE; // not found
-          }
-        }
-      }
-      return Long.MAX_VALUE; // not found
-    }
-
-    public static int getInclusiveFrom(final int codePointRange) {
-      return codePointRange >>> 16;
-    }
-
-    public static int getInclusiveTo(final int codePointRange) {
-      return codePointRange & 0x0000ffff;
-    }
-
-    public static int getInclusiveFrom(final long codePointRange) {
-      return (int) (codePointRange >>> 32);
-    }
-
-    public static int getInclusiveTo(final long codePointRange) {
-      return (int) (codePointRange & 0x00000000_ffffffffL);
-    }
-
-    private static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
-      return (inclusiveFrom << 16) | (inclusiveTo & 0x0000ffff);
-    }
-
-    private static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
-      return (((long) inclusiveFrom) << 32) | inclusiveTo;
+    @Override
+    public long[] getUpperCodePointRanges() {
+      return upperCodePointRanges;
     }
 
     static class CodePointRangesBuilder {
@@ -744,21 +670,21 @@ public class TypeParser {
         addSubset(Category.DASH_PUNCTUATION);
       }
 
-      void addSubset(final Subset subset) {
+      void addSubset(final RangedSubset subset) {
         if (subset != null) {
           final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
           ensureLowerCapacity(lowerCodePointRanges.length);
           for (int i = 0; i < lowerCodePointRanges.length; ++i) {
             addCodePointRange(
-                CodePointRanges.getInclusiveFrom(lowerCodePointRanges[i]),
-                CodePointRanges.getInclusiveTo(lowerCodePointRanges[i]));
+                RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]),
+                RangedSubset.getInclusiveTo(lowerCodePointRanges[i]));
           }
           final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
           ensureUpperCapacity(upperCodePointRanges.length);
           for (int i = 0; i < upperCodePointRanges.length; ++i) {
             addCodePointRange(
-                CodePointRanges.getInclusiveFrom(upperCodePointRanges[i]),
-                CodePointRanges.getInclusiveTo(upperCodePointRanges[i]));
+                RangedSubset.getInclusiveFrom(upperCodePointRanges[i]),
+                RangedSubset.getInclusiveTo(upperCodePointRanges[i]));
           }
         }
       }
@@ -778,7 +704,7 @@ public class TypeParser {
 
       void addCharRange(final char inclusiveFrom, final char inclusiveTo) {
         ensureLowerCapacity();
-        lowerCodePointRanges[lowerEndIndex] = rangeToInt(inclusiveFrom, inclusiveTo);
+        lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
         ++lowerEndIndex;
       }
 
@@ -803,18 +729,18 @@ public class TypeParser {
         if (inclusiveFrom < 0xffff) {
           ensureLowerCapacity();
           if (inclusiveTo < 0xffff) {
-            lowerCodePointRanges[lowerEndIndex] = rangeToInt(inclusiveFrom, inclusiveTo);
+            lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
             ++lowerEndIndex;
           } else {
-            lowerCodePointRanges[lowerEndIndex] = rangeToInt(inclusiveFrom, 0xffff);
+            lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, 0xffff);
             ++lowerEndIndex;
             ensureUpperCapacity();
-            upperCodePointRanges[upperEndIndex] = rangeToLong(0x10000, inclusiveTo);
+            upperCodePointRanges[upperEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
             ++upperEndIndex;
           }
         } else {
           ensureUpperCapacity();
-          upperCodePointRanges[upperEndIndex] = rangeToLong(inclusiveFrom, inclusiveTo);
+          upperCodePointRanges[upperEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
           ++upperEndIndex;
         }
       }
@@ -853,11 +779,19 @@ public class TypeParser {
         }
       }
 
-      private static void unsignedIntegerBubbleSort(final int [] values, int fromIndex, int toIndex) {
+      CodePointRanges build() {
+        mergeLowerContiguousRanges();
+        mergeUpperContiguousRanges();
+        return new CodePointRanges(
+            Arrays.copyOf(lowerCodePointRanges, lowerEndIndex),
+            Arrays.copyOf(upperCodePointRanges, upperEndIndex));
+      }
+
+      private static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
         int temp;
         for (int i = fromIndex; i < toIndex; i++) {
           for (int j = fromIndex; j < toIndex - i - 1; j++) {
-            if ((0x00000000_ffffffffL & (long)values[j]) > (0x00000000_ffffffffL & (long)values[j + 1])) {
+            if ((0x00000000_ffffffffL & (long) values[j]) > (0x00000000_ffffffffL & (long) values[j + 1])) {
               // swap the elements
               temp = values[j];
               values[j] = values[j + 1];
@@ -867,64 +801,60 @@ public class TypeParser {
         }
       }
 
-      CodePointRanges build() {
-        {
-          unsignedIntegerBubbleSort(lowerCodePointRanges, 0, lowerEndIndex);
-          int previousInclusiveFrom;
-          int previousInclusiveTo;
-          int currentInclusiveFrom;
-          int currentInclusiveTo;
-          int i = 0;
-          int j = 1;
-          while (j < lowerEndIndex) {
-            previousInclusiveFrom = getInclusiveFrom(lowerCodePointRanges[i]);
-            previousInclusiveTo = getInclusiveTo(lowerCodePointRanges[i]);
-            currentInclusiveFrom = getInclusiveFrom(lowerCodePointRanges[j]);
-            currentInclusiveTo = getInclusiveTo(lowerCodePointRanges[j]);
-            if (previousInclusiveTo >= currentInclusiveFrom) {
-              if (previousInclusiveTo <= currentInclusiveTo) {
-                lowerCodePointRanges[i] = rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-              }
-              removeLowerElement(j);
-            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-              lowerCodePointRanges[i] = rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-              removeLowerElement(j);
-            } else {
-              ++i;
-              ++j;
+      private void mergeLowerContiguousRanges() {
+        unsignedIntegerBubbleSort(lowerCodePointRanges, 0, lowerEndIndex);
+        int previousInclusiveFrom;
+        int previousInclusiveTo;
+        int currentInclusiveFrom;
+        int currentInclusiveTo;
+        int i = 0;
+        int j = 1;
+        while (j < lowerEndIndex) {
+          previousInclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]);
+          previousInclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[i]);
+          currentInclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[j]);
+          currentInclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[j]);
+          if (previousInclusiveTo >= currentInclusiveFrom) {
+            if (previousInclusiveTo <= currentInclusiveTo) {
+              lowerCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
             }
+            removeLowerElement(j);
+          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+            lowerCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+            removeLowerElement(j);
+          } else {
+            ++i;
+            ++j;
           }
         }
-        {
-          Arrays.sort(upperCodePointRanges, 0, upperEndIndex);
-          int previousInclusiveFrom;
-          int previousInclusiveTo;
-          int currentInclusiveFrom;
-          int currentInclusiveTo;
-          int i = 0;
-          int j = 1;
-          while (j < upperEndIndex) {
-            previousInclusiveFrom = getInclusiveFrom(upperCodePointRanges[i]);
-            previousInclusiveTo = getInclusiveTo(upperCodePointRanges[i]);
-            currentInclusiveFrom = getInclusiveFrom(upperCodePointRanges[j]);
-            currentInclusiveTo = getInclusiveTo(upperCodePointRanges[j]);
-            if (previousInclusiveTo >= currentInclusiveFrom) {
-              if (previousInclusiveTo <= currentInclusiveTo) {
-                upperCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-              }
-              removeUpperElement(j);
-            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-              upperCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-              removeUpperElement(j);
-            } else {
-              ++i;
-              ++j;
+      }
+
+      private void mergeUpperContiguousRanges() {
+        Arrays.sort(upperCodePointRanges, 0, upperEndIndex);
+        int previousInclusiveFrom;
+        int previousInclusiveTo;
+        int currentInclusiveFrom;
+        int currentInclusiveTo;
+        int i = 0;
+        int j = 1;
+        while (j < upperEndIndex) {
+          previousInclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[i]);
+          previousInclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[i]);
+          currentInclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[j]);
+          currentInclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[j]);
+          if (previousInclusiveTo >= currentInclusiveFrom) {
+            if (previousInclusiveTo <= currentInclusiveTo) {
+              upperCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
             }
+            removeUpperElement(j);
+          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+            upperCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+            removeUpperElement(j);
+          } else {
+            ++i;
+            ++j;
           }
         }
-        return new CodePointRanges(
-            Arrays.copyOf(lowerCodePointRanges, lowerEndIndex),
-            Arrays.copyOf(upperCodePointRanges, upperEndIndex));
       }
     }
   }

@@ -86,6 +86,9 @@ public class Main {
         package land.artli.easytype;
                 
         import java.util.Arrays;
+        import java.util.Collection;
+        import java.util.Collections;
+        import java.util.List;
         import javax.annotation.processing.Generated;
                 
         @Generated(
@@ -98,14 +101,134 @@ public class Main {
           }
           
           public interface Subset {
-            public int [] getLowerCodePointRanges();
-            public long [] getUpperCodePointRanges();
+            boolean isInSubset(final int codePoint);
+            default boolean isNotInSubset(final int codePoint) {
+              return !isInSubset(codePoint);
+            }
+            static CompositeSubset of(final Subset... subsets) {
+              if (subsets == null || subsets.length == 0) {
+                return Collections::emptyList;
+              }
+              return () -> List.of(subsets);
+            }
+          }
+          
+          interface CompositeSubset extends Subset {
+            Collection<Subset> getSubsets();
+            default boolean isInSubset(final int codePoint) {
+              for (Subset subset : getSubsets()) {
+                if (subset.isInSubset(codePoint)) {
+                  return true;
+                }
+              }
+              return false;
+            }
+          }
+          
+          interface RangedSubset extends Subset {
+        
+            /**
+             * Returns an array of 2-byte code-point ranges stored as integer values.
+             * Each range comprises an inclusive-from value and an inclusive-to value.
+             * The most-significant 16 bits hold the inclusive-from value. 
+             * The least-significant 16 bits hold the inclusive-to value.
+             * The returned array must be sorted from low-to-high as unsigned-integers.
+             */
+            int[] getLowerCodePointRanges();
+        
+            /**
+             * Returns an array of 3-byte code-point ranges stored as long values.
+             * Each range comprises an inclusive-from value and an inclusive-to value.
+             * The most-significant 32 bits hold the inclusive-from value. 
+             * The least-significant 32 bits hold the inclusive-to value.
+             * The returned array must be sorted from low-to-high.
+             */
+            long[] getUpperCodePointRanges();
+        
+            default boolean isInSubset(final int codePoint) {
+              if (codePoint > 0xffff) {
+                final long[] upperCodePointRanges = getUpperCodePointRanges();
+                if (upperCodePointRanges.length == 0 ||
+                    codePoint < getInclusiveFrom(upperCodePointRanges[0]) ||
+                    codePoint > getInclusiveTo(upperCodePointRanges[upperCodePointRanges.length - 1])) {
+                  return false; // not found, outside of range
+                }
+                // Try to find using a binary search
+                int low = 0;
+                int high = upperCodePointRanges.length - 1;
+                while (low <= high) {
+                  final int mid = (low + high) >>> 1;
+                  final long midVal = upperCodePointRanges[mid];
+                  final int inclusiveFrom = getInclusiveFrom(midVal);
+                  final int inclusiveTo = getInclusiveTo(midVal);
+                  if (codePoint > inclusiveTo) {
+                    low = mid + 1;
+                  } else if (codePoint < inclusiveFrom) {
+                    high = mid - 1;
+                  } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
+                    return true; // found
+                  } else {
+                    return false; // not found
+                  }
+                }
+              } else {
+                final int[] lowerCodePointRanges = getLowerCodePointRanges();
+        
+                if (lowerCodePointRanges.length == 0 ||
+                    codePoint < getInclusiveFrom(lowerCodePointRanges[0]) ||
+                    codePoint > getInclusiveTo(lowerCodePointRanges[lowerCodePointRanges.length - 1])) {
+                  return false; // not found, outside of range
+                }
+                // Try to find using a binary search
+                int low = 0;
+                int high = lowerCodePointRanges.length - 1;
+                while (low <= high) {
+                  final int mid = (low + high) >>> 1;
+                  final int inclusiveFrom = getInclusiveFrom(lowerCodePointRanges[mid]);
+                  final int inclusiveTo = getInclusiveTo(lowerCodePointRanges[mid]);
+                  if (codePoint > inclusiveTo) {
+                    low = mid + 1;
+                  } else if (codePoint < inclusiveFrom) {
+                    high = mid - 1;
+                  } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
+                    return true; // found
+                  } else {
+                    return false; // not found
+                  }
+                }
+              }
+              return false; // not found
+            }
+        
+            static int getInclusiveFrom(final int codePointRange) {
+              return codePointRange >>> 16;
+            }
+        
+            static int getInclusiveTo(final int codePointRange) {
+              return codePointRange & 0x0000ffff;
+            }
+        
+            static int getInclusiveFrom(final long codePointRange) {
+              return (int) (codePointRange >>> 32);
+            }
+        
+            static int getInclusiveTo(final long codePointRange) {
+              return (int) (codePointRange & 0x00000000_ffffffffL);
+            }
+        
+            static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
+              return (inclusiveFrom << 16) | (inclusiveTo & 0x0000ffff);
+            }
+        
+            static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
+              return (((long) inclusiveFrom) << 32) | inclusiveTo;
+            }
           }
           
         """).append(LINE_SEPARATOR);
 
     {
-      s.append("  public enum Other implements Subset {").append(LINE_SEPARATOR)
+      s.append("  public enum Other implements RangedSubset {").append(LINE_SEPARATOR)
           .append("    WHITESPACE(\"Whitespace\",");
       final CodePointRanges whitespaceCodePointRanges = whitespaceCodePointRangesBuilder.build();
       writeCodeRangeArrays(s, whitespaceCodePointRanges);
@@ -191,7 +314,7 @@ public class Main {
            * @see <a href="https://www.unicode.org/reports/tr44/#General_Category_Values">
            *   https://www.unicode.org/reports/tr44/#General_Category_Values</a>
            */
-          public enum Category implements Subset {
+          public enum Category implements RangedSubset {
         """);
     for (UnicodeCategory category : UnicodeCategory.values()) {
       s.append(LINE_SEPARATOR).append("    /** ").append(category.getAbbreviation()).append(" – ")
@@ -242,7 +365,7 @@ public class Main {
           }
         """).append(LINE_SEPARATOR).append(LINE_SEPARATOR);
 
-    s.append("  public enum Script implements Subset {");
+    s.append("  public enum Script implements RangedSubset {");
     for (String script : scriptCodePointRangeBuilders.keySet()) {
       s.append(LINE_SEPARATOR).append("    ").append(script.toUpperCase()).append("(\"").append(script).append("\",");
       final CodePointRanges scriptCodePointRanges = scriptCodePointRangeBuilders.get(script).build();
@@ -269,7 +392,7 @@ public class Main {
           }
         """);
 
-    s.append("  public enum Block implements Subset {");
+    s.append("  public enum Block implements RangedSubset {");
     for (String block : blockCodePointRangeBuilders.keySet()) {
       s.append(LINE_SEPARATOR).append("    ").append(block.toUpperCase()).append("(\"").append(block).append("\",");
       final CodePointRanges blockCodePointRanges = blockCodePointRangeBuilders.get(block).build();
