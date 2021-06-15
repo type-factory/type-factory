@@ -592,18 +592,26 @@ public class TypeParser {
 
       void addCodePointConversions(final RangedSubset subset, final int[] toCodePoints) {
         if (subset != null) {
-          final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
-          for (int i = 0; i < lowerCodePointRanges.length; ++i) {
-            final int inclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]);
-            final int inclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[i]);
+          final char[] singleByteCodePointRanges = subset.getSingleByteCodePointRanges();
+          for (int i = 0; i < singleByteCodePointRanges.length; ++i) {
+            final int inclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[i]);
+            final int inclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[i]);
             for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
               addCodePointConversion(j, toCodePoints);
             }
           }
-          final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
-          for (int i = 0; i < upperCodePointRanges.length; ++i) {
-            final int inclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[i]);
-            final int inclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[i]);
+          final int[] doubleByteCodePointRanges = subset.getDoubleByteCodePointRanges();
+          for (int i = 0; i < doubleByteCodePointRanges.length; ++i) {
+            final int inclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[i]);
+            final int inclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]);
+            for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
+              addCodePointConversion(j, toCodePoints);
+            }
+          }
+          final long[] tripleByteCodePointRanges = subset.getTripleByteCodePointRanges();
+          for (int i = 0; i < tripleByteCodePointRanges.length; ++i) {
+            final int inclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[i]);
+            final int inclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[i]);
             for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
               addCodePointConversion(j, toCodePoints);
             }
@@ -630,37 +638,104 @@ public class TypeParser {
   }
 
   static class CodePointRanges implements RangedSubset {
-
-    private final int[] lowerCodePointRanges;
-    private final long[] upperCodePointRanges;
+    private final char [] singleByteCodePointRanges;
+    private final int [] doubleByteCodePointRanges;
+    private final long [] tripleByteCodePointRanges;
 
     private CodePointRanges(
-        final int[] lowerCodePointRanges,
-        final long[] upperCodePointRanges) {
-      this.lowerCodePointRanges = lowerCodePointRanges;
-      this.upperCodePointRanges = upperCodePointRanges;
+        final char [] singleByteCodePointRanges,
+        final int [] doubleByteCodePointRanges,
+        final long [] tripleByteCodePointRanges) {
+      this.singleByteCodePointRanges = singleByteCodePointRanges;
+      this.doubleByteCodePointRanges = doubleByteCodePointRanges;
+      this.tripleByteCodePointRanges = tripleByteCodePointRanges;
     }
 
     static CodePointRangesBuilder builder() {
       return new CodePointRangesBuilder();
     }
 
-    @Override
-    public int[] getLowerCodePointRanges() {
-      return lowerCodePointRanges;
+    public char[] getSingleByteCodePointRanges() {
+      return singleByteCodePointRanges;
     }
 
-    @Override
-    public long[] getUpperCodePointRanges() {
-      return upperCodePointRanges;
+    public int[] getDoubleByteCodePointRanges() {
+      return doubleByteCodePointRanges;
     }
+
+    public long[] getTripleByteCodePointRanges() {
+      return tripleByteCodePointRanges;
+    }
+
+    boolean isAcceptedCodePoint(final int codePoint) {
+      return getCodePointRange(codePoint) != Long.MIN_VALUE;
+    }
+
+    boolean isNotAcceptedCodePoint(final int codePoint) {
+      return !isAcceptedCodePoint(codePoint);
+    }
+
+    private long getCodePointRange(final int codePoint) {
+      if (codePoint > 0xffff) {
+        if (tripleByteCodePointRanges.length == 0 ||
+            codePoint < RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[0]) ||
+            codePoint > RangedSubset.getInclusiveTo(tripleByteCodePointRanges[tripleByteCodePointRanges.length - 1])) {
+          return Long.MIN_VALUE; // not found, outside of range
+        }
+        // Try to find using a binary search
+        int low = 0;
+        int high = tripleByteCodePointRanges.length - 1;
+        while (low <= high) {
+          final int mid = (low + high) >>> 1;
+          final long midVal = tripleByteCodePointRanges[mid];
+          final int inclusiveFrom = RangedSubset.getInclusiveFrom(midVal);
+          final int inclusiveTo = RangedSubset.getInclusiveTo(midVal);
+          if (codePoint > inclusiveTo) {
+            low = mid + 1;
+          } else if (codePoint < inclusiveFrom) {
+            high = mid - 1;
+          } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
+            return midVal; // found
+          } else {
+            return Long.MIN_VALUE; // not found
+          }
+        }
+      } else {
+        if (doubleByteCodePointRanges.length == 0 ||
+            codePoint < RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[0]) ||
+            codePoint > RangedSubset.getInclusiveTo(doubleByteCodePointRanges[doubleByteCodePointRanges.length - 1])) {
+          return Long.MIN_VALUE; // not found, outside of range
+        }
+        // Try to find using a binary search
+        int low = 0;
+        int high = doubleByteCodePointRanges.length - 1;
+        while (low <= high) {
+          final int mid = (low + high) >>> 1;
+          final int inclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[mid]);
+          final int inclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[mid]);
+          if (codePoint > inclusiveTo) {
+            low = mid + 1;
+          } else if (codePoint < inclusiveFrom) {
+            high = mid - 1;
+          } else if (codePoint >= inclusiveFrom && codePoint <= inclusiveTo) {
+            return RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo); // found
+          } else {
+            return Long.MIN_VALUE; // not found
+          }
+        }
+      }
+      return Long.MIN_VALUE; // not found
+    }
+
 
     static class CodePointRangesBuilder {
 
-      private int[] lowerCodePointRanges = new int[16];
-      private long[] upperCodePointRanges = new long[4];
-      private int lowerEndIndex = 0;
-      private int upperEndIndex = 0;
+      private char [] singleByteCodePointRanges = new char[16];
+      private int [] doubleByteCodePointRanges = new int[16];
+      private long [] tripleByteCodePointRanges = new long[4];
+      private int singleByteEndIndex = 0;
+      private int doubleByteEndIndex = 0;
+      private int tripleByteEndIndex = 0;
 
       void addAllWhiteSpace() {
         addSubset(Other.WHITESPACE);
@@ -672,19 +747,26 @@ public class TypeParser {
 
       void addSubset(final RangedSubset subset) {
         if (subset != null) {
-          final int[] lowerCodePointRanges = subset.getLowerCodePointRanges();
-          ensureLowerCapacity(lowerCodePointRanges.length);
-          for (int i = 0; i < lowerCodePointRanges.length; ++i) {
+          final char[] singleByteCodePointRanges = subset.getSingleByteCodePointRanges();
+          ensureDoubleByteCapacity(singleByteCodePointRanges.length);
+          for (int i = 0; i < singleByteCodePointRanges.length; ++i) {
             addCodePointRange(
-                RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]),
-                RangedSubset.getInclusiveTo(lowerCodePointRanges[i]));
+                RangedSubset.getInclusiveFrom(singleByteCodePointRanges[i]),
+                RangedSubset.getInclusiveTo(singleByteCodePointRanges[i]));
           }
-          final long[] upperCodePointRanges = subset.getUpperCodePointRanges();
-          ensureUpperCapacity(upperCodePointRanges.length);
-          for (int i = 0; i < upperCodePointRanges.length; ++i) {
+          final int[] doubleByteCodePointRanges = subset.getDoubleByteCodePointRanges();
+          ensureDoubleByteCapacity(doubleByteCodePointRanges.length);
+          for (int i = 0; i < doubleByteCodePointRanges.length; ++i) {
             addCodePointRange(
-                RangedSubset.getInclusiveFrom(upperCodePointRanges[i]),
-                RangedSubset.getInclusiveTo(upperCodePointRanges[i]));
+                RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[i]),
+                RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]));
+          }
+          final long[] tripleByteCodePointRanges = subset.getTripleByteCodePointRanges();
+          ensureTripleByteCapacity(tripleByteCodePointRanges.length);
+          for (int i = 0; i < tripleByteCodePointRanges.length; ++i) {
+            addCodePointRange(
+                RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[i]),
+                RangedSubset.getInclusiveTo(tripleByteCodePointRanges[i]));
           }
         }
       }
@@ -695,7 +777,7 @@ public class TypeParser {
 
       void addChars(final char... chars) {
         if (chars != null) {
-          ensureLowerCapacity(chars.length);
+          ensureDoubleByteCapacity(chars.length);
           for (int i = 0; i < chars.length; ++i) {
             addChar(chars[i]);
           }
@@ -703,95 +785,138 @@ public class TypeParser {
       }
 
       void addCharRange(final char inclusiveFrom, final char inclusiveTo) {
-        ensureLowerCapacity();
-        lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
-        ++lowerEndIndex;
+        addCodePointRange(inclusiveFrom & 0x0000_ffff, inclusiveTo & 0x0000_ffff);
       }
 
       void addCodePoint(final int codePoint) {
         addCodePointRange(codePoint, codePoint);
       }
 
-      void addCodePoints(final int... codePoints) {
+      void addCodePoints(final int ... codePoints) {
         if (codePoints != null) {
-          ensureLowerCapacity(codePoints.length);
+          ensureDoubleByteCapacity(codePoints.length);
           for (int i = 0; i < codePoints.length; ++i) {
             addCodePoint(codePoints[i]);
           }
         }
       }
 
-      void addCodePointRange(final long codePointRange) {
-        addCodePointRange((int) (codePointRange >>> 32), (int) codePointRange);
-      }
-
-      void addCodePointRange(final int inclusiveFrom, final int inclusiveTo) {
-        if (inclusiveFrom < 0xffff) {
-          ensureLowerCapacity();
-          if (inclusiveTo < 0xffff) {
-            lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
-            ++lowerEndIndex;
-          } else {
-            lowerCodePointRanges[lowerEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, 0xffff);
-            ++lowerEndIndex;
-            ensureUpperCapacity();
-            upperCodePointRanges[upperEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
-            ++upperEndIndex;
+      void addCodePointRanges(final char [] codePointRanges) {
+        if (codePointRanges != null) {
+          ensureSingleByteCapacity(codePointRanges.length);
+          for (int i = 0; i < codePointRanges.length; ++i) {
+            addCodePointRange(RangedSubset.getInclusiveFrom(codePointRanges[i]), RangedSubset.getInclusiveTo(codePointRanges[i]));
           }
-        } else {
-          ensureUpperCapacity();
-          upperCodePointRanges[upperEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
-          ++upperEndIndex;
         }
       }
 
-      private void removeLowerElement(final int index) {
-        System.arraycopy(lowerCodePointRanges, index + 1, lowerCodePointRanges, index, lowerCodePointRanges.length - index - 1);
-        --lowerEndIndex;
-      }
-
-      private void removeUpperElement(final int index) {
-        System.arraycopy(upperCodePointRanges, index + 1, upperCodePointRanges, index, upperCodePointRanges.length - index - 1);
-        --upperEndIndex;
-      }
-
-      private void ensureLowerCapacity() {
-        if (lowerEndIndex == lowerCodePointRanges.length) {
-          ensureLowerCapacity(16);
+      void addCodePointRanges(final int [] codePointRanges) {
+        if (codePointRanges != null) {
+          ensureDoubleByteCapacity(codePointRanges.length);
+          for (int i = 0; i < codePointRanges.length; ++i) {
+            addCodePointRange(RangedSubset.getInclusiveFrom(codePointRanges[i]), RangedSubset.getInclusiveTo(codePointRanges[i]));
+          }
         }
       }
 
-      private void ensureUpperCapacity() {
-        if (upperEndIndex == upperCodePointRanges.length) {
-          ensureUpperCapacity(16);
+      void addCodePointRanges(final long [] codePointRanges) {
+        if (codePointRanges != null) {
+          ensureTripleByteCapacity(codePointRanges.length);
+          for (int i = 0; i < codePointRanges.length; ++i) {
+            addCodePointRange(RangedSubset.getInclusiveFrom(codePointRanges[i]), RangedSubset.getInclusiveTo(codePointRanges[i]));
+          }
+        }
+      }
+      void addCodePointRange(int inclusiveFrom, int inclusiveTo) {
+        if (inclusiveTo > 0xffff) {
+          if (inclusiveFrom > 0xffff) {
+            ensureTripleByteCapacity();
+            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
+            ++tripleByteEndIndex;
+            return;
+          } else {
+            ensureTripleByteCapacity();
+            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
+            ++tripleByteEndIndex;
+            inclusiveTo = 0xffff;
+          }
+        }
+
+        if (inclusiveTo > 0xff) {
+          if (inclusiveFrom > 0xff) {
+            ensureDoubleByteCapacity();
+            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
+            ++doubleByteEndIndex;
+            return;
+          } else {
+            ensureDoubleByteCapacity();
+            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(0x100, inclusiveTo);
+            ++doubleByteEndIndex;
+            inclusiveTo = 0xff;
+          }
+        }
+
+        ensureSingleByteCapacity();
+        singleByteCodePointRanges[singleByteEndIndex] = RangedSubset.rangeToChar(inclusiveFrom, inclusiveTo);
+        ++singleByteEndIndex;
+      }
+
+      private void removeSingleByteElement(final int index) {
+        System.arraycopy(singleByteCodePointRanges, index + 1, singleByteCodePointRanges, index, singleByteCodePointRanges.length - index - 1);
+        --singleByteEndIndex;
+      }
+
+      private void removeDoubleByteElement(final int index) {
+        System.arraycopy(doubleByteCodePointRanges, index + 1, doubleByteCodePointRanges, index, doubleByteCodePointRanges.length - index - 1);
+        --doubleByteEndIndex;
+      }
+
+      private void removeTripleByteElement(final int index) {
+        System.arraycopy(tripleByteCodePointRanges, index + 1, tripleByteCodePointRanges, index, tripleByteCodePointRanges.length - index - 1);
+        --tripleByteEndIndex;
+      }
+
+      private void ensureSingleByteCapacity() {
+        if (singleByteEndIndex == singleByteCodePointRanges.length) {
+          ensureSingleByteCapacity(16);
         }
       }
 
-      private void ensureLowerCapacity(final int amount) {
-        if ((lowerCodePointRanges.length - lowerEndIndex) < amount) {
-          lowerCodePointRanges = Arrays.copyOf(lowerCodePointRanges, lowerCodePointRanges.length + amount);
+      private void ensureSingleByteCapacity(final int amount) {
+        if ((singleByteCodePointRanges.length - singleByteEndIndex) < amount) {
+          singleByteCodePointRanges = Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length + amount);
         }
       }
 
-      private void ensureUpperCapacity(final int amount) {
-        if ((upperCodePointRanges.length - upperEndIndex) < amount) {
-          upperCodePointRanges = Arrays.copyOf(upperCodePointRanges, upperCodePointRanges.length + amount);
+      private void ensureDoubleByteCapacity() {
+        if (doubleByteEndIndex == doubleByteCodePointRanges.length) {
+          ensureDoubleByteCapacity(16);
         }
       }
 
-      CodePointRanges build() {
-        mergeLowerContiguousRanges();
-        mergeUpperContiguousRanges();
-        return new CodePointRanges(
-            Arrays.copyOf(lowerCodePointRanges, lowerEndIndex),
-            Arrays.copyOf(upperCodePointRanges, upperEndIndex));
+      private void ensureDoubleByteCapacity(final int amount) {
+        if ((doubleByteCodePointRanges.length - doubleByteEndIndex) < amount) {
+          doubleByteCodePointRanges = Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length + amount);
+        }
       }
 
-      private static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
+      private void ensureTripleByteCapacity() {
+        if (tripleByteEndIndex == tripleByteCodePointRanges.length) {
+          ensureTripleByteCapacity(16);
+        }
+      }
+
+      private void ensureTripleByteCapacity(final int amount) {
+        if ((tripleByteCodePointRanges.length - tripleByteEndIndex) < amount) {
+          tripleByteCodePointRanges = Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length + amount);
+        }
+      }
+
+      private static void unsignedIntegerBubbleSort(final int [] values, int fromIndex, int toIndex) {
         int temp;
         for (int i = fromIndex; i < toIndex; i++) {
           for (int j = fromIndex; j < toIndex - i - 1; j++) {
-            if ((0x00000000_ffffffffL & (long) values[j]) > (0x00000000_ffffffffL & (long) values[j + 1])) {
+            if ((0x00000000_ffffffffL & (long)values[j]) > (0x00000000_ffffffffL & (long)values[j + 1])) {
               // swap the elements
               temp = values[j];
               values[j] = values[j + 1];
@@ -801,60 +926,92 @@ public class TypeParser {
         }
       }
 
-      private void mergeLowerContiguousRanges() {
-        unsignedIntegerBubbleSort(lowerCodePointRanges, 0, lowerEndIndex);
-        int previousInclusiveFrom;
-        int previousInclusiveTo;
-        int currentInclusiveFrom;
-        int currentInclusiveTo;
-        int i = 0;
-        int j = 1;
-        while (j < lowerEndIndex) {
-          previousInclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[i]);
-          previousInclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[i]);
-          currentInclusiveFrom = RangedSubset.getInclusiveFrom(lowerCodePointRanges[j]);
-          currentInclusiveTo = RangedSubset.getInclusiveTo(lowerCodePointRanges[j]);
-          if (previousInclusiveTo >= currentInclusiveFrom) {
-            if (previousInclusiveTo <= currentInclusiveTo) {
-              lowerCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+      CodePointRanges build() {
+        {
+          Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < singleByteEndIndex) {
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeSingleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+              removeSingleByteElement(j);
+            } else {
+              ++i;
+              ++j;
             }
-            removeLowerElement(j);
-          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-            lowerCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-            removeLowerElement(j);
-          } else {
-            ++i;
-            ++j;
           }
         }
-      }
-
-      private void mergeUpperContiguousRanges() {
-        Arrays.sort(upperCodePointRanges, 0, upperEndIndex);
-        int previousInclusiveFrom;
-        int previousInclusiveTo;
-        int currentInclusiveFrom;
-        int currentInclusiveTo;
-        int i = 0;
-        int j = 1;
-        while (j < upperEndIndex) {
-          previousInclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[i]);
-          previousInclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[i]);
-          currentInclusiveFrom = RangedSubset.getInclusiveFrom(upperCodePointRanges[j]);
-          currentInclusiveTo = RangedSubset.getInclusiveTo(upperCodePointRanges[j]);
-          if (previousInclusiveTo >= currentInclusiveFrom) {
-            if (previousInclusiveTo <= currentInclusiveTo) {
-              upperCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+        {
+          unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, doubleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < doubleByteEndIndex) {
+            previousInclusiveFrom =RangedSubset. getInclusiveFrom(doubleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeDoubleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+              removeDoubleByteElement(j);
+            } else {
+              ++i;
+              ++j;
             }
-            removeUpperElement(j);
-          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-            upperCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-            removeUpperElement(j);
-          } else {
-            ++i;
-            ++j;
           }
         }
+        {
+          Arrays.sort(tripleByteCodePointRanges, 0, tripleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < tripleByteEndIndex) {
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeTripleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+              removeTripleByteElement(j);
+            } else {
+              ++i;
+              ++j;
+            }
+          }
+        }
+        return new CodePointRanges(
+            Arrays.copyOf(singleByteCodePointRanges, singleByteEndIndex),
+            Arrays.copyOf(doubleByteCodePointRanges, doubleByteEndIndex),
+            Arrays.copyOf(tripleByteCodePointRanges, tripleByteEndIndex));
       }
     }
   }
