@@ -77,7 +77,12 @@
               <target>
                 <mkdir dir="${project.build.directory}/generated-sources"/>
                 <mkdir dir="${project.build.directory}/generated-schema"/>
-                <copy file="${basedir}/src/main/unicode/bindings.xjb" tofile="${project.build.directory}/generated-schema/bindings.xjb"/>
+                <copy
+                  file="${basedir}/src/main/unicode/bindings.xjb"
+                  tofile="${project.build.directory}/generated-schema/bindings.xjb"/>
+                <copy
+                  file="${basedir}/src/main/java/land/artli/easytype/generator/Unicode.java"
+                  tofile="${project.build.directory}/classes/Unicode_Template.java"/>
               </target>
             </configuration>
           </execution>
