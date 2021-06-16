@@ -6,10 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import land.artli.easytype.generator.CodePointRanges.CodePointRangesBuilder;
 import land.artli.easytype.generator.Unicode.RangedSubset;
+import land.artli.easytype.generator.Unicode.RangedSubset.RangedSubsetBuilder;
 
 public class Main {
 
@@ -23,116 +25,133 @@ public class Main {
     final UnicodeGroupDataLoader loader = new UnicodeGroupDataLoader(inputXml);
 
     int i = 0;
-    final TreeMap<String, CodePointRangesBuilder> blockCodePointRangeBuilders = new TreeMap<>();
-    final TreeMap<String, CodePointRangesBuilder> scriptCodePointRangeBuilders = new TreeMap<>();
-    final TreeMap<UnicodeCategory, CodePointRangesBuilder> categoryCodePointRangeBuilders = new TreeMap<>();
-    final CodePointRangesBuilder whitespaceCodePointRangesBuilder = CodePointRanges.builder();
+    final TreeMap<String, RangedSubsetBuilder> blockCodePointRangeBuilders = new TreeMap<>();
+    final TreeMap<String, RangedSubsetBuilder> scriptCodePointRangeBuilders = new TreeMap<>();
+    final TreeMap<UnicodeCategory, RangedSubsetBuilder> categoryCodePointRangeBuilders = new TreeMap<>();
+    final RangedSubsetBuilder whitespaceRangedSubsetBuilder = RangedSubset.builder();
     for (UnicodeCodePoint c : loader.getUnicodeCodePoints()) {
       ++i;
       if (c.getCodePoint() == null) {
         continue;
       }
-      CodePointRangesBuilder codePointRangesBuilder;
+      RangedSubsetBuilder rangedSubsetBuilder;
       if (c.getBlock() != null) {
-        codePointRangesBuilder = blockCodePointRangeBuilders.get(c.getBlock());
-        if (codePointRangesBuilder == null) {
-          codePointRangesBuilder = CodePointRanges.builder();
-          blockCodePointRangeBuilders.put(c.getBlock(), codePointRangesBuilder);
+        rangedSubsetBuilder = blockCodePointRangeBuilders.get(c.getBlock());
+        if (rangedSubsetBuilder == null) {
+          rangedSubsetBuilder = RangedSubset.builder();
+          blockCodePointRangeBuilders.put(c.getBlock(), rangedSubsetBuilder);
         }
         if (c.hasCodePoint()) {
-          codePointRangesBuilder.addCodePoint(c.getCodePoint());
+          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
         } else if (c.hasCodePointRange()) {
-          codePointRangesBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
         }
       }
 
       if (c.getScript() != null) {
-        codePointRangesBuilder = scriptCodePointRangeBuilders.get(c.getScript());
-        if (codePointRangesBuilder == null) {
-          codePointRangesBuilder = CodePointRanges.builder();
-          scriptCodePointRangeBuilders.put(c.getScript(), codePointRangesBuilder);
+        rangedSubsetBuilder = scriptCodePointRangeBuilders.get(c.getScript());
+        if (rangedSubsetBuilder == null) {
+          rangedSubsetBuilder = RangedSubset.builder();
+          scriptCodePointRangeBuilders.put(c.getScript(), rangedSubsetBuilder);
         }
         if (c.hasCodePoint()) {
-          codePointRangesBuilder.addCodePoint(c.getCodePoint());
+          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
         } else if (c.hasCodePointRange()) {
-          codePointRangesBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
         }
       }
 
       final UnicodeCategory unicodeCategory = UnicodeCategory.of(c.getGeneralCategory());
       if (unicodeCategory != null) {
-        codePointRangesBuilder = categoryCodePointRangeBuilders.get(unicodeCategory);
-        if (codePointRangesBuilder == null) {
-          codePointRangesBuilder = CodePointRanges.builder();
-          categoryCodePointRangeBuilders.put(unicodeCategory, codePointRangesBuilder);
+        rangedSubsetBuilder = categoryCodePointRangeBuilders.get(unicodeCategory);
+        if (rangedSubsetBuilder == null) {
+          rangedSubsetBuilder = RangedSubset.builder();
+          categoryCodePointRangeBuilders.put(unicodeCategory, rangedSubsetBuilder);
         }
         if (c.hasCodePoint()) {
-          codePointRangesBuilder.addCodePoint(c.getCodePoint());
+          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
         } else if (c.hasCodePointRange()) {
-          codePointRangesBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
         }
       }
 
       if (c.isWhitespace()) {
         if (c.hasCodePoint()) {
-          whitespaceCodePointRangesBuilder.addCodePoint(c.getCodePoint());
+          whitespaceRangedSubsetBuilder.addCodePoint(c.getCodePoint());
         } else if (c.hasCodePointRange()) {
-          whitespaceCodePointRangesBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+          whitespaceRangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
         }
       }
     }
 
     final StringBuilder enumOtherValues = new StringBuilder();
-    enumOtherValues.append(LINE_SEPARATOR).append("    WHITESPACE(\"Whitespace\",");
-    final CodePointRanges whitespaceCodePointRanges = whitespaceCodePointRangesBuilder.build();
-    writeCodeRangeArrays(enumOtherValues, whitespaceCodePointRanges);
-    enumOtherValues.append(")").append(LINE_SEPARATOR).append(LINE_SEPARATOR);
+    enumOtherValues.append(LINE_SEPARATOR).append("    public static final Other WHITESPACE = new Other(")
+        .append(LINE_SEPARATOR)
+        .append("\"WHITESPACE\", \"Whitespace\",");
+    final RangedSubset whitespaceRangedSubset = whitespaceRangedSubsetBuilder.build();
+    writeCodeRangeArrays(enumOtherValues, whitespaceRangedSubset);
+    enumOtherValues.append(");");
 
     final StringBuilder enumCategoryValues = new StringBuilder();
     for (UnicodeCategory category : UnicodeCategory.values()) {
       enumCategoryValues.append(LINE_SEPARATOR).append("    /** ").append(category.getAbbreviation()).append(" – ")
           .append(category.getDescription()).append(" */")
-          .append(LINE_SEPARATOR).append("    ").append(category.name())
-          .append("(\"").append(category.getAbbreviation())
-          .append("\", \"").append(category.getFullName().replace('_', ' '))
+          .append(LINE_SEPARATOR).append("    public static final Category ").append(category.name())
+          .append(" = new Category(")
+          .append(LINE_SEPARATOR).append("      \"").append(category.name())
+          .append("\", \"").append(category.getFullName())
+          .append("\", \"").append(category.getAbbreviation().replace('_', ' '))
           .append("\",");
       final UnicodeCategory[] compositeCategories = category.isComposite() ? category.getCompositeCategories() : new UnicodeCategory[]{category};
-      final CodePointRangesBuilder codePointRangesBuilder = CodePointRanges.builder();
+      final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
       for (UnicodeCategory compositeCategory : compositeCategories) {
         if (categoryCodePointRangeBuilders.containsKey(compositeCategory)) {
-          final CodePointRanges codePointRanges = categoryCodePointRangeBuilders.get(compositeCategory).build();
-          codePointRangesBuilder.addCodePointRanges(codePointRanges.getSingleByteCodePointRanges());
-          codePointRangesBuilder.addCodePointRanges(codePointRanges.getDoubleByteCodePointRanges());
-          codePointRangesBuilder.addCodePointRanges(codePointRanges.getTripleByteCodePointRanges());
+          final RangedSubset rangedSubset = categoryCodePointRangeBuilders.get(compositeCategory).build();
+          rangedSubsetBuilder.addRangedSubset(rangedSubset);
         }
       }
-      final CodePointRanges codePointRanges = codePointRangesBuilder.build();
-      writeCodeRangeArrays(enumCategoryValues, codePointRanges);
-      enumCategoryValues.append("),");
+      final RangedSubset rangedSubset = rangedSubsetBuilder.build();
+      writeCodeRangeArrays(enumCategoryValues, rangedSubset);
+      enumCategoryValues.append(");");
     }
 
     final StringBuilder enumScriptValues = new StringBuilder();
     for (String script : scriptCodePointRangeBuilders.keySet()) {
-      enumScriptValues.append(LINE_SEPARATOR).append("    ").append(script.toUpperCase()).append("(\"").append(script).append("\",");
-      final CodePointRanges scriptCodePointRanges = scriptCodePointRangeBuilders.get(script).build();
-      writeCodeRangeArrays(enumScriptValues, scriptCodePointRanges);
-      enumScriptValues.append("),");
+      enumScriptValues.append(LINE_SEPARATOR).append("    public static final Script ")
+          .append(script.toUpperCase()).append(" = new Script(")
+          .append(LINE_SEPARATOR).append("      \"")
+          .append(script.toUpperCase()).append("\", \"")
+          .append(script).append("\",");
+      final RangedSubset scriptRangedSubset = scriptCodePointRangeBuilders.get(script).build();
+      writeCodeRangeArrays(enumScriptValues, scriptRangedSubset);
+      enumScriptValues.append(");");
     }
 
     final StringBuilder enumBlockValues = new StringBuilder();
     for (String block : blockCodePointRangeBuilders.keySet()) {
-      enumBlockValues.append(LINE_SEPARATOR).append("    ").append(block.toUpperCase()).append("(\"").append(block).append("\",");
-      final CodePointRanges blockCodePointRanges = blockCodePointRangeBuilders.get(block).build();
-      writeCodeRangeArrays(enumBlockValues, blockCodePointRanges);
-      enumBlockValues.append("),");
+      enumBlockValues.append(LINE_SEPARATOR).append("    public static final Block ")
+          .append(block.toUpperCase()).append(" = new Block(")
+          .append(LINE_SEPARATOR).append("      \"")
+          .append(block.toUpperCase()).append("\", \"")
+          .append(block).append("\",");
+      final RangedSubset blockRangedSubset = blockCodePointRangeBuilders.get(block).build();
+      writeCodeRangeArrays(enumBlockValues, blockRangedSubset);
+      enumBlockValues.append(");");
     }
 
     final InputStream unicodeTemplateStream = Main.class.getClassLoader().getResourceAsStream("Unicode_Template.java");
     final String unicodeTemplate = new BufferedReader(new InputStreamReader(unicodeTemplateStream))
         .lines().collect(Collectors.joining("\n"));
 
+    final String generatedMessage = String.format("""
+            @javax.annotation.processing.Generated(
+                comments = "This file is partly generated from the Unicode file 'ucd.all.grouped.xml'",
+                date="%tFT%tT",
+                value = "land.artli:easy-type-unicode-code-generator")""", LocalDate.now(), LocalTime.now());
+
     final String unicodeFile = unicodeTemplate
         .replace("package land.artli.easytype.generator;", "package land.artli.easytype;")
+        .replace("// INSERT-GENERATED-MESSAGE", generatedMessage)
         .replace("    // INSERT-OTHER-VALUES-HERE", enumOtherValues.toString())
         .replace("    // INSERT-CATEGORY-VALUES-HERE", enumCategoryValues.toString())
         .replace("    // INSERT-SCRIPT-VALUES-HERE", enumScriptValues.toString())
@@ -149,11 +168,11 @@ public class Main {
 
   }
 
-  private static void writeCodeRangeArrays(final StringBuilder s, final CodePointRanges codePointRanges) {
+  private static void writeCodeRangeArrays(final StringBuilder s, final RangedSubset rangedSubset) {
 
-    final char[] singleByteCodePointRanges = codePointRanges.getSingleByteCodePointRanges();
+    final char[] singleByteCodePointRanges = rangedSubset.getSingleByteCodePointRanges();
     if (singleByteCodePointRanges.length == 0) {
-      s.append(LINE_SEPARATOR).append("        new char [0],");
+      s.append(LINE_SEPARATOR).append("        EMPTY_CHAR_ARRAY,");
     } else {
       s.append(LINE_SEPARATOR).append("        new char [] {");
       for (int j = 0; j < singleByteCodePointRanges.length; ++j) {
@@ -167,9 +186,9 @@ public class Main {
       s.setLength(s.length() - 1);
       s.append("},");
     }
-    final int[] doubleByteCodePointRanges = codePointRanges.getDoubleByteCodePointRanges();
+    final int[] doubleByteCodePointRanges = rangedSubset.getDoubleByteCodePointRanges();
     if (doubleByteCodePointRanges.length == 0) {
-      s.append(LINE_SEPARATOR).append("        new int [0],");
+      s.append(LINE_SEPARATOR).append("        EMPTY_INT_ARRAY,");
     } else {
       s.append(LINE_SEPARATOR).append("        new int [] {");
       for (int j = 0; j < doubleByteCodePointRanges.length; ++j) {
@@ -183,9 +202,9 @@ public class Main {
       s.setLength(s.length() - 1);
       s.append("},");
     }
-    final long[] tripleByteCodePointRanges = codePointRanges.getTripleByteCodePointRanges();
+    final long[] tripleByteCodePointRanges = rangedSubset.getTripleByteCodePointRanges();
     if (tripleByteCodePointRanges.length == 0) {
-      s.append(LINE_SEPARATOR).append("        new long [0]");
+      s.append(LINE_SEPARATOR).append("        EMPTY_LONG_ARRAY");
     } else {
       s.append(LINE_SEPARATOR).append("        new long [] { ");
       for (int j = 0; j < tripleByteCodePointRanges.length; ++j) {
