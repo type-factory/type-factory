@@ -465,23 +465,15 @@ public class TypeParser {
 
   static class CodePointConversions {
 
-    final static int[] SLOT_SIZES = {0, 7, 11, 17, 37, 67, 101, 211, 401, 601, 809, 1009, 1511, 2003, 2503, 3001, 4001, 6007, 7919};
-
     /**
      * Hash-map of Character categories to code-point arrays:
      */
-//    final IntToIntArrayHashMap categoryConversionToCodePoint;
+    final IntToIntArrayHashMap categoryConversionToCodePoint;
 
     /**
-     * Array of Character categories to code-point arrays:
-     * <ul>
-     *   <li>first index/dimension is the int value from the {@link Character} categories like {@link Character#UPPERCASE_LETTER}, etc.</li>
-     *   <li>second index/dimension is the array of code-points to convert to.</li>
-     * </ul>
+     * Hash-map of code-points to code-point arrays:
      */
-    private int[][] categoryConversionToCodePoint;
-
-    final CodePointConversion[][] codePointConversions;
+    final IntToIntArrayHashMap codePointConversions;
 
     final int maxToCodePointsLength;
 
@@ -490,95 +482,38 @@ public class TypeParser {
     }
 
     private CodePointConversions(
-        final int[][] categoryConversionToCodePoint,
-        final CodePointConversion[] codePointConversions) {
+        final IntToIntArrayHashMap categoryConversionToCodePoint,
+        final IntToIntArrayHashMap codePointConversions) {
       this.categoryConversionToCodePoint = categoryConversionToCodePoint;
-      if (codePointConversions == null || codePointConversions.length == 0) {
-        this.codePointConversions = null;
-        this.maxToCodePointsLength = 0;
-      } else {
-        int slots = determineNumberOfSlots(codePointConversions);
-        this.codePointConversions = new CodePointConversion[slots][];
-        int maxToCodePointsLength = 0;
-        for (CodePointConversion codePointConversion : codePointConversions) {
-          maxToCodePointsLength = Math.max(maxToCodePointsLength, codePointConversion.toCodePoints.length);
-          addConversion(this.codePointConversions, codePointConversion);
-        }
-        this.maxToCodePointsLength = maxToCodePointsLength;
+      this.codePointConversions = codePointConversions;
+      int max = 0;
+      if (categoryConversionToCodePoint != null && !categoryConversionToCodePoint.isEmpty()) {
+        max = Math.max(max, categoryConversionToCodePoint.getMaxValueArrayLength());
       }
+      if (codePointConversions != null && !codePointConversions.isEmpty()) {
+        max = Math.max(max, codePointConversions.getMaxValueArrayLength());
+      }
+      this.maxToCodePointsLength = max;
     }
 
-    private static int determineNumberOfSlots(final CodePointConversion[] codePointConversions) {
-      final int target = codePointConversions.length;
-
-      int low = 0;
-      int high = SLOT_SIZES.length - 1;
-      while (low <= high) {
-        int midA = (low + high) >>> 1;
-        int midB = midA + 1;
-        int midValA = SLOT_SIZES[midA];
-        int midValB = midB < SLOT_SIZES.length ? SLOT_SIZES[midB] : midValA + 1;
-
-        if (target > midValB) {
-          low = midA + 1;
-        } else if (target < midValA) {
-          high = midA - 1;
-        } else {
-          return Math.max(7, midValA); // key found
-        }
-      }
-      return Math.max(7, (int) (codePointConversions.length * 0.8)); // key not found.
-    }
-
-
-    private static void addConversion(
-        final CodePointConversion[][] codePointConversions,
-        final CodePointConversion codePointConversion) {
-      final int slot = codePointConversion.fromCodePoint % codePointConversions.length;
-      CodePointConversion[] buckets = codePointConversions[slot];
-      if (buckets == null) {
-        buckets = new CodePointConversion[4];
-        codePointConversions[slot] = buckets;
-      }
-      int i = 0;
-      for (; i < buckets.length && buckets[i] != null; ++i) {
-        if (buckets[i].fromCodePoint == codePointConversion.fromCodePoint) {
-          buckets[i] = codePointConversion;
-          return;
-        }
-      }
-      if (i == buckets.length) {
-        buckets = Arrays.copyOf(buckets, buckets.length + 4);
-        codePointConversions[slot] = buckets;
-      }
-      buckets[i] = codePointConversion;
-    }
-
-    int [] getCodePointConversion(final int fromCodePoint) {
-      int [] toCodePoints;
+    int[] getCodePointConversion(final int fromCodePoint) {
       if (categoryConversionToCodePoint != null) {
-        toCodePoints = categoryConversionToCodePoint[Character.getType(fromCodePoint)];
+        final int[] toCodePoints = categoryConversionToCodePoint.get(Character.getType(fromCodePoint));
         if (toCodePoints != null) {
           return toCodePoints;
         }
       }
       if (codePointConversions != null) {
-        final int slot = fromCodePoint % codePointConversions.length;
-        CodePointConversion[] buckets = codePointConversions[slot];
-        if (buckets == null) {
-          return null;
-        }
-        for (int i = 0; i < buckets.length && buckets[i] != null; ++i) {
-          if (buckets[i].fromCodePoint == fromCodePoint) {
-            return buckets[i].toCodePoints;
-          }
+        final int[] toCodePoints = codePointConversions.get(fromCodePoint);
+        if (toCodePoints != null) {
+          return toCodePoints;
         }
       }
       return null;
     }
 
     int[] convertCodePoint(final int fromCodePoint, final int[] useThisArrayWhenNoConversionRequired) {
-      int [] toCodePoints = getCodePointConversion(fromCodePoint);
+      int[] toCodePoints = getCodePointConversion(fromCodePoint);
       if (toCodePoints == null) {
         useThisArrayWhenNoConversionRequired[0] = fromCodePoint;
         return useThisArrayWhenNoConversionRequired;
@@ -591,16 +526,10 @@ public class TypeParser {
      */
     static class CodePointConversionsBuilder {
 
-      /**
-       * Array of Character categories to code-point arrays:
-       * <ul>
-       *   <li>first index/dimension is the int value from the {@link Character} categories like {@link Character#UPPERCASE_LETTER}, etc.</li>
-       *   <li>second index/dimension is the array of code-points to convert to.</li>
-       * </ul>
-       */
-      private int[][] categoryConversionToCodePoint = null;
+      private IntToIntArrayHashMap categoryConversionToCodePoint = new IntToIntArrayHashMap();
 
-      CodePointConversion[] codePointConversions = new CodePointConversion[8];
+      private IntToIntArrayHashMap codePointConversions = new IntToIntArrayHashMap();
+
       private int endIndex = 0;
 
       private CodePointConversionsBuilder() {
@@ -619,11 +548,8 @@ public class TypeParser {
       }
 
       public CodePointConversionsBuilder addCategoryConversion(final Category category, final int[] toCodePoints) {
-        if (categoryConversionToCodePoint == null) {
-          categoryConversionToCodePoint = new int[Category.MAX_CHARACTER_CATEGORY_VALUE + 1][];
-        }
         for (int characterCategory : category.characterCategories) {
-          categoryConversionToCodePoint[characterCategory] = toCodePoints;
+          categoryConversionToCodePoint.put(characterCategory, toCodePoints);
         }
         return this;
       }
@@ -695,15 +621,13 @@ public class TypeParser {
       }
 
       void addCodePointConversion(final int fromCodePoint, final int[] toCodePoints) {
-        if (endIndex == codePointConversions.length) {
-          codePointConversions = Arrays.copyOf(codePointConversions, Math.round(codePointConversions.length * 1.5F));
-        }
-        codePointConversions[endIndex] = new CodePointConversion(fromCodePoint, toCodePoints);
-        endIndex++;
+        codePointConversions.put(fromCodePoint, toCodePoints);
       }
 
       CodePointConversions build() {
-        return new CodePointConversions(categoryConversionToCodePoint, Arrays.copyOf(codePointConversions, endIndex));
+        return new CodePointConversions(
+            categoryConversionToCodePoint.isEmpty() ? null : categoryConversionToCodePoint,
+            codePointConversions.isEmpty() ? null : codePointConversions);
       }
     }
   }
@@ -1220,100 +1144,134 @@ public class TypeParser {
     private static final float LOAD_FACTOR = 0.75F;
 
     /**
-     * We will re-hash the map its size exceeds this threshold.  (The
-     * value of this field is (int)(capacity * loadFactor).)
+     * Use and internal struct-like class to ensure an atomic transfer after a rehash.
+     */
+    private static class HashTable {
+
+      /**
+       * 2-dimensional array for the keys which is aligned with the values array:
+       * <ul>
+       *   <li>first index/dimension to get the hash bucket containing the map keys.</li>
+       *   <li>second index/dimension to get the key values.</li>
+       * </ul>
+       */
+      private int[][] keys;
+
+      /**
+       * 2-dimensional array for the values which is aligned with the key array. It appears to be 3-dimensional but that is because the map-values are
+       * actually int-arrays:
+       * <ul>
+       *   <li>first index/dimension to get the hash bucket containing the map values.</li>
+       *   <li>second index/dimension to get the value objects which are int-arrays.</li>
+       * </ul>
+       */
+      private int[][][] values;
+    }
+
+    /**
+     * We will re-hash the map its size exceeds this threshold.  (The value of this field is (int)(capacity * loadFactor).)
      *
      * @serial
      */
     private int threshold;
 
-    /**
-     * 2-dimensional array for the keys which is aligned with the values array:
-     * <ul>
-     *   <li>first index/dimension to get the hash bucket containing the map keys.</li>
-     *   <li>second index/dimension to get the key values.</li>
-     * </ul>
-     */
-    private int[][] keys;
+    private HashTable hashTable;
 
-    /**
-     * 2-dimensional array for the values which is aligned with the key array. It appears to be 3-dimensional
-     * but that is because the map-values are actually int-arrays:
-     * <ul>
-     *   <li>first index/dimension to get the hash bucket containing the map values.</li>
-     *   <li>second index/dimension to get the value objects which are int-arrays.</li>
-     * </ul>
-     */
-    private int[][][] values;
+    private int maxValueArrayLength = 0;
 
     private int size;
 
-    public IntToIntArrayHashMap() {
-      this.keys = new int[20][];
-      this.values = new int[20][][];
-      threshold = (int) (this.keys.length * LOAD_FACTOR);
+    IntToIntArrayHashMap() {
+      final int initialCapacity = 20;
+      this.hashTable = new HashTable();
+      this.hashTable.keys = new int[initialCapacity][];
+      this.hashTable.values = new int[initialCapacity][][];
+      this.threshold = (int) (this.hashTable.keys.length * LOAD_FACTOR);
+
+      threshold = (int) (initialCapacity * LOAD_FACTOR);
     }
 
     /**
      * Return the number of entries in this hash map.
      *
-     * @return  the number of keys in this hash map.
+     * @return the number of keys in this hash map.
      */
-    public int size() {
+    int size() {
       return size;
     }
 
     /**
      * Returns {@code true} if there are no entries in this hash map and {@code false} otherwise.
      *
-     * @return  {@code true} if there are no entries in this hash map and {@code false} otherwise.
+     * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
      */
-    public boolean isEmpty() {
+    boolean isEmpty() {
       return size == 0;
     }
 
-    void put(final int key, final int [] value) {
-      if (threshold < (int) (this.keys.length * LOAD_FACTOR)) {
-        rehash();
-      }
-      put(key, value, keys, values);
-      ++size;
+    int getMaxValueArrayLength() {
+      return maxValueArrayLength;
     }
 
-    int [] get(final int key) {
-      int hashIndex = (key & 0x7FFFFFFF) % keys.length;
-      int [] bucket = keys[hashIndex];
-      for (int bucketIndex = 0; bucketIndex < bucket.length; ++bucketIndex) {
-        if (bucket[bucketIndex] == key) {
-          return values[hashIndex][bucketIndex];
+    int[] get(final int key) {
+      int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+      int[] bucket = hashTable.keys[hashIndex];
+      if (bucket != null) {
+        for (int bucketIndex = 0; bucketIndex < bucket.length; ++bucketIndex) {
+          if (bucket[bucketIndex] == key) {
+            return hashTable.values[hashIndex][bucketIndex];
+          }
         }
       }
       return null;
     }
 
-    void rehash() {
-      final int newCapacity = (int)(keys.length * 1.5F + 1);
-      int[][] newKeys = new int[newCapacity][];
-      int[][][] newValues = new int[newCapacity][][];
-      for (int i = 0; i < keys.length; ++i) {
-        if (keys[i] != null) {
-          for (int j = 0; j < keys[i].length; ++j) {
-            put(keys[i][j], values[i][j], newKeys, newValues);
+    void put(final int key, final int[] value) {
+      if (value == null) {
+        return;
+      }
+      if (threshold < (int) (size * LOAD_FACTOR)) {
+        rehash();
+      }
+      put(key, value, hashTable);
+      maxValueArrayLength = Math.max(maxValueArrayLength, value.length);
+      ++size;
+    }
+
+    private static void put(final int key, final int[] value, final HashTable hashTable) {
+      int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+      int[] bucket = hashTable.keys[hashIndex];
+      if (bucket == null) {
+        hashTable.keys[hashIndex] = new int[]{key};
+        hashTable.values[hashIndex] = new int[][]{value};
+      } else {
+        int bucketIndex = 0;
+        while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
+          ++bucketIndex;
+        }
+        if (bucketIndex == bucket.length) {
+          hashTable.keys[hashIndex] = Arrays.copyOf(hashTable.keys[hashIndex], bucketIndex + 1);
+          hashTable.values[hashIndex] = Arrays.copyOf(hashTable.values[hashIndex], bucketIndex + 1);
+        }
+        hashTable.keys[hashIndex][bucketIndex] = key;
+        hashTable.values[hashIndex][bucketIndex] = value;
+      }
+    }
+
+    private void rehash() {
+      final int newCapacity = (int) (hashTable.keys.length * 1.5F + 1);
+      threshold = (int) (newCapacity * LOAD_FACTOR);
+      final HashTable newHashTable = new HashTable();
+      newHashTable.keys = new int[newCapacity][];
+      newHashTable.values = new int[newCapacity][][];
+      for (int i = 0; i < hashTable.keys.length; ++i) {
+        if (hashTable.keys[i] != null) {
+          for (int j = 0; j < hashTable.keys[i].length; ++j) {
+            put(hashTable.keys[i][j], hashTable.values[i][j], newHashTable);
           }
         }
       }
-      this.keys = newKeys;
-      this.values = newValues;
-    }
-
-    static void put(final int key, final int [] value, final int[][] keys, final int[][][] values) {
-      int hashIndex = (key & 0x7FFFFFFF) % keys.length;
-      int [] bucket = keys[hashIndex];
-      int bucketIndex = 0;
-      while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
-        ++bucketIndex;
-      }
-      values[hashIndex][bucketIndex] = value;
+      this.hashTable = newHashTable;
     }
   }
 
