@@ -3,11 +3,12 @@ package land.artli.easytype;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @javax.annotation.processing.Generated(
     comments = "This file is partly generated from the Unicode file 'ucd.all.grouped.xml'",
-    date="2021-06-16T11:27:22",
+    date="2021-06-26T21:59:04",
     value = "land.artli:easy-type-unicode-code-generator")
 public final class Unicode {
 
@@ -18,511 +19,6 @@ public final class Unicode {
   private Unicode() {
     // don't instantiate - use static values and methods
   }
-
-  public interface Subset {
-
-    boolean isInSubset(final int codePoint);
-
-    default boolean isInSubset(final char ch) {
-      return isInSubset((int)ch);
-    }
-
-    default boolean isNotInSubset(final int codePoint) {
-      return !isInSubset(codePoint);
-    }
-
-    default boolean isNotInSubset(final char ch) {
-      return !isInSubset((int)ch);
-    }
-
-    static CompositeSubset of(final Subset... subsets) {
-      if (subsets == null || subsets.length == 0) {
-        return Collections::emptyList;
-      }
-      return () -> List.of(subsets);
-    }
-  }
-
-  interface CompositeSubset extends Subset {
-
-    Collection<Subset> getSubsets();
-
-    default boolean isInSubset(final int codePoint) {
-      for (Subset subset : getSubsets()) {
-        if (subset.isInSubset(codePoint)) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-
-  static class RangedSubset implements Subset {
-
-    protected final String name;
-    protected final String alias;
-    protected final char[] singleByteCodePointRanges;
-    protected final int[] doubleByteCodePointRanges;
-    protected final long[] tripleByteCodePointRanges;
-    protected final int size;
-
-    protected RangedSubset(
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      this("", "", singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
-    }
-
-    private RangedSubset(
-        final String name,
-        final String alias,
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      this.name = name;
-      this.alias = alias;
-      this.singleByteCodePointRanges = singleByteCodePointRanges == null ? EMPTY_CHAR_ARRAY : singleByteCodePointRanges;
-      this.doubleByteCodePointRanges = doubleByteCodePointRanges == null ? EMPTY_INT_ARRAY : doubleByteCodePointRanges;
-      this.tripleByteCodePointRanges = tripleByteCodePointRanges == null ? EMPTY_LONG_ARRAY : tripleByteCodePointRanges;
-      this.size = this.singleByteCodePointRanges.length
-          + this.doubleByteCodePointRanges.length
-          + this.tripleByteCodePointRanges.length;
-    }
-
-    public static RangedSubsetBuilder builder() {
-      return new RangedSubsetBuilder();
-    }
-
-    int size() {
-      return size;
-    }
-
-    boolean isEmpty() {
-      return size() == 0;
-    }
-
-    boolean isNotEmpty() {
-      return !isEmpty();
-    }
-
-    /**
-     * Returns an array of 2-byte code-point ranges stored as char values. Each range comprises an inclusive-from value and an inclusive-to value. The
-     * most-significant 8 bits hold the inclusive-from value. The least-significant 8 bits hold the inclusive-to value. The returned array must be
-     * sorted from low-to-high.
-     */
-    char[] getSingleByteCodePointRanges() {
-      // Protect out data by returning a copy
-      return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length);
-    }
-
-    /**
-     * Returns an array of 2-byte code-point ranges stored as integer values. Each range comprises an inclusive-from value and an inclusive-to value.
-     * The most-significant 16 bits hold the inclusive-from value. The least-significant 16 bits hold the inclusive-to value. The returned array must
-     * be sorted from low-to-high as unsigned-integers.
-     */
-    int[] getDoubleByteCodePointRanges() {
-      // Protect out data by returning a copy
-      return Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length);
-    }
-
-    /**
-     * Returns an array of 3-byte code-point ranges stored as long values. Each range comprises an inclusive-from value and an inclusive-to value. The
-     * most-significant 32 bits hold the inclusive-from value. The least-significant 32 bits hold the inclusive-to value. The returned array must be
-     * sorted from low-to-high.
-     */
-    long[] getTripleByteCodePointRanges() {
-      // Protect out data by returning a copy
-      return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getAlias() {
-      return alias;
-    }
-
-    public boolean isInSubset(final int codePoint) {
-      if (codePoint < 0x100) {
-        if (singleByteCodePointRanges.length == 0 ||
-            codePoint < getInclusiveFrom(singleByteCodePointRanges[0]) ||
-            codePoint > getInclusiveTo(singleByteCodePointRanges[singleByteCodePointRanges.length - 1])) {
-          return false; // not found, outside of range
-        }
-        // Try to find using a binary search
-        int low = 0;
-        int high = singleByteCodePointRanges.length - 1;
-        while (low <= high) {
-          final int mid = (low + high) >>> 1;
-          final int inclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[mid]);
-          final int inclusiveTo = getInclusiveTo(singleByteCodePointRanges[mid]);
-          if (codePoint > inclusiveTo) {
-            low = mid + 1;
-          } else if (codePoint < inclusiveFrom) {
-            high = mid - 1;
-          } else {
-            return true; // found
-          }
-        }
-      } else if (codePoint < 0x10000) {
-        if (doubleByteCodePointRanges.length == 0 ||
-            codePoint < getInclusiveFrom(doubleByteCodePointRanges[0]) ||
-            codePoint > getInclusiveTo(doubleByteCodePointRanges[doubleByteCodePointRanges.length - 1])) {
-          return false; // not found, outside of range
-        }
-        // Try to find using a binary search
-        int low = 0;
-        int high = doubleByteCodePointRanges.length - 1;
-        while (low <= high) {
-          final int mid = (low + high) >>> 1;
-          final int inclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[mid]);
-          final int inclusiveTo = getInclusiveTo(doubleByteCodePointRanges[mid]);
-          if (codePoint > inclusiveTo) {
-            low = mid + 1;
-          } else if (codePoint < inclusiveFrom) {
-            high = mid - 1;
-          } else {
-            return true; // found
-          }
-        }
-      } else {
-        if (tripleByteCodePointRanges.length == 0 ||
-            codePoint < getInclusiveFrom(tripleByteCodePointRanges[0]) ||
-            codePoint > getInclusiveTo(tripleByteCodePointRanges[tripleByteCodePointRanges.length - 1])) {
-          return false; // not found, outside of range
-        }
-        // Try to find using a binary search
-        int low = 0;
-        int high = tripleByteCodePointRanges.length - 1;
-        while (low <= high) {
-          final int mid = (low + high) >>> 1;
-          final long midVal = tripleByteCodePointRanges[mid];
-          final int inclusiveFrom = getInclusiveFrom(midVal);
-          final int inclusiveTo = getInclusiveTo(midVal);
-          if (codePoint > inclusiveTo) {
-            low = mid + 1;
-          } else if (codePoint < inclusiveFrom) {
-            high = mid - 1;
-          } else {
-            return true; // found
-          }
-        }
-      }
-      return false; // not found
-    }
-
-    @Override
-    public String toString() {
-      final StringBuilder s = new StringBuilder();
-      s.append(name).append('[');
-      for (char singleByteCodePointRange : singleByteCodePointRanges) {
-        s.append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('.').append('.')
-            .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
-      }
-      for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
-        s.append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('.').append('.')
-            .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
-      }
-      for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
-        s.append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('.').append('.')
-            .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
-      }
-      s.setLength(s.length() - 1); // remove final comma
-      s.append(']');
-      return s.toString();
-    }
-
-    static int getInclusiveFrom(final char codePointRange) {
-      return codePointRange >>> 8;
-    }
-
-    static int getInclusiveTo(final char codePointRange) {
-      return codePointRange & 0x00_ff;
-    }
-
-    static int getInclusiveFrom(final int codePointRange) {
-      return codePointRange >>> 16;
-    }
-
-    static int getInclusiveTo(final int codePointRange) {
-      return codePointRange & 0x0000_ffff;
-    }
-
-    static int getInclusiveFrom(final long codePointRange) {
-      return (int) (codePointRange >>> 32);
-    }
-
-    static int getInclusiveTo(final long codePointRange) {
-      return (int) (codePointRange & 0x00000000_ffffffffL);
-    }
-
-    static char rangeToChar(final int inclusiveFrom, final int inclusiveTo) {
-      return (char) ((inclusiveFrom << 8) | (inclusiveTo & 0x00_ff));
-    }
-
-    static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
-      return (inclusiveFrom << 16) | (inclusiveTo & 0x0000_ffff);
-    }
-
-    static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
-      return (((long) inclusiveFrom) << 32) | inclusiveTo;
-    }
-
-    static class RangedSubsetBuilder {
-
-      private char [] singleByteCodePointRanges = new char[16];
-      private int [] doubleByteCodePointRanges = new int[16];
-      private long [] tripleByteCodePointRanges = new long[16];
-      private int singleByteEndIndex = 0;
-      private int doubleByteEndIndex = 0;
-      private int tripleByteEndIndex = 0;
-
-      void addChar(final char ch) {
-        addCharRange(ch, ch);
-      }
-
-      void addChars(final char... chars) {
-        if (chars != null) {
-          ensureDoubleByteCapacity(chars.length);
-          for (int i = 0; i < chars.length; ++i) {
-            addChar(chars[i]);
-          }
-        }
-      }
-
-      void addCharRange(final char inclusiveFrom, final char inclusiveTo) {
-        addCodePointRange(inclusiveFrom & 0x0000_ffff, inclusiveTo & 0x0000_ffff);
-      }
-
-      void addCodePoint(final int codePoint) {
-        addCodePointRange(codePoint, codePoint);
-      }
-
-      void addCodePoints(final int ... codePoints) {
-        if (codePoints != null) {
-          ensureDoubleByteCapacity(codePoints.length);
-          for (int i = 0; i < codePoints.length; ++i) {
-            addCodePoint(codePoints[i]);
-          }
-        }
-      }
-
-      void addRangedSubset(final RangedSubset subset) {
-        if (subset != null && subset.isNotEmpty()) {
-          final char[] singleByteRanges = subset.getSingleByteCodePointRanges();
-          ensureSingleByteCapacity(singleByteRanges.length);
-          for (char c : singleByteRanges) {
-            addCodePointRange(
-                RangedSubset.getInclusiveFrom(c),
-                RangedSubset.getInclusiveTo(c));
-          }
-          final int[] doubleByteRanges = subset.getDoubleByteCodePointRanges();
-          ensureDoubleByteCapacity(doubleByteRanges.length);
-          for (int j : doubleByteRanges) {
-            addCodePointRange(
-                RangedSubset.getInclusiveFrom(j),
-                RangedSubset.getInclusiveTo(j));
-          }
-          final long[] tripleByteRanges = subset.getTripleByteCodePointRanges();
-          ensureTripleByteCapacity(tripleByteRanges.length);
-          for (long l : tripleByteRanges) {
-            addCodePointRange(
-                RangedSubset.getInclusiveFrom(l),
-                RangedSubset.getInclusiveTo(l));
-          }
-        }
-      }
-
-      void addCodePointRange(int inclusiveFrom, int inclusiveTo) {
-        if (inclusiveTo > 0xffff) {
-          if (inclusiveFrom > 0xffff) {
-            ensureTripleByteCapacity();
-            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
-            ++tripleByteEndIndex;
-            return;
-          } else {
-            ensureTripleByteCapacity();
-            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
-            ++tripleByteEndIndex;
-            inclusiveTo = 0xffff;
-          }
-        }
-
-        if (inclusiveTo > 0xff) {
-          if (inclusiveFrom > 0xff) {
-            ensureDoubleByteCapacity();
-            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
-            ++doubleByteEndIndex;
-            return;
-          } else {
-            ensureDoubleByteCapacity();
-            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(0x100, inclusiveTo);
-            ++doubleByteEndIndex;
-            inclusiveTo = 0xff;
-          }
-        }
-
-        ensureSingleByteCapacity();
-        singleByteCodePointRanges[singleByteEndIndex] = RangedSubset.rangeToChar(inclusiveFrom, inclusiveTo);
-        ++singleByteEndIndex;
-      }
-
-      private void removeSingleByteElement(final int index) {
-        System.arraycopy(singleByteCodePointRanges, index + 1, singleByteCodePointRanges, index, singleByteCodePointRanges.length - index - 1);
-        --singleByteEndIndex;
-      }
-
-      private void removeDoubleByteElement(final int index) {
-        System.arraycopy(doubleByteCodePointRanges, index + 1, doubleByteCodePointRanges, index, doubleByteCodePointRanges.length - index - 1);
-        --doubleByteEndIndex;
-      }
-
-      private void removeTripleByteElement(final int index) {
-        System.arraycopy(tripleByteCodePointRanges, index + 1, tripleByteCodePointRanges, index, tripleByteCodePointRanges.length - index - 1);
-        --tripleByteEndIndex;
-      }
-
-      private void ensureSingleByteCapacity() {
-        if (singleByteEndIndex == singleByteCodePointRanges.length) {
-          ensureSingleByteCapacity(16);
-        }
-      }
-
-      private void ensureSingleByteCapacity(final int amount) {
-        if ((singleByteCodePointRanges.length - singleByteEndIndex) < amount) {
-          singleByteCodePointRanges = Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length + amount);
-        }
-      }
-
-      private void ensureDoubleByteCapacity() {
-        if (doubleByteEndIndex == doubleByteCodePointRanges.length) {
-          ensureDoubleByteCapacity(16);
-        }
-      }
-
-      private void ensureDoubleByteCapacity(final int amount) {
-        if ((doubleByteCodePointRanges.length - doubleByteEndIndex) < amount) {
-          doubleByteCodePointRanges = Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length + amount);
-        }
-      }
-
-      private void ensureTripleByteCapacity() {
-        if (tripleByteEndIndex == tripleByteCodePointRanges.length) {
-          ensureTripleByteCapacity(16);
-        }
-      }
-
-      private void ensureTripleByteCapacity(final int amount) {
-        if ((tripleByteCodePointRanges.length - tripleByteEndIndex) < amount) {
-          tripleByteCodePointRanges = Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length + amount);
-        }
-      }
-
-      private static void unsignedIntegerBubbleSort(final int [] values, int fromIndex, int toIndex) {
-        int temp;
-        for (int i = fromIndex; i < toIndex; i++) {
-          for (int j = fromIndex; j < toIndex - i - 1; j++) {
-            if ((0x00000000_ffffffffL & (long)values[j]) > (0x00000000_ffffffffL & (long)values[j + 1])) {
-              // swap the elements
-              temp = values[j];
-              values[j] = values[j + 1];
-              values[j + 1] = temp;
-            }
-          }
-        }
-      }
-
-      RangedSubset build() {
-        {
-          Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
-          int previousInclusiveFrom;
-          int previousInclusiveTo;
-          int currentInclusiveFrom;
-          int currentInclusiveTo;
-          int i = 0;
-          int j = 1;
-          while (j < singleByteEndIndex) {
-            previousInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[i]);
-            previousInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[i]);
-            currentInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[j]);
-            currentInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[j]);
-            if (previousInclusiveTo >= currentInclusiveFrom) {
-              if (previousInclusiveTo <= currentInclusiveTo) {
-                singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
-              }
-              removeSingleByteElement(j);
-            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-              singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
-              removeSingleByteElement(j);
-            } else {
-              ++i;
-              ++j;
-            }
-          }
-        }
-        {
-          unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, doubleByteEndIndex);
-          int previousInclusiveFrom;
-          int previousInclusiveTo;
-          int currentInclusiveFrom;
-          int currentInclusiveTo;
-          int i = 0;
-          int j = 1;
-          while (j < doubleByteEndIndex) {
-            previousInclusiveFrom =RangedSubset. getInclusiveFrom(doubleByteCodePointRanges[i]);
-            previousInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]);
-            currentInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[j]);
-            currentInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[j]);
-            if (previousInclusiveTo >= currentInclusiveFrom) {
-              if (previousInclusiveTo <= currentInclusiveTo) {
-                doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-              }
-              removeDoubleByteElement(j);
-            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-              doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-              removeDoubleByteElement(j);
-            } else {
-              ++i;
-              ++j;
-            }
-          }
-        }
-        {
-          Arrays.sort(tripleByteCodePointRanges, 0, tripleByteEndIndex);
-          int previousInclusiveFrom;
-          int previousInclusiveTo;
-          int currentInclusiveFrom;
-          int currentInclusiveTo;
-          int i = 0;
-          int j = 1;
-          while (j < tripleByteEndIndex) {
-            previousInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[i]);
-            previousInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[i]);
-            currentInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[j]);
-            currentInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[j]);
-            if (previousInclusiveTo >= currentInclusiveFrom) {
-              if (previousInclusiveTo <= currentInclusiveTo) {
-                tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-              }
-              removeTripleByteElement(j);
-            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-              tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-              removeTripleByteElement(j);
-            } else {
-              ++i;
-              ++j;
-            }
-          }
-        }
-        return new RangedSubset(
-            Arrays.copyOf(singleByteCodePointRanges, singleByteEndIndex),
-            Arrays.copyOf(doubleByteCodePointRanges, doubleByteEndIndex),
-            Arrays.copyOf(tripleByteCodePointRanges, tripleByteEndIndex));
-      }
-    }
-  }
-
 
   static final class Other extends RangedSubset {
 
@@ -1050,8 +546,8 @@ public final class Unicode {
           0x0002a700_0002b734L, 0x0002b740_0002b81dL, 0x0002b820_0002cea1L, 0x0002ceb0_0002ebe0L,
           0x0002f800_0002fa1dL, 0x00030000_0003134aL});
     /** Mn – a nonspacing combining mark (zero advance width) */
-    public static final Category NONSPACING_MARK = new Category(
-      "NONSPACING_MARK", "Nonspacing_Mark", "Mn",
+    public static final Category NON_SPACING_MARK = new Category(
+      "NON_SPACING_MARK", "Nonspacing_Mark", "Mn",
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x0300_036f, 0x0483_0487, 0x0591_05bd, 0x05bf_05bf, 0x05c1_05c2, 0x05c4_05c5, 0x05c7_05c7, 0x0610_061a,
@@ -1113,8 +609,8 @@ public final class Unicode {
           0x0001e130_0001e136L, 0x0001e2ec_0001e2efL, 0x0001e8d0_0001e8d6L, 0x0001e944_0001e94aL,
           0x000e0100_000e01efL});
     /** Mc – a spacing combining mark (positive advance width) */
-    public static final Category SPACING_MARK = new Category(
-      "SPACING_MARK", "Spacing_Mark", "Mc",
+    public static final Category COMBINING_SPACING_MARK = new Category(
+      "COMBINING_SPACING_MARK", "Spacing_Mark", "Mc",
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x0903_0903, 0x093b_093b, 0x093e_0940, 0x0949_094c, 0x094e_094f, 0x0982_0983, 0x09be_09c0, 0x09c7_09c8,
@@ -1213,8 +709,8 @@ public final class Unicode {
           0x0001e023_0001e024L, 0x0001e026_0001e02aL, 0x0001e130_0001e136L, 0x0001e2ec_0001e2efL,
           0x0001e8d0_0001e8d6L, 0x0001e944_0001e94aL, 0x000e0100_000e01efL});
     /** Nd – a decimal digit */
-    public static final Category DECIMAL_NUMBER = new Category(
-      "DECIMAL_NUMBER", "Decimal_Number", "Nd",
+    public static final Category DECIMAL_DIGIT_NUMBER = new Category(
+      "DECIMAL_DIGIT_NUMBER", "Decimal_Number", "Nd",
         new char [] {
           0x30_39},
         new int [] {
@@ -1311,38 +807,6 @@ public final class Unicode {
           0x2e40_2e40, 0x301c_301c, 0x3030_3030, 0x30a0_30a0, 0xfe31_fe32, 0xfe58_fe58, 0xfe63_fe63, 0xff0d_ff0d},
         new long [] { 
           0x00010ead_00010eadL});
-    /** Ps – an opening punctuation mark (of a pair) */
-    public static final Category OPEN_PUNCTUATION = new Category(
-      "OPEN_PUNCTUATION", "Open_Punctuation", "Ps",
-        new char [] {
-          0x28_28, 0x5b_5b, 0x7b_7b},
-        new int [] {
-          0x0f3a_0f3a, 0x0f3c_0f3c, 0x169b_169b, 0x201a_201a, 0x201e_201e, 0x2045_2045, 0x207d_207d, 0x208d_208d,
-          0x2308_2308, 0x230a_230a, 0x2329_2329, 0x2768_2768, 0x276a_276a, 0x276c_276c, 0x276e_276e, 0x2770_2770,
-          0x2772_2772, 0x2774_2774, 0x27c5_27c5, 0x27e6_27e6, 0x27e8_27e8, 0x27ea_27ea, 0x27ec_27ec, 0x27ee_27ee,
-          0x2983_2983, 0x2985_2985, 0x2987_2987, 0x2989_2989, 0x298b_298b, 0x298d_298d, 0x298f_298f, 0x2991_2991,
-          0x2993_2993, 0x2995_2995, 0x2997_2997, 0x29d8_29d8, 0x29da_29da, 0x29fc_29fc, 0x2e22_2e22, 0x2e24_2e24,
-          0x2e26_2e26, 0x2e28_2e28, 0x2e42_2e42, 0x3008_3008, 0x300a_300a, 0x300c_300c, 0x300e_300e, 0x3010_3010,
-          0x3014_3014, 0x3016_3016, 0x3018_3018, 0x301a_301a, 0x301d_301d, 0xfd3f_fd3f, 0xfe17_fe17, 0xfe35_fe35,
-          0xfe37_fe37, 0xfe39_fe39, 0xfe3b_fe3b, 0xfe3d_fe3d, 0xfe3f_fe3f, 0xfe41_fe41, 0xfe43_fe43, 0xfe47_fe47,
-          0xfe59_fe59, 0xfe5b_fe5b, 0xfe5d_fe5d, 0xff08_ff08, 0xff3b_ff3b, 0xff5b_ff5b, 0xff5f_ff5f, 0xff62_ff62},
-        EMPTY_LONG_ARRAY);
-    /** Pe – a closing punctuation mark (of a pair) */
-    public static final Category CLOSE_PUNCTUATION = new Category(
-      "CLOSE_PUNCTUATION", "Close_Punctuation", "Pe",
-        new char [] {
-          0x29_29, 0x5d_5d, 0x7d_7d},
-        new int [] {
-          0x0f3b_0f3b, 0x0f3d_0f3d, 0x169c_169c, 0x2046_2046, 0x207e_207e, 0x208e_208e, 0x2309_2309, 0x230b_230b,
-          0x232a_232a, 0x2769_2769, 0x276b_276b, 0x276d_276d, 0x276f_276f, 0x2771_2771, 0x2773_2773, 0x2775_2775,
-          0x27c6_27c6, 0x27e7_27e7, 0x27e9_27e9, 0x27eb_27eb, 0x27ed_27ed, 0x27ef_27ef, 0x2984_2984, 0x2986_2986,
-          0x2988_2988, 0x298a_298a, 0x298c_298c, 0x298e_298e, 0x2990_2990, 0x2992_2992, 0x2994_2994, 0x2996_2996,
-          0x2998_2998, 0x29d9_29d9, 0x29db_29db, 0x29fd_29fd, 0x2e23_2e23, 0x2e25_2e25, 0x2e27_2e27, 0x2e29_2e29,
-          0x3009_3009, 0x300b_300b, 0x300d_300d, 0x300f_300f, 0x3011_3011, 0x3015_3015, 0x3017_3017, 0x3019_3019,
-          0x301b_301b, 0x301e_301f, 0xfd3e_fd3e, 0xfe18_fe18, 0xfe36_fe36, 0xfe38_fe38, 0xfe3a_fe3a, 0xfe3c_fe3c,
-          0xfe3e_fe3e, 0xfe40_fe40, 0xfe42_fe42, 0xfe44_fe44, 0xfe48_fe48, 0xfe5a_fe5a, 0xfe5c_fe5c, 0xfe5e_fe5e,
-          0xff09_ff09, 0xff3d_ff3d, 0xff5d_ff5d, 0xff60_ff60, 0xff63_ff63},
-        EMPTY_LONG_ARRAY);
     /** Pi – an initial quotation mark */
     public static final Category INITIAL_PUNCTUATION = new Category(
       "INITIAL_PUNCTUATION", "Initial_Punctuation", "Pi",
@@ -1401,24 +865,23 @@ public final class Unicode {
     public static final Category PUNCTUATION = new Category(
       "PUNCTUATION", "Punctuation", "P",
         new char [] {
-          0x21_23, 0x25_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 0x5f_5f, 0x7b_7b,
-          0x7d_7d, 0xa1_a1, 0xa7_a7, 0xab_ab, 0xb6_b7, 0xbb_bb, 0xbf_bf},
+          0x21_23, 0x25_27, 0x2a_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5c_5c, 0x5f_5f,
+          0xa1_a1, 0xa7_a7, 0xab_ab, 0xb6_b7, 0xbb_bb, 0xbf_bf},
         new int [] {
           0x037e_037e, 0x0387_0387, 0x055a_055f, 0x0589_058a, 0x05be_05be, 0x05c0_05c0, 0x05c3_05c3, 0x05c6_05c6,
           0x05f3_05f4, 0x0609_060a, 0x060c_060d, 0x061b_061b, 0x061e_061f, 0x066a_066d, 0x06d4_06d4, 0x0700_070d,
           0x07f7_07f9, 0x0830_083e, 0x085e_085e, 0x0964_0965, 0x0970_0970, 0x09fd_09fd, 0x0a76_0a76, 0x0af0_0af0,
-          0x0c77_0c77, 0x0c84_0c84, 0x0df4_0df4, 0x0e4f_0e4f, 0x0e5a_0e5b, 0x0f04_0f12, 0x0f14_0f14, 0x0f3a_0f3d,
-          0x0f85_0f85, 0x0fd0_0fd4, 0x0fd9_0fda, 0x104a_104f, 0x10fb_10fb, 0x1360_1368, 0x1400_1400, 0x166e_166e,
-          0x169b_169c, 0x16eb_16ed, 0x1735_1736, 0x17d4_17d6, 0x17d8_17da, 0x1800_180a, 0x1944_1945, 0x1a1e_1a1f,
-          0x1aa0_1aa6, 0x1aa8_1aad, 0x1b5a_1b60, 0x1bfc_1bff, 0x1c3b_1c3f, 0x1c7e_1c7f, 0x1cc0_1cc7, 0x1cd3_1cd3,
-          0x2010_2027, 0x2030_2043, 0x2045_2051, 0x2053_205e, 0x207d_207e, 0x208d_208e, 0x2308_230b, 0x2329_232a,
-          0x2768_2775, 0x27c5_27c6, 0x27e6_27ef, 0x2983_2998, 0x29d8_29db, 0x29fc_29fd, 0x2cf9_2cfc, 0x2cfe_2cff,
-          0x2d70_2d70, 0x2e00_2e2e, 0x2e30_2e4f, 0x2e52_2e52, 0x3001_3003, 0x3008_3011, 0x3014_301f, 0x3030_3030,
-          0x303d_303d, 0x30a0_30a0, 0x30fb_30fb, 0xa4fe_a4ff, 0xa60d_a60f, 0xa673_a673, 0xa67e_a67e, 0xa6f2_a6f7,
-          0xa874_a877, 0xa8ce_a8cf, 0xa8f8_a8fa, 0xa8fc_a8fc, 0xa92e_a92f, 0xa95f_a95f, 0xa9c1_a9cd, 0xa9de_a9df,
-          0xaa5c_aa5f, 0xaade_aadf, 0xaaf0_aaf1, 0xabeb_abeb, 0xfd3e_fd3f, 0xfe10_fe19, 0xfe30_fe52, 0xfe54_fe61,
-          0xfe63_fe63, 0xfe68_fe68, 0xfe6a_fe6b, 0xff01_ff03, 0xff05_ff0a, 0xff0c_ff0f, 0xff1a_ff1b, 0xff1f_ff20,
-          0xff3b_ff3d, 0xff3f_ff3f, 0xff5b_ff5b, 0xff5d_ff5d, 0xff5f_ff65},
+          0x0c77_0c77, 0x0c84_0c84, 0x0df4_0df4, 0x0e4f_0e4f, 0x0e5a_0e5b, 0x0f04_0f12, 0x0f14_0f14, 0x0f85_0f85,
+          0x0fd0_0fd4, 0x0fd9_0fda, 0x104a_104f, 0x10fb_10fb, 0x1360_1368, 0x1400_1400, 0x166e_166e, 0x16eb_16ed,
+          0x1735_1736, 0x17d4_17d6, 0x17d8_17da, 0x1800_180a, 0x1944_1945, 0x1a1e_1a1f, 0x1aa0_1aa6, 0x1aa8_1aad,
+          0x1b5a_1b60, 0x1bfc_1bff, 0x1c3b_1c3f, 0x1c7e_1c7f, 0x1cc0_1cc7, 0x1cd3_1cd3, 0x2010_2019, 0x201b_201d,
+          0x201f_2027, 0x2030_2043, 0x2047_2051, 0x2053_205e, 0x2cf9_2cfc, 0x2cfe_2cff, 0x2d70_2d70, 0x2e00_2e21,
+          0x2e2a_2e2e, 0x2e30_2e41, 0x2e43_2e4f, 0x2e52_2e52, 0x3001_3003, 0x301c_301c, 0x3030_3030, 0x303d_303d,
+          0x30a0_30a0, 0x30fb_30fb, 0xa4fe_a4ff, 0xa60d_a60f, 0xa673_a673, 0xa67e_a67e, 0xa6f2_a6f7, 0xa874_a877,
+          0xa8ce_a8cf, 0xa8f8_a8fa, 0xa8fc_a8fc, 0xa92e_a92f, 0xa95f_a95f, 0xa9c1_a9cd, 0xa9de_a9df, 0xaa5c_aa5f,
+          0xaade_aadf, 0xaaf0_aaf1, 0xabeb_abeb, 0xfe10_fe16, 0xfe19_fe19, 0xfe30_fe34, 0xfe45_fe46, 0xfe49_fe52,
+          0xfe54_fe58, 0xfe5f_fe61, 0xfe63_fe63, 0xfe68_fe68, 0xfe6a_fe6b, 0xff01_ff03, 0xff05_ff07, 0xff0a_ff0a,
+          0xff0c_ff0f, 0xff1a_ff1b, 0xff1f_ff20, 0xff3c_ff3c, 0xff3f_ff3f, 0xff61_ff61, 0xff64_ff65},
         new long [] { 
           0x00010100_00010102L, 0x0001039f_0001039fL, 0x000103d0_000103d0L, 0x0001056f_0001056fL,
           0x00010857_00010857L, 0x0001091f_0001091fL, 0x0001093f_0001093fL, 0x00010a50_00010a58L,
@@ -2830,1093 +2293,2679 @@ public final class Unicode {
 
   static final class Block extends RangedSubset {
 
-    public static final Script ADLM = new Script(
-      "ADLM", "ADLM",
+    public static final Block BASIC_LATIN = new Block(
+      "ASCII", "ASCII",
+      0x00000000, 0x0000007f, 
+        new char [] {
+          0x00_7f},
+        EMPTY_INT_ARRAY,
+        EMPTY_LONG_ARRAY);
+    public static final Block ADLAM = new Block(
+      "ADLAM", "Adlam",
+      0x0001e900, 0x0001e95f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x0001e900_0001e94bL, 0x0001e950_0001e959L, 0x0001e95e_0001e95fL});
-    public static final Script AGHB = new Script(
-      "AGHB", "AGHB",
+    public static final Block AEGEAN_NUMBERS = new Block(
+      "AEGEAN_NUMBERS", "Aegean_Numbers",
+      0x00010100, 0x0001013f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010530_00010563L, 0x0001056f_0001056fL});
-    public static final Script AHOM = new Script(
-      "AHOM", "AHOM",
+          0x00010100_00010102L, 0x00010107_00010133L, 0x00010137_0001013fL});
+    public static final Block AHOM = new Block(
+      "AHOM", "Ahom",
+      0x00011700, 0x0001173f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00011700_0001171aL, 0x0001171d_0001172bL, 0x00011730_0001173fL});
-    public static final Script ARAB = new Script(
-      "ARAB", "ARAB",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0600_0604, 0x0606_060b, 0x060d_061a, 0x061c_061c, 0x061e_061e, 0x0620_063f, 0x0641_064a, 0x0656_066f,
-          0x0671_06dc, 0x06de_06ff, 0x0750_077f, 0x08a0_08b4, 0x08b6_08c7, 0x08d3_08e1, 0x08e3_08ff, 0xfb50_fbc1,
-          0xfbd3_fd3d, 0xfd50_fd8f, 0xfd92_fdc7, 0xfdf0_fdfd, 0xfe70_fe74, 0xfe76_fefc},
-        new long [] { 
-          0x00010e60_00010e7eL, 0x0001ee00_0001ee03L, 0x0001ee05_0001ee1fL, 0x0001ee21_0001ee22L,
-          0x0001ee24_0001ee24L, 0x0001ee27_0001ee27L, 0x0001ee29_0001ee32L, 0x0001ee34_0001ee37L,
-          0x0001ee39_0001ee39L, 0x0001ee3b_0001ee3bL, 0x0001ee42_0001ee42L, 0x0001ee47_0001ee47L,
-          0x0001ee49_0001ee49L, 0x0001ee4b_0001ee4bL, 0x0001ee4d_0001ee4fL, 0x0001ee51_0001ee52L,
-          0x0001ee54_0001ee54L, 0x0001ee57_0001ee57L, 0x0001ee59_0001ee59L, 0x0001ee5b_0001ee5bL,
-          0x0001ee5d_0001ee5dL, 0x0001ee5f_0001ee5fL, 0x0001ee61_0001ee62L, 0x0001ee64_0001ee64L,
-          0x0001ee67_0001ee6aL, 0x0001ee6c_0001ee72L, 0x0001ee74_0001ee77L, 0x0001ee79_0001ee7cL,
-          0x0001ee7e_0001ee7eL, 0x0001ee80_0001ee89L, 0x0001ee8b_0001ee9bL, 0x0001eea1_0001eea3L,
-          0x0001eea5_0001eea9L, 0x0001eeab_0001eebbL, 0x0001eef0_0001eef1L});
-    public static final Script ARMI = new Script(
-      "ARMI", "ARMI",
+    public static final Block ALCHEMICAL_SYMBOLS = new Block(
+      "ALCHEMICAL", "Alchemical",
+      0x0001f700, 0x0001f77f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010840_00010855L, 0x00010857_0001085fL});
-    public static final Script ARMN = new Script(
-      "ARMN", "ARMN",
+          0x0001f700_0001f773L});
+    public static final Block ALPHABETIC_PRESENTATION_FORMS = new Block(
+      "ALPHABETIC_PF", "Alphabetic_PF",
+      0x0000fb00, 0x0000fb4f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0531_0556, 0x0559_058a, 0x058d_058f, 0xfb13_fb17},
+          0xfb00_fb06, 0xfb13_fb17, 0xfb1d_fb4f},
         EMPTY_LONG_ARRAY);
-    public static final Script AVST = new Script(
-      "AVST", "AVST",
+    public static final Block ANATOLIAN_HIEROGLYPHS = new Block(
+      "ANATOLIAN_HIEROGLYPHS", "Anatolian_Hieroglyphs",
+      0x00014400, 0x0001467f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00014400_00014646L});
+    public static final Block ANCIENT_GREEK_MUSICAL_NOTATION = new Block(
+      "ANCIENT_GREEK_MUSIC", "Ancient_Greek_Music",
+      0x0001d200, 0x0001d24f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d200_0001d245L});
+    public static final Block ANCIENT_GREEK_NUMBERS = new Block(
+      "ANCIENT_GREEK_NUMBERS", "Ancient_Greek_Numbers",
+      0x00010140, 0x0001018f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010140_0001018fL});
+    public static final Block ANCIENT_SYMBOLS = new Block(
+      "ANCIENT_SYMBOLS", "Ancient_Symbols",
+      0x00010190, 0x000101cf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010190_0001019cL, 0x000101a0_000101a0L});
+    public static final Block ARABIC = new Block(
+      "ARABIC", "Arabic",
+      0x00000600, 0x000006ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0600_06ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARABIC_EXTENDED_A = new Block(
+      "ARABIC_EXT_A", "Arabic_Ext_A",
+      0x000008a0, 0x000008ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x08a0_08c7, 0x08d3_08ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARABIC_MATHEMATICAL_ALPHABETIC_SYMBOLS = new Block(
+      "ARABIC_MATH", "Arabic_Math",
+      0x0001ee00, 0x0001eeff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001ee00_0001ee24L, 0x0001ee27_0001ee3bL, 0x0001ee42_0001ee42L, 0x0001ee47_0001ee54L,
+          0x0001ee57_0001ee64L, 0x0001ee67_0001ee9bL, 0x0001eea1_0001eebbL, 0x0001eef0_0001eef1L});
+    public static final Block ARABIC_PRESENTATION_FORMS_A = new Block(
+      "ARABIC_PF_A", "Arabic_PF_A",
+      0x0000fb50, 0x0000fdff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfb50_fbc1, 0xfbd3_fd3f, 0xfd50_fd8f, 0xfd92_fdc7, 0xfdf0_fdfd},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARABIC_PRESENTATION_FORMS_B = new Block(
+      "ARABIC_PF_B", "Arabic_PF_B",
+      0x0000fe70, 0x0000feff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfe70_fefc, 0xfeff_feff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARABIC_SUPPLEMENT = new Block(
+      "ARABIC_SUP", "Arabic_Sup",
+      0x00000750, 0x0000077f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0750_077f},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARMENIAN = new Block(
+      "ARMENIAN", "Armenian",
+      0x00000530, 0x0000058f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0530_0556, 0x0559_058a, 0x058d_058f},
+        EMPTY_LONG_ARRAY);
+    public static final Block ARROWS = new Block(
+      "ARROWS", "Arrows",
+      0x00002190, 0x000021ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2190_21ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block AVESTAN = new Block(
+      "AVESTAN", "Avestan",
+      0x00010b00, 0x00010b3f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010b00_00010b35L, 0x00010b39_00010b3fL});
-    public static final Script BALI = new Script(
-      "BALI", "BALI",
+    public static final Block BALINESE = new Block(
+      "BALINESE", "Balinese",
+      0x00001b00, 0x00001b7f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x1b00_1b4b, 0x1b50_1b7c},
         EMPTY_LONG_ARRAY);
-    public static final Script BAMU = new Script(
-      "BAMU", "BAMU",
+    public static final Block BAMUM = new Block(
+      "BAMUM", "Bamum",
+      0x0000a6a0, 0x0000a6ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0xa6a0_a6f7},
+        EMPTY_LONG_ARRAY);
+    public static final Block BAMUM_SUPPLEMENT = new Block(
+      "BAMUM_SUP", "Bamum_Sup",
+      0x00016800, 0x00016a3f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
         new long [] { 
           0x00016800_00016a38L});
-    public static final Script BASS = new Script(
-      "BASS", "BASS",
+    public static final Block BASSA_VAH = new Block(
+      "BASSA_VAH", "Bassa_Vah",
+      0x00016ad0, 0x00016aff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00016ad0_00016aedL, 0x00016af0_00016af5L});
-    public static final Script BATK = new Script(
-      "BATK", "BATK",
+    public static final Block BATAK = new Block(
+      "BATAK", "Batak",
+      0x00001bc0, 0x00001bff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x1bc0_1bf3, 0x1bfc_1bff},
         EMPTY_LONG_ARRAY);
-    public static final Script BENG = new Script(
-      "BENG", "BENG",
+    public static final Block BENGALI = new Block(
+      "BENGALI", "Bengali",
+      0x00000980, 0x000009ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0980_0983, 0x0985_098c, 0x098f_0990, 0x0993_09a8, 0x09aa_09b0, 0x09b2_09b2, 0x09b6_09b9, 0x09bc_09c4,
-          0x09c7_09c8, 0x09cb_09ce, 0x09d7_09d7, 0x09dc_09dd, 0x09df_09e3, 0x09e6_09fe},
+          0x0980_098c, 0x098f_0990, 0x0993_09b2, 0x09b6_09b9, 0x09bc_09c4, 0x09c7_09c8, 0x09cb_09ce, 0x09d7_09d7,
+          0x09dc_09e3, 0x09e6_09ff},
         EMPTY_LONG_ARRAY);
-    public static final Script BHKS = new Script(
-      "BHKS", "BHKS",
+    public static final Block BHAIKSUKI = new Block(
+      "BHAIKSUKI", "Bhaiksuki",
+      0x00011c00, 0x00011c6f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011c00_00011c08L, 0x00011c0a_00011c36L, 0x00011c38_00011c45L, 0x00011c50_00011c6cL});
-    public static final Script BOPO = new Script(
-      "BOPO", "BOPO",
+          0x00011c00_00011c45L, 0x00011c50_00011c6cL});
+    public static final Block BLOCK_ELEMENTS = new Block(
+      "BLOCK_ELEMENTS", "Block_Elements",
+      0x00002580, 0x0000259f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x02ea_02eb, 0x3105_312f, 0x31a0_31bf},
+          0x2580_259f},
         EMPTY_LONG_ARRAY);
-    public static final Script BRAH = new Script(
-      "BRAH", "BRAH",
+    public static final Block BOPOMOFO = new Block(
+      "BOPOMOFO", "Bopomofo",
+      0x00003100, 0x0000312f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3105_312f},
+        EMPTY_LONG_ARRAY);
+    public static final Block BOPOMOFO_EXTENDED = new Block(
+      "BOPOMOFO_EXT", "Bopomofo_Ext",
+      0x000031a0, 0x000031bf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x31a0_31bf},
+        EMPTY_LONG_ARRAY);
+    public static final Block BOX_DRAWING = new Block(
+      "BOX_DRAWING", "Box_Drawing",
+      0x00002500, 0x0000257f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2500_257f},
+        EMPTY_LONG_ARRAY);
+    public static final Block BRAHMI = new Block(
+      "BRAHMI", "Brahmi",
+      0x00011000, 0x0001107f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00011000_0001104dL, 0x00011052_0001106fL, 0x0001107f_0001107fL});
-    public static final Script BRAI = new Script(
-      "BRAI", "BRAI",
+    public static final Block BRAILLE_PATTERNS = new Block(
+      "BRAILLE", "Braille",
+      0x00002800, 0x000028ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x2800_28ff},
         EMPTY_LONG_ARRAY);
-    public static final Script BUGI = new Script(
-      "BUGI", "BUGI",
+    public static final Block BUGINESE = new Block(
+      "BUGINESE", "Buginese",
+      0x00001a00, 0x00001a1f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x1a00_1a1b, 0x1a1e_1a1f},
         EMPTY_LONG_ARRAY);
-    public static final Script BUHD = new Script(
-      "BUHD", "BUHD",
+    public static final Block BUHID = new Block(
+      "BUHID", "Buhid",
+      0x00001740, 0x0000175f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x1740_1753},
         EMPTY_LONG_ARRAY);
-    public static final Script CAKM = new Script(
-      "CAKM", "CAKM",
+    public static final Block BYZANTINE_MUSICAL_SYMBOLS = new Block(
+      "BYZANTINE_MUSIC", "Byzantine_Music",
+      0x0001d000, 0x0001d0ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011100_00011134L, 0x00011136_00011147L});
-    public static final Script CANS = new Script(
-      "CANS", "CANS",
+          0x0001d000_0001d0f5L});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS = new Block(
+      "CJK", "CJK",
+      0x00004e00, 0x00009fff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x1400_167f, 0x18b0_18f5},
+          0x4e00_9ffc},
         EMPTY_LONG_ARRAY);
-    public static final Script CARI = new Script(
-      "CARI", "CARI",
+    public static final Block CJK_COMPATIBILITY = new Block(
+      "CJK_COMPAT", "CJK_Compat",
+      0x00003300, 0x000033ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3300_33ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_COMPATIBILITY_FORMS = new Block(
+      "CJK_COMPAT_FORMS", "CJK_Compat_Forms",
+      0x0000fe30, 0x0000fe4f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfe30_fe4f},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_COMPATIBILITY_IDEOGRAPHS = new Block(
+      "CJK_COMPAT_IDEOGRAPHS", "CJK_Compat_Ideographs",
+      0x0000f900, 0x0000faff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xf900_fa6d, 0xfa70_fad9},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_COMPATIBILITY_IDEOGRAPHS_SUPPLEMENT = new Block(
+      "CJK_COMPAT_IDEOGRAPHS_SUP", "CJK_Compat_Ideographs_Sup",
+      0x0002f800, 0x0002fa1f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0002f800_0002fa1dL});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A = new Block(
+      "CJK_EXT_A", "CJK_Ext_A",
+      0x00003400, 0x00004dbf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3400_4dbf},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B = new Block(
+      "CJK_EXT_B", "CJK_Ext_B",
+      0x00020000, 0x0002a6df, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00020000_0002a6ddL});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_C = new Block(
+      "CJK_EXT_C", "CJK_Ext_C",
+      0x0002a700, 0x0002b73f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0002a700_0002b734L});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_D = new Block(
+      "CJK_EXT_D", "CJK_Ext_D",
+      0x0002b740, 0x0002b81f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0002b740_0002b81dL});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_E = new Block(
+      "CJK_EXT_E", "CJK_Ext_E",
+      0x0002b820, 0x0002ceaf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0002b820_0002cea1L});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_F = new Block(
+      "CJK_EXT_F", "CJK_Ext_F",
+      0x0002ceb0, 0x0002ebef, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0002ceb0_0002ebe0L});
+    public static final Block CJK_UNIFIED_IDEOGRAPHS_EXTENSION_G = new Block(
+      "CJK_EXT_G", "CJK_Ext_G",
+      0x00030000, 0x0003134f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00030000_0003134aL});
+    public static final Block CJK_RADICALS_SUPPLEMENT = new Block(
+      "CJK_RADICALS_SUP", "CJK_Radicals_Sup",
+      0x00002e80, 0x00002eff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2e80_2ef3},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_STROKES = new Block(
+      "CJK_STROKES", "CJK_Strokes",
+      0x000031c0, 0x000031ef, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x31c0_31e3},
+        EMPTY_LONG_ARRAY);
+    public static final Block CJK_SYMBOLS_AND_PUNCTUATION = new Block(
+      "CJK_SYMBOLS", "CJK_Symbols",
+      0x00003000, 0x0000303f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3000_303f},
+        EMPTY_LONG_ARRAY);
+    public static final Block CARIAN = new Block(
+      "CARIAN", "Carian",
+      0x000102a0, 0x000102df, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x000102a0_000102d0L});
-    public static final Script CHAM = new Script(
-      "CHAM", "CHAM",
+    public static final Block CAUCASIAN_ALBANIAN = new Block(
+      "CAUCASIAN_ALBANIAN", "Caucasian_Albanian",
+      0x00010530, 0x0001056f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010530_00010563L, 0x0001056f_0001056fL});
+    public static final Block CHAKMA = new Block(
+      "CHAKMA", "Chakma",
+      0x00011100, 0x0001114f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011100_00011147L});
+    public static final Block CHAM = new Block(
+      "CHAM", "Cham",
+      0x0000aa00, 0x0000aa5f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0xaa00_aa36, 0xaa40_aa4d, 0xaa50_aa59, 0xaa5c_aa5f},
         EMPTY_LONG_ARRAY);
-    public static final Script CHER = new Script(
-      "CHER", "CHER",
+    public static final Block CHEROKEE = new Block(
+      "CHEROKEE", "Cherokee",
+      0x000013a0, 0x000013ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x13a0_13f5, 0x13f8_13fd, 0xab70_abbf},
+          0x13a0_13f5, 0x13f8_13fd},
         EMPTY_LONG_ARRAY);
-    public static final Script CHRS = new Script(
-      "CHRS", "CHRS",
+    public static final Block CHEROKEE_SUPPLEMENT = new Block(
+      "CHEROKEE_SUP", "Cherokee_Sup",
+      0x0000ab70, 0x0000abbf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xab70_abbf},
+        EMPTY_LONG_ARRAY);
+    public static final Block CHESS_SYMBOLS = new Block(
+      "CHESS_SYMBOLS", "Chess_Symbols",
+      0x0001fa00, 0x0001fa6f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001fa00_0001fa53L, 0x0001fa60_0001fa6dL});
+    public static final Block CHORASMIAN = new Block(
+      "CHORASMIAN", "Chorasmian",
+      0x00010fb0, 0x00010fdf, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010fb0_00010fcbL});
-    public static final Script COPT = new Script(
-      "COPT", "COPT",
+    public static final Block HANGUL_COMPATIBILITY_JAMO = new Block(
+      "COMPAT_JAMO", "Compat_Jamo",
+      0x00003130, 0x0000318f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x03e2_03ef, 0x2c80_2cf3, 0x2cf9_2cff},
+          0x3130_318f},
         EMPTY_LONG_ARRAY);
-    public static final Script CPRT = new Script(
-      "CPRT", "CPRT",
+    public static final Block CONTROL_PICTURES = new Block(
+      "CONTROL_PICTURES", "Control_Pictures",
+      0x00002400, 0x0000243f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2400_2426},
+        EMPTY_LONG_ARRAY);
+    public static final Block COPTIC = new Block(
+      "COPTIC", "Coptic",
+      0x00002c80, 0x00002cff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2c80_2cf3, 0x2cf9_2cff},
+        EMPTY_LONG_ARRAY);
+    public static final Block COPTIC_EPACT_NUMBERS = new Block(
+      "COPTIC_EPACT_NUMBERS", "Coptic_Epact_Numbers",
+      0x000102e0, 0x000102ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010800_00010805L, 0x00010808_00010808L, 0x0001080a_00010835L, 0x00010837_00010838L,
-          0x0001083c_0001083cL, 0x0001083f_0001083fL});
-    public static final Script CYRL = new Script(
-      "CYRL", "CYRL",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0400_0484, 0x0487_052f, 0x1c80_1c88, 0x1d2b_1d2b, 0x1d78_1d78, 0x2de0_2dff, 0xa640_a69f, 0xfe2e_fe2f},
-        EMPTY_LONG_ARRAY);
-    public static final Script DEVA = new Script(
-      "DEVA", "DEVA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0900_0950, 0x0955_0963, 0x0966_097f, 0xa8e0_a8ff},
-        EMPTY_LONG_ARRAY);
-    public static final Script DIAK = new Script(
-      "DIAK", "DIAK",
+          0x000102e0_000102fbL});
+    public static final Block COUNTING_ROD_NUMERALS = new Block(
+      "COUNTING_ROD", "Counting_Rod",
+      0x0001d360, 0x0001d37f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011900_00011906L, 0x00011909_00011909L, 0x0001190c_00011913L, 0x00011915_00011916L,
-          0x00011918_00011935L, 0x00011937_00011938L, 0x0001193b_00011946L, 0x00011950_00011959L});
-    public static final Script DOGR = new Script(
-      "DOGR", "DOGR",
+          0x0001d360_0001d378L});
+    public static final Block CUNEIFORM = new Block(
+      "CUNEIFORM", "Cuneiform",
+      0x00012000, 0x000123ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011800_0001183bL});
-    public static final Script DSRT = new Script(
-      "DSRT", "DSRT",
+          0x00012000_00012399L});
+    public static final Block CUNEIFORM_NUMBERS_AND_PUNCTUATION = new Block(
+      "CUNEIFORM_NUMBERS", "Cuneiform_Numbers",
+      0x00012400, 0x0001247f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00012400_00012474L});
+    public static final Block CURRENCY_SYMBOLS = new Block(
+      "CURRENCY_SYMBOLS", "Currency_Symbols",
+      0x000020a0, 0x000020cf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x20a0_20bf},
+        EMPTY_LONG_ARRAY);
+    public static final Block CYPRIOT_SYLLABARY = new Block(
+      "CYPRIOT_SYLLABARY", "Cypriot_Syllabary",
+      0x00010800, 0x0001083f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010800_00010805L, 0x00010808_00010838L, 0x0001083c_0001083cL, 0x0001083f_0001083fL});
+    public static final Block CYRILLIC = new Block(
+      "CYRILLIC", "Cyrillic",
+      0x00000400, 0x000004ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0400_04ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block CYRILLIC_EXTENDED_A = new Block(
+      "CYRILLIC_EXT_A", "Cyrillic_Ext_A",
+      0x00002de0, 0x00002dff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2de0_2dff},
+        EMPTY_LONG_ARRAY);
+    public static final Block CYRILLIC_EXTENDED_B = new Block(
+      "CYRILLIC_EXT_B", "Cyrillic_Ext_B",
+      0x0000a640, 0x0000a69f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa640_a69f},
+        EMPTY_LONG_ARRAY);
+    public static final Block CYRILLIC_EXTENDED_C = new Block(
+      "CYRILLIC_EXT_C", "Cyrillic_Ext_C",
+      0x00001c80, 0x00001c8f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1c80_1c88},
+        EMPTY_LONG_ARRAY);
+    public static final Block CYRILLIC_SUPPLEMENT = new Block(
+      "CYRILLIC_SUP", "Cyrillic_Sup",
+      0x00000500, 0x0000052f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0500_052f},
+        EMPTY_LONG_ARRAY);
+    public static final Block DESERET = new Block(
+      "DESERET", "Deseret",
+      0x00010400, 0x0001044f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010400_0001044fL});
-    public static final Script DUPL = new Script(
-      "DUPL", "DUPL",
+    public static final Block DEVANAGARI = new Block(
+      "DEVANAGARI", "Devanagari",
+      0x00000900, 0x0000097f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0900_097f},
+        EMPTY_LONG_ARRAY);
+    public static final Block DEVANAGARI_EXTENDED = new Block(
+      "DEVANAGARI_EXT", "Devanagari_Ext",
+      0x0000a8e0, 0x0000a8ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa8e0_a8ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block COMBINING_DIACRITICAL_MARKS = new Block(
+      "DIACRITICALS", "Diacriticals",
+      0x00000300, 0x0000036f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0300_036f},
+        EMPTY_LONG_ARRAY);
+    public static final Block COMBINING_DIACRITICAL_MARKS_EXTENDED = new Block(
+      "DIACRITICALS_EXT", "Diacriticals_Ext",
+      0x00001ab0, 0x00001aff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1ab0_1ac0},
+        EMPTY_LONG_ARRAY);
+    public static final Block COMBINING_DIACRITICAL_MARKS_FOR_SYMBOLS = new Block(
+      "DIACRITICALS_FOR_SYMBOLS", "Diacriticals_For_Symbols",
+      0x000020d0, 0x000020ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x20d0_20f0},
+        EMPTY_LONG_ARRAY);
+    public static final Block COMBINING_DIACRITICAL_MARKS_SUPPLEMENT = new Block(
+      "DIACRITICALS_SUP", "Diacriticals_Sup",
+      0x00001dc0, 0x00001dff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1dc0_1dff},
+        EMPTY_LONG_ARRAY);
+    public static final Block DINGBATS = new Block(
+      "DINGBATS", "Dingbats",
+      0x00002700, 0x000027bf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2700_27bf},
+        EMPTY_LONG_ARRAY);
+    public static final Block DIVES_AKURU = new Block(
+      "DIVES_AKURU", "Dives_Akuru",
+      0x00011900, 0x0001195f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011900_00011906L, 0x00011909_00011909L, 0x0001190c_00011938L, 0x0001193b_00011946L,
+          0x00011950_00011959L});
+    public static final Block DOGRA = new Block(
+      "DOGRA", "Dogra",
+      0x00011800, 0x0001184f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011800_0001183bL});
+    public static final Block DOMINO_TILES = new Block(
+      "DOMINO", "Domino",
+      0x0001f030, 0x0001f09f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f030_0001f093L});
+    public static final Block DUPLOYAN = new Block(
+      "DUPLOYAN", "Duployan",
+      0x0001bc00, 0x0001bc9f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x0001bc00_0001bc6aL, 0x0001bc70_0001bc7cL, 0x0001bc80_0001bc88L, 0x0001bc90_0001bc99L,
           0x0001bc9c_0001bc9fL});
-    public static final Script EGYP = new Script(
-      "EGYP", "EGYP",
+    public static final Block EARLY_DYNASTIC_CUNEIFORM = new Block(
+      "EARLY_DYNASTIC_CUNEIFORM", "Early_Dynastic_Cuneiform",
+      0x00012480, 0x0001254f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00013000_0001342eL, 0x00013430_00013438L});
-    public static final Script ELBA = new Script(
-      "ELBA", "ELBA",
+          0x00012480_00012543L});
+    public static final Block EGYPTIAN_HIEROGLYPH_FORMAT_CONTROLS = new Block(
+      "EGYPTIAN_HIEROGLYPH_FORMAT_CONTROLS", "Egyptian_Hieroglyph_Format_Controls",
+      0x00013430, 0x0001343f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00013430_00013438L});
+    public static final Block EGYPTIAN_HIEROGLYPHS = new Block(
+      "EGYPTIAN_HIEROGLYPHS", "Egyptian_Hieroglyphs",
+      0x00013000, 0x0001342f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00013000_0001342fL});
+    public static final Block ELBASAN = new Block(
+      "ELBASAN", "Elbasan",
+      0x00010500, 0x0001052f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010500_00010527L});
-    public static final Script ELYM = new Script(
-      "ELYM", "ELYM",
+    public static final Block ELYMAIC = new Block(
+      "ELYMAIC", "Elymaic",
+      0x00010fe0, 0x00010fff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010fe0_00010ff6L});
-    public static final Script ETHI = new Script(
-      "ETHI", "ETHI",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1200_1248, 0x124a_124d, 0x1250_1256, 0x1258_1258, 0x125a_125d, 0x1260_1288, 0x128a_128d, 0x1290_12b0,
-          0x12b2_12b5, 0x12b8_12be, 0x12c0_12c0, 0x12c2_12c5, 0x12c8_12d6, 0x12d8_1310, 0x1312_1315, 0x1318_135a,
-          0x135d_137c, 0x1380_1399, 0x2d80_2d96, 0x2da0_2da6, 0x2da8_2dae, 0x2db0_2db6, 0x2db8_2dbe, 0x2dc0_2dc6,
-          0x2dc8_2dce, 0x2dd0_2dd6, 0x2dd8_2dde, 0xab01_ab06, 0xab09_ab0e, 0xab11_ab16, 0xab20_ab26, 0xab28_ab2e},
-        EMPTY_LONG_ARRAY);
-    public static final Script GEOR = new Script(
-      "GEOR", "GEOR",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x10a0_10c5, 0x10c7_10c7, 0x10cd_10cd, 0x10d0_10fa, 0x10fc_10ff, 0x1c90_1cba, 0x1cbd_1cbf, 0x2d00_2d25,
-          0x2d27_2d27, 0x2d2d_2d2d},
-        EMPTY_LONG_ARRAY);
-    public static final Script GLAG = new Script(
-      "GLAG", "GLAG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x2c00_2c2e, 0x2c30_2c5e},
-        new long [] { 
-          0x0001e000_0001e006L, 0x0001e008_0001e018L, 0x0001e01b_0001e021L, 0x0001e023_0001e024L,
-          0x0001e026_0001e02aL});
-    public static final Script GONG = new Script(
-      "GONG", "GONG",
+    public static final Block EMOTICONS = new Block(
+      "EMOTICONS", "Emoticons",
+      0x0001f600, 0x0001f64f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011d60_00011d65L, 0x00011d67_00011d68L, 0x00011d6a_00011d8eL, 0x00011d90_00011d91L,
-          0x00011d93_00011d98L, 0x00011da0_00011da9L});
-    public static final Script GONM = new Script(
-      "GONM", "GONM",
+          0x0001f600_0001f64fL});
+    public static final Block ENCLOSED_ALPHANUMERICS = new Block(
+      "ENCLOSED_ALPHANUM", "Enclosed_Alphanum",
+      0x00002460, 0x000024ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2460_24ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ENCLOSED_ALPHANUMERIC_SUPPLEMENT = new Block(
+      "ENCLOSED_ALPHANUM_SUP", "Enclosed_Alphanum_Sup",
+      0x0001f100, 0x0001f1ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011d00_00011d06L, 0x00011d08_00011d09L, 0x00011d0b_00011d36L, 0x00011d3a_00011d3aL,
-          0x00011d3c_00011d3dL, 0x00011d3f_00011d47L, 0x00011d50_00011d59L});
-    public static final Script GOTH = new Script(
-      "GOTH", "GOTH",
+          0x0001f100_0001f1adL, 0x0001f1e6_0001f1ffL});
+    public static final Block ENCLOSED_CJK_LETTERS_AND_MONTHS = new Block(
+      "ENCLOSED_CJK", "Enclosed_CJK",
+      0x00003200, 0x000032ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3200_32ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ENCLOSED_IDEOGRAPHIC_SUPPLEMENT = new Block(
+      "ENCLOSED_IDEOGRAPHIC_SUP", "Enclosed_Ideographic_Sup",
+      0x0001f200, 0x0001f2ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f200_0001f202L, 0x0001f210_0001f23bL, 0x0001f240_0001f248L, 0x0001f250_0001f251L,
+          0x0001f260_0001f265L});
+    public static final Block ETHIOPIC = new Block(
+      "ETHIOPIC", "Ethiopic",
+      0x00001200, 0x0000137f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1200_124d, 0x1250_125d, 0x1260_128d, 0x1290_12b5, 0x12b8_12c5, 0x12c8_1315, 0x1318_135a, 0x135d_137c},
+        EMPTY_LONG_ARRAY);
+    public static final Block ETHIOPIC_EXTENDED = new Block(
+      "ETHIOPIC_EXT", "Ethiopic_Ext",
+      0x00002d80, 0x00002ddf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2d80_2d96, 0x2da0_2ddf},
+        EMPTY_LONG_ARRAY);
+    public static final Block ETHIOPIC_EXTENDED_A = new Block(
+      "ETHIOPIC_EXT_A", "Ethiopic_Ext_A",
+      0x0000ab00, 0x0000ab2f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xab00_ab06, 0xab09_ab0e, 0xab11_ab16, 0xab20_ab2f},
+        EMPTY_LONG_ARRAY);
+    public static final Block ETHIOPIC_SUPPLEMENT = new Block(
+      "ETHIOPIC_SUP", "Ethiopic_Sup",
+      0x00001380, 0x0000139f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1380_1399},
+        EMPTY_LONG_ARRAY);
+    public static final Block GEOMETRIC_SHAPES = new Block(
+      "GEOMETRIC_SHAPES", "Geometric_Shapes",
+      0x000025a0, 0x000025ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x25a0_25ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block GEOMETRIC_SHAPES_EXTENDED = new Block(
+      "GEOMETRIC_SHAPES_EXT", "Geometric_Shapes_Ext",
+      0x0001f780, 0x0001f7ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f780_0001f7d8L, 0x0001f7e0_0001f7ebL});
+    public static final Block GEORGIAN = new Block(
+      "GEORGIAN", "Georgian",
+      0x000010a0, 0x000010ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x10a0_10c7, 0x10cd_10cd, 0x10d0_10ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block GEORGIAN_EXTENDED = new Block(
+      "GEORGIAN_EXT", "Georgian_Ext",
+      0x00001c90, 0x00001cbf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1c90_1cba, 0x1cbd_1cbf},
+        EMPTY_LONG_ARRAY);
+    public static final Block GEORGIAN_SUPPLEMENT = new Block(
+      "GEORGIAN_SUP", "Georgian_Sup",
+      0x00002d00, 0x00002d2f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2d00_2d27, 0x2d2d_2d2d},
+        EMPTY_LONG_ARRAY);
+    public static final Block GLAGOLITIC = new Block(
+      "GLAGOLITIC", "Glagolitic",
+      0x00002c00, 0x00002c5f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2c00_2c5f},
+        EMPTY_LONG_ARRAY);
+    public static final Block GLAGOLITIC_SUPPLEMENT = new Block(
+      "GLAGOLITIC_SUP", "Glagolitic_Sup",
+      0x0001e000, 0x0001e02f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001e000_0001e018L, 0x0001e01b_0001e02aL});
+    public static final Block GOTHIC = new Block(
+      "GOTHIC", "Gothic",
+      0x00010330, 0x0001034f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010330_0001034aL});
-    public static final Script GRAN = new Script(
-      "GRAN", "GRAN",
+    public static final Block GRANTHA = new Block(
+      "GRANTHA", "Grantha",
+      0x00011300, 0x0001137f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011300_00011303L, 0x00011305_0001130cL, 0x0001130f_00011310L, 0x00011313_00011328L,
-          0x0001132a_00011330L, 0x00011332_00011333L, 0x00011335_00011339L, 0x0001133c_00011344L,
-          0x00011347_00011348L, 0x0001134b_0001134dL, 0x00011350_00011350L, 0x00011357_00011357L,
-          0x0001135d_00011363L, 0x00011366_0001136cL, 0x00011370_00011374L});
-    public static final Script GREK = new Script(
-      "GREK", "GREK",
+          0x00011300_0001130cL, 0x0001130f_00011310L, 0x00011313_00011344L, 0x00011347_00011348L,
+          0x0001134b_0001134dL, 0x00011350_00011350L, 0x00011357_00011357L, 0x0001135d_00011363L,
+          0x00011366_0001136cL, 0x00011370_00011374L});
+    public static final Block GREEK_AND_COPTIC = new Block(
+      "GREEK", "Greek",
+      0x00000370, 0x000003ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0370_0373, 0x0375_0377, 0x037a_037d, 0x037f_037f, 0x0384_0384, 0x0386_0386, 0x0388_038a, 0x038c_038c,
-          0x038e_03a1, 0x03a3_03e1, 0x03f0_03ff, 0x1d26_1d2a, 0x1d5d_1d61, 0x1d66_1d6a, 0x1dbf_1dbf, 0x1f00_1f15,
-          0x1f18_1f1d, 0x1f20_1f45, 0x1f48_1f4d, 0x1f50_1f57, 0x1f59_1f59, 0x1f5b_1f5b, 0x1f5d_1f5d, 0x1f5f_1f7d,
-          0x1f80_1fb4, 0x1fb6_1fc4, 0x1fc6_1fd3, 0x1fd6_1fdb, 0x1fdd_1fef, 0x1ff2_1ff4, 0x1ff6_1ffe, 0x2126_2126,
-          0xab65_ab65},
-        new long [] { 
-          0x00010140_0001018eL, 0x000101a0_000101a0L, 0x0001d200_0001d245L});
-    public static final Script GUJR = new Script(
-      "GUJR", "GUJR",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0a81_0a83, 0x0a85_0a8d, 0x0a8f_0a91, 0x0a93_0aa8, 0x0aaa_0ab0, 0x0ab2_0ab3, 0x0ab5_0ab9, 0x0abc_0ac5,
-          0x0ac7_0ac9, 0x0acb_0acd, 0x0ad0_0ad0, 0x0ae0_0ae3, 0x0ae6_0af1, 0x0af9_0aff},
+          0x0370_0377, 0x037a_037f, 0x0384_03ff},
         EMPTY_LONG_ARRAY);
-    public static final Script GURU = new Script(
-      "GURU", "GURU",
+    public static final Block GREEK_EXTENDED = new Block(
+      "GREEK_EXT", "Greek_Ext",
+      0x00001f00, 0x00001fff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0a01_0a03, 0x0a05_0a0a, 0x0a0f_0a10, 0x0a13_0a28, 0x0a2a_0a30, 0x0a32_0a33, 0x0a35_0a36, 0x0a38_0a39,
-          0x0a3c_0a3c, 0x0a3e_0a42, 0x0a47_0a48, 0x0a4b_0a4d, 0x0a51_0a51, 0x0a59_0a5c, 0x0a5e_0a5e, 0x0a66_0a76},
+          0x1f00_1f15, 0x1f18_1f1d, 0x1f20_1f45, 0x1f48_1f4d, 0x1f50_1f7d, 0x1f80_1fd3, 0x1fd6_1fef, 0x1ff2_1fff},
         EMPTY_LONG_ARRAY);
-    public static final Script HANG = new Script(
-      "HANG", "HANG",
+    public static final Block GUJARATI = new Block(
+      "GUJARATI", "Gujarati",
+      0x00000a80, 0x00000aff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x1100_11ff, 0x302e_302f, 0x3131_318e, 0x3200_321e, 0x3260_327e, 0xa960_a97c, 0xac00_d7a3, 0xd7b0_d7c6,
-          0xd7cb_d7fb, 0xffa0_ffbe, 0xffc2_ffc7, 0xffca_ffcf, 0xffd2_ffd7, 0xffda_ffdc},
+          0x0a80_0ab9, 0x0abc_0acd, 0x0ad0_0ad0, 0x0ae0_0ae3, 0x0ae6_0af1, 0x0af9_0aff},
         EMPTY_LONG_ARRAY);
-    public static final Script HANI = new Script(
-      "HANI", "HANI",
+    public static final Block GUNJALA_GONDI = new Block(
+      "GUNJALA_GONDI", "Gunjala_Gondi",
+      0x00011d60, 0x00011daf, 
         EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x2e80_2e99, 0x2e9b_2ef3, 0x2f00_2fd5, 0x3005_3005, 0x3007_3007, 0x3021_3029, 0x3038_303b, 0x3400_4dbf,
-          0x4e00_9ffc, 0xf900_fa6d, 0xfa70_fad9},
+        EMPTY_INT_ARRAY,
         new long [] { 
-          0x00016ff0_00016ff1L, 0x00020000_0002a6ddL, 0x0002a700_0002b734L, 0x0002b740_0002b81dL,
-          0x0002b820_0002cea1L, 0x0002ceb0_0002ebe0L, 0x0002f800_0002fa1dL, 0x00030000_0003134aL});
-    public static final Script HANO = new Script(
-      "HANO", "HANO",
+          0x00011d60_00011d98L, 0x00011da0_00011da9L});
+    public static final Block GURMUKHI = new Block(
+      "GURMUKHI", "Gurmukhi",
+      0x00000a00, 0x00000a7f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x1720_1734},
+          0x0a00_0a0a, 0x0a0f_0a10, 0x0a13_0a39, 0x0a3c_0a42, 0x0a47_0a48, 0x0a4b_0a4d, 0x0a51_0a51, 0x0a59_0a5e,
+          0x0a66_0a76},
         EMPTY_LONG_ARRAY);
-    public static final Script HATR = new Script(
-      "HATR", "HATR",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x000108e0_000108f2L, 0x000108f4_000108f5L, 0x000108fb_000108ffL});
-    public static final Script HEBR = new Script(
-      "HEBR", "HEBR",
+    public static final Block HALFWIDTH_AND_FULLWIDTH_FORMS = new Block(
+      "HALF_AND_FULL_FORMS", "Half_And_Full_Forms",
+      0x0000ff00, 0x0000ffef, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0591_05c7, 0x05d0_05ea, 0x05ef_05f4, 0xfb1d_fb36, 0xfb38_fb3c, 0xfb3e_fb3e, 0xfb40_fb41, 0xfb43_fb44,
-          0xfb46_fb4f},
+          0xff00_ffbe, 0xffc2_ffc7, 0xffca_ffcf, 0xffd2_ffd7, 0xffda_ffdc, 0xffe0_ffef},
         EMPTY_LONG_ARRAY);
-    public static final Script HIRA = new Script(
-      "HIRA", "HIRA",
+    public static final Block COMBINING_HALF_MARKS = new Block(
+      "HALF_MARKS", "Half_Marks",
+      0x0000fe20, 0x0000fe2f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x3041_3096, 0x309d_309f},
-        new long [] { 
-          0x0001b001_0001b11eL, 0x0001b150_0001b152L, 0x0001f200_0001f200L});
-    public static final Script HLUW = new Script(
-      "HLUW", "HLUW",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00014400_00014646L});
-    public static final Script HMNG = new Script(
-      "HMNG", "HMNG",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016b00_00016b45L, 0x00016b50_00016b59L, 0x00016b5b_00016b61L, 0x00016b63_00016b77L,
-          0x00016b7d_00016b8fL});
-    public static final Script HMNP = new Script(
-      "HMNP", "HMNP",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x0001e100_0001e12cL, 0x0001e130_0001e13dL, 0x0001e140_0001e149L, 0x0001e14e_0001e14fL});
-    public static final Script HUNG = new Script(
-      "HUNG", "HUNG",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010c80_00010cb2L, 0x00010cc0_00010cf2L, 0x00010cfa_00010cffL});
-    public static final Script ITAL = new Script(
-      "ITAL", "ITAL",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010300_00010323L, 0x0001032d_0001032fL});
-    public static final Script JAVA = new Script(
-      "JAVA", "JAVA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xa980_a9cd, 0xa9d0_a9d9, 0xa9de_a9df},
+          0xfe20_fe2f},
         EMPTY_LONG_ARRAY);
-    public static final Script KALI = new Script(
-      "KALI", "KALI",
+    public static final Block HANGUL_SYLLABLES = new Block(
+      "HANGUL", "Hangul",
+      0x0000ac00, 0x0000d7af, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0xa900_a92d, 0xa92f_a92f},
+          0xac00_d7a3},
         EMPTY_LONG_ARRAY);
-    public static final Script KANA = new Script(
-      "KANA", "KANA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x30a1_30fa, 0x30fd_30ff, 0x31f0_31ff, 0x32d0_32fe, 0x3300_3357, 0xff66_ff6f, 0xff71_ff9d},
-        new long [] { 
-          0x0001b000_0001b000L, 0x0001b164_0001b167L});
-    public static final Script KHAR = new Script(
-      "KHAR", "KHAR",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010a00_00010a03L, 0x00010a05_00010a06L, 0x00010a0c_00010a13L, 0x00010a15_00010a17L,
-          0x00010a19_00010a35L, 0x00010a38_00010a3aL, 0x00010a3f_00010a48L, 0x00010a50_00010a58L});
-    public static final Script KHMR = new Script(
-      "KHMR", "KHMR",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1780_17dd, 0x17e0_17e9, 0x17f0_17f9, 0x19e0_19ff},
-        EMPTY_LONG_ARRAY);
-    public static final Script KHOJ = new Script(
-      "KHOJ", "KHOJ",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011200_00011211L, 0x00011213_0001123eL});
-    public static final Script KITS = new Script(
-      "KITS", "KITS",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016fe4_00016fe4L, 0x00018b00_00018cd5L});
-    public static final Script KNDA = new Script(
-      "KNDA", "KNDA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0c80_0c8c, 0x0c8e_0c90, 0x0c92_0ca8, 0x0caa_0cb3, 0x0cb5_0cb9, 0x0cbc_0cc4, 0x0cc6_0cc8, 0x0cca_0ccd,
-          0x0cd5_0cd6, 0x0cde_0cde, 0x0ce0_0ce3, 0x0ce6_0cef, 0x0cf1_0cf2},
-        EMPTY_LONG_ARRAY);
-    public static final Script KTHI = new Script(
-      "KTHI", "KTHI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011080_000110c1L, 0x000110cd_000110cdL});
-    public static final Script LANA = new Script(
-      "LANA", "LANA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1a20_1a5e, 0x1a60_1a7c, 0x1a7f_1a89, 0x1a90_1a99, 0x1aa0_1aad},
-        EMPTY_LONG_ARRAY);
-    public static final Script LAOO = new Script(
-      "LAOO", "LAOO",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0e81_0e82, 0x0e84_0e84, 0x0e86_0e8a, 0x0e8c_0ea3, 0x0ea5_0ea5, 0x0ea7_0ebd, 0x0ec0_0ec4, 0x0ec6_0ec6,
-          0x0ec8_0ecd, 0x0ed0_0ed9, 0x0edc_0edf},
-        EMPTY_LONG_ARRAY);
-    public static final Script LATN = new Script(
-      "LATN", "LATN",
-        new char [] {
-          0x41_5a, 0x61_7a, 0xaa_aa, 0xba_ba, 0xc0_d6, 0xd8_f6, 0xf8_ff},
-        new int [] {
-          0x0100_02b8, 0x02e0_02e4, 0x1d00_1d25, 0x1d2c_1d5c, 0x1d62_1d65, 0x1d6b_1d77, 0x1d79_1dbe, 0x1e00_1eff,
-          0x2071_2071, 0x207f_207f, 0x2090_209c, 0x212a_212b, 0x2132_2132, 0x214e_214e, 0x2160_2188, 0x2c60_2c7f,
-          0xa722_a787, 0xa78b_a7bf, 0xa7c2_a7ca, 0xa7f5_a7ff, 0xab30_ab5a, 0xab5c_ab64, 0xab66_ab69, 0xfb00_fb06,
-          0xff21_ff3a, 0xff41_ff5a},
-        EMPTY_LONG_ARRAY);
-    public static final Script LEPC = new Script(
-      "LEPC", "LEPC",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1c00_1c37, 0x1c3b_1c49, 0x1c4d_1c4f},
-        EMPTY_LONG_ARRAY);
-    public static final Script LIMB = new Script(
-      "LIMB", "LIMB",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1900_191e, 0x1920_192b, 0x1930_193b, 0x1940_1940, 0x1944_194f},
-        EMPTY_LONG_ARRAY);
-    public static final Script LINA = new Script(
-      "LINA", "LINA",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010600_00010736L, 0x00010740_00010755L, 0x00010760_00010767L});
-    public static final Script LINB = new Script(
-      "LINB", "LINB",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010000_0001000bL, 0x0001000d_00010026L, 0x00010028_0001003aL, 0x0001003c_0001003dL,
-          0x0001003f_0001004dL, 0x00010050_0001005dL, 0x00010080_000100faL});
-    public static final Script LISU = new Script(
-      "LISU", "LISU",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xa4d0_a4ff},
-        new long [] { 
-          0x00011fb0_00011fb0L});
-    public static final Script LYCI = new Script(
-      "LYCI", "LYCI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010280_0001029cL});
-    public static final Script LYDI = new Script(
-      "LYDI", "LYDI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010920_00010939L, 0x0001093f_0001093fL});
-    public static final Script MAHJ = new Script(
-      "MAHJ", "MAHJ",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011150_00011176L});
-    public static final Script MAKA = new Script(
-      "MAKA", "MAKA",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011ee0_00011ef8L});
-    public static final Script MAND = new Script(
-      "MAND", "MAND",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0840_085b, 0x085e_085e},
-        EMPTY_LONG_ARRAY);
-    public static final Script MANI = new Script(
-      "MANI", "MANI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010ac0_00010ae6L, 0x00010aeb_00010af6L});
-    public static final Script MARC = new Script(
-      "MARC", "MARC",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011c70_00011c8fL, 0x00011c92_00011ca7L, 0x00011ca9_00011cb6L});
-    public static final Script MEDF = new Script(
-      "MEDF", "MEDF",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016e40_00016e9aL});
-    public static final Script MEND = new Script(
-      "MEND", "MEND",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x0001e800_0001e8c4L, 0x0001e8c7_0001e8d6L});
-    public static final Script MERC = new Script(
-      "MERC", "MERC",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x000109a0_000109b7L, 0x000109bc_000109cfL, 0x000109d2_000109ffL});
-    public static final Script MERO = new Script(
-      "MERO", "MERO",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010980_0001099fL});
-    public static final Script MLYM = new Script(
-      "MLYM", "MLYM",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0d00_0d0c, 0x0d0e_0d10, 0x0d12_0d44, 0x0d46_0d48, 0x0d4a_0d4f, 0x0d54_0d63, 0x0d66_0d7f},
-        EMPTY_LONG_ARRAY);
-    public static final Script MODI = new Script(
-      "MODI", "MODI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011600_00011644L, 0x00011650_00011659L});
-    public static final Script MONG = new Script(
-      "MONG", "MONG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1800_1801, 0x1804_1804, 0x1806_180e, 0x1810_1819, 0x1820_1878, 0x1880_18aa},
-        new long [] { 
-          0x00011660_0001166cL});
-    public static final Script MROO = new Script(
-      "MROO", "MROO",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016a40_00016a5eL, 0x00016a60_00016a69L, 0x00016a6e_00016a6fL});
-    public static final Script MTEI = new Script(
-      "MTEI", "MTEI",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xaae0_aaf6, 0xabc0_abed, 0xabf0_abf9},
-        EMPTY_LONG_ARRAY);
-    public static final Script MULT = new Script(
-      "MULT", "MULT",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011280_00011286L, 0x00011288_00011288L, 0x0001128a_0001128dL, 0x0001128f_0001129dL,
-          0x0001129f_000112a9L});
-    public static final Script MYMR = new Script(
-      "MYMR", "MYMR",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1000_109f, 0xa9e0_a9fe, 0xaa60_aa7f},
-        EMPTY_LONG_ARRAY);
-    public static final Script NAND = new Script(
-      "NAND", "NAND",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x000119a0_000119a7L, 0x000119aa_000119d7L, 0x000119da_000119e4L});
-    public static final Script NARB = new Script(
-      "NARB", "NARB",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010a80_00010a9fL});
-    public static final Script NBAT = new Script(
-      "NBAT", "NBAT",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010880_0001089eL, 0x000108a7_000108afL});
-    public static final Script NEWA = new Script(
-      "NEWA", "NEWA",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011400_0001145bL, 0x0001145d_00011461L});
-    public static final Script NKOO = new Script(
-      "NKOO", "NKOO",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x07c0_07fa, 0x07fd_07ff},
-        EMPTY_LONG_ARRAY);
-    public static final Script NSHU = new Script(
-      "NSHU", "NSHU",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016fe1_00016fe1L, 0x0001b170_0001b2fbL});
-    public static final Script OGAM = new Script(
-      "OGAM", "OGAM",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1680_169c},
-        EMPTY_LONG_ARRAY);
-    public static final Script OLCK = new Script(
-      "OLCK", "OLCK",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1c50_1c7f},
-        EMPTY_LONG_ARRAY);
-    public static final Script ORKH = new Script(
-      "ORKH", "ORKH",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010c00_00010c48L});
-    public static final Script ORYA = new Script(
-      "ORYA", "ORYA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0b01_0b03, 0x0b05_0b0c, 0x0b0f_0b10, 0x0b13_0b28, 0x0b2a_0b30, 0x0b32_0b33, 0x0b35_0b39, 0x0b3c_0b44,
-          0x0b47_0b48, 0x0b4b_0b4d, 0x0b55_0b57, 0x0b5c_0b5d, 0x0b5f_0b63, 0x0b66_0b77},
-        EMPTY_LONG_ARRAY);
-    public static final Script OSGE = new Script(
-      "OSGE", "OSGE",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x000104b0_000104d3L, 0x000104d8_000104fbL});
-    public static final Script OSMA = new Script(
-      "OSMA", "OSMA",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010480_0001049dL, 0x000104a0_000104a9L});
-    public static final Script PALM = new Script(
-      "PALM", "PALM",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010860_0001087fL});
-    public static final Script PAUC = new Script(
-      "PAUC", "PAUC",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00011ac0_00011af8L});
-    public static final Script PERM = new Script(
-      "PERM", "PERM",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010350_0001037aL});
-    public static final Script PHAG = new Script(
-      "PHAG", "PHAG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xa840_a877},
-        EMPTY_LONG_ARRAY);
-    public static final Script PHLI = new Script(
-      "PHLI", "PHLI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010b60_00010b72L, 0x00010b78_00010b7fL});
-    public static final Script PHLP = new Script(
-      "PHLP", "PHLP",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010b80_00010b91L, 0x00010b99_00010b9cL, 0x00010ba9_00010bafL});
-    public static final Script PHNX = new Script(
-      "PHNX", "PHNX",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010900_0001091bL, 0x0001091f_0001091fL});
-    public static final Script PLRD = new Script(
-      "PLRD", "PLRD",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00016f00_00016f4aL, 0x00016f4f_00016f87L, 0x00016f8f_00016f9fL});
-    public static final Script PRTI = new Script(
-      "PRTI", "PRTI",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010b40_00010b55L, 0x00010b58_00010b5fL});
-    public static final Script RJNG = new Script(
-      "RJNG", "RJNG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xa930_a953, 0xa95f_a95f},
-        EMPTY_LONG_ARRAY);
-    public static final Script ROHG = new Script(
-      "ROHG", "ROHG",
+    public static final Block HANIFI_ROHINGYA = new Block(
+      "HANIFI_ROHINGYA", "Hanifi_Rohingya",
+      0x00010d00, 0x00010d3f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00010d00_00010d27L, 0x00010d30_00010d39L});
-    public static final Script RUNR = new Script(
-      "RUNR", "RUNR",
+    public static final Block HANUNOO = new Block(
+      "HANUNOO", "Hanunoo",
+      0x00001720, 0x0000173f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x16a0_16ea, 0x16ee_16f8},
+          0x1720_1736},
         EMPTY_LONG_ARRAY);
-    public static final Script SAMR = new Script(
-      "SAMR", "SAMR",
+    public static final Block HATRAN = new Block(
+      "HATRAN", "Hatran",
+      0x000108e0, 0x000108ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000108e0_000108f5L, 0x000108fb_000108ffL});
+    public static final Block HEBREW = new Block(
+      "HEBREW", "Hebrew",
+      0x00000590, 0x000005ff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0800_082d, 0x0830_083e},
+          0x0590_05c7, 0x05d0_05ea, 0x05ef_05f4},
         EMPTY_LONG_ARRAY);
-    public static final Script SARB = new Script(
-      "SARB", "SARB",
-        EMPTY_CHAR_ARRAY,
-        EMPTY_INT_ARRAY,
-        new long [] { 
-          0x00010a60_00010a7fL});
-    public static final Script SAUR = new Script(
-      "SAUR", "SAUR",
+    public static final Block HIRAGANA = new Block(
+      "HIRAGANA", "Hiragana",
+      0x00003040, 0x0000309f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0xa880_a8c5, 0xa8ce_a8d9},
+          0x3040_3096, 0x3099_309f},
         EMPTY_LONG_ARRAY);
-    public static final Script SGNW = new Script(
-      "SGNW", "SGNW",
+    public static final Block IDEOGRAPHIC_DESCRIPTION_CHARACTERS = new Block(
+      "IDC", "IDC",
+      0x00002ff0, 0x00002fff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2ff0_2ffb},
+        EMPTY_LONG_ARRAY);
+    public static final Block IPA_EXTENSIONS = new Block(
+      "IPA_EXT", "IPA_Ext",
+      0x00000250, 0x000002af, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0250_02af},
+        EMPTY_LONG_ARRAY);
+    public static final Block IDEOGRAPHIC_SYMBOLS_AND_PUNCTUATION = new Block(
+      "IDEOGRAPHIC_SYMBOLS", "Ideographic_Symbols",
+      0x00016fe0, 0x00016fff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x0001d800_0001da8bL, 0x0001da9b_0001da9fL, 0x0001daa1_0001daafL});
-    public static final Script SHAW = new Script(
-      "SHAW", "SHAW",
+          0x00016fe0_00016fe4L, 0x00016ff0_00016ff1L});
+    public static final Block IMPERIAL_ARAMAIC = new Block(
+      "IMPERIAL_ARAMAIC", "Imperial_Aramaic",
+      0x00010840, 0x0001085f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010450_0001047fL});
-    public static final Script SHRD = new Script(
-      "SHRD", "SHRD",
+          0x00010840_0001085fL});
+    public static final Block COMMON_INDIC_NUMBER_FORMS = new Block(
+      "INDIC_NUMBER_FORMS", "Indic_Number_Forms",
+      0x0000a830, 0x0000a83f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa830_a839},
+        EMPTY_LONG_ARRAY);
+    public static final Block INDIC_SIYAQ_NUMBERS = new Block(
+      "INDIC_SIYAQ_NUMBERS", "Indic_Siyaq_Numbers",
+      0x0001ec70, 0x0001ecbf, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011180_000111dfL});
-    public static final Script SIDD = new Script(
-      "SIDD", "SIDD",
+          0x0001ec70_0001ecb4L});
+    public static final Block INSCRIPTIONAL_PAHLAVI = new Block(
+      "INSCRIPTIONAL_PAHLAVI", "Inscriptional_Pahlavi",
+      0x00010b60, 0x00010b7f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011580_000115b5L, 0x000115b8_000115ddL});
-    public static final Script SIND = new Script(
-      "SIND", "SIND",
+          0x00010b60_00010b72L, 0x00010b78_00010b7fL});
+    public static final Block INSCRIPTIONAL_PARTHIAN = new Block(
+      "INSCRIPTIONAL_PARTHIAN", "Inscriptional_Parthian",
+      0x00010b40, 0x00010b5f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010b40_00010b55L, 0x00010b58_00010b5fL});
+    public static final Block HANGUL_JAMO = new Block(
+      "JAMO", "Jamo",
+      0x00001100, 0x000011ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1100_11ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block HANGUL_JAMO_EXTENDED_A = new Block(
+      "JAMO_EXT_A", "Jamo_Ext_A",
+      0x0000a960, 0x0000a97f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa960_a97c},
+        EMPTY_LONG_ARRAY);
+    public static final Block HANGUL_JAMO_EXTENDED_B = new Block(
+      "JAMO_EXT_B", "Jamo_Ext_B",
+      0x0000d7b0, 0x0000d7ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xd7b0_d7c6, 0xd7cb_d7fb},
+        EMPTY_LONG_ARRAY);
+    public static final Block JAVANESE = new Block(
+      "JAVANESE", "Javanese",
+      0x0000a980, 0x0000a9df, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa980_a9d9, 0xa9de_a9df},
+        EMPTY_LONG_ARRAY);
+    public static final Block KAITHI = new Block(
+      "KAITHI", "Kaithi",
+      0x00011080, 0x000110cf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011080_000110c1L, 0x000110cd_000110cdL});
+    public static final Block KANA_EXTENDED_A = new Block(
+      "KANA_EXT_A", "Kana_Ext_A",
+      0x0001b100, 0x0001b12f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001b100_0001b11eL});
+    public static final Block KANA_SUPPLEMENT = new Block(
+      "KANA_SUP", "Kana_Sup",
+      0x0001b000, 0x0001b0ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001b000_0001b0ffL});
+    public static final Block KANBUN = new Block(
+      "KANBUN", "Kanbun",
+      0x00003190, 0x0000319f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x3190_319f},
+        EMPTY_LONG_ARRAY);
+    public static final Block KANGXI_RADICALS = new Block(
+      "KANGXI", "Kangxi",
+      0x00002f00, 0x00002fdf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2f00_2fd5},
+        EMPTY_LONG_ARRAY);
+    public static final Block KANNADA = new Block(
+      "KANNADA", "Kannada",
+      0x00000c80, 0x00000cff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0c80_0cb9, 0x0cbc_0ccd, 0x0cd5_0cd6, 0x0cde_0ce3, 0x0ce6_0cf2},
+        EMPTY_LONG_ARRAY);
+    public static final Block KATAKANA = new Block(
+      "KATAKANA", "Katakana",
+      0x000030a0, 0x000030ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x30a0_30ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block KATAKANA_PHONETIC_EXTENSIONS = new Block(
+      "KATAKANA_EXT", "Katakana_Ext",
+      0x000031f0, 0x000031ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x31f0_31ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block KAYAH_LI = new Block(
+      "KAYAH_LI", "Kayah_Li",
+      0x0000a900, 0x0000a92f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa900_a92f},
+        EMPTY_LONG_ARRAY);
+    public static final Block KHAROSHTHI = new Block(
+      "KHAROSHTHI", "Kharoshthi",
+      0x00010a00, 0x00010a5f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010a00_00010a06L, 0x00010a0c_00010a35L, 0x00010a38_00010a3aL, 0x00010a3f_00010a48L,
+          0x00010a50_00010a58L});
+    public static final Block KHITAN_SMALL_SCRIPT = new Block(
+      "KHITAN_SMALL_SCRIPT", "Khitan_Small_Script",
+      0x00018b00, 0x00018cff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00018b00_00018cd5L});
+    public static final Block KHMER = new Block(
+      "KHMER", "Khmer",
+      0x00001780, 0x000017ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1780_17dd, 0x17e0_17e9, 0x17f0_17f9},
+        EMPTY_LONG_ARRAY);
+    public static final Block KHMER_SYMBOLS = new Block(
+      "KHMER_SYMBOLS", "Khmer_Symbols",
+      0x000019e0, 0x000019ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x19e0_19ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block KHOJKI = new Block(
+      "KHOJKI", "Khojki",
+      0x00011200, 0x0001124f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011200_0001123eL});
+    public static final Block KHUDAWADI = new Block(
+      "KHUDAWADI", "Khudawadi",
+      0x000112b0, 0x000112ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x000112b0_000112eaL, 0x000112f0_000112f9L});
-    public static final Script SINH = new Script(
-      "SINH", "SINH",
+    public static final Block LAO = new Block(
+      "LAO", "Lao",
+      0x00000e80, 0x00000eff, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x0d81_0d83, 0x0d85_0d96, 0x0d9a_0db1, 0x0db3_0dbb, 0x0dbd_0dbd, 0x0dc0_0dc6, 0x0dca_0dca, 0x0dcf_0dd4,
-          0x0dd6_0dd6, 0x0dd8_0ddf, 0x0de6_0def, 0x0df2_0df4},
-        new long [] { 
-          0x000111e1_000111f4L});
-    public static final Script SOGD = new Script(
-      "SOGD", "SOGD",
+          0x0e80_0ebd, 0x0ec0_0ecd, 0x0ed0_0ed9, 0x0edc_0edf},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_1_SUPPLEMENT = new Block(
+      "LATIN_1_SUP", "Latin_1_Sup",
+      0x00000080, 0x000000ff, 
+        new char [] {
+          0x80_ff},
+        EMPTY_INT_ARRAY,
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_A = new Block(
+      "LATIN_EXT_A", "Latin_Ext_A",
+      0x00000100, 0x0000017f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0100_017f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_ADDITIONAL = new Block(
+      "LATIN_EXT_ADDITIONAL", "Latin_Ext_Additional",
+      0x00001e00, 0x00001eff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1e00_1eff},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_B = new Block(
+      "LATIN_EXT_B", "Latin_Ext_B",
+      0x00000180, 0x0000024f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0180_024f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_C = new Block(
+      "LATIN_EXT_C", "Latin_Ext_C",
+      0x00002c60, 0x00002c7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2c60_2c7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_D = new Block(
+      "LATIN_EXT_D", "Latin_Ext_D",
+      0x0000a720, 0x0000a7ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa720_a7bf, 0xa7c2_a7ca, 0xa7f5_a7ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block LATIN_EXTENDED_E = new Block(
+      "LATIN_EXT_E", "Latin_Ext_E",
+      0x0000ab30, 0x0000ab6f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xab30_ab6b},
+        EMPTY_LONG_ARRAY);
+    public static final Block LEPCHA = new Block(
+      "LEPCHA", "Lepcha",
+      0x00001c00, 0x00001c4f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1c00_1c37, 0x1c3b_1c49, 0x1c4d_1c4f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LETTERLIKE_SYMBOLS = new Block(
+      "LETTERLIKE_SYMBOLS", "Letterlike_Symbols",
+      0x00002100, 0x0000214f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2100_214f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LIMBU = new Block(
+      "LIMBU", "Limbu",
+      0x00001900, 0x0000194f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1900_192b, 0x1930_193b, 0x1940_1940, 0x1944_194f},
+        EMPTY_LONG_ARRAY);
+    public static final Block LINEAR_A = new Block(
+      "LINEAR_A", "Linear_A",
+      0x00010600, 0x0001077f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010f30_00010f59L});
-    public static final Script SOGO = new Script(
-      "SOGO", "SOGO",
+          0x00010600_00010736L, 0x00010740_00010755L, 0x00010760_00010767L});
+    public static final Block LINEAR_B_IDEOGRAMS = new Block(
+      "LINEAR_B_IDEOGRAMS", "Linear_B_Ideograms",
+      0x00010080, 0x000100ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010f00_00010f27L});
-    public static final Script SORA = new Script(
-      "SORA", "SORA",
+          0x00010080_000100faL});
+    public static final Block LINEAR_B_SYLLABARY = new Block(
+      "LINEAR_B_SYLLABARY", "Linear_B_Syllabary",
+      0x00010000, 0x0001007f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x000110d0_000110e8L, 0x000110f0_000110f9L});
-    public static final Script SOYO = new Script(
-      "SOYO", "SOYO",
+          0x00010000_0001004dL, 0x00010050_0001005dL});
+    public static final Block LISU = new Block(
+      "LISU", "Lisu",
+      0x0000a4d0, 0x0000a4ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa4d0_a4ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block LISU_SUPPLEMENT = new Block(
+      "LISU_SUP", "Lisu_Sup",
+      0x00011fb0, 0x00011fbf, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011a50_00011aa2L});
-    public static final Script SUND = new Script(
-      "SUND", "SUND",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1b80_1bbf, 0x1cc0_1cc7},
-        EMPTY_LONG_ARRAY);
-    public static final Script SYLO = new Script(
-      "SYLO", "SYLO",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0xa800_a82c},
-        EMPTY_LONG_ARRAY);
-    public static final Script SYRC = new Script(
-      "SYRC", "SYRC",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0700_070d, 0x070f_074a, 0x074d_074f, 0x0860_086a},
-        EMPTY_LONG_ARRAY);
-    public static final Script TAGB = new Script(
-      "TAGB", "TAGB",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1760_176c, 0x176e_1770, 0x1772_1773},
-        EMPTY_LONG_ARRAY);
-    public static final Script TAKR = new Script(
-      "TAKR", "TAKR",
+          0x00011fb0_00011fb0L});
+    public static final Block LYCIAN = new Block(
+      "LYCIAN", "Lycian",
+      0x00010280, 0x0001029f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011680_000116b8L, 0x000116c0_000116c9L});
-    public static final Script TALE = new Script(
-      "TALE", "TALE",
+          0x00010280_0001029cL});
+    public static final Block LYDIAN = new Block(
+      "LYDIAN", "Lydian",
+      0x00010920, 0x0001093f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010920_00010939L, 0x0001093f_0001093fL});
+    public static final Block MAHAJANI = new Block(
+      "MAHAJANI", "Mahajani",
+      0x00011150, 0x0001117f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011150_00011176L});
+    public static final Block MAHJONG_TILES = new Block(
+      "MAHJONG", "Mahjong",
+      0x0001f000, 0x0001f02f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f000_0001f02bL});
+    public static final Block MAKASAR = new Block(
+      "MAKASAR", "Makasar",
+      0x00011ee0, 0x00011eff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011ee0_00011ef8L});
+    public static final Block MALAYALAM = new Block(
+      "MALAYALAM", "Malayalam",
+      0x00000d00, 0x00000d7f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0x1950_196d, 0x1970_1974},
+          0x0d00_0d4f, 0x0d54_0d63, 0x0d66_0d7f},
         EMPTY_LONG_ARRAY);
-    public static final Script TALU = new Script(
-      "TALU", "TALU",
+    public static final Block MANDAIC = new Block(
+      "MANDAIC", "Mandaic",
+      0x00000840, 0x0000085f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0840_085b, 0x085e_085f},
+        EMPTY_LONG_ARRAY);
+    public static final Block MANICHAEAN = new Block(
+      "MANICHAEAN", "Manichaean",
+      0x00010ac0, 0x00010aff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010ac0_00010ae6L, 0x00010aeb_00010af6L});
+    public static final Block MARCHEN = new Block(
+      "MARCHEN", "Marchen",
+      0x00011c70, 0x00011cbf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011c70_00011c8fL, 0x00011c92_00011cb6L});
+    public static final Block MASARAM_GONDI = new Block(
+      "MASARAM_GONDI", "Masaram_Gondi",
+      0x00011d00, 0x00011d5f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011d00_00011d36L, 0x00011d3a_00011d47L, 0x00011d50_00011d59L});
+    public static final Block MATHEMATICAL_ALPHANUMERIC_SYMBOLS = new Block(
+      "MATH_ALPHANUM", "Math_Alphanum",
+      0x0001d400, 0x0001d7ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d400_0001d49fL, 0x0001d4a2_0001d4a2L, 0x0001d4a5_0001d4a6L, 0x0001d4a9_0001d50aL,
+          0x0001d50d_0001d546L, 0x0001d54a_0001d6a5L, 0x0001d6a8_0001d7cbL, 0x0001d7ce_0001d7ffL});
+    public static final Block MATHEMATICAL_OPERATORS = new Block(
+      "MATH_OPERATORS", "Math_Operators",
+      0x00002200, 0x000022ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2200_22ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MAYAN_NUMERALS = new Block(
+      "MAYAN_NUMERALS", "Mayan_Numerals",
+      0x0001d2e0, 0x0001d2ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d2e0_0001d2f3L});
+    public static final Block MEDEFAIDRIN = new Block(
+      "MEDEFAIDRIN", "Medefaidrin",
+      0x00016e40, 0x00016e9f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00016e40_00016e9aL});
+    public static final Block MEETEI_MAYEK = new Block(
+      "MEETEI_MAYEK", "Meetei_Mayek",
+      0x0000abc0, 0x0000abff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xabc0_abed, 0xabf0_abf9},
+        EMPTY_LONG_ARRAY);
+    public static final Block MEETEI_MAYEK_EXTENSIONS = new Block(
+      "MEETEI_MAYEK_EXT", "Meetei_Mayek_Ext",
+      0x0000aae0, 0x0000aaff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xaae0_aaf6},
+        EMPTY_LONG_ARRAY);
+    public static final Block MENDE_KIKAKUI = new Block(
+      "MENDE_KIKAKUI", "Mende_Kikakui",
+      0x0001e800, 0x0001e8df, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001e800_0001e8c4L, 0x0001e8c7_0001e8d6L});
+    public static final Block MEROITIC_CURSIVE = new Block(
+      "MEROITIC_CURSIVE", "Meroitic_Cursive",
+      0x000109a0, 0x000109ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000109a0_000109b7L, 0x000109bc_000109cfL, 0x000109d2_000109ffL});
+    public static final Block MEROITIC_HIEROGLYPHS = new Block(
+      "MEROITIC_HIEROGLYPHS", "Meroitic_Hieroglyphs",
+      0x00010980, 0x0001099f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010980_0001099fL});
+    public static final Block MIAO = new Block(
+      "MIAO", "Miao",
+      0x00016f00, 0x00016f9f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00016f00_00016f4aL, 0x00016f4f_00016f87L, 0x00016f8f_00016f9fL});
+    public static final Block MISCELLANEOUS_SYMBOLS_AND_ARROWS = new Block(
+      "MISC_ARROWS", "Misc_Arrows",
+      0x00002b00, 0x00002bff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2b00_2b73, 0x2b76_2bff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MISCELLANEOUS_MATHEMATICAL_SYMBOLS_A = new Block(
+      "MISC_MATH_SYMBOLS_A", "Misc_Math_Symbols_A",
+      0x000027c0, 0x000027ef, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x27c0_27ef},
+        EMPTY_LONG_ARRAY);
+    public static final Block MISCELLANEOUS_MATHEMATICAL_SYMBOLS_B = new Block(
+      "MISC_MATH_SYMBOLS_B", "Misc_Math_Symbols_B",
+      0x00002980, 0x000029ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2980_29ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS = new Block(
+      "MISC_PICTOGRAPHS", "Misc_Pictographs",
+      0x0001f300, 0x0001f5ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f300_0001f5ffL});
+    public static final Block MISCELLANEOUS_SYMBOLS = new Block(
+      "MISC_SYMBOLS", "Misc_Symbols",
+      0x00002600, 0x000026ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2600_26ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MISCELLANEOUS_TECHNICAL = new Block(
+      "MISC_TECHNICAL", "Misc_Technical",
+      0x00002300, 0x000023ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2300_23ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MODI = new Block(
+      "MODI", "Modi",
+      0x00011600, 0x0001165f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011600_00011644L, 0x00011650_00011659L});
+    public static final Block SPACING_MODIFIER_LETTERS = new Block(
+      "MODIFIER_LETTERS", "Modifier_Letters",
+      0x000002b0, 0x000002ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x02b0_02ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block MODIFIER_TONE_LETTERS = new Block(
+      "MODIFIER_TONE_LETTERS", "Modifier_Tone_Letters",
+      0x0000a700, 0x0000a71f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa700_a71f},
+        EMPTY_LONG_ARRAY);
+    public static final Block MONGOLIAN = new Block(
+      "MONGOLIAN", "Mongolian",
+      0x00001800, 0x000018af, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1800_1819, 0x1820_1878, 0x1880_18aa},
+        EMPTY_LONG_ARRAY);
+    public static final Block MONGOLIAN_SUPPLEMENT = new Block(
+      "MONGOLIAN_SUP", "Mongolian_Sup",
+      0x00011660, 0x0001167f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011660_0001166cL});
+    public static final Block MRO = new Block(
+      "MRO", "Mro",
+      0x00016a40, 0x00016a6f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00016a40_00016a69L, 0x00016a6e_00016a6fL});
+    public static final Block MULTANI = new Block(
+      "MULTANI", "Multani",
+      0x00011280, 0x000112af, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011280_000112a9L});
+    public static final Block MUSICAL_SYMBOLS = new Block(
+      "MUSIC", "Music",
+      0x0001d100, 0x0001d1ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d100_0001d126L, 0x0001d129_0001d1e8L});
+    public static final Block MYANMAR = new Block(
+      "MYANMAR", "Myanmar",
+      0x00001000, 0x0000109f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1000_109f},
+        EMPTY_LONG_ARRAY);
+    public static final Block MYANMAR_EXTENDED_A = new Block(
+      "MYANMAR_EXT_A", "Myanmar_Ext_A",
+      0x0000aa60, 0x0000aa7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xaa60_aa7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block MYANMAR_EXTENDED_B = new Block(
+      "MYANMAR_EXT_B", "Myanmar_Ext_B",
+      0x0000a9e0, 0x0000a9ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa9e0_a9ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block NKO = new Block(
+      "NKO", "NKo",
+      0x000007c0, 0x000007ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x07c0_07fa, 0x07fd_07ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block NABATAEAN = new Block(
+      "NABATAEAN", "Nabataean",
+      0x00010880, 0x000108af, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010880_0001089eL, 0x000108a7_000108afL});
+    public static final Block NANDINAGARI = new Block(
+      "NANDINAGARI", "Nandinagari",
+      0x000119a0, 0x000119ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000119a0_000119a7L, 0x000119aa_000119d7L, 0x000119da_000119e4L});
+    public static final Block NEW_TAI_LUE = new Block(
+      "NEW_TAI_LUE", "New_Tai_Lue",
+      0x00001980, 0x000019df, 
         EMPTY_CHAR_ARRAY,
         new int [] {
           0x1980_19ab, 0x19b0_19c9, 0x19d0_19da, 0x19de_19df},
         EMPTY_LONG_ARRAY);
-    public static final Script TAML = new Script(
-      "TAML", "TAML",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0b82_0b83, 0x0b85_0b8a, 0x0b8e_0b90, 0x0b92_0b95, 0x0b99_0b9a, 0x0b9c_0b9c, 0x0b9e_0b9f, 0x0ba3_0ba4,
-          0x0ba8_0baa, 0x0bae_0bb9, 0x0bbe_0bc2, 0x0bc6_0bc8, 0x0bca_0bcd, 0x0bd0_0bd0, 0x0bd7_0bd7, 0x0be6_0bfa},
-        new long [] { 
-          0x00011fc0_00011ff1L, 0x00011fff_00011fffL});
-    public static final Script TANG = new Script(
-      "TANG", "TANG",
+    public static final Block NEWA = new Block(
+      "NEWA", "Newa",
+      0x00011400, 0x0001147f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00016fe0_00016fe0L, 0x00017000_000187f7L, 0x00018800_00018affL, 0x00018d00_00018d08L});
-    public static final Script TAVT = new Script(
-      "TAVT", "TAVT",
+          0x00011400_00011461L});
+    public static final Block NUMBER_FORMS = new Block(
+      "NUMBER_FORMS", "Number_Forms",
+      0x00002150, 0x0000218f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0xaa80_aac2, 0xaadb_aadf},
+          0x2150_218b},
         EMPTY_LONG_ARRAY);
-    public static final Script TELU = new Script(
-      "TELU", "TELU",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0c00_0c0c, 0x0c0e_0c10, 0x0c12_0c28, 0x0c2a_0c39, 0x0c3d_0c44, 0x0c46_0c48, 0x0c4a_0c4d, 0x0c55_0c56,
-          0x0c58_0c5a, 0x0c60_0c63, 0x0c66_0c6f, 0x0c77_0c7f},
-        EMPTY_LONG_ARRAY);
-    public static final Script TFNG = new Script(
-      "TFNG", "TFNG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x2d30_2d67, 0x2d6f_2d70, 0x2d7f_2d7f},
-        EMPTY_LONG_ARRAY);
-    public static final Script TGLG = new Script(
-      "TGLG", "TGLG",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x1700_170c, 0x170e_1714},
-        EMPTY_LONG_ARRAY);
-    public static final Script THAA = new Script(
-      "THAA", "THAA",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0780_07b1},
-        EMPTY_LONG_ARRAY);
-    public static final Script THAI = new Script(
-      "THAI", "THAI",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0e01_0e3a, 0x0e40_0e5b},
-        EMPTY_LONG_ARRAY);
-    public static final Script TIBT = new Script(
-      "TIBT", "TIBT",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0f00_0f47, 0x0f49_0f6c, 0x0f71_0f97, 0x0f99_0fbc, 0x0fbe_0fcc, 0x0fce_0fd4, 0x0fd9_0fda},
-        EMPTY_LONG_ARRAY);
-    public static final Script TIRH = new Script(
-      "TIRH", "TIRH",
+    public static final Block NUSHU = new Block(
+      "NUSHU", "Nushu",
+      0x0001b170, 0x0001b2ff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00011480_000114c7L, 0x000114d0_000114d9L});
-    public static final Script UGAR = new Script(
-      "UGAR", "UGAR",
+          0x0001b170_0001b2fbL});
+    public static final Block NYIAKENG_PUACHUE_HMONG = new Block(
+      "NYIAKENG_PUACHUE_HMONG", "Nyiakeng_Puachue_Hmong",
+      0x0001e100, 0x0001e14f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010380_0001039dL, 0x0001039f_0001039fL});
-    public static final Script VAII = new Script(
-      "VAII", "VAII",
+          0x0001e100_0001e12cL, 0x0001e130_0001e13dL, 0x0001e140_0001e149L, 0x0001e14e_0001e14fL});
+    public static final Block OPTICAL_CHARACTER_RECOGNITION = new Block(
+      "OCR", "OCR",
+      0x00002440, 0x0000245f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0xa500_a62b},
+          0x2440_244a},
         EMPTY_LONG_ARRAY);
-    public static final Script WARA = new Script(
-      "WARA", "WARA",
+    public static final Block OGHAM = new Block(
+      "OGHAM", "Ogham",
+      0x00001680, 0x0000169f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1680_169c},
+        EMPTY_LONG_ARRAY);
+    public static final Block OL_CHIKI = new Block(
+      "OL_CHIKI", "Ol_Chiki",
+      0x00001c50, 0x00001c7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1c50_1c7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block OLD_HUNGARIAN = new Block(
+      "OLD_HUNGARIAN", "Old_Hungarian",
+      0x00010c80, 0x00010cff, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x000118a0_000118f2L, 0x000118ff_000118ffL});
-    public static final Script WCHO = new Script(
-      "WCHO", "WCHO",
+          0x00010c80_00010cb2L, 0x00010cc0_00010cf2L, 0x00010cfa_00010cffL});
+    public static final Block OLD_ITALIC = new Block(
+      "OLD_ITALIC", "Old_Italic",
+      0x00010300, 0x0001032f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x0001e2c0_0001e2f9L, 0x0001e2ff_0001e2ffL});
-    public static final Script XPEO = new Script(
-      "XPEO", "XPEO",
+          0x00010300_00010323L, 0x0001032d_0001032fL});
+    public static final Block OLD_NORTH_ARABIAN = new Block(
+      "OLD_NORTH_ARABIAN", "Old_North_Arabian",
+      0x00010a80, 0x00010a9f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010a80_00010a9fL});
+    public static final Block OLD_PERMIC = new Block(
+      "OLD_PERMIC", "Old_Permic",
+      0x00010350, 0x0001037f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010350_0001037aL});
+    public static final Block OLD_PERSIAN = new Block(
+      "OLD_PERSIAN", "Old_Persian",
+      0x000103a0, 0x000103df, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x000103a0_000103c3L, 0x000103c8_000103d5L});
-    public static final Script XSUX = new Script(
-      "XSUX", "XSUX",
+    public static final Block OLD_SOGDIAN = new Block(
+      "OLD_SOGDIAN", "Old_Sogdian",
+      0x00010f00, 0x00010f2f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00012000_00012399L, 0x00012400_0001246eL, 0x00012470_00012474L, 0x00012480_00012543L});
-    public static final Script YEZI = new Script(
-      "YEZI", "YEZI",
+          0x00010f00_00010f27L});
+    public static final Block OLD_SOUTH_ARABIAN = new Block(
+      "OLD_SOUTH_ARABIAN", "Old_South_Arabian",
+      0x00010a60, 0x00010a7f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
-          0x00010e80_00010ea9L, 0x00010eab_00010eadL, 0x00010eb0_00010eb1L});
-    public static final Script YIII = new Script(
-      "YIII", "YIII",
+          0x00010a60_00010a7fL});
+    public static final Block OLD_TURKIC = new Block(
+      "OLD_TURKIC", "Old_Turkic",
+      0x00010c00, 0x00010c4f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010c00_00010c48L});
+    public static final Block ORIYA = new Block(
+      "ORIYA", "Oriya",
+      0x00000b00, 0x00000b7f, 
         EMPTY_CHAR_ARRAY,
         new int [] {
-          0xa000_a48c, 0xa490_a4c6},
+          0x0b00_0b0c, 0x0b0f_0b10, 0x0b13_0b39, 0x0b3c_0b44, 0x0b47_0b48, 0x0b4b_0b4d, 0x0b55_0b57, 0x0b5c_0b63,
+          0x0b66_0b77},
         EMPTY_LONG_ARRAY);
-    public static final Script ZANB = new Script(
-      "ZANB", "ZANB",
+    public static final Block ORNAMENTAL_DINGBATS = new Block(
+      "ORNAMENTAL_DINGBATS", "Ornamental_Dingbats",
+      0x0001f650, 0x0001f67f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f650_0001f67fL});
+    public static final Block OSAGE = new Block(
+      "OSAGE", "Osage",
+      0x000104b0, 0x000104ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000104b0_000104d3L, 0x000104d8_000104fbL});
+    public static final Block OSMANYA = new Block(
+      "OSMANYA", "Osmanya",
+      0x00010480, 0x000104af, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010480_0001049dL, 0x000104a0_000104a9L});
+    public static final Block OTTOMAN_SIYAQ_NUMBERS = new Block(
+      "OTTOMAN_SIYAQ_NUMBERS", "Ottoman_Siyaq_Numbers",
+      0x0001ed00, 0x0001ed4f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001ed00_0001ed3dL});
+    public static final Block PAHAWH_HMONG = new Block(
+      "PAHAWH_HMONG", "Pahawh_Hmong",
+      0x00016b00, 0x00016b8f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00016b00_00016b45L, 0x00016b50_00016b77L, 0x00016b7d_00016b8fL});
+    public static final Block PALMYRENE = new Block(
+      "PALMYRENE", "Palmyrene",
+      0x00010860, 0x0001087f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010860_0001087fL});
+    public static final Block PAU_CIN_HAU = new Block(
+      "PAU_CIN_HAU", "Pau_Cin_Hau",
+      0x00011ac0, 0x00011aff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011ac0_00011af8L});
+    public static final Block PHAGS_PA = new Block(
+      "PHAGS_PA", "Phags_Pa",
+      0x0000a840, 0x0000a87f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa840_a877},
+        EMPTY_LONG_ARRAY);
+    public static final Block PHAISTOS_DISC = new Block(
+      "PHAISTOS", "Phaistos",
+      0x000101d0, 0x000101ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000101d0_000101fdL});
+    public static final Block PHOENICIAN = new Block(
+      "PHOENICIAN", "Phoenician",
+      0x00010900, 0x0001091f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010900_0001091bL, 0x0001091f_0001091fL});
+    public static final Block PHONETIC_EXTENSIONS = new Block(
+      "PHONETIC_EXT", "Phonetic_Ext",
+      0x00001d00, 0x00001d7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1d00_1d7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block PHONETIC_EXTENSIONS_SUPPLEMENT = new Block(
+      "PHONETIC_EXT_SUP", "Phonetic_Ext_Sup",
+      0x00001d80, 0x00001dbf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1d80_1dbf},
+        EMPTY_LONG_ARRAY);
+    public static final Block PLAYING_CARDS = new Block(
+      "PLAYING_CARDS", "Playing_Cards",
+      0x0001f0a0, 0x0001f0ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f0a0_0001f0aeL, 0x0001f0b1_0001f0f5L});
+    public static final Block PSALTER_PAHLAVI = new Block(
+      "PSALTER_PAHLAVI", "Psalter_Pahlavi",
+      0x00010b80, 0x00010baf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010b80_00010b91L, 0x00010b99_00010b9cL, 0x00010ba9_00010bafL});
+    public static final Block GENERAL_PUNCTUATION = new Block(
+      "PUNCTUATION", "Punctuation",
+      0x00002000, 0x0000206f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2000_206f},
+        EMPTY_LONG_ARRAY);
+    public static final Block REJANG = new Block(
+      "REJANG", "Rejang",
+      0x0000a930, 0x0000a95f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa930_a953, 0xa95f_a95f},
+        EMPTY_LONG_ARRAY);
+    public static final Block RUMI_NUMERAL_SYMBOLS = new Block(
+      "RUMI", "Rumi",
+      0x00010e60, 0x00010e7f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010e60_00010e7fL});
+    public static final Block RUNIC = new Block(
+      "RUNIC", "Runic",
+      0x000016a0, 0x000016ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x16a0_16f8},
+        EMPTY_LONG_ARRAY);
+    public static final Block SAMARITAN = new Block(
+      "SAMARITAN", "Samaritan",
+      0x00000800, 0x0000083f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0800_082d, 0x0830_083f},
+        EMPTY_LONG_ARRAY);
+    public static final Block SAURASHTRA = new Block(
+      "SAURASHTRA", "Saurashtra",
+      0x0000a880, 0x0000a8df, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa880_a8c5, 0xa8ce_a8d9},
+        EMPTY_LONG_ARRAY);
+    public static final Block SHARADA = new Block(
+      "SHARADA", "Sharada",
+      0x00011180, 0x000111df, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011180_000111dfL});
+    public static final Block SHAVIAN = new Block(
+      "SHAVIAN", "Shavian",
+      0x00010450, 0x0001047f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010450_0001047fL});
+    public static final Block SHORTHAND_FORMAT_CONTROLS = new Block(
+      "SHORTHAND_FORMAT_CONTROLS", "Shorthand_Format_Controls",
+      0x0001bca0, 0x0001bcaf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001bca0_0001bca3L});
+    public static final Block SIDDHAM = new Block(
+      "SIDDHAM", "Siddham",
+      0x00011580, 0x000115ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011580_000115b5L, 0x000115b8_000115ddL});
+    public static final Block SINHALA = new Block(
+      "SINHALA", "Sinhala",
+      0x00000d80, 0x00000dff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0d80_0d96, 0x0d9a_0dbd, 0x0dc0_0dc6, 0x0dca_0dca, 0x0dcf_0ddf, 0x0de6_0def, 0x0df2_0df4},
+        EMPTY_LONG_ARRAY);
+    public static final Block SINHALA_ARCHAIC_NUMBERS = new Block(
+      "SINHALA_ARCHAIC_NUMBERS", "Sinhala_Archaic_Numbers",
+      0x000111e0, 0x000111ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000111e0_000111f4L});
+    public static final Block SMALL_FORM_VARIANTS = new Block(
+      "SMALL_FORMS", "Small_Forms",
+      0x0000fe50, 0x0000fe6f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfe50_fe6b},
+        EMPTY_LONG_ARRAY);
+    public static final Block SMALL_KANA_EXTENSION = new Block(
+      "SMALL_KANA_EXT", "Small_Kana_Ext",
+      0x0001b130, 0x0001b16f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001b150_0001b152L, 0x0001b164_0001b167L});
+    public static final Block SOGDIAN = new Block(
+      "SOGDIAN", "Sogdian",
+      0x00010f30, 0x00010f6f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010f30_00010f59L});
+    public static final Block SORA_SOMPENG = new Block(
+      "SORA_SOMPENG", "Sora_Sompeng",
+      0x000110d0, 0x000110ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000110d0_000110e8L, 0x000110f0_000110f9L});
+    public static final Block SOYOMBO = new Block(
+      "SOYOMBO", "Soyombo",
+      0x00011a50, 0x00011aaf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011a50_00011aa2L});
+    public static final Block SPECIALS = new Block(
+      "SPECIALS", "Specials",
+      0x0000fff0, 0x0000ffff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfff9_fffd},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUNDANESE = new Block(
+      "SUNDANESE", "Sundanese",
+      0x00001b80, 0x00001bbf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1b80_1bbf},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUNDANESE_SUPPLEMENT = new Block(
+      "SUNDANESE_SUP", "Sundanese_Sup",
+      0x00001cc0, 0x00001ccf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1cc0_1cc7},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUPPLEMENTAL_ARROWS_A = new Block(
+      "SUP_ARROWS_A", "Sup_Arrows_A",
+      0x000027f0, 0x000027ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x27f0_27ff},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUPPLEMENTAL_ARROWS_B = new Block(
+      "SUP_ARROWS_B", "Sup_Arrows_B",
+      0x00002900, 0x0000297f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2900_297f},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUPPLEMENTAL_ARROWS_C = new Block(
+      "SUP_ARROWS_C", "Sup_Arrows_C",
+      0x0001f800, 0x0001f8ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f800_0001f80bL, 0x0001f810_0001f847L, 0x0001f850_0001f859L, 0x0001f860_0001f887L,
+          0x0001f890_0001f8adL, 0x0001f8b0_0001f8b1L});
+    public static final Block SUPPLEMENTAL_MATHEMATICAL_OPERATORS = new Block(
+      "SUP_MATH_OPERATORS", "Sup_Math_Operators",
+      0x00002a00, 0x00002aff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2a00_2aff},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUPPLEMENTAL_PUNCTUATION = new Block(
+      "SUP_PUNCTUATION", "Sup_Punctuation",
+      0x00002e00, 0x00002e7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2e00_2e52},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUPPLEMENTAL_SYMBOLS_AND_PICTOGRAPHS = new Block(
+      "SUP_SYMBOLS_AND_PICTOGRAPHS", "Sup_Symbols_And_Pictographs",
+      0x0001f900, 0x0001f9ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f900_0001f9ffL});
+    public static final Block SUPERSCRIPTS_AND_SUBSCRIPTS = new Block(
+      "SUPER_AND_SUB", "Super_And_Sub",
+      0x00002070, 0x0000209f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2070_2071, 0x2074_209c},
+        EMPTY_LONG_ARRAY);
+    public static final Block SUTTON_SIGNWRITING = new Block(
+      "SUTTON_SIGNWRITING", "Sutton_SignWriting",
+      0x0001d800, 0x0001daaf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d800_0001da8bL, 0x0001da9b_0001daafL});
+    public static final Block SYLOTI_NAGRI = new Block(
+      "SYLOTI_NAGRI", "Syloti_Nagri",
+      0x0000a800, 0x0000a82f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa800_a82c},
+        EMPTY_LONG_ARRAY);
+    public static final Block SYMBOLS_AND_PICTOGRAPHS_EXTENDED_A = new Block(
+      "SYMBOLS_AND_PICTOGRAPHS_EXT_A", "Symbols_And_Pictographs_Ext_A",
+      0x0001fa70, 0x0001faff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001fa70_0001fa74L, 0x0001fa78_0001fa7aL, 0x0001fa80_0001fa86L, 0x0001fa90_0001faa8L,
+          0x0001fab0_0001fab6L, 0x0001fac0_0001fac2L, 0x0001fad0_0001fad6L});
+    public static final Block SYMBOLS_FOR_LEGACY_COMPUTING = new Block(
+      "SYMBOLS_FOR_LEGACY_COMPUTING", "Symbols_For_Legacy_Computing",
+      0x0001fb00, 0x0001fbff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001fb00_0001fbcaL, 0x0001fbf0_0001fbf9L});
+    public static final Block SYRIAC = new Block(
+      "SYRIAC", "Syriac",
+      0x00000700, 0x0000074f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0700_074a, 0x074d_074f},
+        EMPTY_LONG_ARRAY);
+    public static final Block SYRIAC_SUPPLEMENT = new Block(
+      "SYRIAC_SUP", "Syriac_Sup",
+      0x00000860, 0x0000086f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0860_086a},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAGALOG = new Block(
+      "TAGALOG", "Tagalog",
+      0x00001700, 0x0000171f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1700_1714},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAGBANWA = new Block(
+      "TAGBANWA", "Tagbanwa",
+      0x00001760, 0x0000177f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1760_1773},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAGS = new Block(
+      "TAGS", "Tags",
+      0x000e0000, 0x000e007f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000e0000_000e0001L, 0x000e0020_000e007fL});
+    public static final Block TAI_LE = new Block(
+      "TAI_LE", "Tai_Le",
+      0x00001950, 0x0000197f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1950_196d, 0x1970_1974},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAI_THAM = new Block(
+      "TAI_THAM", "Tai_Tham",
+      0x00001a20, 0x00001aaf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1a20_1a7c, 0x1a7f_1a89, 0x1a90_1a99, 0x1aa0_1aad},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAI_VIET = new Block(
+      "TAI_VIET", "Tai_Viet",
+      0x0000aa80, 0x0000aadf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xaa80_aac2, 0xaadb_aadf},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAI_XUAN_JING_SYMBOLS = new Block(
+      "TAI_XUAN_JING", "Tai_Xuan_Jing",
+      0x0001d300, 0x0001d35f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001d300_0001d356L});
+    public static final Block TAKRI = new Block(
+      "TAKRI", "Takri",
+      0x00011680, 0x000116cf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011680_000116b8L, 0x000116c0_000116c9L});
+    public static final Block TAMIL = new Block(
+      "TAMIL", "Tamil",
+      0x00000b80, 0x00000bff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0b82_0b8a, 0x0b8e_0b95, 0x0b99_0b9f, 0x0ba3_0ba4, 0x0ba8_0baa, 0x0bae_0bb9, 0x0bbe_0bc2, 0x0bc6_0bcd,
+          0x0bd0_0bd0, 0x0bd7_0bd7, 0x0be6_0bfa},
+        EMPTY_LONG_ARRAY);
+    public static final Block TAMIL_SUPPLEMENT = new Block(
+      "TAMIL_SUP", "Tamil_Sup",
+      0x00011fc0, 0x00011fff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011fc0_00011ff1L, 0x00011fff_00011fffL});
+    public static final Block TANGUT = new Block(
+      "TANGUT", "Tangut",
+      0x00017000, 0x000187ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00017000_000187f7L});
+    public static final Block TANGUT_COMPONENTS = new Block(
+      "TANGUT_COMPONENTS", "Tangut_Components",
+      0x00018800, 0x00018aff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00018800_00018affL});
+    public static final Block TANGUT_SUPPLEMENT = new Block(
+      "TANGUT_SUP", "Tangut_Sup",
+      0x00018d00, 0x00018d8f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00018d00_00018d08L});
+    public static final Block TELUGU = new Block(
+      "TELUGU", "Telugu",
+      0x00000c00, 0x00000c7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0c00_0c39, 0x0c3d_0c4d, 0x0c55_0c5a, 0x0c60_0c63, 0x0c66_0c6f, 0x0c77_0c7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block THAANA = new Block(
+      "THAANA", "Thaana",
+      0x00000780, 0x000007bf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0780_07b1},
+        EMPTY_LONG_ARRAY);
+    public static final Block THAI = new Block(
+      "THAI", "Thai",
+      0x00000e00, 0x00000e7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0e00_0e3a, 0x0e3f_0e5b},
+        EMPTY_LONG_ARRAY);
+    public static final Block TIBETAN = new Block(
+      "TIBETAN", "Tibetan",
+      0x00000f00, 0x00000fff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x0f00_0f6c, 0x0f71_0fda},
+        EMPTY_LONG_ARRAY);
+    public static final Block TIFINAGH = new Block(
+      "TIFINAGH", "Tifinagh",
+      0x00002d30, 0x00002d7f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x2d30_2d67, 0x2d6f_2d70, 0x2d7f_2d7f},
+        EMPTY_LONG_ARRAY);
+    public static final Block TIRHUTA = new Block(
+      "TIRHUTA", "Tirhuta",
+      0x00011480, 0x000114df, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00011480_000114c7L, 0x000114d0_000114d9L});
+    public static final Block TRANSPORT_AND_MAP_SYMBOLS = new Block(
+      "TRANSPORT_AND_MAP", "Transport_And_Map",
+      0x0001f680, 0x0001f6ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001f680_0001f6d7L, 0x0001f6e0_0001f6ecL, 0x0001f6f0_0001f6fcL});
+    public static final Block UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS = new Block(
+      "UCAS", "UCAS",
+      0x00001400, 0x0000167f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1400_167f},
+        EMPTY_LONG_ARRAY);
+    public static final Block UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED = new Block(
+      "UCAS_EXT", "UCAS_Ext",
+      0x000018b0, 0x000018ff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x18b0_18f5},
+        EMPTY_LONG_ARRAY);
+    public static final Block UGARITIC = new Block(
+      "UGARITIC", "Ugaritic",
+      0x00010380, 0x0001039f, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010380_0001039fL});
+    public static final Block VARIATION_SELECTORS = new Block(
+      "VS", "VS",
+      0x0000fe00, 0x0000fe0f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfe00_fe0f},
+        EMPTY_LONG_ARRAY);
+    public static final Block VARIATION_SELECTORS_SUPPLEMENT = new Block(
+      "VS_SUP", "VS_Sup",
+      0x000e0100, 0x000e01ef, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000e0100_000e01efL});
+    public static final Block VAI = new Block(
+      "VAI", "Vai",
+      0x0000a500, 0x0000a63f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa500_a62b},
+        EMPTY_LONG_ARRAY);
+    public static final Block VEDIC_EXTENSIONS = new Block(
+      "VEDIC_EXT", "Vedic_Ext",
+      0x00001cd0, 0x00001cff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x1cd0_1cfa},
+        EMPTY_LONG_ARRAY);
+    public static final Block VERTICAL_FORMS = new Block(
+      "VERTICAL_FORMS", "Vertical_Forms",
+      0x0000fe10, 0x0000fe1f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xfe10_fe19},
+        EMPTY_LONG_ARRAY);
+    public static final Block WANCHO = new Block(
+      "WANCHO", "Wancho",
+      0x0001e2c0, 0x0001e2ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x0001e2c0_0001e2f9L, 0x0001e2ff_0001e2ffL});
+    public static final Block WARANG_CITI = new Block(
+      "WARANG_CITI", "Warang_Citi",
+      0x000118a0, 0x000118ff, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x000118a0_000118f2L, 0x000118ff_000118ffL});
+    public static final Block YEZIDI = new Block(
+      "YEZIDI", "Yezidi",
+      0x00010e80, 0x00010ebf, 
+        EMPTY_CHAR_ARRAY,
+        EMPTY_INT_ARRAY,
+        new long [] { 
+          0x00010e80_00010eadL, 0x00010eb0_00010eb1L});
+    public static final Block YI_RADICALS = new Block(
+      "YI_RADICALS", "Yi_Radicals",
+      0x0000a490, 0x0000a4cf, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa490_a4c6},
+        EMPTY_LONG_ARRAY);
+    public static final Block YI_SYLLABLES = new Block(
+      "YI_SYLLABLES", "Yi_Syllables",
+      0x0000a000, 0x0000a48f, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0xa000_a48c},
+        EMPTY_LONG_ARRAY);
+    public static final Block YIJING_HEXAGRAM_SYMBOLS = new Block(
+      "YIJING", "Yijing",
+      0x00004dc0, 0x00004dff, 
+        EMPTY_CHAR_ARRAY,
+        new int [] {
+          0x4dc0_4dff},
+        EMPTY_LONG_ARRAY);
+    public static final Block ZANABAZAR_SQUARE = new Block(
+      "ZANABAZAR_SQUARE", "Zanabazar_Square",
+      0x00011a00, 0x00011a4f, 
         EMPTY_CHAR_ARRAY,
         EMPTY_INT_ARRAY,
         new long [] { 
           0x00011a00_00011a47L});
-    public static final Script ZINH = new Script(
-      "ZINH", "ZINH",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x0300_036f, 0x0485_0486, 0x064b_0655, 0x0670_0670, 0x0951_0954, 0x1ab0_1ac0, 0x1cd0_1cd2, 0x1cd4_1ce0,
-          0x1ce2_1ce8, 0x1ced_1ced, 0x1cf4_1cf4, 0x1cf8_1cf9, 0x1dc0_1df9, 0x1dfb_1dff, 0x200c_200d, 0x20d0_20f0,
-          0x302a_302d, 0x3099_309a, 0xfe00_fe0f, 0xfe20_fe2d},
-        new long [] { 
-          0x000101fd_000101fdL, 0x000102e0_000102e0L, 0x0001133b_0001133bL, 0x0001d167_0001d169L,
-          0x0001d17b_0001d182L, 0x0001d185_0001d18bL, 0x0001d1aa_0001d1adL, 0x000e0100_000e01efL});
-    public static final Script ZYYY = new Script(
-      "ZYYY", "ZYYY",
-        new char [] {
-          0x00_40, 0x5b_60, 0x7b_a9, 0xab_b9, 0xbb_bf, 0xd7_d7, 0xf7_f7},
-        new int [] {
-          0x02b9_02df, 0x02e5_02e9, 0x02ec_02ff, 0x0374_0374, 0x037e_037e, 0x0385_0385, 0x0387_0387, 0x0605_0605,
-          0x060c_060c, 0x061b_061b, 0x061f_061f, 0x0640_0640, 0x06dd_06dd, 0x08e2_08e2, 0x0964_0965, 0x0e3f_0e3f,
-          0x0fd5_0fd8, 0x10fb_10fb, 0x16eb_16ed, 0x1735_1736, 0x1802_1803, 0x1805_1805, 0x1cd3_1cd3, 0x1ce1_1ce1,
-          0x1ce9_1cec, 0x1cee_1cf3, 0x1cf5_1cf7, 0x1cfa_1cfa, 0x2000_200b, 0x200e_2064, 0x2066_2070, 0x2074_207e,
-          0x2080_208e, 0x20a0_20bf, 0x2100_2125, 0x2127_2129, 0x212c_2131, 0x2133_214d, 0x214f_215f, 0x2189_218b,
-          0x2190_2426, 0x2440_244a, 0x2460_27ff, 0x2900_2b73, 0x2b76_2b95, 0x2b97_2bff, 0x2e00_2e52, 0x2ff0_2ffb,
-          0x3000_3004, 0x3006_3006, 0x3008_3020, 0x3030_3037, 0x303c_303f, 0x309b_309c, 0x30a0_30a0, 0x30fb_30fc,
-          0x3190_319f, 0x31c0_31e3, 0x3220_325f, 0x327f_32cf, 0x32ff_32ff, 0x3358_33ff, 0x4dc0_4dff, 0xa700_a721,
-          0xa788_a78a, 0xa830_a839, 0xa92e_a92e, 0xa9cf_a9cf, 0xab5b_ab5b, 0xab6a_ab6b, 0xfd3e_fd3f, 0xfe10_fe19,
-          0xfe30_fe52, 0xfe54_fe66, 0xfe68_fe6b, 0xfeff_feff, 0xff01_ff20, 0xff3b_ff40, 0xff5b_ff65, 0xff70_ff70,
-          0xff9e_ff9f, 0xffe0_ffe6, 0xffe8_ffee, 0xfff9_fffd},
-        new long [] { 
-          0x00010100_00010102L, 0x00010107_00010133L, 0x00010137_0001013fL, 0x00010190_0001019cL,
-          0x000101d0_000101fcL, 0x000102e1_000102fbL, 0x00016fe2_00016fe3L, 0x0001bca0_0001bca3L,
-          0x0001d000_0001d0f5L, 0x0001d100_0001d126L, 0x0001d129_0001d166L, 0x0001d16a_0001d17aL,
-          0x0001d183_0001d184L, 0x0001d18c_0001d1a9L, 0x0001d1ae_0001d1e8L, 0x0001d2e0_0001d2f3L,
-          0x0001d300_0001d356L, 0x0001d360_0001d378L, 0x0001d400_0001d454L, 0x0001d456_0001d49cL,
-          0x0001d49e_0001d49fL, 0x0001d4a2_0001d4a2L, 0x0001d4a5_0001d4a6L, 0x0001d4a9_0001d4acL,
-          0x0001d4ae_0001d4b9L, 0x0001d4bb_0001d4bbL, 0x0001d4bd_0001d4c3L, 0x0001d4c5_0001d505L,
-          0x0001d507_0001d50aL, 0x0001d50d_0001d514L, 0x0001d516_0001d51cL, 0x0001d51e_0001d539L,
-          0x0001d53b_0001d53eL, 0x0001d540_0001d544L, 0x0001d546_0001d546L, 0x0001d54a_0001d550L,
-          0x0001d552_0001d6a5L, 0x0001d6a8_0001d7cbL, 0x0001d7ce_0001d7ffL, 0x0001ec71_0001ecb4L,
-          0x0001ed01_0001ed3dL, 0x0001f000_0001f02bL, 0x0001f030_0001f093L, 0x0001f0a0_0001f0aeL,
-          0x0001f0b1_0001f0bfL, 0x0001f0c1_0001f0cfL, 0x0001f0d1_0001f0f5L, 0x0001f100_0001f1adL,
-          0x0001f1e6_0001f1ffL, 0x0001f201_0001f202L, 0x0001f210_0001f23bL, 0x0001f240_0001f248L,
-          0x0001f250_0001f251L, 0x0001f260_0001f265L, 0x0001f300_0001f6d7L, 0x0001f6e0_0001f6ecL,
-          0x0001f6f0_0001f6fcL, 0x0001f700_0001f773L, 0x0001f780_0001f7d8L, 0x0001f7e0_0001f7ebL,
-          0x0001f800_0001f80bL, 0x0001f810_0001f847L, 0x0001f850_0001f859L, 0x0001f860_0001f887L,
-          0x0001f890_0001f8adL, 0x0001f8b0_0001f8b1L, 0x0001f900_0001f978L, 0x0001f97a_0001f9cbL,
-          0x0001f9cd_0001fa53L, 0x0001fa60_0001fa6dL, 0x0001fa70_0001fa74L, 0x0001fa78_0001fa7aL,
-          0x0001fa80_0001fa86L, 0x0001fa90_0001faa8L, 0x0001fab0_0001fab6L, 0x0001fac0_0001fac2L,
-          0x0001fad0_0001fad6L, 0x0001fb00_0001fb92L, 0x0001fb94_0001fbcaL, 0x0001fbf0_0001fbf9L,
-          0x000e0001_000e0001L, 0x000e0020_000e007fL});
-    public static final Script ZZZZ = new Script(
-      "ZZZZ", "ZZZZ",
-        EMPTY_CHAR_ARRAY,
-        new int [] {
-          0x038b_038b, 0x038d_038d, 0x03a2_03a2, 0x0530_0530, 0x0590_0590, 0x061d_061d, 0x070e_070e, 0x083f_083f,
-          0x085f_085f, 0x08b5_08b5, 0x0984_0984, 0x09a9_09a9, 0x09b1_09b1, 0x09de_09de, 0x09ff_0a00, 0x0a04_0a04,
-          0x0a29_0a29, 0x0a31_0a31, 0x0a34_0a34, 0x0a37_0a37, 0x0a3d_0a3d, 0x0a5d_0a5d, 0x0a80_0a80, 0x0a84_0a84,
-          0x0a8e_0a8e, 0x0a92_0a92, 0x0aa9_0aa9, 0x0ab1_0ab1, 0x0ab4_0ab4, 0x0ac6_0ac6, 0x0aca_0aca, 0x0b00_0b00,
-          0x0b04_0b04, 0x0b29_0b29, 0x0b31_0b31, 0x0b34_0b34, 0x0b5e_0b5e, 0x0b84_0b84, 0x0b91_0b91, 0x0b9b_0b9b,
-          0x0b9d_0b9d, 0x0bc9_0bc9, 0x0c0d_0c0d, 0x0c11_0c11, 0x0c29_0c29, 0x0c45_0c45, 0x0c49_0c49, 0x0c57_0c57,
-          0x0c8d_0c8d, 0x0c91_0c91, 0x0ca9_0ca9, 0x0cb4_0cb4, 0x0cc5_0cc5, 0x0cc9_0cc9, 0x0cdf_0cdf, 0x0cf0_0cf0,
-          0x0d0d_0d0d, 0x0d11_0d11, 0x0d45_0d45, 0x0d49_0d49, 0x0d80_0d80, 0x0d84_0d84, 0x0db2_0db2, 0x0dbc_0dbc,
-          0x0dd5_0dd5, 0x0dd7_0dd7, 0x0e00_0e00, 0x0e80_0e80, 0x0e83_0e83, 0x0e85_0e85, 0x0e8b_0e8b, 0x0ea4_0ea4,
-          0x0ea6_0ea6, 0x0ec5_0ec5, 0x0ec7_0ec7, 0x0f48_0f48, 0x0f98_0f98, 0x0fbd_0fbd, 0x0fcd_0fcd, 0x10c6_10c6,
-          0x1249_1249, 0x1257_1257, 0x1259_1259, 0x1289_1289, 0x12b1_12b1, 0x12bf_12bf, 0x12c1_12c1, 0x12d7_12d7,
-          0x1311_1311, 0x170d_170d, 0x176d_176d, 0x1771_1771, 0x180f_180f, 0x191f_191f, 0x1a5f_1a5f, 0x1dfa_1dfa,
-          0x1f58_1f58, 0x1f5a_1f5a, 0x1f5c_1f5c, 0x1f5e_1f5e, 0x1fb5_1fb5, 0x1fc5_1fc5, 0x1fdc_1fdc, 0x1ff5_1ff5,
-          0x1fff_1fff, 0x2065_2065, 0x208f_208f, 0x2b96_2b96, 0x2c2f_2c2f, 0x2c5f_2c5f, 0x2d26_2d26, 0x2da7_2da7,
-          0x2daf_2daf, 0x2db7_2db7, 0x2dbf_2dbf, 0x2dc7_2dc7, 0x2dcf_2dcf, 0x2dd7_2dd7, 0x2ddf_2ddf, 0x2e9a_2e9a,
-          0x3040_3040, 0x3130_3130, 0x318f_318f, 0x321f_321f, 0xa9ce_a9ce, 0xa9ff_a9ff, 0xab00_ab00, 0xab27_ab27,
-          0xab2f_ab2f, 0xfb37_fb37, 0xfb3d_fb3d, 0xfb3f_fb3f, 0xfb42_fb42, 0xfb45_fb45, 0xfe53_fe53, 0xfe67_fe67,
-          0xfe75_fe75, 0xff00_ff00, 0xffe7_ffe7, 0xffef_ffef},
-        new long [] { 
-          0x0001000c_0001000cL, 0x00010027_00010027L, 0x0001003b_0001003bL, 0x0001003e_0001003eL,
-          0x0001018f_0001018fL, 0x0001039e_0001039eL, 0x00010809_00010809L, 0x00010836_00010836L,
-          0x00010856_00010856L, 0x000108f3_000108f3L, 0x00010a04_00010a04L, 0x00010a14_00010a14L,
-          0x00010a18_00010a18L, 0x00010e7f_00010e7fL, 0x00010eaa_00010eaaL, 0x00011135_00011135L,
-          0x000111e0_000111e0L, 0x00011212_00011212L, 0x00011287_00011287L, 0x00011289_00011289L,
-          0x0001128e_0001128eL, 0x0001129e_0001129eL, 0x00011304_00011304L, 0x00011329_00011329L,
-          0x00011331_00011331L, 0x00011334_00011334L, 0x0001133a_0001133aL, 0x0001145c_0001145cL,
-          0x00011914_00011914L, 0x00011917_00011917L, 0x00011936_00011936L, 0x00011c09_00011c09L,
-          0x00011c37_00011c37L, 0x00011ca8_00011ca8L, 0x00011d07_00011d07L, 0x00011d0a_00011d0aL,
-          0x00011d3b_00011d3bL, 0x00011d3e_00011d3eL, 0x00011d66_00011d66L, 0x00011d69_00011d69L,
-          0x00011d8f_00011d8fL, 0x00011d92_00011d92L, 0x0001246f_0001246fL, 0x0001342f_0001342fL,
-          0x00016a5f_00016a5fL, 0x00016b5a_00016b5aL, 0x00016b62_00016b62L, 0x0001d455_0001d455L,
-          0x0001d49d_0001d49dL, 0x0001d4ad_0001d4adL, 0x0001d4ba_0001d4baL, 0x0001d4bc_0001d4bcL,
-          0x0001d4c4_0001d4c4L, 0x0001d506_0001d506L, 0x0001d515_0001d515L, 0x0001d51d_0001d51dL,
-          0x0001d53a_0001d53aL, 0x0001d53f_0001d53fL, 0x0001d545_0001d545L, 0x0001d551_0001d551L,
-          0x0001daa0_0001daa0L, 0x0001e007_0001e007L, 0x0001e022_0001e022L, 0x0001e025_0001e025L,
-          0x0001ec70_0001ec70L, 0x0001ed00_0001ed00L, 0x0001ee04_0001ee04L, 0x0001ee20_0001ee20L,
-          0x0001ee23_0001ee23L, 0x0001ee28_0001ee28L, 0x0001ee33_0001ee33L, 0x0001ee38_0001ee38L,
-          0x0001ee3a_0001ee3aL, 0x0001ee48_0001ee48L, 0x0001ee4a_0001ee4aL, 0x0001ee4c_0001ee4cL,
-          0x0001ee50_0001ee50L, 0x0001ee53_0001ee53L, 0x0001ee58_0001ee58L, 0x0001ee5a_0001ee5aL,
-          0x0001ee5c_0001ee5cL, 0x0001ee5e_0001ee5eL, 0x0001ee60_0001ee60L, 0x0001ee63_0001ee63L,
-          0x0001ee6b_0001ee6bL, 0x0001ee73_0001ee73L, 0x0001ee78_0001ee78L, 0x0001ee7d_0001ee7dL,
-          0x0001ee7f_0001ee7fL, 0x0001ee8a_0001ee8aL, 0x0001eea4_0001eea4L, 0x0001eeaa_0001eeaaL,
-          0x0001f0c0_0001f0c0L, 0x0001f0d0_0001f0d0L, 0x0001f979_0001f979L, 0x0001f9cc_0001f9ccL,
-          0x0001fb93_0001fb93L, 0x000e0000_000e0000L});
+
+    private static final HashMap<Character.UnicodeBlock, Block> blockMap = new HashMap<>();
+    private final int blockStart;
+    private final int blockEnd;
 
     private Block(
-        final String alias,
         final String name,
+        final String alias,
+        final int blockStart,
+        final int blockEnd,
         final char[] singleByteCodePointRanges,
         final int[] doubleByteCodePointRanges,
         final long[] tripleByteCodePointRanges) {
       super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+      this.blockStart = blockStart;
+      this.blockEnd = blockEnd;
+      try {
+        blockMap.put(Character.UnicodeBlock.of(blockStart), this);
+      } catch (final IllegalArgumentException e) {
+        // ignore this – it means we have a more recent Unicode data-set that the JDK
+      }
+    }
+
+    public static Block of(final Character.UnicodeBlock unicodeBlock) {
+      return blockMap.get(unicodeBlock);
+    }
+
+    public boolean isInBlock(final char ch) {
+      return blockStart <= ch && ch <= blockEnd;
+    }
+
+    public boolean isInBlock(final int codePoint) {
+      return blockStart <= codePoint && codePoint <= blockEnd;
+    }
+
+    public int getBlockStart() {
+      return blockStart;
+    }
+
+    public int getBlockEnd() {
+      return blockEnd;
+    }
+  }
+
+  public interface Subset {
+
+    boolean isInSubset(final int codePoint);
+
+    default boolean isInSubset(final char ch) {
+      return isInSubset((int) ch);
+    }
+
+    default boolean isNotInSubset(final int codePoint) {
+      return !isInSubset(codePoint);
+    }
+
+    default boolean isNotInSubset(final char ch) {
+      return !isInSubset((int) ch);
+    }
+
+    static CompositeSubset of(final Subset... subsets) {
+      if (subsets == null || subsets.length == 0) {
+        return Collections::emptyList;
+      }
+      return () -> List.of(subsets);
+    }
+  }
+
+  interface CompositeSubset extends Subset {
+
+    Collection<Subset> getSubsets();
+
+    default boolean isInSubset(final int codePoint) {
+      for (Subset subset : getSubsets()) {
+        if (subset.isInSubset(codePoint)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  static class RangedSubset implements Subset {
+
+    protected final String name;
+    protected final String alias;
+    protected final char[] singleByteCodePointRanges;
+    protected final int[] doubleByteCodePointRanges;
+    protected final long[] tripleByteCodePointRanges;
+    protected final int size;
+
+    protected RangedSubset(
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      this("", "", singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+    }
+
+    private RangedSubset(
+        final String name,
+        final String alias,
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      this.name = name;
+      this.alias = alias;
+      this.singleByteCodePointRanges = singleByteCodePointRanges == null ? EMPTY_CHAR_ARRAY : singleByteCodePointRanges;
+      this.doubleByteCodePointRanges = doubleByteCodePointRanges == null ? EMPTY_INT_ARRAY : doubleByteCodePointRanges;
+      this.tripleByteCodePointRanges = tripleByteCodePointRanges == null ? EMPTY_LONG_ARRAY : tripleByteCodePointRanges;
+      this.size = this.singleByteCodePointRanges.length
+          + this.doubleByteCodePointRanges.length
+          + this.tripleByteCodePointRanges.length;
+    }
+
+    public static RangedSubsetBuilder builder() {
+      return new RangedSubsetBuilder();
+    }
+
+    int size() {
+      return size;
+    }
+
+    boolean isEmpty() {
+      return size() == 0;
+    }
+
+    boolean isNotEmpty() {
+      return !isEmpty();
+    }
+
+    /**
+     * Returns an array of 2-byte code-point ranges stored as char values. Each range comprises an inclusive-from value and an inclusive-to value. The
+     * most-significant 8 bits hold the inclusive-from value. The least-significant 8 bits hold the inclusive-to value. The returned array must be
+     * sorted from low-to-high.
+     */
+    char[] getSingleByteCodePointRanges() {
+      // Protect out data by returning a copy
+      return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length);
+    }
+
+    /**
+     * Returns an array of 2-byte code-point ranges stored as integer values. Each range comprises an inclusive-from value and an inclusive-to value.
+     * The most-significant 16 bits hold the inclusive-from value. The least-significant 16 bits hold the inclusive-to value. The returned array must
+     * be sorted from low-to-high as unsigned-integers.
+     */
+    int[] getDoubleByteCodePointRanges() {
+      // Protect out data by returning a copy
+      return Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length);
+    }
+
+    /**
+     * Returns an array of 3-byte code-point ranges stored as long values. Each range comprises an inclusive-from value and an inclusive-to value. The
+     * most-significant 32 bits hold the inclusive-from value. The least-significant 32 bits hold the inclusive-to value. The returned array must be
+     * sorted from low-to-high.
+     */
+    long[] getTripleByteCodePointRanges() {
+      // Protect out data by returning a copy
+      return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getAlias() {
+      return alias;
+    }
+
+    public boolean isInSubset(final int codePoint) {
+      if (codePoint < 0x100) {
+        if (singleByteCodePointRanges.length == 0 ||
+            codePoint < getInclusiveFrom(singleByteCodePointRanges[0]) ||
+            codePoint > getInclusiveTo(singleByteCodePointRanges[singleByteCodePointRanges.length - 1])) {
+          return false; // not found, outside of range
+        }
+        // Try to find using a binary search
+        int low = 0;
+        int high = singleByteCodePointRanges.length - 1;
+        while (low <= high) {
+          final int mid = (low + high) >>> 1;
+          final int inclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[mid]);
+          final int inclusiveTo = getInclusiveTo(singleByteCodePointRanges[mid]);
+          if (codePoint > inclusiveTo) {
+            low = mid + 1;
+          } else if (codePoint < inclusiveFrom) {
+            high = mid - 1;
+          } else {
+            return true; // found
+          }
+        }
+      } else if (codePoint < 0x10000) {
+        if (doubleByteCodePointRanges.length == 0 ||
+            codePoint < getInclusiveFrom(doubleByteCodePointRanges[0]) ||
+            codePoint > getInclusiveTo(doubleByteCodePointRanges[doubleByteCodePointRanges.length - 1])) {
+          return false; // not found, outside of range
+        }
+        // Try to find using a binary search
+        int low = 0;
+        int high = doubleByteCodePointRanges.length - 1;
+        while (low <= high) {
+          final int mid = (low + high) >>> 1;
+          final int inclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[mid]);
+          final int inclusiveTo = getInclusiveTo(doubleByteCodePointRanges[mid]);
+          if (codePoint > inclusiveTo) {
+            low = mid + 1;
+          } else if (codePoint < inclusiveFrom) {
+            high = mid - 1;
+          } else {
+            return true; // found
+          }
+        }
+      } else {
+        if (tripleByteCodePointRanges.length == 0 ||
+            codePoint < getInclusiveFrom(tripleByteCodePointRanges[0]) ||
+            codePoint > getInclusiveTo(tripleByteCodePointRanges[tripleByteCodePointRanges.length - 1])) {
+          return false; // not found, outside of range
+        }
+        // Try to find using a binary search
+        int low = 0;
+        int high = tripleByteCodePointRanges.length - 1;
+        while (low <= high) {
+          final int mid = (low + high) >>> 1;
+          final long midVal = tripleByteCodePointRanges[mid];
+          final int inclusiveFrom = getInclusiveFrom(midVal);
+          final int inclusiveTo = getInclusiveTo(midVal);
+          if (codePoint > inclusiveTo) {
+            low = mid + 1;
+          } else if (codePoint < inclusiveFrom) {
+            high = mid - 1;
+          } else {
+            return true; // found
+          }
+        }
+      }
+      return false; // not found
+    }
+
+    @Override
+    public String toString() {
+      final StringBuilder s = new StringBuilder();
+      s.append(name).append('[');
+      for (char singleByteCodePointRange : singleByteCodePointRanges) {
+        s.append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('.').append('.')
+            .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
+      }
+      for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
+        s.append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('.').append('.')
+            .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
+      }
+      for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
+        s.append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('.').append('.')
+            .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
+      }
+      s.setLength(s.length() - 1); // remove final comma
+      s.append(']');
+      return s.toString();
+    }
+
+    static int getInclusiveFrom(final char codePointRange) {
+      return codePointRange >>> 8;
+    }
+
+    static int getInclusiveTo(final char codePointRange) {
+      return codePointRange & 0x00_ff;
+    }
+
+    static int getInclusiveFrom(final int codePointRange) {
+      return codePointRange >>> 16;
+    }
+
+    static int getInclusiveTo(final int codePointRange) {
+      return codePointRange & 0x0000_ffff;
+    }
+
+    static int getInclusiveFrom(final long codePointRange) {
+      return (int) (codePointRange >>> 32);
+    }
+
+    static int getInclusiveTo(final long codePointRange) {
+      return (int) (codePointRange & 0x00000000_ffffffffL);
+    }
+
+    static char rangeToChar(final int inclusiveFrom, final int inclusiveTo) {
+      return (char) ((inclusiveFrom << 8) | (inclusiveTo & 0x00_ff));
+    }
+
+    static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
+      return (inclusiveFrom << 16) | (inclusiveTo & 0x0000_ffff);
+    }
+
+    static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
+      return (((long) inclusiveFrom) << 32) | inclusiveTo;
+    }
+
+    static class RangedSubsetBuilder {
+
+      private char[] singleByteCodePointRanges = new char[16];
+      private int[] doubleByteCodePointRanges = new int[16];
+      private long[] tripleByteCodePointRanges = new long[16];
+      private int singleByteEndIndex = 0;
+      private int doubleByteEndIndex = 0;
+      private int tripleByteEndIndex = 0;
+
+      void addChar(final char ch) {
+        addCharRange(ch, ch);
+      }
+
+      void addChars(final char... chars) {
+        if (chars != null) {
+          ensureDoubleByteCapacity(chars.length);
+          for (int i = 0; i < chars.length; ++i) {
+            addChar(chars[i]);
+          }
+        }
+      }
+
+      void addCharRange(final char inclusiveFrom, final char inclusiveTo) {
+        addCodePointRange(inclusiveFrom & 0x0000_ffff, inclusiveTo & 0x0000_ffff);
+      }
+
+      void addCodePoint(final int codePoint) {
+        addCodePointRange(codePoint, codePoint);
+      }
+
+      void addCodePoints(final int... codePoints) {
+        if (codePoints != null) {
+          ensureDoubleByteCapacity(codePoints.length);
+          for (int i = 0; i < codePoints.length; ++i) {
+            addCodePoint(codePoints[i]);
+          }
+        }
+      }
+
+      void addRangedSubset(final RangedSubset subset) {
+        if (subset != null && subset.isNotEmpty()) {
+          final char[] singleByteRanges = subset.getSingleByteCodePointRanges();
+          ensureSingleByteCapacity(singleByteRanges.length);
+          for (char c : singleByteRanges) {
+            addCodePointRange(
+                RangedSubset.getInclusiveFrom(c),
+                RangedSubset.getInclusiveTo(c));
+          }
+          final int[] doubleByteRanges = subset.getDoubleByteCodePointRanges();
+          ensureDoubleByteCapacity(doubleByteRanges.length);
+          for (int j : doubleByteRanges) {
+            addCodePointRange(
+                RangedSubset.getInclusiveFrom(j),
+                RangedSubset.getInclusiveTo(j));
+          }
+          final long[] tripleByteRanges = subset.getTripleByteCodePointRanges();
+          ensureTripleByteCapacity(tripleByteRanges.length);
+          for (long l : tripleByteRanges) {
+            addCodePointRange(
+                RangedSubset.getInclusiveFrom(l),
+                RangedSubset.getInclusiveTo(l));
+          }
+        }
+      }
+
+      void addCodePointRange(int inclusiveFrom, int inclusiveTo) {
+        if (inclusiveTo > 0xffff) {
+          if (inclusiveFrom > 0xffff) {
+            ensureTripleByteCapacity();
+            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
+            ++tripleByteEndIndex;
+            return;
+          } else {
+            ensureTripleByteCapacity();
+            tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
+            ++tripleByteEndIndex;
+            inclusiveTo = 0xffff;
+          }
+        }
+
+        if (inclusiveTo > 0xff) {
+          if (inclusiveFrom > 0xff) {
+            ensureDoubleByteCapacity();
+            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
+            ++doubleByteEndIndex;
+            return;
+          } else {
+            ensureDoubleByteCapacity();
+            doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(0x100, inclusiveTo);
+            ++doubleByteEndIndex;
+            inclusiveTo = 0xff;
+          }
+        }
+
+        ensureSingleByteCapacity();
+        singleByteCodePointRanges[singleByteEndIndex] = RangedSubset.rangeToChar(inclusiveFrom, inclusiveTo);
+        ++singleByteEndIndex;
+      }
+
+      private void removeSingleByteElement(final int index) {
+        System.arraycopy(singleByteCodePointRanges, index + 1, singleByteCodePointRanges, index, singleByteCodePointRanges.length - index - 1);
+        --singleByteEndIndex;
+      }
+
+      private void removeDoubleByteElement(final int index) {
+        System.arraycopy(doubleByteCodePointRanges, index + 1, doubleByteCodePointRanges, index, doubleByteCodePointRanges.length - index - 1);
+        --doubleByteEndIndex;
+      }
+
+      private void removeTripleByteElement(final int index) {
+        System.arraycopy(tripleByteCodePointRanges, index + 1, tripleByteCodePointRanges, index, tripleByteCodePointRanges.length - index - 1);
+        --tripleByteEndIndex;
+      }
+
+      private void ensureSingleByteCapacity() {
+        if (singleByteEndIndex == singleByteCodePointRanges.length) {
+          ensureSingleByteCapacity(16);
+        }
+      }
+
+      private void ensureSingleByteCapacity(final int amount) {
+        if ((singleByteCodePointRanges.length - singleByteEndIndex) < amount) {
+          singleByteCodePointRanges = Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length + amount);
+        }
+      }
+
+      private void ensureDoubleByteCapacity() {
+        if (doubleByteEndIndex == doubleByteCodePointRanges.length) {
+          ensureDoubleByteCapacity(16);
+        }
+      }
+
+      private void ensureDoubleByteCapacity(final int amount) {
+        if ((doubleByteCodePointRanges.length - doubleByteEndIndex) < amount) {
+          doubleByteCodePointRanges = Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length + amount);
+        }
+      }
+
+      private void ensureTripleByteCapacity() {
+        if (tripleByteEndIndex == tripleByteCodePointRanges.length) {
+          ensureTripleByteCapacity(16);
+        }
+      }
+
+      private void ensureTripleByteCapacity(final int amount) {
+        if ((tripleByteCodePointRanges.length - tripleByteEndIndex) < amount) {
+          tripleByteCodePointRanges = Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length + amount);
+        }
+      }
+
+      private static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
+        int temp;
+        for (int i = fromIndex; i < toIndex; i++) {
+          for (int j = fromIndex; j < toIndex - i - 1; j++) {
+            if ((0x00000000_ffffffffL & (long) values[j]) > (0x00000000_ffffffffL & (long) values[j + 1])) {
+              // swap the elements
+              temp = values[j];
+              values[j] = values[j + 1];
+              values[j + 1] = temp;
+            }
+          }
+        }
+      }
+
+      RangedSubset build() {
+        {
+          Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < singleByteEndIndex) {
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(singleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(singleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeSingleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              singleByteCodePointRanges[i] = RangedSubset.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+              removeSingleByteElement(j);
+            } else {
+              ++i;
+              ++j;
+            }
+          }
+        }
+        {
+          unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, doubleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < doubleByteEndIndex) {
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeDoubleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              doubleByteCodePointRanges[i] = RangedSubset.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+              removeDoubleByteElement(j);
+            } else {
+              ++i;
+              ++j;
+            }
+          }
+        }
+        {
+          Arrays.sort(tripleByteCodePointRanges, 0, tripleByteEndIndex);
+          int previousInclusiveFrom;
+          int previousInclusiveTo;
+          int currentInclusiveFrom;
+          int currentInclusiveTo;
+          int i = 0;
+          int j = 1;
+          while (j < tripleByteEndIndex) {
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[i]);
+            previousInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[i]);
+            currentInclusiveFrom = RangedSubset.getInclusiveFrom(tripleByteCodePointRanges[j]);
+            currentInclusiveTo = RangedSubset.getInclusiveTo(tripleByteCodePointRanges[j]);
+            if (previousInclusiveTo >= currentInclusiveFrom) {
+              if (previousInclusiveTo <= currentInclusiveTo) {
+                tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+              }
+              removeTripleByteElement(j);
+            } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+              tripleByteCodePointRanges[i] = RangedSubset.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+              removeTripleByteElement(j);
+            } else {
+              ++i;
+              ++j;
+            }
+          }
+        }
+        return new RangedSubset(
+            Arrays.copyOf(singleByteCodePointRanges, singleByteEndIndex),
+            Arrays.copyOf(doubleByteCodePointRanges, doubleByteEndIndex),
+            Arrays.copyOf(tripleByteCodePointRanges, tripleByteEndIndex));
+      }
     }
   }
 }
