@@ -8,10 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import land.artli.easytype.generator.Unicode.RangedSubset;
 import land.artli.easytype.generator.Unicode.RangedSubset.RangedSubsetBuilder;
+import org.unicode.ns._2003.ucd._1.Block;
 
 public class Main {
 
@@ -24,71 +25,11 @@ public class Main {
 
     final UnicodeGroupDataLoader loader = new UnicodeGroupDataLoader(inputXml);
 
-    int i = 0;
-    final TreeMap<String, RangedSubsetBuilder> blockCodePointRangeBuilders = new TreeMap<>();
-    final TreeMap<String, RangedSubsetBuilder> scriptCodePointRangeBuilders = new TreeMap<>();
-    final TreeMap<UnicodeCategory, RangedSubsetBuilder> categoryCodePointRangeBuilders = new TreeMap<>();
-    final RangedSubsetBuilder whitespaceRangedSubsetBuilder = RangedSubset.builder();
-    for (UnicodeCodePoint c : loader.getUnicodeCodePoints()) {
-      ++i;
-      if (c.getCodePoint() == null) {
-        continue;
-      }
-      RangedSubsetBuilder rangedSubsetBuilder;
-      if (c.getBlock() != null) {
-        rangedSubsetBuilder = blockCodePointRangeBuilders.get(c.getBlock());
-        if (rangedSubsetBuilder == null) {
-          rangedSubsetBuilder = RangedSubset.builder();
-          blockCodePointRangeBuilders.put(c.getBlock(), rangedSubsetBuilder);
-        }
-        if (c.hasCodePoint()) {
-          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
-        } else if (c.hasCodePointRange()) {
-          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
-        }
-      }
-
-      if (c.getScript() != null) {
-        rangedSubsetBuilder = scriptCodePointRangeBuilders.get(c.getScript());
-        if (rangedSubsetBuilder == null) {
-          rangedSubsetBuilder = RangedSubset.builder();
-          scriptCodePointRangeBuilders.put(c.getScript(), rangedSubsetBuilder);
-        }
-        if (c.hasCodePoint()) {
-          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
-        } else if (c.hasCodePointRange()) {
-          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
-        }
-      }
-
-      final UnicodeCategory unicodeCategory = UnicodeCategory.of(c.getGeneralCategory());
-      if (unicodeCategory != null) {
-        rangedSubsetBuilder = categoryCodePointRangeBuilders.get(unicodeCategory);
-        if (rangedSubsetBuilder == null) {
-          rangedSubsetBuilder = RangedSubset.builder();
-          categoryCodePointRangeBuilders.put(unicodeCategory, rangedSubsetBuilder);
-        }
-        if (c.hasCodePoint()) {
-          rangedSubsetBuilder.addCodePoint(c.getCodePoint());
-        } else if (c.hasCodePointRange()) {
-          rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
-        }
-      }
-
-      if (c.isWhitespace()) {
-        if (c.hasCodePoint()) {
-          whitespaceRangedSubsetBuilder.addCodePoint(c.getCodePoint());
-        } else if (c.hasCodePointRange()) {
-          whitespaceRangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
-        }
-      }
-    }
-
     final StringBuilder enumOtherValues = new StringBuilder();
     enumOtherValues.append(LINE_SEPARATOR).append("    public static final Other WHITESPACE = new Other(")
         .append(LINE_SEPARATOR)
         .append("\"WHITESPACE\", \"Whitespace\",");
-    final RangedSubset whitespaceRangedSubset = whitespaceRangedSubsetBuilder.build();
+    final RangedSubset whitespaceRangedSubset = loader.getWhitespaceRangedSubset();
     writeCodeRangeArrays(enumOtherValues, whitespaceRangedSubset);
     enumOtherValues.append(");");
 
@@ -104,9 +45,10 @@ public class Main {
           .append("\",");
       final UnicodeCategory[] compositeCategories = category.isComposite() ? category.getCompositeCategories() : new UnicodeCategory[]{category};
       final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
+      final Map<UnicodeCategory, RangedSubset> categoryRangedSubsets = loader.getCategoryRangedSubsets();
       for (UnicodeCategory compositeCategory : compositeCategories) {
-        if (categoryCodePointRangeBuilders.containsKey(compositeCategory)) {
-          final RangedSubset rangedSubset = categoryCodePointRangeBuilders.get(compositeCategory).build();
+        if (categoryRangedSubsets.containsKey(compositeCategory)) {
+          final RangedSubset rangedSubset = categoryRangedSubsets.get(compositeCategory);
           rangedSubsetBuilder.addRangedSubset(rangedSubset);
         }
       }
@@ -115,26 +57,34 @@ public class Main {
       enumCategoryValues.append(");");
     }
 
+    final Map<String, RangedSubset> scriptRangedSubsets = loader.getScriptRangedSubsets();
     final StringBuilder enumScriptValues = new StringBuilder();
-    for (String script : scriptCodePointRangeBuilders.keySet()) {
+    for (String script : scriptRangedSubsets.keySet()) {
       enumScriptValues.append(LINE_SEPARATOR).append("    public static final Script ")
           .append(script.toUpperCase()).append(" = new Script(")
           .append(LINE_SEPARATOR).append("      \"")
           .append(script.toUpperCase()).append("\", \"")
           .append(script).append("\",");
-      final RangedSubset scriptRangedSubset = scriptCodePointRangeBuilders.get(script).build();
+      final RangedSubset scriptRangedSubset = scriptRangedSubsets.get(script);
       writeCodeRangeArrays(enumScriptValues, scriptRangedSubset);
       enumScriptValues.append(");");
     }
 
+    final Map<String, RangedSubset> blockRangedSubsets = loader.getBlockRangedSubsets();
+    final Map<String, Block> blockMap = loader.getBlocksByTheirAbbreviation();
     final StringBuilder enumBlockValues = new StringBuilder();
-    for (String block : blockCodePointRangeBuilders.keySet()) {
+    for (String blockAbbreviation : blockRangedSubsets.keySet()) {
+      final Block block = blockMap.get(blockAbbreviation);
+      final String blockName = block.getName().toUpperCase().replace(' ', '_').replace('-', '_');
       enumBlockValues.append(LINE_SEPARATOR).append("    public static final Block ")
-          .append(block.toUpperCase()).append(" = new Block(")
+          .append(blockName).append(" = new Block(")
           .append(LINE_SEPARATOR).append("      \"")
-          .append(block.toUpperCase()).append("\", \"")
-          .append(block).append("\",");
-      final RangedSubset blockRangedSubset = blockCodePointRangeBuilders.get(block).build();
+          .append(blockAbbreviation.toUpperCase()).append("\", \"")
+          .append(blockAbbreviation).append("\",")
+          .append(LINE_SEPARATOR).append("      ")
+          .append(String.format("0x%08x", Integer.parseInt(block.getFirstCp(), 16))).append(", ")
+          .append(String.format("0x%08x", Integer.parseInt(block.getLastCp(), 16))).append(", ");
+      final RangedSubset blockRangedSubset = blockRangedSubsets.get(blockAbbreviation);
       writeCodeRangeArrays(enumBlockValues, blockRangedSubset);
       enumBlockValues.append(");");
     }
@@ -144,10 +94,10 @@ public class Main {
         .lines().collect(Collectors.joining("\n"));
 
     final String generatedMessage = String.format("""
-            @javax.annotation.processing.Generated(
-                comments = "This file is partly generated from the Unicode file 'ucd.all.grouped.xml'",
-                date="%tFT%tT",
-                value = "land.artli:easy-type-unicode-code-generator")""", LocalDate.now(), LocalTime.now());
+        @javax.annotation.processing.Generated(
+            comments = "This file is partly generated from the Unicode file 'ucd.all.grouped.xml'",
+            date="%tFT%tT",
+            value = "land.artli:easy-type-unicode-code-generator")""", LocalDate.now(), LocalTime.now());
 
     final String unicodeFile = unicodeTemplate
         .replace("package land.artli.easytype.generator;", "package land.artli.easytype;")
@@ -163,9 +113,6 @@ public class Main {
     } catch (final IOException e) {
       e.printStackTrace();
     }
-
-    System.out.println("total codepoints=" + i);
-
   }
 
   private static void writeCodeRangeArrays(final StringBuilder s, final RangedSubset rangedSubset) {

@@ -3,6 +3,7 @@ package land.artli.easytype.generator;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 // INSERT-GENERATED-MESSAGE
@@ -16,12 +17,164 @@ public final class Unicode {
     // don't instantiate - use static values and methods
   }
 
+  static final class Other extends RangedSubset {
+    // INSERT-OTHER-VALUES-HERE
+
+    private Other(
+        final String name,
+        final String alias,
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+    }
+  }
+
+  /**
+   * <p>Unicode General Category Values. Categories classify a code point by their primary characteristic.
+   * The following is quoted from the
+   * <em>"<a href="https://www.unicode.org/reports/tr44/#General_Category_Values">Unicode General Category Values</a>"</em>
+   * section of the <a href="https://www.unicode.org/reports/tr44">Unicode Character Database</a> document.</p>
+   * <blockquote>
+   * <p>For example, is the character a letter, a mark, a number, punctuation, or a symbol, and if so, of what type?</p>
+   * <p>...</p>
+   * <p>Many characters have multiple uses, and not all such cases can be captured entirely by the
+   * General Category value. For example, the General Category value of Latin, Greek, or Hebrew letters does not attempt to cover (or preclude) the
+   * numerical use of such letters as Roman numerals or in other numerary systems.<p>
+   * <p>...</p>
+   * <p class="caption">Table 12. <a name="GC_Values_Table" href="#GC_Values_Table">General_Category Values</a></p>
+   * <table class="simple">
+   *   <tr><th>Abbr</th><th>Long</th><th>Description</th></tr>
+   *   <tr><td>Lu</td><td>Uppercase_Letter</td><td>an uppercase letter</td></tr>
+   *   <tr><td>Ll</td><td>Lowercase_Letter</td><td>a lowercase letter</td></tr>
+   *   <tr><td>Lt</td><td>Titlecase_Letter</td><td>a digraphic character, with first part uppercase</td></tr>
+   *   <tr style='background-color:lightblue;'><td>LC</td><td>Cased_Letter</td><td>Lu | Ll | Lt</td></tr>
+   *   <tr><td>Lm</td><td>Modifier_Letter</td><td>a modifier letter</td></tr>
+   *   <tr><td>Lo</td><td>Other_Letter</td><td>other letters, including syllables and ideographs</td></tr>
+   *   <tr style='background-color:lightblue;'><td>L</td><td>Letter</td><td>Lu | Ll | Lt | Lm | Lo</td></tr>
+   *   <tr><td>Mn</td><td>Nonspacing_Mark</td><td>a nonspacing combining mark (zero advance width)</td></tr>
+   *   <tr><td>Mc</td><td>Spacing_Mark</td><td>a spacing combining mark (positive advance width)</td></tr>
+   *   <tr><td>Me</td><td>Enclosing_Mark</td><td>an enclosing combining mark</td></tr>
+   *   <tr style='background-color:lightblue;'><td>M</td><td>Mark</td><td>Mn | Mc | Me</td></tr>
+   *   <tr><td>Nd</td><td>Decimal_Number</td><td>a decimal digit</td></tr>
+   *   <tr><td>Nl</td><td>Letter_Number</td><td>a letterlike numeric character</td></tr>
+   *   <tr><td>No</td><td>Other_Number</td><td>a numeric character of other type</td></tr>
+   *   <tr style='background-color:lightblue;'><td>N</td><td>Number</td><td>Nd | Nl | No</td></tr>
+   *   <tr><td>Pc</td><td>Connector_Punctuation</td><td>a connecting punctuation mark, like a tie</td></tr>
+   *   <tr><td>Pd</td><td>Dash_Punctuation</td><td>a dash or hyphen punctuation mark</td></tr>
+   *   <tr><td>Ps</td><td>Open_Punctuation</td><td>an opening punctuation mark (of a pair)</td></tr>
+   *   <tr><td>Pe</td><td>Close_Punctuation</td><td>a closing punctuation mark (of a pair)</td></tr>
+   *   <tr><td>Pi</td><td>Initial_Punctuation</td><td>an initial quotation mark</td></tr>
+   *   <tr><td>Pf</td><td>Final_Punctuation</td><td>a final quotation mark</td></tr>
+   *   <tr><td>Po</td><td>Other_Punctuation</td><td>a punctuation mark of other type</td></tr>
+   *   <tr style='background-color:lightblue;'><td>P</td><td>Punctuation</td><td>Pc | Pd | Ps | Pe | Pi | Pf | Po</td></tr>
+   *   <tr><td>Sm</td><td>Math_Symbol</td><td>a symbol of mathematical use</td></tr>
+   *   <tr><td>Sc</td><td>Currency_Symbol</td><td>a currency sign</td></tr>
+   *   <tr><td>Sk</td><td>Modifier_Symbol</td><td>a non-letterlike modifier symbol</td></tr>
+   *   <tr><td>So</td><td>Other_Symbol</td><td>a symbol of other type</td></tr>
+   *   <tr style='background-color:lightblue;'><td>S</td><td>Symbol</td><td>Sm | Sc | Sk | So</td></tr>
+   *   <tr><td>Zs</td><td>Space_Separator</td><td>a space character (of various non-zero widths)</td></tr>
+   *   <tr><td>Zl</td><td>Line_Separator</td><td>U+2028 LINE SEPARATOR only</td></tr>
+   *   <tr><td>Zp</td><td>Paragraph_Separator</td><td>U+2029 PARAGRAPH SEPARATOR only</td></tr>
+   *   <tr style='background-color:lightblue;'><td>Z</td><td>Separator</td><td>Zs | Zl | Zp</td></tr>
+   *   <tr><td>Cc</td><td>Control</td><td>a C0 or C1 control code</td></tr>
+   *   <tr><td>Cf</td><td>Format</td><td>a format control character</td></tr>
+   *   <tr><td>Cs</td><td>Surrogate</td><td>a surrogate code point</td></tr>
+   *   <tr><td>Co</td><td>Private_Use</td><td>a private-use character</td></tr>
+   *   <tr><td>Cn</td><td>Unassigned</td><td>a reserved unassigned code point or a noncharacter</td></tr>
+   *   <tr style='background-color:lightblue;'><td>C</td><td>Other</td><td>Cc | Cf | Cs | Co | Cn</td></tr>
+   * </table>
+   * </blockquote>
+   *
+   * @see <a href="https://www.unicode.org/reports/tr44/#General_Category_Values">
+   * https://www.unicode.org/reports/tr44/#General_Category_Values</a>
+   */
+  static final class Category extends RangedSubset {
+    // INSERT-CATEGORY-VALUES-HERE
+
+    private final String abbreviation;
+
+    private Category(
+        final String name,
+        final String alias,
+        final String abbreviation,
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+      this.abbreviation = abbreviation;
+    }
+
+    public String getAbbreviation() {
+      return abbreviation;
+    }
+  }
+
+  static final class Script extends RangedSubset {
+    // INSERT-SCRIPT-VALUES-HERE
+
+    private Script(
+        final String name,
+        final String alias,
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+    }
+  }
+
+  static final class Block extends RangedSubset {
+    // INSERT-BLOCK-VALUES-HERE
+
+    private static final HashMap<Character.UnicodeBlock, Block> blockMap = new HashMap<>();
+    private final int blockStart;
+    private final int blockEnd;
+
+    private Block(
+        final String name,
+        final String alias,
+        final int blockStart,
+        final int blockEnd,
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+      this.blockStart = blockStart;
+      this.blockEnd = blockEnd;
+      try {
+        blockMap.put(Character.UnicodeBlock.of(blockStart), this);
+      } catch (final IllegalArgumentException e) {
+        // ignore this – it means we have a more recent Unicode data-set that the JDK
+      }
+    }
+
+    public static Block of(final Character.UnicodeBlock unicodeBlock) {
+      return blockMap.get(unicodeBlock);
+    }
+
+    public boolean isInBlock(final char ch) {
+      return blockStart <= ch && ch <= blockEnd;
+    }
+
+    public boolean isInBlock(final int codePoint) {
+      return blockStart <= codePoint && codePoint <= blockEnd;
+    }
+
+    public int getBlockStart() {
+      return blockStart;
+    }
+
+    public int getBlockEnd() {
+      return blockEnd;
+    }
+  }
+
   public interface Subset {
 
     boolean isInSubset(final int codePoint);
 
     default boolean isInSubset(final char ch) {
-      return isInSubset((int)ch);
+      return isInSubset((int) ch);
     }
 
     default boolean isNotInSubset(final int codePoint) {
@@ -29,7 +182,7 @@ public final class Unicode {
     }
 
     default boolean isNotInSubset(final char ch) {
-      return !isInSubset((int)ch);
+      return !isInSubset((int) ch);
     }
 
     static CompositeSubset of(final Subset... subsets) {
@@ -268,9 +421,9 @@ public final class Unicode {
 
     static class RangedSubsetBuilder {
 
-      private char [] singleByteCodePointRanges = new char[16];
-      private int [] doubleByteCodePointRanges = new int[16];
-      private long [] tripleByteCodePointRanges = new long[16];
+      private char[] singleByteCodePointRanges = new char[16];
+      private int[] doubleByteCodePointRanges = new int[16];
+      private long[] tripleByteCodePointRanges = new long[16];
       private int singleByteEndIndex = 0;
       private int doubleByteEndIndex = 0;
       private int tripleByteEndIndex = 0;
@@ -296,7 +449,7 @@ public final class Unicode {
         addCodePointRange(codePoint, codePoint);
       }
 
-      void addCodePoints(final int ... codePoints) {
+      void addCodePoints(final int... codePoints) {
         if (codePoints != null) {
           ensureDoubleByteCapacity(codePoints.length);
           for (int i = 0; i < codePoints.length; ++i) {
@@ -416,11 +569,11 @@ public final class Unicode {
         }
       }
 
-      private static void unsignedIntegerBubbleSort(final int [] values, int fromIndex, int toIndex) {
+      private static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
         int temp;
         for (int i = fromIndex; i < toIndex; i++) {
           for (int j = fromIndex; j < toIndex - i - 1; j++) {
-            if ((0x00000000_ffffffffL & (long)values[j]) > (0x00000000_ffffffffL & (long)values[j + 1])) {
+            if ((0x00000000_ffffffffL & (long) values[j]) > (0x00000000_ffffffffL & (long) values[j + 1])) {
               // swap the elements
               temp = values[j];
               values[j] = values[j + 1];
@@ -467,7 +620,7 @@ public final class Unicode {
           int i = 0;
           int j = 1;
           while (j < doubleByteEndIndex) {
-            previousInclusiveFrom =RangedSubset. getInclusiveFrom(doubleByteCodePointRanges[i]);
+            previousInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[i]);
             previousInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[i]);
             currentInclusiveFrom = RangedSubset.getInclusiveFrom(doubleByteCodePointRanges[j]);
             currentInclusiveTo = RangedSubset.getInclusiveTo(doubleByteCodePointRanges[j]);
@@ -517,126 +670,6 @@ public final class Unicode {
             Arrays.copyOf(doubleByteCodePointRanges, doubleByteEndIndex),
             Arrays.copyOf(tripleByteCodePointRanges, tripleByteEndIndex));
       }
-    }
-  }
-
-
-  static final class Other extends RangedSubset {
-    // INSERT-OTHER-VALUES-HERE
-
-    private Other(
-        final String name,
-        final String alias,
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
-    }
-  }
-
-  /**
-   * <p>Unicode General Category Values. Categories classify a code point by their primary characteristic.
-   * The following is quoted from the
-   * <em>"<a href="https://www.unicode.org/reports/tr44/#General_Category_Values">Unicode General Category Values</a>"</em>
-   * section of the <a href="https://www.unicode.org/reports/tr44">Unicode Character Database</a> document.</p>
-   * <blockquote>
-   * <p>For example, is the character a letter, a mark, a number, punctuation, or a symbol, and if so, of what type?</p>
-   * <p>...</p>
-   * <p>Many characters have multiple uses, and not all such cases can be captured entirely by the
-   * General Category value. For example, the General Category value of Latin, Greek, or Hebrew letters does not attempt to cover (or preclude) the
-   * numerical use of such letters as Roman numerals or in other numerary systems.<p>
-   * <p>...</p>
-   * <p class="caption">Table 12. <a name="GC_Values_Table" href="#GC_Values_Table">General_Category Values</a></p>
-   * <table class="simple">
-   *   <tr><th>Abbr</th><th>Long</th><th>Description</th></tr>
-   *   <tr><td>Lu</td><td>Uppercase_Letter</td><td>an uppercase letter</td></tr>
-   *   <tr><td>Ll</td><td>Lowercase_Letter</td><td>a lowercase letter</td></tr>
-   *   <tr><td>Lt</td><td>Titlecase_Letter</td><td>a digraphic character, with first part uppercase</td></tr>
-   *   <tr style='background-color:lightblue;'><td>LC</td><td>Cased_Letter</td><td>Lu | Ll | Lt</td></tr>
-   *   <tr><td>Lm</td><td>Modifier_Letter</td><td>a modifier letter</td></tr>
-   *   <tr><td>Lo</td><td>Other_Letter</td><td>other letters, including syllables and ideographs</td></tr>
-   *   <tr style='background-color:lightblue;'><td>L</td><td>Letter</td><td>Lu | Ll | Lt | Lm | Lo</td></tr>
-   *   <tr><td>Mn</td><td>Nonspacing_Mark</td><td>a nonspacing combining mark (zero advance width)</td></tr>
-   *   <tr><td>Mc</td><td>Spacing_Mark</td><td>a spacing combining mark (positive advance width)</td></tr>
-   *   <tr><td>Me</td><td>Enclosing_Mark</td><td>an enclosing combining mark</td></tr>
-   *   <tr style='background-color:lightblue;'><td>M</td><td>Mark</td><td>Mn | Mc | Me</td></tr>
-   *   <tr><td>Nd</td><td>Decimal_Number</td><td>a decimal digit</td></tr>
-   *   <tr><td>Nl</td><td>Letter_Number</td><td>a letterlike numeric character</td></tr>
-   *   <tr><td>No</td><td>Other_Number</td><td>a numeric character of other type</td></tr>
-   *   <tr style='background-color:lightblue;'><td>N</td><td>Number</td><td>Nd | Nl | No</td></tr>
-   *   <tr><td>Pc</td><td>Connector_Punctuation</td><td>a connecting punctuation mark, like a tie</td></tr>
-   *   <tr><td>Pd</td><td>Dash_Punctuation</td><td>a dash or hyphen punctuation mark</td></tr>
-   *   <tr><td>Ps</td><td>Open_Punctuation</td><td>an opening punctuation mark (of a pair)</td></tr>
-   *   <tr><td>Pe</td><td>Close_Punctuation</td><td>a closing punctuation mark (of a pair)</td></tr>
-   *   <tr><td>Pi</td><td>Initial_Punctuation</td><td>an initial quotation mark</td></tr>
-   *   <tr><td>Pf</td><td>Final_Punctuation</td><td>a final quotation mark</td></tr>
-   *   <tr><td>Po</td><td>Other_Punctuation</td><td>a punctuation mark of other type</td></tr>
-   *   <tr style='background-color:lightblue;'><td>P</td><td>Punctuation</td><td>Pc | Pd | Ps | Pe | Pi | Pf | Po</td></tr>
-   *   <tr><td>Sm</td><td>Math_Symbol</td><td>a symbol of mathematical use</td></tr>
-   *   <tr><td>Sc</td><td>Currency_Symbol</td><td>a currency sign</td></tr>
-   *   <tr><td>Sk</td><td>Modifier_Symbol</td><td>a non-letterlike modifier symbol</td></tr>
-   *   <tr><td>So</td><td>Other_Symbol</td><td>a symbol of other type</td></tr>
-   *   <tr style='background-color:lightblue;'><td>S</td><td>Symbol</td><td>Sm | Sc | Sk | So</td></tr>
-   *   <tr><td>Zs</td><td>Space_Separator</td><td>a space character (of various non-zero widths)</td></tr>
-   *   <tr><td>Zl</td><td>Line_Separator</td><td>U+2028 LINE SEPARATOR only</td></tr>
-   *   <tr><td>Zp</td><td>Paragraph_Separator</td><td>U+2029 PARAGRAPH SEPARATOR only</td></tr>
-   *   <tr style='background-color:lightblue;'><td>Z</td><td>Separator</td><td>Zs | Zl | Zp</td></tr>
-   *   <tr><td>Cc</td><td>Control</td><td>a C0 or C1 control code</td></tr>
-   *   <tr><td>Cf</td><td>Format</td><td>a format control character</td></tr>
-   *   <tr><td>Cs</td><td>Surrogate</td><td>a surrogate code point</td></tr>
-   *   <tr><td>Co</td><td>Private_Use</td><td>a private-use character</td></tr>
-   *   <tr><td>Cn</td><td>Unassigned</td><td>a reserved unassigned code point or a noncharacter</td></tr>
-   *   <tr style='background-color:lightblue;'><td>C</td><td>Other</td><td>Cc | Cf | Cs | Co | Cn</td></tr>
-   * </table>
-   * </blockquote>
-   *
-   * @see <a href="https://www.unicode.org/reports/tr44/#General_Category_Values">
-   * https://www.unicode.org/reports/tr44/#General_Category_Values</a>
-   */
-  static final class Category extends RangedSubset {
-    // INSERT-CATEGORY-VALUES-HERE
-
-    private final String abbreviation;
-
-    private Category(
-        final String name,
-        final String alias,
-        final String abbreviation,
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
-      this.abbreviation = abbreviation;
-    }
-
-    public String getAbbreviation() {
-      return abbreviation;
-    }
-  }
-
-  static final class Script extends RangedSubset {
-    // INSERT-SCRIPT-VALUES-HERE
-
-    private Script(
-        final String name,
-        final String alias,
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
-    }
-  }
-
-  static final class Block extends RangedSubset {
-    // INSERT-SCRIPT-VALUES-HERE
-
-    private Block(
-        final String alias,
-        final String name,
-        final char[] singleByteCodePointRanges,
-        final int[] doubleByteCodePointRanges,
-        final long[] tripleByteCodePointRanges) {
-      super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
     }
   }
 }

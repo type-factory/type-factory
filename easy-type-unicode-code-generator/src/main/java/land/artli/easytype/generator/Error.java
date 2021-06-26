@@ -6,6 +6,8 @@ public enum Error {
   THERE_ARE_NO_REPERTOIRE_ELEMENTS_IN_THE_FILE(2, "There are no repertoire elements in the file '%s'."),
   THERE_ARE_TOO_MANY_REPERTOIRE_ELEMENTS_IN_THE_FILE(3, "There are too many repertoire elements in the file '%s'."),
   THERE_ARE_NO_GROUP_ELEMENTS_IN_THE_FILE(4, "There are no group elements in the file '%s'."),
+  THERE_ARE_NO_BLOCKS_ELEMENTS_IN_THE_FILE(2, "There are no blocks elements in the file '%s'."),
+  THERE_ARE_TOO_MANY_BLOCKS_ELEMENTS_IN_THE_FILE(3, "There are too many blocks elements in the file '%s'."),
 
   ;
   private final int errorCode;

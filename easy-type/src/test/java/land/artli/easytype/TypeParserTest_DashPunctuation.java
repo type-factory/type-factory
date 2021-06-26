@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class TypeParserTest_DashPunctuation {
+public class TypeParserTest_DashPunctuation extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
@@ -16,7 +16,7 @@ public class TypeParserTest_DashPunctuation {
   void should_parse_converting_all_dashes_to_hyphen(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(CharType.class)
+        TypeParser.builder(SomeType.class)
             .acceptAllDashes()
             .convertAllDashesToHyphen()
             .acceptCharRange('a', 'z')
@@ -35,7 +35,7 @@ public class TypeParserTest_DashPunctuation {
   void should_parse_converting_all_dashes_to_underscore(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(CharType.class)
+        TypeParser.builder(SomeType.class)
             .acceptAllDashes()
             .convertAllDashesTo('_')
             .acceptCharRange('a', 'z')
@@ -54,7 +54,7 @@ public class TypeParserTest_DashPunctuation {
   void should_parse_converting_all_dashes_to_char_sequence(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(CharType.class)
+        TypeParser.builder(SomeType.class)
             .acceptAllDashes()
             .convertAllDashesTo("===")
             .acceptCharRange('a', 'z')
