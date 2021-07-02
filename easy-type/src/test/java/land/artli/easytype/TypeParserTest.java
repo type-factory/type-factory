@@ -219,7 +219,7 @@ class TypeParserTest extends AbstractTypeParserTest {
       "Ox|Invalid SomeType value - too short, min length must be '4'.",
       "Cat|Invalid SomeType value - too short, min length must be '4'.",
   }, delimiter = '|')
-  void should_throw_exception_when_too_small(final String value, final String expectedMessage) {
+  void should_throw_exception_when_too_small(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
@@ -231,8 +231,8 @@ class TypeParserTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
         .isInstanceOf(InvalidTypeValueException.class)
-        .hasMessage(expectedMessage)
-        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be 4 alpha characters.");
+        .hasMessage("Some type must be 4 alpha characters.")
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
   @ParameterizedTest
@@ -241,7 +241,7 @@ class TypeParserTest extends AbstractTypeParserTest {
       "Donkey|Invalid SomeType value - too long, max length must be '4'.",
       "Mammoth|Invalid SomeType value - too long, max length must be '4'.",
   }, delimiter = '|')
-  void should_throw_exception_when_too_large(final String value, final String expectedMessage) {
+  void should_throw_exception_when_too_large(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
@@ -253,8 +253,8 @@ class TypeParserTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
         .isInstanceOf(InvalidTypeValueException.class)
-        .hasMessage(expectedMessage)
-        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be 4 alpha characters.");
+        .hasMessage("Some type must be 4 alpha characters.")
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
   @ParameterizedTest
@@ -263,7 +263,7 @@ class TypeParserTest extends AbstractTypeParserTest {
       "Apple-tart|Invalid SomeType value - invalid character '-'.",
       "Apple-tart-with-a-really-very-long-name|Invalid SomeType value - invalid character '-'.",
   }, delimiter = '|')
-  void should_throw_exception_when_invalid_character(final String value, final String expectedMessage) {
+  void should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
@@ -274,7 +274,7 @@ class TypeParserTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parse(value))
         .isInstanceOf(InvalidTypeValueException.class)
-        .hasMessage(expectedMessage)
-        .hasFieldOrPropertyWithValue("localizedMessage", "Some type must be alpha characters.");
+        .hasMessage("Some type must be alpha characters.")
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 }
