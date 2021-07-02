@@ -2,7 +2,6 @@ package land.artli.easytype;
 
 import static java.lang.Character.isWhitespace;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,7 +59,7 @@ public class TypeParser {
     return new TypeParserBuilder(targetClass);
   }
 
-  public <T extends CharType<?>> T parse(final CharSequence value, Function<String, T> constructorOrFactoryMethod) throws ParseException {
+  public <T extends CharType<?>> T parse(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
     return constructorOrFactoryMethod.apply(parse(value));
   }
 
@@ -93,7 +92,7 @@ public class TypeParser {
       ch = value.charAt(i);
       if (Character.isSurrogate(ch)) {
         if (++i < length) {
-          codePoint = Character.toCodePoint(ch, value.charAt(++i));
+          codePoint = Character.toCodePoint(ch, value.charAt(i));
         } else {
           throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, ch);
         }

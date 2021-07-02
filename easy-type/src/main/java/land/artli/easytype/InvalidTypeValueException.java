@@ -1,92 +1,125 @@
 package land.artli.easytype;
 
 import java.io.Serial;
+import java.util.ResourceBundle;
 
 public class InvalidTypeValueException extends IllegalArgumentException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
 
-  private final String localisedMessage;
+  private final ResourceBundle localizationResourceBundle;
+  private final String parserErrorMessage;
+  private final String invalidValue;
 
   InvalidTypeValueException(
-      final String message, final String localisedMessage,
-      final int[] successfullyParsedCodePoints, final int successfullyParsedCount) {
+      final String parserErrorMessage, 
+      final String message,
+      final int[] successfullyParsedCodePoints, 
+      final int successfullyParsedCount) {
     super(message);
-    this.localisedMessage = localisedMessage;
+    this.localizationResourceBundle = null;
+    this.parserErrorMessage = parserErrorMessage;
+    this.invalidValue = new String(successfullyParsedCodePoints, 0, successfullyParsedCount);
   }
 
   InvalidTypeValueException(
-      final String message, final String localisedMessage,
-      final int[] successfullyParsedCodePoints, final int successfullyParsedCount,
+      final String parserErrorMessage, 
+      final String message,
+      final int[] successfullyParsedCodePoints, 
+      final int successfullyParsedCount,
       final CharSequence invalidValue) {
     super(message);
-    this.localisedMessage = localisedMessage;
+    this.localizationResourceBundle = null;
+    this.parserErrorMessage = parserErrorMessage;
+    this.invalidValue = invalidValue == null ? null : invalidValue.toString();
   }
 
-  InvalidTypeValueException(final String message, final String localisedMessage, final CharSequence invalidValue) {
+  InvalidTypeValueException(
+      final String parserErrorMessage, 
+      final String message, 
+      final CharSequence invalidValue) {
     super(message);
-    this.localisedMessage = localisedMessage;
+    this.localizationResourceBundle = null;
+    this.parserErrorMessage = parserErrorMessage;
+    this.invalidValue = invalidValue == null ? null : invalidValue.toString();
   }
 
-  InvalidTypeValueException(final String message, final String localisedMessage, final CharSequence invalidValue, final Throwable cause) {
+  InvalidTypeValueException(
+      final String parserErrorMessage, 
+      final String message, 
+      final CharSequence invalidValue, 
+      final Throwable cause) {
     super(message, cause);
-    this.localisedMessage = localisedMessage;
+    this.localizationResourceBundle = null;
+    this.parserErrorMessage = parserErrorMessage;
+    this.invalidValue = invalidValue == null ? null : invalidValue.toString();
+  }
+
+  public String getParserErrorMessage() {
+    return parserErrorMessage;
   }
 
   @Override
   public String getLocalizedMessage() {
-    return localisedMessage == null || localisedMessage.isBlank() ? getMessage() : localisedMessage;
+    if (localizationResourceBundle == null) {
+      return getMessage();
+    }
+    try {
+      return localizationResourceBundle.getString(getMessage());
+    } catch (final Exception e) {
+      return getMessage();
+    }
   }
 
   public static InvalidTypeValueException forValueTooShort(
-      final String localisedMessage,
+      final String message,
       final Class<? extends CharType> targetTypeClass,
       final CharSequence value,
       final int minLength) {
 
-    final StringBuilder message = new StringBuilder();
-    message.append("Invalid ")
+    final StringBuilder parserErrorMessage = new StringBuilder();
+    parserErrorMessage.append("Invalid ")
         .append(targetTypeClass.getSimpleName())
         .append(" value - too short, min length must be '")
         .append(minLength)
         .append("'.");
-    return new InvalidTypeValueException(message.toString(), localisedMessage, value);
+    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
   public static InvalidTypeValueException forValueTooLong(
-      final String localisedMessage,
+      final String message,
       final Class<? extends CharType> targetTypeClass,
       final CharSequence value,
       final int maxLength) {
 
-    final StringBuilder message = new StringBuilder();
-    message.append("Invalid ")
+    final StringBuilder parserErrorMessage = new StringBuilder();
+    parserErrorMessage.append("Invalid ")
         .append(targetTypeClass.getSimpleName())
         .append(" value - too long, max length must be '")
         .append(maxLength)
         .append("'.");
-    return new InvalidTypeValueException(message.toString(), localisedMessage, value);
+    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
   static InvalidTypeValueException forInvalidCodePoint(
-      final String localisedMessage,
+      final String message,
       final Class<? extends CharType> targetTypeClass,
       final CharSequence value,
       final int indexOfInvalidCharacter,
       final int invalidCodePoint) {
 
-    final StringBuilder message = new StringBuilder();
-    message.append("Invalid ").append(targetTypeClass.getSimpleName()).append(" value - invalid ");
+    final StringBuilder parserErrorMessage = new StringBuilder();
+    parserErrorMessage.append("Invalid ").append(targetTypeClass.getSimpleName()).append(" value - invalid ");
     if (Character.isWhitespace(invalidCodePoint)) {
-      message.append("white-space ");
+      parserErrorMessage.append("white-space ");
     } else if (Character.isISOControl(invalidCodePoint)) {
-      message.append("control ");
+      parserErrorMessage.append("control ");
     }
-    message.append("character '");
-    appendCodePoint(message, invalidCodePoint);
-    message.append("'.");
-    return new InvalidTypeValueException(message.toString(), localisedMessage, value);
+    parserErrorMessage.append("character '");
+    appendCodePoint(parserErrorMessage, invalidCodePoint);
+    parserErrorMessage.append("'.");
+    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
   private static StringBuilder appendCodePoint(final StringBuilder s, final int invalidCodePoint) {
