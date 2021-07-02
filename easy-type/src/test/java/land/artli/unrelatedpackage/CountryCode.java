@@ -1,6 +1,7 @@
-package land.artli.easytype;
+package land.artli.unrelatedpackage;
 
-import java.text.ParseException;
+import land.artli.easytype.CharType;
+import land.artli.easytype.TypeParser;
 
 public final class CountryCode extends CharType<CountryCode> {
 
@@ -15,7 +16,7 @@ public final class CountryCode extends CharType<CountryCode> {
     super(value);
   }
 
-  public static CountryCode of(final CharSequence value) throws ParseException {
+  public static CountryCode of(final CharSequence value) {
     return TYPE_PARSER.parse(value, CountryCode::new);
   }
 }
