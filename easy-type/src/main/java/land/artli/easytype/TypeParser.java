@@ -18,12 +18,11 @@ public class TypeParser {
   private static final int[] EMPTY_INT_ARRAY = new int[0];
   private static final long[] EMPTY_LONG_ARRAY = new long[0];
 
-
   private final Class<? extends CharType<?>> targetClass;
   private final String errorMessage;
   private final TargetCase targetCase;
   private final WhiteSpace whiteSpace;
-  private int[] convertWhiteSpaceToCodePoints;
+  private final int[] convertWhiteSpaceToCodePoints;
   private final NullHandling nullHandling;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
@@ -86,7 +85,6 @@ public class TypeParser {
     int codePoint;
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
-    CodePointConversion codePointConversion;
 
     while (i < length) {
       ch = value.charAt(i);
@@ -150,8 +148,6 @@ public class TypeParser {
         if (k >= maxNumberOfCodePoints) {
           throw InvalidTypeValueException.forValueTooLong(errorMessage, targetClass, value, maxNumberOfCodePoints);
         }
-//        codePointConversion = codePointConversions.getCodePointConversion(codePoint);
-//        codePoint = codePointConversion == null ? codePoint : (char) codePointConversion.toCodePoints[0];
         if (k == result.length) {
           result = Arrays.copyOf(result, result.length + Math.max(16, toCodePoints.length));
         }
@@ -353,7 +349,6 @@ public class TypeParser {
 
     public TypeParserBuilder acceptAllDashes() {
       acceptUnicodeCategory(Category.DASH_PUNCTUATION);
-//      codePointRangesBuilder.addRangedSubset(Category.DASH_PUNCTUATION);
       return this;
     }
 
@@ -554,13 +549,13 @@ public class TypeParser {
       }
 
       void addCharConversion(final char fromChar, final char toChar) {
-        addCodePointConversion(fromChar, new int[]{(int) toChar});
+        addCodePointConversion(fromChar, new int[]{toChar});
       }
 
       void addCharConversions(final char[] fromChars, final char toChar) {
         if (fromChars != null) {
           for (int i = 0; i < fromChars.length; ++i) {
-            addCodePointConversion(fromChars[i], new int[]{(int) toChar});
+            addCodePointConversion(fromChars[i], new int[]{toChar});
           }
         }
       }
@@ -1035,7 +1030,7 @@ public class TypeParser {
         int temp;
         for (int i = fromIndex; i < toIndex; i++) {
           for (int j = fromIndex; j < toIndex - i - 1; j++) {
-            if ((0x00000000_ffffffffL & (long) values[j]) > (0x00000000_ffffffffL & (long) values[j + 1])) {
+            if ((0x00000000_ffffffffL & values[j]) > (0x00000000_ffffffffL & values[j + 1])) {
               // swap the elements
               temp = values[j];
               values[j] = values[j + 1];
