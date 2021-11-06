@@ -102,7 +102,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
-  static InvalidTypeValueException forInvalidCodePoint(
+  public static InvalidTypeValueException forInvalidCodePoint(
       final String message,
       final Class<? extends CharType> targetTypeClass,
       final CharSequence value,
