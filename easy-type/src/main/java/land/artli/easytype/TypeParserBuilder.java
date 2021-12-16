@@ -175,6 +175,20 @@ public class TypeParserBuilder {
     return this;
   }
 
+  public TypeParserBuilder acceptLanguage(final Language language) {
+    codePointRangesBuilder.addRangedSubset(language.getRangedSubset());
+    return this;
+  }
+
+  public TypeParserBuilder acceptLanguages(final Language... languages) {
+    if (languages != null && languages.length > 0) {
+      for (int i = 0; i < languages.length; ++i) {
+        acceptLanguage(languages[i]);
+      }
+    }
+    return this;
+  }
+
   public TypeParserBuilder acceptUnicodeCategory(final Category category) {
     acceptedCategories |= category.bitMask;
     return this;
@@ -240,16 +254,22 @@ public class TypeParserBuilder {
     return convertAllDashesTo((int) '-');
   }
 
+  public TypeParserBuilder acceptHyphenAndConvertAllDashesToHyphen() {
+    return acceptChar('-').convertAllDashesTo((int) '-');
+  }
+
   public TypeParserBuilder convertAllDashesTo(final char toChar) {
     return convertAllDashesTo((int) toChar);
   }
 
   public TypeParserBuilder convertAllDashesTo(final int toCodePoint) {
+    acceptCodePoint(toCodePoint);
     codePointConversionsBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCodePoint);
     return this;
   }
 
   public TypeParserBuilder convertAllDashesTo(final CharSequence toCharSequence) {
+    toCharSequence.codePoints().forEach(this::acceptCodePoint);
     codePointConversionsBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCharSequence);
     return this;
   }
