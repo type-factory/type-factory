@@ -25,10 +25,10 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat|Invalid SomeType value - invalid character 'a'.",
-      "Deer|Invalid SomeType value - invalid character 'e'.",
-      "Τίγρη|Invalid SomeType value - invalid character 'ί'.", // Greek
-      "Жирафа|Invalid SomeType value - invalid character 'и'.", // Russian
+      "Cat    | Invalid SomeType value - invalid character 'a'.",
+      "Deer   | Invalid SomeType value - invalid character 'e'.",
+      "Τίγρη  | Invalid SomeType value - invalid character 'ί'.", // Greek
+      "Жирафа | Invalid SomeType value - invalid character 'и'.", // Russian
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_lowercase_letters(
       final String value, final String expectedParserErrorMessage) {

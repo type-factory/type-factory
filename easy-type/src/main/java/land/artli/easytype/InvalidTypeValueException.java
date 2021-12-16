@@ -17,7 +17,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
       final String message,
       final int[] successfullyParsedCodePoints, 
       final int successfullyParsedCount) {
-    super(message);
+    super(message == null || message.isBlank() ? parserErrorMessage : message);
     this.localizationResourceBundle = null;
     this.parserErrorMessage = parserErrorMessage;
     this.invalidValue = new String(successfullyParsedCodePoints, 0, successfullyParsedCount);
@@ -29,7 +29,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
       final int[] successfullyParsedCodePoints, 
       final int successfullyParsedCount,
       final CharSequence invalidValue) {
-    super(message);
+    super(message == null || message.isBlank() ? parserErrorMessage : message);
     this.localizationResourceBundle = null;
     this.parserErrorMessage = parserErrorMessage;
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
@@ -39,7 +39,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
       final String parserErrorMessage, 
       final String message, 
       final CharSequence invalidValue) {
-    super(message);
+    super(message == null || message.isBlank() ? parserErrorMessage : message);
     this.localizationResourceBundle = null;
     this.parserErrorMessage = parserErrorMessage;
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
@@ -50,7 +50,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
       final String message, 
       final CharSequence invalidValue, 
       final Throwable cause) {
-    super(message, cause);
+    super(message == null || message.isBlank() ? parserErrorMessage : message, cause);
     this.localizationResourceBundle = null;
     this.parserErrorMessage = parserErrorMessage;
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
