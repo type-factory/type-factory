@@ -58,9 +58,11 @@ class RangedSubset implements Subset {
   }
 
   /**
-   * Returns an array of 2-byte code-point ranges stored as char values. Each range comprises an inclusive-from value and an inclusive-to value. The
+   * Returns an array of 1-byte code-point ranges stored as char values. Each range comprises an inclusive-from value and an inclusive-to value. The
    * most-significant 8 bits hold the inclusive-from value. The least-significant 8 bits hold the inclusive-to value. The returned array must be
    * sorted from low-to-high.
+   *
+   * @return an array of 1-byte code-point ranges stored as char values.
    */
   char[] getSingleByteCodePointRanges() {
     // Protect out data by returning a copy
@@ -71,6 +73,7 @@ class RangedSubset implements Subset {
    * Returns an array of 2-byte code-point ranges stored as integer values. Each range comprises an inclusive-from value and an inclusive-to value.
    * The most-significant 16 bits hold the inclusive-from value. The least-significant 16 bits hold the inclusive-to value. The returned array must be
    * sorted from low-to-high as unsigned-integers.
+   * @return an array of 2-byte code-point ranges stored as integer values.
    */
   int[] getDoubleByteCodePointRanges() {
     // Protect out data by returning a copy
@@ -78,9 +81,10 @@ class RangedSubset implements Subset {
   }
 
   /**
-   * Returns an array of 3-byte code-point ranges stored as long values. Each range comprises an inclusive-from value and an inclusive-to value. The
+   * Returns an array of 4-byte code-point ranges stored as long values. Each range comprises an inclusive-from value and an inclusive-to value. The
    * most-significant 32 bits hold the inclusive-from value. The least-significant 32 bits hold the inclusive-to value. The returned array must be
    * sorted from low-to-high.
+   * @return an array of 4-byte code-point ranges stored as long values.
    */
   long[] getTripleByteCodePointRanges() {
     // Protect out data by returning a copy
@@ -256,37 +260,42 @@ class RangedSubset implements Subset {
     private int doubleByteEndIndex = 0;
     private int tripleByteEndIndex = 0;
 
-    void addChar(final char ch) {
+    RangedSubsetBuilder addChar(final char ch) {
       addCharRange(ch, ch);
+      return this;
     }
 
-    void addChars(final char... chars) {
+    RangedSubsetBuilder addChars(final char... chars) {
       if (chars != null) {
         ensureDoubleByteCapacity(chars.length);
         for (int i = 0; i < chars.length; ++i) {
           addChar(chars[i]);
         }
       }
+      return this;
     }
 
-    void addCharRange(final char inclusiveFrom, final char inclusiveTo) {
+    RangedSubsetBuilder addCharRange(final char inclusiveFrom, final char inclusiveTo) {
       addCodePointRange(inclusiveFrom & 0x0000_ffff, inclusiveTo & 0x0000_ffff);
+      return this;
     }
 
-    void addCodePoint(final int codePoint) {
+    RangedSubsetBuilder addCodePoint(final int codePoint) {
       addCodePointRange(codePoint, codePoint);
+      return this;
     }
 
-    void addCodePoints(final int... codePoints) {
+    RangedSubsetBuilder addCodePoints(final int... codePoints) {
       if (codePoints != null) {
         ensureDoubleByteCapacity(codePoints.length);
         for (int i = 0; i < codePoints.length; ++i) {
           addCodePoint(codePoints[i]);
         }
       }
+      return this;
     }
 
-    void addRangedSubset(final RangedSubset subset) {
+    RangedSubsetBuilder addRangedSubset(final RangedSubset subset) {
       if (subset != null && subset.isNotEmpty()) {
         final char[] singleByteRanges = subset.getSingleByteCodePointRanges();
         ensureSingleByteCapacity(singleByteRanges.length);
@@ -310,15 +319,16 @@ class RangedSubset implements Subset {
               RangedSubset.getInclusiveTo(l));
         }
       }
+      return this;
     }
 
-    void addCodePointRange(int inclusiveFrom, int inclusiveTo) {
+    RangedSubsetBuilder addCodePointRange(int inclusiveFrom, int inclusiveTo) {
       if (inclusiveTo > 0xffff) {
         if (inclusiveFrom > 0xffff) {
           ensureTripleByteCapacity();
           tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(inclusiveFrom, inclusiveTo);
           ++tripleByteEndIndex;
-          return;
+          return this;
         } else {
           ensureTripleByteCapacity();
           tripleByteCodePointRanges[tripleByteEndIndex] = RangedSubset.rangeToLong(0x10000, inclusiveTo);
@@ -332,7 +342,7 @@ class RangedSubset implements Subset {
           ensureDoubleByteCapacity();
           doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(inclusiveFrom, inclusiveTo);
           ++doubleByteEndIndex;
-          return;
+          return this;
         } else {
           ensureDoubleByteCapacity();
           doubleByteCodePointRanges[doubleByteEndIndex] = RangedSubset.rangeToInt(0x100, inclusiveTo);
@@ -344,6 +354,7 @@ class RangedSubset implements Subset {
       ensureSingleByteCapacity();
       singleByteCodePointRanges[singleByteEndIndex] = RangedSubset.rangeToChar(inclusiveFrom, inclusiveTo);
       ++singleByteEndIndex;
+      return this;
     }
 
     private void removeSingleByteElement(final int index) {

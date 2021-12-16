@@ -7,6 +7,7 @@ import java.text.Normalizer.Form;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+
 public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
 
   enum WordsWithDiacriticModifiers {
@@ -15,7 +16,10 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
     GREEK_TIGER("τίγρη", 'τ', 'ι', '́', 'γ', 'ρ', 'η'),
     FRENCH_BEETLE("scarabée", 's', 'c', 'a', 'r', 'a', 'b', 'e', '́', 'e'),
     DANISH_BEAR("får", 'f', 'a', '̊', 'r'),
-    ;
+    VIETNAMESE_GIRAFFE("hươu cao cổ", 'h', 'u', '̛', 'o', '̛', 'u', ' ', 'c', 'a', 'o', ' ', 'c', 'o', '̂', '̉'),
+    VIETNAMESE_KANGAROO("chuột túi", 'c', 'h', 'u', 'o', '̣', '̂', 't', ' ', 't', 'u', '́', 'i'),
+    RUSSIAN_SQUIRREL("бе́лка", 'б', 'е', '́', 'л', 'к', 'а'),
+    RUSSIAN_MONKEY("обезья́на", 'о', 'б', 'е', 'з', 'ь', 'я', '́', 'н', 'а');
 
     final String valueNFC;
     final String valueNFD;
@@ -46,6 +50,8 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .toCharacterNormalizationFormNFC()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.MODIFIER_SYMBOL)
+            .acceptUnicodeCategory(Category.NON_SPACING_MARK)
+            .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
     assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFC);
@@ -63,6 +69,7 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .toCharacterNormalizationFormNFD()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.NON_SPACING_MARK)
+            .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
     assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFD);
@@ -79,6 +86,9 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
         TypeParser.builder(SomeType.class)
             .toCharacterNormalizationFormNFKC()
             .acceptAllUnicodeLetters()
+            .acceptUnicodeCategory(Category.MODIFIER_SYMBOL)
+            .acceptUnicodeCategory(Category.NON_SPACING_MARK)
+            .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
     assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFKC);
@@ -96,6 +106,7 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .toCharacterNormalizationFormNFKD()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.NON_SPACING_MARK)
+            .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
     assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFKD);

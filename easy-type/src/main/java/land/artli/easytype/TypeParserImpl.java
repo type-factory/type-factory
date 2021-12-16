@@ -134,12 +134,12 @@ class TypeParserImpl implements TypeParser {
             break;
         }
       }
-      if (!isAcceptedCodePoint(codePoint)) {
-        throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
-      }
       toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
+        if (!isAcceptedCodePoint(codePoint)) {
+          throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
+        }
         if (k >= maxNumberOfCodePoints) {
           throw InvalidTypeValueException.forValueTooLong(errorMessage, targetClass, value, maxNumberOfCodePoints);
         }
