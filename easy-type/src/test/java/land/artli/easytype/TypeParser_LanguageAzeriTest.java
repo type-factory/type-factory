@@ -5,21 +5,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class TypeParser_LanguageArabicTest {
+public class TypeParser_LanguageAzeriTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "جاموس", // Arabic 'Buffalo'
-      "حصان", // Arabic 'Horse'
-      "قنديل البحر", // Arabic 'Jellyfish'
+      "eşşək", // Azeri 'Donkey'
+      "kəpənək", // Azeri 'Butterfly'
+      "zürafə", // Azeri 'Girrafe'
   })
-  void should_parse_accepting_only_arabic_letters(final String value) {
+  void should_parse_accepting_only_azeri_latin_letters(final String value) {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
-            .errorMessage("Must be made up of Arabic letters only.")
+            .errorMessage("Must be made up of Azeri Latin letters only.")
             .toCharacterNormalizationFormNFC()
-            .acceptLanguage(Language.LETTERS_ARABIC_AR)
+            .acceptLanguage(Language.LETTERS_AZERI_AZ_LATN)
             .normalizeWhitespace()
             .build();
     Assertions.assertThat(typeParser.parse(value)).hasToString(value);
