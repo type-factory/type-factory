@@ -1,11 +1,18 @@
 package land.artli.easytype;
 
-import land.artli.easytype.AbstractTypeParserTest.SomeType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class TypeParser_LanguageGreekTest {
+class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
+
+  static final TypeParser TYPE_PARSER =
+      TypeParser.builder(SomeType.class)
+          .errorMessage("Must be made up of Greek letters only.")
+          .toCharacterNormalizationFormNFC()
+          .acceptLanguage(Language.LETTERS_GREEK_EL)
+          .normalizeWhitespace()
+          .build();
 
   @ParameterizedTest
   @ValueSource(strings = {
@@ -14,15 +21,7 @@ public class TypeParser_LanguageGreekTest {
       "Μαϊμού", // Greek 'Monkey'
   })
   void should_parse_accepting_only_greek_letters(final String value) {
-
-    final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
-            .errorMessage("Must be made up of Greek letters only.")
-            .toCharacterNormalizationFormNFC()
-            .acceptLanguage(Language.LETTERS_GREEK_EL)
-            .normalizeWhitespace()
-            .build();
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(TYPE_PARSER.parse(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -32,17 +31,8 @@ public class TypeParser_LanguageGreekTest {
       "Mαϊμού", // Greek 'Monkey' with English 'M'
   })
   void should_throw_exception_with_non_greek_letters(final String value) {
-
-    final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
-            .errorMessage("Must be made up of Greek letters only.")
-            .toCharacterNormalizationFormNFC()
-            .acceptLanguage(Language.LETTERS_GREEK_EL)
-            .normalizeWhitespace()
-            .build();
-
     Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
-        .isThrownBy(() -> typeParser.parse(value))
+        .isThrownBy(() -> TYPE_PARSER.parse(value))
         .withMessage("Must be made up of Greek letters only.");
   }
 
