@@ -75,6 +75,16 @@ public enum Language implements Subset {
           'u', 'v', 'x', 'y')
       .build()),
 
+  LETTERS_HINDI_HI(RangedSubset.builder()
+      .addChars('ऄ', 'अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ऋ', 'ऌ', 'ऍ', 'ऎ', 'ए', 'ऐ', 'ऑ', 'ऒ',
+          'ओ', 'औ', 'क', 'ख', 'ग', 'घ', 'ङ', 'च', 'छ', 'ज', 'झ', 'ञ', 'ट', 'ठ', 'ड', 'ढ',
+          'ण', 'त', 'थ', 'द', 'ध', 'न', 'ऩ', 'प', 'फ', 'ब', 'भ', 'म', 'य', 'र', 'ऱ', 'ल',
+          'ळ', 'ऴ', 'व', 'श', 'ष', 'स', 'ह')
+      .addCharRange('\u093c', '\u093d') // Various signs
+      .addCharRange('\u093e', '\u094c') // Dependent vowel signs
+      .addChar('\u094d') // Virama / halant
+      .build()),
+
   NUMBERS(RangedSubset.builder()
       .addCharRange('0', '9')
       .build()),
@@ -82,7 +92,13 @@ public enum Language implements Subset {
   NUMBERS_ARABIC(RangedSubset.builder()
       .addChars('١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
       .build()),
+
+  NUMBERS_DEVANAGARI(RangedSubset.builder()
+      .addChars('०', '१', '२', '३', '४', '५', '६', '७', '८', '९')
+      .build()),
   ;
+
+  public static final char DOTTED_CIRCLE_COMBINING_MARK_PLACEHOLDER = '◌';
 
   private final RangedSubset rangedSubset;
 
