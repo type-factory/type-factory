@@ -6,12 +6,22 @@ interface CompositeSubset extends Subset {
 
   Collection<Subset> getSubsets();
 
-  default boolean isInSubset(final int codePoint) {
+  default boolean contains(final int codePoint) {
     for (Subset subset : getSubsets()) {
-      if (subset.isInSubset(codePoint)) {
+      if (subset.contains(codePoint)) {
         return true;
       }
     }
     return false;
+  }
+
+  @Override
+  default boolean isEmpty() {
+    for (Subset subset : getSubsets()) {
+      if (subset.isNotEmpty()) {
+        return false;
+      }
+    }
+    return true;
   }
 }

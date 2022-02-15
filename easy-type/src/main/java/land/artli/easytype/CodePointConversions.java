@@ -109,41 +109,41 @@ class CodePointConversions {
       addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
     }
 
-    void addCodePointConversions(final RangedSubset subset, final CharSequence toCharSequence) {
+    void addCodePointConversions(final RangedSubsetImpl subset, final CharSequence toCharSequence) {
       addCodePointConversions(subset, toCharSequence.codePoints().toArray());
     }
 
-    void addCodePointConversions(final RangedSubset subset, final char toChar) {
+    void addCodePointConversions(final RangedSubsetImpl subset, final char toChar) {
       addCodePointConversions(subset, new int[]{toChar});
     }
 
-    void addCodePointConversions(final RangedSubset subset, final int toCodePoint) {
+    void addCodePointConversions(final RangedSubsetImpl subset, final int toCodePoint) {
       addCodePointConversions(subset, new int[]{toCodePoint});
     }
 
-    void addCodePointConversions(final RangedSubset subset, final int[] toCodePoints) {
+    void addCodePointConversions(final RangedSubsetImpl subset, final int[] toCodePoints) {
 
       if (subset != null) {
         final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();
         for (char c : singleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubset.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubset.getInclusiveTo(c);
+          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
+          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }
         }
         final int[] doubleByteRangedSubset = subset.getDoubleByteCodePointRanges();
         for (int c : doubleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubset.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubset.getInclusiveTo(c);
+          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
+          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }
         }
         final long[] tripleByteRangedSubset = subset.getTripleByteCodePointRanges();
         for (long c : tripleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubset.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubset.getInclusiveTo(c);
+          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
+          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }
