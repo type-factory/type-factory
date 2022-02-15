@@ -107,10 +107,20 @@ public enum Language implements Subset {
   }
 
   @Override
-  public boolean isInSubset(int codePoint) {
-    return rangedSubset.isInSubset(codePoint);
+  public boolean isEmpty() {
+    return rangedSubset.isEmpty();
   }
 
+  @Override
+  public boolean contains(int codePoint) {
+    return rangedSubset.contains(codePoint);
+  }
+
+  /**
+   * Package scoped – to be accessed by other package classes to get access to code-point array ranges.
+   *
+   * @return
+   */
   RangedSubset getRangedSubset() {
     return rangedSubset;
   }
