@@ -165,7 +165,7 @@ class TypeParserImpl implements TypeParser {
   private boolean isAcceptedCodePoint(final int codePoint) {
     return (acceptedCategories > 0L
         && (acceptedCategories & (0x1L << Character.getType(codePoint))) > 0L)
-        || acceptedCodePoints.isInSubset(codePoint);
+        || acceptedCodePoints.contains(codePoint);
   }
 
   private static int[] appendCodePoint(int[] result, final int index, final int codePoint) {

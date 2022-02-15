@@ -5,7 +5,6 @@ import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import land.artli.easytype.CodePointConversions.CodePointConversionsBuilder;
-import land.artli.easytype.RangedSubset.RangedSubsetBuilder;
 
 public class TypeParserBuilder {
 
@@ -18,7 +17,7 @@ public class TypeParserBuilder {
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
-  private long acceptedCategories = 0; // bit values, currently 'int' is enough but new categories have been defined.
+  private long acceptedCategories = 0; // bit values, currently 32-bit 'int' is enough but new categories have been defined, so we use 'long'.
   private final RangedSubsetBuilder codePointRangesBuilder = RangedSubset.builder();
   private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();

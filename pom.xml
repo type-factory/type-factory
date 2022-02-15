@@ -52,6 +52,23 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j</artifactId>
+        <version>70.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j-charset</artifactId>
+        <version>70.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j-localespi</artifactId>
+        <version>70.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
