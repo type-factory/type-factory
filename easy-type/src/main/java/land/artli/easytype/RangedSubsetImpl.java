@@ -2,6 +2,8 @@ package land.artli.easytype;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static land.artli.easytype.RangedSubsetUtils.getInclusiveFrom;
+import static land.artli.easytype.RangedSubsetUtils.getInclusiveTo;
 
 import java.util.Arrays;
 
@@ -41,13 +43,9 @@ final class RangedSubsetImpl implements RangedSubset {
         + this.tripleByteCodePointRanges.length;
   }
 
-  private int size() {
-    return size;
-  }
-
   @Override
   public boolean isEmpty() {
-    return size() == 0;
+    return size == 0;
   }
 
   /**
@@ -95,74 +93,11 @@ final class RangedSubsetImpl implements RangedSubset {
   }
 
   public boolean contains(final int codePoint) {
-    if (size == 0) {
-      return false;
-    } else if (codePoint < 0x100) {
-      if (singleByteCodePointRanges.length == 0 ||
-          codePoint < getInclusiveFrom(singleByteCodePointRanges[0]) ||
-          codePoint > getInclusiveTo(singleByteCodePointRanges[singleByteCodePointRanges.length - 1])) {
-        return false; // not found, outside of range
-      }
-      // Try to find using a binary search
-      int low = 0;
-      int high = singleByteCodePointRanges.length - 1;
-      while (low <= high) {
-        final int mid = (low + high) >>> 1; // divide by 2
-        final int inclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[mid]);
-        final int inclusiveTo = getInclusiveTo(singleByteCodePointRanges[mid]);
-        if (codePoint > inclusiveTo) {
-          low = mid + 1;
-        } else if (codePoint < inclusiveFrom) {
-          high = mid - 1;
-        } else {
-          return true; // found
-        }
-      }
-    } else if (codePoint < 0x10000) {
-      if (doubleByteCodePointRanges.length == 0 ||
-          codePoint < getInclusiveFrom(doubleByteCodePointRanges[0]) ||
-          codePoint > getInclusiveTo(doubleByteCodePointRanges[doubleByteCodePointRanges.length - 1])) {
-        return false; // not found, outside of range
-      }
-      // Try to find using a binary search
-      int low = 0;
-      int high = doubleByteCodePointRanges.length - 1;
-      while (low <= high) {
-        final int mid = (low + high) >>> 1; // divide by 2
-        final int inclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[mid]);
-        final int inclusiveTo = getInclusiveTo(doubleByteCodePointRanges[mid]);
-        if (codePoint > inclusiveTo) {
-          low = mid + 1;
-        } else if (codePoint < inclusiveFrom) {
-          high = mid - 1;
-        } else {
-          return true; // found
-        }
-      }
-    } else {
-      if (tripleByteCodePointRanges.length == 0 ||
-          codePoint < getInclusiveFrom(tripleByteCodePointRanges[0]) ||
-          codePoint > getInclusiveTo(tripleByteCodePointRanges[tripleByteCodePointRanges.length - 1])) {
-        return false; // not found, outside of range
-      }
-      // Try to find using a binary search
-      int low = 0;
-      int high = tripleByteCodePointRanges.length - 1;
-      while (low <= high) {
-        final int mid = (low + high) >>> 1; // divide by 2
-        final long midVal = tripleByteCodePointRanges[mid];
-        final int inclusiveFrom = getInclusiveFrom(midVal);
-        final int inclusiveTo = getInclusiveTo(midVal);
-        if (codePoint > inclusiveTo) {
-          low = mid + 1;
-        } else if (codePoint < inclusiveFrom) {
-          high = mid - 1;
-        } else {
-          return true; // found
-        }
-      }
-    }
-    return false; // not found
+    return RangedSubsetUtils.contains(
+        codePoint,
+        singleByteCodePointRanges,
+        doubleByteCodePointRanges,
+        tripleByteCodePointRanges);
   }
 
   @Override
@@ -184,30 +119,6 @@ final class RangedSubsetImpl implements RangedSubset {
     s.setLength(s.length() - 1); // remove final comma
     s.append(']');
     return s.toString();
-  }
-
-  static int getInclusiveFrom(final char codePointRange) {
-    return codePointRange >>> 8;
-  }
-
-  static int getInclusiveTo(final char codePointRange) {
-    return codePointRange & 0x00_ff;
-  }
-
-  static int getInclusiveFrom(final int codePointRange) {
-    return codePointRange >>> 16;
-  }
-
-  static int getInclusiveTo(final int codePointRange) {
-    return codePointRange & 0x0000_ffff;
-  }
-
-  static int getInclusiveFrom(final long codePointRange) {
-    return (int) (codePointRange >>> 32);
-  }
-
-  static int getInclusiveTo(final long codePointRange) {
-    return (int) (codePointRange & 0x00000000_ffffffffL);
   }
 
   /**
@@ -296,22 +207,22 @@ final class RangedSubsetImpl implements RangedSubset {
         ensureSingleByteCapacity(singleByteRanges.length);
         for (char c : singleByteRanges) {
           addCodePointRange(
-              RangedSubsetImpl.getInclusiveFrom(c),
-              RangedSubsetImpl.getInclusiveTo(c));
+              getInclusiveFrom(c),
+              getInclusiveTo(c));
         }
         final int[] doubleByteRanges = subset.getDoubleByteCodePointRanges();
         ensureDoubleByteCapacity(doubleByteRanges.length);
         for (int j : doubleByteRanges) {
           addCodePointRange(
-              RangedSubsetImpl.getInclusiveFrom(j),
-              RangedSubsetImpl.getInclusiveTo(j));
+              getInclusiveFrom(j),
+              getInclusiveTo(j));
         }
         final long[] tripleByteRanges = subset.getTripleByteCodePointRanges();
         ensureTripleByteCapacity(tripleByteRanges.length);
         for (long l : tripleByteRanges) {
           addCodePointRange(
-              RangedSubsetImpl.getInclusiveFrom(l),
-              RangedSubsetImpl.getInclusiveTo(l));
+              getInclusiveFrom(l),
+              getInclusiveTo(l));
         }
       }
       return this;
@@ -428,10 +339,10 @@ final class RangedSubsetImpl implements RangedSubset {
         int i = 0;
         int j = 1;
         while (j < singleByteEndIndex) {
-          previousInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(singleByteCodePointRanges[i]);
-          previousInclusiveTo = RangedSubsetImpl.getInclusiveTo(singleByteCodePointRanges[i]);
-          currentInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(singleByteCodePointRanges[j]);
-          currentInclusiveTo = RangedSubsetImpl.getInclusiveTo(singleByteCodePointRanges[j]);
+          previousInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[i]);
+          previousInclusiveTo = getInclusiveTo(singleByteCodePointRanges[i]);
+          currentInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[j]);
+          currentInclusiveTo = getInclusiveTo(singleByteCodePointRanges[j]);
           if (previousInclusiveTo >= currentInclusiveFrom) {
             if (previousInclusiveTo <= currentInclusiveTo) {
               singleByteCodePointRanges[i] = RangedSubsetImpl.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
@@ -455,10 +366,10 @@ final class RangedSubsetImpl implements RangedSubset {
         int i = 0;
         int j = 1;
         while (j < doubleByteEndIndex) {
-          previousInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(doubleByteCodePointRanges[i]);
-          previousInclusiveTo = RangedSubsetImpl.getInclusiveTo(doubleByteCodePointRanges[i]);
-          currentInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(doubleByteCodePointRanges[j]);
-          currentInclusiveTo = RangedSubsetImpl.getInclusiveTo(doubleByteCodePointRanges[j]);
+          previousInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[i]);
+          previousInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[i]);
+          currentInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[j]);
+          currentInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[j]);
           if (previousInclusiveTo >= currentInclusiveFrom) {
             if (previousInclusiveTo <= currentInclusiveTo) {
               doubleByteCodePointRanges[i] = RangedSubsetImpl.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
@@ -482,10 +393,10 @@ final class RangedSubsetImpl implements RangedSubset {
         int i = 0;
         int j = 1;
         while (j < tripleByteEndIndex) {
-          previousInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(tripleByteCodePointRanges[i]);
-          previousInclusiveTo = RangedSubsetImpl.getInclusiveTo(tripleByteCodePointRanges[i]);
-          currentInclusiveFrom = RangedSubsetImpl.getInclusiveFrom(tripleByteCodePointRanges[j]);
-          currentInclusiveTo = RangedSubsetImpl.getInclusiveTo(tripleByteCodePointRanges[j]);
+          previousInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[i]);
+          previousInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[i]);
+          currentInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[j]);
+          currentInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[j]);
           if (previousInclusiveTo >= currentInclusiveFrom) {
             if (previousInclusiveTo <= currentInclusiveTo) {
               tripleByteCodePointRanges[i] = RangedSubsetImpl.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
