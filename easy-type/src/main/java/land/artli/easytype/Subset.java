@@ -1,7 +1,6 @@
 package land.artli.easytype;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import land.artli.easytype.RangedSubsetImpl.RangedSubsetBuilderImpl;
 
 public interface Subset {
@@ -38,9 +37,10 @@ public interface Subset {
   }
 
   static Subset of(final Subset... subsets) {
-    if (subsets == null || subsets.length == 0) {
-      return (CompositeSubset) Collections::emptyList;
-    }
-    return (CompositeSubset) () -> List.of(subsets);
+    return new CompositeSubsetImpl(subsets);
+  }
+
+  static Subset of(final Collection<Subset> subsets) {
+    return new CompositeSubsetImpl(subsets);
   }
 }

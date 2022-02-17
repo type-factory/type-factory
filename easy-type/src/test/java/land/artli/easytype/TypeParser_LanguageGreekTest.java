@@ -10,7 +10,7 @@ class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
       TypeParser.builder(SomeType.class)
           .errorMessage("Must be made up of Greek letters only.")
           .toCharacterNormalizationFormNFC()
-          .acceptLanguage(Language.LETTERS_GREEK_EL)
+          .acceptLanguage(Language.GREEK_el)
           .normalizeWhitespace()
           .build();
 

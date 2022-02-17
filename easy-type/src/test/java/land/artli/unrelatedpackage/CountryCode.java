@@ -7,8 +7,7 @@ public final class CountryCode extends CharType<CountryCode> {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder(CountryCode.class)
-          .acceptCharRange('a', 'z')
-          .acceptCharRange('A', 'Z')
+          .acceptLettersAtoZ()
           .toUpperCase()
           .build();
 

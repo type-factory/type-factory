@@ -30,11 +30,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.ibm.icu</groupId>
-      <artifactId>icu4j-charset</artifactId>
-    </dependency>
-
     <!--    <dependency>-->
     <!--      <groupId>land.artli</groupId>-->
     <!--      <artifactId>easy-type-unicode-code-generator</artifactId>-->
@@ -43,66 +38,45 @@
 
   </dependencies>
 
-<!--  <build>-->
-<!--    <plugins>-->
+  <build>
+    <plugins>
 
-<!--      <plugin>-->
-<!--        <groupId>org.codehaus.mojo</groupId>-->
-<!--        <artifactId>exec-maven-plugin</artifactId>-->
-<!--        <version>3.0.0</version>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>generate-unicode-constants-classes</id>-->
-<!--            <phase>generate-sources</phase>-->
-<!--            <goals>-->
-<!--              <goal>java</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--        <configuration>-->
-<!--          <includePluginDependencies>true</includePluginDependencies>-->
-<!--          <includeProjectDependencies>false</includeProjectDependencies>-->
-<!--          <mainClass>land.artli.easytype.generator.Main</mainClass>-->
-<!--          <arguments>-->
-<!--            <argument>${basedir}/src/main/unicode/ucd.all.grouped.xml</argument>-->
-<!--            <argument>${basedir}/src/main/java/land/artli/easytype</argument>-->
-<!--          </arguments>-->
-<!--        </configuration>-->
-<!--        <dependencies>-->
-<!--          <dependency>-->
-<!--            <groupId>land.artli</groupId>-->
-<!--            <artifactId>easy-type-unicode-code-generator</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>javax.activation</groupId>-->
-<!--            <artifactId>activation</artifactId>-->
-<!--            <version>1.1.1</version>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>javax.xml.bind</groupId>-->
-<!--            <artifactId>jaxb-api</artifactId>-->
-<!--            <version>2.3.0</version>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>com.sun.xml.bind</groupId>-->
-<!--            <artifactId>jaxb-core</artifactId>-->
-<!--            <version>2.3.0</version>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>com.sun.xml.bind</groupId>-->
-<!--            <artifactId>jaxb-impl</artifactId>-->
-<!--            <version>2.3.0</version>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>org.jvnet.jaxb2_commons</groupId>-->
-<!--            <artifactId>jaxb2-basics-runtime</artifactId>-->
-<!--            <version>0.12.0</version>-->
-<!--          </dependency>-->
-<!--        </dependencies>-->
-<!--      </plugin>-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>generate-language-classes</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includePluginDependencies>true</includePluginDependencies>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <mainClass>land.artli.easytype.generator.language.Main</mainClass>
+          <arguments>
+            <argument>${basedir}/src/main/java/land/artli/easytype</argument>
+          </arguments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>land.artli</groupId>
+            <artifactId>easy-type-language-generator</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j-charset</artifactId>
+            <version>70.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
 
-<!--    </plugins>-->
-<!--  </build>-->
+    </plugins>
+  </build>
 
 </project>
