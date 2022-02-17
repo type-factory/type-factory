@@ -18,7 +18,7 @@ public class TypeParser_LanguageArmenianTest extends AbstractTypeParserTest {
         TypeParser.builder(SomeType.class)
             .errorMessage("Must be made up of Armenian letters only.")
             .toCharacterNormalizationFormNFC()
-            .acceptLanguage(Language.LETTERS_ARMENIAN_HY)
+            .acceptLanguage(Language.ARMENIAN_hy)
             .normalizeWhitespace()
             .build();
     Assertions.assertThat(typeParser.parse(value)).hasToString(value);

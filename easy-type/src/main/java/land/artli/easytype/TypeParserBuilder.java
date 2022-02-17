@@ -18,9 +18,11 @@ public class TypeParserBuilder {
   private int maxNumberOfCodePoints = 64;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
   private long acceptedCategories = 0; // bit values, currently 32-bit 'int' is enough but new categories have been defined, so we use 'long'.
-  private final RangedSubsetBuilder codePointRangesBuilder = RangedSubset.builder();
+  private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
   private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
+  private final List<Subset> otherSubsets = new ArrayList<>();
+
 
   TypeParserBuilder(final Class<? extends CharType<?>> targetClass) {
     this.targetClass = targetClass;
@@ -108,12 +110,12 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptChar(final char ch) {
-    codePointRangesBuilder.addChar(ch);
+    rangedSubsetBuilder.addChar(ch);
     return this;
   }
 
   public TypeParserBuilder acceptChars(final char... chars) {
-    codePointRangesBuilder.addChars(chars);
+    rangedSubsetBuilder.addChars(chars);
     return this;
   }
 
@@ -126,17 +128,17 @@ public class TypeParserBuilder {
    * @return this {@code TypeParserBuilder}.
    */
   public TypeParserBuilder acceptCharRange(final char inclusiveFrom, final char inclusiveTo) {
-    codePointRangesBuilder.addCharRange(inclusiveFrom, inclusiveTo);
+    rangedSubsetBuilder.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   public TypeParserBuilder acceptCodePoint(final int codePoint) {
-    codePointRangesBuilder.addCodePoint(codePoint);
+    rangedSubsetBuilder.addCodePoint(codePoint);
     return this;
   }
 
   public TypeParserBuilder acceptCodePoints(final int... codePoints) {
-    codePointRangesBuilder.addCodePoints(codePoints);
+    rangedSubsetBuilder.addCodePoints(codePoints);
     return this;
   }
 
@@ -149,7 +151,7 @@ public class TypeParserBuilder {
    * @return this {@code TypeParserBuilder}.
    */
   public TypeParserBuilder acceptCodePointRange(final int inclusiveFrom, final int inclusiveTo) {
-    codePointRangesBuilder.addCodePointRange(inclusiveFrom, inclusiveTo);
+    rangedSubsetBuilder.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
@@ -175,7 +177,11 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptLanguage(final Language language) {
-    codePointRangesBuilder.addRangedSubset(language.getRangedSubset());
+    if (language instanceof RangedSubset rangedSubset) {
+      rangedSubsetBuilder.addRangedSubset(rangedSubset);
+    } else {
+      otherSubsets.add(language);
+    }
     return this;
   }
 
@@ -203,22 +209,28 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptAllUnicodeLetters() {
-    acceptUnicodeCategory(Category.LETTER);
-    return this;
+    return acceptUnicodeCategory(Category.LETTER);
   }
 
   /**
-   * Configures the type parser to accepts all letters 'A' through 'Z' that were originally in the ASCII range.
+   * Configures the type parser to accepts all letters [a-zA-Z] that are in the ASCII portion of the Unicode character set.
+   * <p>
+   * If you wish for the letters to converted to upper or lower case then remember to configure the {@link TypeParser} by calling {@link
+   * #toLowerCase()} or {@link #toUpperCase()} in the {@link TypeParserBuilder}
    * <p>
    * If you want to accept <em>all</em> letters in the Unicode set (this could mean mixed-languages) then use: {@link #acceptAllUnicodeLetters()}
+   * <p>
+   * This method is a convenience method that invokes {@code acceptCharRange('a', 'z').acceptCharRange('A', 'Z');} on this builder.
    *
    * @return this {@code TypeParserBuilder}
    * @see #acceptUnicodeCategory(Category)
    * @see Category#LETTER
+   * @see #toLowerCase()
+   * @see #toUpperCase()
    */
   public TypeParserBuilder acceptLettersAtoZ() {
-    acceptCharRange('A', 'Z');
-    return this;
+    return acceptCharRange('a', 'z')
+        .acceptCharRange('A', 'Z');
   }
 
   /**
@@ -240,8 +252,7 @@ public class TypeParserBuilder {
    * @see Category#DECIMAL_DIGIT_NUMBER
    */
   public TypeParserBuilder acceptDigits0to9() {
-    acceptCharRange('0', '9');
-    return this;
+    return acceptCharRange('0', '9');
   }
 
   public TypeParserBuilder acceptAllDashes() {
@@ -325,6 +336,13 @@ public class TypeParserBuilder {
   }
 
   public TypeParserImpl build() {
+    final Subset subset;
+    if (otherSubsets.isEmpty()) {
+      subset = rangedSubsetBuilder.build();
+    } else {
+      otherSubsets.add(rangedSubsetBuilder.build());
+      subset = new CompositeSubsetImpl(otherSubsets);
+    }
     return new TypeParserImpl(
         targetClass, errorMessage, targetCase,
         whiteSpace, convertWhiteSpaceToCodePoints,
@@ -332,7 +350,7 @@ public class TypeParserBuilder {
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
         acceptedCategories,
-        codePointRangesBuilder.build(),
+        subset,
         codePointConversionsBuilder.build());
   }
 }

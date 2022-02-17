@@ -1,5 +1,8 @@
 package land.artli.easytype;
 
+import static land.artli.easytype.RangedSubsetUtils.getInclusiveFrom;
+import static land.artli.easytype.RangedSubsetUtils.getInclusiveTo;
+
 class CodePointConversions {
 
   /**
@@ -126,24 +129,24 @@ class CodePointConversions {
       if (subset != null) {
         final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();
         for (char c : singleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
+          final int inclusiveFrom = getInclusiveFrom(c);
+          final int inclusiveTo = getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }
         }
         final int[] doubleByteRangedSubset = subset.getDoubleByteCodePointRanges();
         for (int c : doubleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
+          final int inclusiveFrom = getInclusiveFrom(c);
+          final int inclusiveTo = getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }
         }
         final long[] tripleByteRangedSubset = subset.getTripleByteCodePointRanges();
         for (long c : tripleByteRangedSubset) {
-          final int inclusiveFrom = RangedSubsetImpl.getInclusiveFrom(c);
-          final int inclusiveTo = RangedSubsetImpl.getInclusiveTo(c);
+          final int inclusiveFrom = getInclusiveFrom(c);
+          final int inclusiveTo = getInclusiveTo(c);
           for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
             addCodePointConversion(j, toCodePoints);
           }

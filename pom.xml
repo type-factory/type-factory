@@ -20,6 +20,7 @@
 
   <modules>
     <module>easy-type-bom</module>
+    <module>easy-type-language-generator</module>
     <module>easy-type-unicode-code-generator</module>
     <module>easy-type-parent</module>
     <module>easy-type</module>
