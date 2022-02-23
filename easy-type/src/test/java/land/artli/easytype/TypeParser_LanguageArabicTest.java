@@ -21,7 +21,7 @@ public class TypeParser_LanguageArabicTest extends AbstractTypeParserTest {
             .acceptLanguage(Language.ARABIC_ar)
             .normalizeWhitespace()
             .build();
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
 

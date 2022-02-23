@@ -20,7 +20,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -39,7 +39,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
@@ -60,7 +60,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -79,7 +79,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
@@ -100,7 +100,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -121,7 +121,7 @@ public class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
     Assertions.setMaxStackTraceElementsDisplayed(16);
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);

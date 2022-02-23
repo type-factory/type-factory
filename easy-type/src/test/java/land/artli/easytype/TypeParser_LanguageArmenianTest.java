@@ -21,7 +21,7 @@ public class TypeParser_LanguageArmenianTest extends AbstractTypeParserTest {
             .acceptLanguage(Language.ARMENIAN_hy)
             .normalizeWhitespace()
             .build();
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
 

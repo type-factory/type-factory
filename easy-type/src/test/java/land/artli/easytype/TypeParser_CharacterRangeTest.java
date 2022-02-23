@@ -21,7 +21,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
@@ -41,7 +41,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
             .acceptCharRange('Α', 'Ω')
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);

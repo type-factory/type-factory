@@ -74,7 +74,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
 
   public static InvalidTypeValueException forValueTooShort(
       final String message,
-      final Class<? extends CharType> targetTypeClass,
+      final Class<?> targetTypeClass,
       final CharSequence value,
       final int minLength) {
 
@@ -89,7 +89,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
 
   public static InvalidTypeValueException forValueTooLong(
       final String message,
-      final Class<? extends CharType> targetTypeClass,
+      final Class<?> targetTypeClass,
       final CharSequence value,
       final int maxLength) {
 
@@ -104,7 +104,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
 
   public static InvalidTypeValueException forInvalidCodePoint(
       final String message,
-      final Class<? extends CharType> targetTypeClass,
+      final Class<?> targetTypeClass,
       final CharSequence value,
       final int indexOfInvalidCharacter,
       final int invalidCodePoint) {
