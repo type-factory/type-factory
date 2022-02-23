@@ -4,11 +4,12 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import land.artli.easytype.CodePointConversions.CodePointConversionsBuilder;
 
 public class TypeParserBuilder {
 
-  private final Class<? extends CharType<?>> targetClass;
+  private final Class<?> targetClass;
   private String errorMessage;
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private int[] convertWhiteSpaceToCodePoints;
@@ -16,15 +17,17 @@ public class TypeParserBuilder {
   private Normalizer.Form targetCharacterNormalizationForm = Form.NFC;
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
+  private int minNumberOfCodePointsIgnoringModifiers = 0;
+  private int maxNumberOfCodePointsIgnoringModifiers = 64;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
-  private long acceptedCategories = 0; // bit values, currently 32-bit 'int' is enough but new categories have been defined, so we use 'long'.
+  private long acceptedUnicodeCategories = 0; // bit values, currently 32-bit 'int' is enough but new categories have been defined, so we use 'long'.
   private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
   private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
-  private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
   private final List<Subset> otherSubsets = new ArrayList<>();
+  private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
 
-  TypeParserBuilder(final Class<? extends CharType<?>> targetClass) {
+  TypeParserBuilder(final Class<?> targetClass) {
     this.targetClass = targetClass;
   }
 
@@ -33,32 +36,110 @@ public class TypeParserBuilder {
     return this;
   }
 
-  public TypeParserBuilder minNumberOfCodePoints(final int min) {
+  public TypeParserBuilder minSizeNumberOfCodePoints(final int min) {
     minNumberOfCodePoints = Math.max(min, 0);
     return this;
   }
 
-  public TypeParserBuilder maxNumberOfCodePoints(final int max) {
+  public TypeParserBuilder maxSizeNumberOfCodePoints(final int max) {
     maxNumberOfCodePoints = max;
     return this;
   }
 
-  public TypeParserBuilder fixedNumberOfCodePoints(final int size) {
-    minNumberOfCodePoints(size);
-    maxNumberOfCodePoints(size);
+  public TypeParserBuilder fixedSizeNumberOfCodePoints(final int size) {
+    minSizeNumberOfCodePoints(size);
+    maxSizeNumberOfCodePoints(size);
     return this;
   }
 
+  /**
+   * Configures the typeParser to ensure that both null and empty input values are preserved in the parse result.
+   * <p>
+   * For example - assuming a valid parseable value of "ABC":
+   * </p>
+   * <pre>
+   *   parseToString(null)                     ⟶ null
+   *   parseToString("")                       ⟶ ""
+   *   parseToString("ABC")                    ⟶ "ABC"
+   *
+   *   parseToClass(null,  TargetClass::new)   ⟶ null
+   *   parseToClass("",    TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
+   *
+   *   parseToRecord(null,  TargetRecord::new) ⟶ null
+   *   parseToRecord("",    TargetRecord::new) ⟶ new TargetRecord("")
+   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   * </pre>
+   *
+   * @return this builder.
+   * @see #convertEmptyToNull()
+   * @see #convertNullToEmpty()
+   * @see TypeParser#parseToString(CharSequence)
+   * @see TypeParser#parseToStringType(CharSequence, Function)
+   * @see TypeParser#parseToRecord(CharSequence, Function)
+   */
   public TypeParserBuilder preserveNullAndEmpty() {
     nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
     return this;
   }
 
+  /**
+   * Configures the typeParser to ensure that both null and empty input values are converted to an empty value in the parse result.
+   * <p>
+   * For example - assuming a valid parseable value of "ABC":
+   * </p>
+   * <pre>
+   *   parseToString(null)                     ⟶ ""
+   *   parseToString("")                       ⟶ ""
+   *   parseToString("ABC")                    ⟶ "ABC"
+   *
+   *   parseToClass(null,  TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToClass("",    TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
+   *
+   *   parseToRecord(null,  TargetRecord::new) ⟶ new TargetRecord("")
+   *   parseToRecord("",    TargetRecord::new) ⟶ new TargetRecord("")
+   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   * </pre>
+   *
+   * @return this builder.
+   * @see #preserveNullAndEmpty()
+   * @see #convertEmptyToNull() ()
+   * @see TypeParser#parseToString(CharSequence)
+   * @see TypeParser#parseToStringType(CharSequence, Function)
+   * @see TypeParser#parseToRecord(CharSequence, Function)
+   */
   public TypeParserBuilder convertNullToEmpty() {
     nullHandling = NullHandling.CONVERT_NULL_TO_EMPTY;
     return this;
   }
 
+  /**
+   * Configures the typeParser to ensure that both null and empty input values are converted to a null value in the parse result.
+   * <p>
+   * For example - assuming a valid parseable value of "ABC":
+   * </p>
+   * <pre>
+   *   parseToString(null)                     ⟶ null
+   *   parseToString("")                       ⟶ null
+   *   parseToString("ABC")                    ⟶ "ABC"
+   *
+   *   parseToClass(null,  TargetClass::new)   ⟶ null
+   *   parseToClass("",    TargetClass::new)   ⟶ null
+   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
+   *
+   *   parseToRecord(null,  TargetRecord::new) ⟶ null
+   *   parseToRecord("",    TargetRecord::new) ⟶ null
+   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   * </pre>
+   *
+   * @return this builder.
+   * @see #preserveNullAndEmpty()
+   * @see #convertNullToEmpty()
+   * @see TypeParser#parseToString(CharSequence)
+   * @see TypeParser#parseToStringType(CharSequence, Function)
+   * @see TypeParser#parseToRecord(CharSequence, Function)
+   */
   public TypeParserBuilder convertEmptyToNull() {
     nullHandling = NullHandling.CONVERT_EMPTY_TO_NULL;
     return this;
@@ -195,7 +276,7 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptUnicodeCategory(final Category category) {
-    acceptedCategories |= category.bitMask;
+    acceptedUnicodeCategories |= category.bitMask;
     return this;
   }
 
@@ -215,7 +296,7 @@ public class TypeParserBuilder {
   /**
    * Configures the type parser to accepts all letters [a-zA-Z] that are in the ASCII portion of the Unicode character set.
    * <p>
-   * If you wish for the letters to converted to upper or lower case then remember to configure the {@link TypeParser} by calling {@link
+   * If you wish for the letters to be converted to upper or lower case then remember to configure the {@link TypeParser} by calling {@link
    * #toLowerCase()} or {@link #toUpperCase()} in the {@link TypeParserBuilder}
    * <p>
    * If you want to accept <em>all</em> letters in the Unicode set (this could mean mixed-languages) then use: {@link #acceptAllUnicodeLetters()}
@@ -349,7 +430,7 @@ public class TypeParserBuilder {
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
-        acceptedCategories,
+        acceptedUnicodeCategories,
         subset,
         codePointConversionsBuilder.build());
   }

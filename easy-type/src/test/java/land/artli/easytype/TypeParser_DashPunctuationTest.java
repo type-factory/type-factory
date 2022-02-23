@@ -23,7 +23,7 @@ public class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
   }
 
   @ParameterizedTest
@@ -42,7 +42,7 @@ public class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
   }
 
   @ParameterizedTest
@@ -61,6 +61,6 @@ public class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
   }
 }

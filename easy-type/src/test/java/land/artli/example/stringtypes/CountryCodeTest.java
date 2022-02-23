@@ -1,4 +1,4 @@
-package land.artli.unrelatedpackage;
+package land.artli.example.stringtypes;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

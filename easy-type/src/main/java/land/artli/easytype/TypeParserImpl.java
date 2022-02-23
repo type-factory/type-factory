@@ -1,14 +1,18 @@
 package land.artli.easytype;
 
 import static java.lang.Character.isWhitespace;
+import static land.artli.easytype.NullHandling.CONVERT_EMPTY_TO_NULL;
+import static land.artli.easytype.NullHandling.PRESERVE_NULL_AND_EMPTY;
 
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
 class TypeParserImpl implements TypeParser {
 
-  private final Class<? extends CharType<?>> targetClass;
+  private final Class<?> targetClass;
   private final String errorMessage;
   private final TargetCase targetCase;
   private final WhiteSpace whiteSpace;
@@ -17,12 +21,12 @@ class TypeParserImpl implements TypeParser {
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
-  private final long acceptedCategories; // bit values, currently 'int' is enough but new categories have been defined.
+  private final long acceptedUnicodeCategories; // bit values, currently 'int' is enough but new categories have been defined.
   private final Subset acceptedCodePoints;
   private final CodePointConversions codePointConversions;
 
   TypeParserImpl(
-      final Class<? extends CharType<?>> targetClass,
+      final Class<?> targetClass,
       final String errorMessage,
       final TargetCase targetCase,
       final WhiteSpace whiteSpace,
@@ -31,7 +35,7 @@ class TypeParserImpl implements TypeParser {
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
-      final long acceptedCategories,
+      final long acceptedUnicodeCategories,
       final Subset acceptedCodePoints,
       final CodePointConversions codePointConversions) {
     this.targetClass = targetClass;
@@ -43,21 +47,75 @@ class TypeParserImpl implements TypeParser {
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
-    this.acceptedCategories = acceptedCategories;
+    this.acceptedUnicodeCategories = acceptedUnicodeCategories;
     this.acceptedCodePoints = acceptedCodePoints;
     this.codePointConversions = codePointConversions;
   }
 
-  public <T extends CharType<?>> T parse(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
-    return constructorOrFactoryMethod.apply(parse(value));
+  @Override
+  public <T extends StringType<?>> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
+    return (nullHandling == PRESERVE_NULL_AND_EMPTY && value == null)
+        || (nullHandling == CONVERT_EMPTY_TO_NULL && (value == null || value.isEmpty()))
+        ? null
+        : constructorOrFactoryMethod.apply(parseToString(value));
   }
 
-  public String parse(final CharSequence originalValue) {
-    if (originalValue == null) {
-      return switch (nullHandling) {
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> null;
-        case CONVERT_NULL_TO_EMPTY -> "";
-      };
+  @Override
+  public <T extends ShortType<?>> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) {
+    final Short parsedValue = parseToShort(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  @Override
+  public <T extends IntegerType<?>> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) {
+    final Integer parsedValue = parseToInteger(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  @Override
+  public <T extends LongType<?>> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) {
+    final Long parsedValue = parseToLong(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  @Override
+  public Short parseToShort(final CharSequence originalValue) {
+    final String parsedValue = parseToString(originalValue);
+    if (parsedValue == null || parsedValue.isBlank()) {
+      return null;
+    }
+    return Short.valueOf(parsedValue);
+  }
+
+  @Override
+  public Integer parseToInteger(final CharSequence originalValue) {
+    final String parsedValue = parseToString(originalValue);
+    if (parsedValue == null || parsedValue.isBlank()) {
+      return null;
+    }
+    return Integer.valueOf(parsedValue);
+  }
+
+  @Override
+  public Long parseToLong(final CharSequence originalValue) {
+    final String parsedValue = parseToString(originalValue);
+    if (parsedValue == null || parsedValue.isBlank()) {
+      return null;
+    }
+    return Long.valueOf(parsedValue);
+  }
+
+  @Override
+  public String parseToString(final CharSequence originalValue) {
+    if ((nullHandling == PRESERVE_NULL_AND_EMPTY && originalValue == null)
+        || (nullHandling == CONVERT_EMPTY_TO_NULL && (originalValue == null || originalValue.isEmpty()))) {
+      return null;
     }
 
     final CharSequence value = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
@@ -163,8 +221,8 @@ class TypeParserImpl implements TypeParser {
   }
 
   private boolean isAcceptedCodePoint(final int codePoint) {
-    return (acceptedCategories > 0L
-        && (acceptedCategories & (0x1L << Character.getType(codePoint))) > 0L)
+    return (acceptedUnicodeCategories > 0L
+        && (acceptedUnicodeCategories & (0x1L << Character.getType(codePoint))) > 0L)
         || acceptedCodePoints.contains(codePoint);
   }
 

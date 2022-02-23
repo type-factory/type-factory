@@ -21,7 +21,7 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
       "hvítabjörninn", // Icelandic 'Polar Bear'
   })
   void should_parse_accepting_only_icelandic_letters(final String value) {
-    Assertions.assertThat(TYPE_PARSER.parse(value)).hasToString(value);
+    Assertions.assertThat(TYPE_PARSER.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -32,7 +32,7 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
   })
   void should_throw_exception_with_non_icelandic_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
-        .isThrownBy(() -> TYPE_PARSER.parse(value))
+        .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Icelandic letters only.");
   }
 

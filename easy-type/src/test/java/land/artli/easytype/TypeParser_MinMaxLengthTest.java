@@ -18,12 +18,12 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
-            .fixedNumberOfCodePoints(4)
+            .fixedSizeNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -36,12 +36,12 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
             .errorMessage("Some type must be 4 alpha characters.")
-            .fixedNumberOfCodePoints(4)
+            .fixedSizeNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be 4 alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
@@ -58,12 +58,12 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
             .errorMessage("Some type must be 4 alpha characters.")
-            .fixedNumberOfCodePoints(4)
+            .fixedSizeNumberOfCodePoints(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThatThrownBy(() -> typeParser.parse(value))
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidTypeValueException.class)
         .hasMessage("Some type must be 4 alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);

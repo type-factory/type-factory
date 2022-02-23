@@ -54,10 +54,10 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
-    assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFC);
-    assertThat(typeParser.parse(value.valueNFD)).hasToString(value.valueNFC);
-    assertThat(typeParser.parse(value.valueNFKC)).hasToString(value.valueNFC);
-    assertThat(typeParser.parse(value.valueNFKD)).hasToString(value.valueNFC);
+    assertThat(typeParser.parseToString(value.valueNFC)).hasToString(value.valueNFC);
+    assertThat(typeParser.parseToString(value.valueNFD)).hasToString(value.valueNFC);
+    assertThat(typeParser.parseToString(value.valueNFKC)).hasToString(value.valueNFC);
+    assertThat(typeParser.parseToString(value.valueNFKD)).hasToString(value.valueNFC);
   }
 
   @ParameterizedTest
@@ -72,10 +72,10 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
-    assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFD);
-    assertThat(typeParser.parse(value.valueNFD)).hasToString(value.valueNFD);
-    assertThat(typeParser.parse(value.valueNFKC)).hasToString(value.valueNFD);
-    assertThat(typeParser.parse(value.valueNFKD)).hasToString(value.valueNFD);
+    assertThat(typeParser.parseToString(value.valueNFC)).hasToString(value.valueNFD);
+    assertThat(typeParser.parseToString(value.valueNFD)).hasToString(value.valueNFD);
+    assertThat(typeParser.parseToString(value.valueNFKC)).hasToString(value.valueNFD);
+    assertThat(typeParser.parseToString(value.valueNFKD)).hasToString(value.valueNFD);
   }
 
   @ParameterizedTest
@@ -91,10 +91,10 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
-    assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFKC);
-    assertThat(typeParser.parse(value.valueNFD)).hasToString(value.valueNFKC);
-    assertThat(typeParser.parse(value.valueNFKC)).hasToString(value.valueNFKC);
-    assertThat(typeParser.parse(value.valueNFKD)).hasToString(value.valueNFKC);
+    assertThat(typeParser.parseToString(value.valueNFC)).hasToString(value.valueNFKC);
+    assertThat(typeParser.parseToString(value.valueNFD)).hasToString(value.valueNFKC);
+    assertThat(typeParser.parseToString(value.valueNFKC)).hasToString(value.valueNFKC);
+    assertThat(typeParser.parseToString(value.valueNFKD)).hasToString(value.valueNFKC);
   }
 
   @ParameterizedTest
@@ -109,9 +109,9 @@ public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest 
             .normalizeAndConvertWhitespaceTo(' ')
             .build();
 
-    assertThat(typeParser.parse(value.valueNFC)).hasToString(value.valueNFKD);
-    assertThat(typeParser.parse(value.valueNFD)).hasToString(value.valueNFKD);
-    assertThat(typeParser.parse(value.valueNFKC)).hasToString(value.valueNFKD);
-    assertThat(typeParser.parse(value.valueNFKD)).hasToString(value.valueNFKD);
+    assertThat(typeParser.parseToString(value.valueNFC)).hasToString(value.valueNFKD);
+    assertThat(typeParser.parseToString(value.valueNFD)).hasToString(value.valueNFKD);
+    assertThat(typeParser.parseToString(value.valueNFKC)).hasToString(value.valueNFKD);
+    assertThat(typeParser.parseToString(value.valueNFKD)).hasToString(value.valueNFKD);
   }
 }

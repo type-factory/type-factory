@@ -22,7 +22,7 @@ public class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
       "le léopard", // French 'Leopard'
   })
   void should_parse_accepting_only_french_letters(final String value) {
-    Assertions.assertThat(TYPE_PARSER.parse(value)).hasToString(value);
+    Assertions.assertThat(TYPE_PARSER.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
@@ -33,7 +33,7 @@ public class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
   })
   void should_throw_exception_with_non_french_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
-        .isThrownBy(() -> TYPE_PARSER.parse(value))
+        .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of French letters only.");
   }
 

@@ -20,8 +20,8 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
-            .minNumberOfCodePoints(4)
-            .maxNumberOfCodePoints(44)
+            .minSizeNumberOfCodePoints(4)
+            .maxSizeNumberOfCodePoints(44)
             .toUpperCase()
             .convertChar('7', '1')
             .convertChar('I', '1')
@@ -41,7 +41,7 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
             .acceptCharRange('T', 'Y')
             .build();
 
-    Assertions.assertThat(typeParser.parse(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
   }
 
 }
