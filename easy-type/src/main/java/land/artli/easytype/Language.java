@@ -5,7 +5,6 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     comments = "This file is generated from data in the LanguageData class in the easy-type-language-generator module.",
-    date = "2022-02-23T20:38:21",
     value = "land.artli:easy-type-language-generator")
 public interface Language extends Subset {
 

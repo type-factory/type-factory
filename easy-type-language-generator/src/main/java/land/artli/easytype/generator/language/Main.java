@@ -9,8 +9,6 @@ import com.ibm.icu.util.ULocale;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Main {
 
@@ -20,7 +18,7 @@ public class Main {
 
     final StringBuilder s = new StringBuilder();
 
-    s.append(String.format("""
+    s.append("""
         package land.artli.easytype;
                 
         import java.util.Locale;
@@ -28,9 +26,8 @@ public class Main {
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the easy-type-language-generator module.",
-            date="%tFT%tT",
             value = "land.artli:easy-type-language-generator")       
-        public interface Language extends Subset {""", LocalDate.now(), LocalTime.now()));
+        public interface Language extends Subset {""");
 
     for (LanguageData languageData : LanguageData.values()) {
       final ULocale locale = languageData.getLocale();
