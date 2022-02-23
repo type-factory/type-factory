@@ -41,11 +41,11 @@ public class Main {
           locale.toLanguageTag().replaceAll("[\s_-]+", "_")));
       if (locale.getScript() == null || locale.getScript().isBlank()) {
         s.append(String.format("""
-                %n    new Locale("%s", "%s", "%s"),""",
+                %n      new Locale("%s", "%s", "%s"),""",
             localeLanguage, localeCountry, localeVariant));
       } else {
         s.append(String.format("""
-                %n    new Locale.Builder().setLanguage("%s").setRegion("%s").setVariant("%s").setScript("%s").build(),""",
+                %n      new Locale.Builder().setLanguage("%s").setRegion("%s").setVariant("%s").setScript("%s").build(),""",
             localeLanguage, localeCountry, localeVariant, localeScript));
       }
 
@@ -82,10 +82,10 @@ public class Main {
       final int to = range.codepointEnd;
       if (from <= 0xFF && to >= 0x00) {
         if (!arrayStarted) {
-          s.append("\n    new char[] {\n");
+          s.append("\n      new char[]{\n");
           arrayStarted = true;
         }
-        s.append(String.format("        0x%02x_%02x, // ", max(0x00, from), min(0xff, to)));
+        s.append(String.format("          0x%02x_%02x, // ", max(0x00, from), min(0xff, to)));
         for (char c = (char) from; c <= to; ++c) {
           s.append(String.format(" %c", c));
         }
@@ -107,10 +107,10 @@ public class Main {
       final int to = range.codepointEnd;
       if (from <= 0xFFFF && to >= 0x0100) {
         if (!arrayStarted) {
-          s.append("\n    new int[] {\n");
+          s.append("\n      new int[]{\n");
           arrayStarted = true;
         }
-        s.append(String.format("        0x%04x_%04x, // ", max(0x0100, from), min(0xffff, to)));
+        s.append(String.format("          0x%04x_%04x, // ", max(0x0100, from), min(0xffff, to)));
         for (char c = (char) from; c <= to; ++c) {
           s.append(String.format(" %c", c));
         }
@@ -132,10 +132,10 @@ public class Main {
       final int to = range.codepointEnd;
       if (from <= 0xFFFFFFFF && to >= 0x00010000) {
         if (!arrayStarted) {
-          s.append("\n    new long[] {\n");
+          s.append("\n      new long[]{\n");
           arrayStarted = true;
         }
-        s.append(String.format("        0x%08x_%08x, // ", max(0x000010000, from), min(0xffffffff, to)));
+        s.append(String.format("          0x%08x_%08x, // ", max(0x000010000, from), min(0xffffffff, to)));
         for (char c = (char) from; c <= to; ++c) {
           s.append(String.format(" %c", c));
         }
