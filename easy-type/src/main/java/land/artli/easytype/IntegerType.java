@@ -2,7 +2,7 @@ package land.artli.easytype;
 
 import java.io.Serial;
 
-public abstract class IntegerType<T extends IntegerType<T>> extends NumberType<Integer, T> {
+public abstract class IntegerType extends NumberType<Integer, IntegerType> {
 
   @Serial
   private static final long serialVersionUID = 1083186934667437011L;

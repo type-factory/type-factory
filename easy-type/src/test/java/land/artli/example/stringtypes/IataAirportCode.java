@@ -3,7 +3,7 @@ package land.artli.example.stringtypes;
 import land.artli.easytype.StringType;
 import land.artli.easytype.TypeParser;
 
-public final class IataAirportCode extends StringType<IataAirportCode> {
+public final class IataAirportCode extends StringType {
 
   public static final IataAirportCode EMPTY_IATA_AIRPORT_CODE = new IataAirportCode("");
 

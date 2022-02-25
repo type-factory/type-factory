@@ -3,7 +3,7 @@ package land.artli.example.stringtypes;
 import land.artli.easytype.StringType;
 import land.artli.easytype.TypeParser;
 
-public final class CountryCode extends StringType<CountryCode> {
+public final class CountryCode extends StringType {
 
   public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
 
