@@ -2,6 +2,7 @@ package land.artli.easytype.generator.language;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static land.artli.easytype.generator.language.JavadocFragments.LANGUAGE_ALPHABET_INCLUDED_JAVADOC;
 
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
@@ -30,13 +31,29 @@ public class Main {
         public interface Language extends Subset {""");
 
     for (LanguageData languageData : LanguageData.values()) {
+      final UnicodeSet unicodeSet = languageData.getUnicodeSet();
       final ULocale locale = languageData.getLocale();
       final String localeLanguage = locale.getLanguage();
       final String localeCountry = locale.getCountry();
       final String localeVariant = locale.getVariant();
       final String localeScript = locale.getScript();
-      s.append("\n\n  ");
-      s.append(String.format("Language %s_%s = new LanguageImpl(",
+      s.append("\n\n");
+      if (languageData.hasJavadoc()) {
+        s.append("  /**");
+        for (String javadoc : languageData.getJavadoc()) {
+          s.append("\n   * ");
+          s.append(javadoc.replace("\n", "\n   * "));
+          s.append("\n   *");
+          if (LANGUAGE_ALPHABET_INCLUDED_JAVADOC.equals(javadoc)) {
+            s.append("\n   * <pre>");
+            appendIncludedJavadoc(s, unicodeSet);
+            s.append("\n   * </pre>");
+            s.append("\n   *");
+          }
+        }
+        s.append("/\n");
+      }
+      s.append(String.format("  Language %s_%s = new LanguageImpl(",
           locale.getDisplayLanguage().replaceAll("[\s_-]+", "_").toUpperCase(),
           locale.toLanguageTag().replaceAll("[\s_-]+", "_")));
       if (locale.getScript() == null || locale.getScript().isBlank()) {
@@ -48,8 +65,6 @@ public class Main {
                 %n      new Locale.Builder().setLanguage("%s").setRegion("%s").setVariant("%s").setScript("%s").build(),""",
             localeLanguage, localeCountry, localeVariant, localeScript));
       }
-
-      final UnicodeSet unicodeSet = languageData.getUnicodeSet();
 
       appendCharArrayRanges(s, unicodeSet);
       appendIntArrayRanges(s, unicodeSet);
@@ -146,4 +161,26 @@ public class Main {
       s.append("      },");
     }
   }
+
+  private static void appendIncludedJavadoc(final StringBuilder s, final UnicodeSet unicodeSet) {
+    if (unicodeSet == null || unicodeSet.isEmpty()) {
+      return;
+    }
+    for (EntryRange range : unicodeSet.ranges()) {
+      final int from = range.codepoint;
+      final int to = range.codepointEnd;
+      if (range.codepointEnd > range.codepoint) {
+        s.append(String.format("%n   *    %04X..%04X  ", from, to));
+        for (char c = (char) from; c <= to; ++c) {
+          s.append(String.format(" %c", c));
+        }
+      } else {
+        s.append(String.format("%n   *    %04X        ", from));
+        for (char c = (char) from; c <= to; ++c) {
+          s.append(String.format(" %c", c));
+        }
+      }
+    }
+  }
+
 }

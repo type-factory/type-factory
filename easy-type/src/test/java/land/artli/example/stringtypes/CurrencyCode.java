@@ -3,7 +3,7 @@ package land.artli.example.stringtypes;
 import land.artli.easytype.StringType;
 import land.artli.easytype.TypeParser;
 
-public final class CurrencyCode extends StringType<CountryCode> {
+public final class CurrencyCode extends StringType {
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");
 

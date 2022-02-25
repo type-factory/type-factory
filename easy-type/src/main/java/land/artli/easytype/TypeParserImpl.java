@@ -53,7 +53,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends StringType<?>> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
+  public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
     return (nullHandling == PRESERVE_NULL_AND_EMPTY && value == null)
         || (nullHandling == CONVERT_EMPTY_TO_NULL && (value == null || value.isEmpty()))
         ? null
@@ -61,7 +61,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends ShortType<?>> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) {
+  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) {
     final Short parsedValue = parseToShort(value);
     return parsedValue == null
         ? null
@@ -69,7 +69,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends IntegerType<?>> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) {
+  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) {
     final Integer parsedValue = parseToInteger(value);
     return parsedValue == null
         ? null
@@ -77,7 +77,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends LongType<?>> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) {
+  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) {
     final Long parsedValue = parseToLong(value);
     return parsedValue == null
         ? null

@@ -3,7 +3,7 @@ package land.artli.easytype;
 import java.io.Serial;
 import java.util.Objects;
 
-public abstract class StringType<T extends StringType<T>> implements CharSequenceType<T> {
+public abstract class StringType implements CharSequenceType<StringType> {
 
   @Serial
   private static final long serialVersionUID = -1263119529456254274L;
@@ -32,7 +32,7 @@ public abstract class StringType<T extends StringType<T>> implements CharSequenc
     if (o == null || !this.getClass().isAssignableFrom(o.getClass())) {
       return false;
     }
-    return Objects.equals(value, ((StringType<T>) o).value);
+    return Objects.equals(value, ((StringType) o).value);
   }
 
   @Override

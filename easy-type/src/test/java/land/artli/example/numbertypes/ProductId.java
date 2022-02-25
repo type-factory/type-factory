@@ -3,7 +3,7 @@ package land.artli.example.numbertypes;
 import land.artli.easytype.LongType;
 import land.artli.easytype.TypeParser;
 
-public final class ProductId extends LongType<ProductId> {
+public final class ProductId extends LongType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder(ProductId.class)

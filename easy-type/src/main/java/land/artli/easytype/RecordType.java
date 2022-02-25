@@ -1,5 +1,5 @@
 package land.artli.easytype;
 
-public interface RecordType<T extends RecordType<T>> extends CharSequenceType<T> {
+public interface RecordType extends CharSequenceType<RecordType> {
 
 }
