@@ -1,5 +1,6 @@
 package land.artli.easytype.generator.language;
 
+import static land.artli.easytype.generator.language.CodePointRange.range;
 import static land.artli.easytype.generator.language.JavadocFragments.LANGUAGE_ALPHABET_AIM_JAVADOC;
 import static land.artli.easytype.generator.language.JavadocFragments.LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC;
 import static land.artli.easytype.generator.language.JavadocFragments.LANGUAGE_ALPHABET_INCLUDED_JAVADOC;
@@ -22,12 +23,23 @@ public enum LanguageData {
       LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
       SEE_ALSO_COMMON_ARABIC_SCRIPT_REFERENCES),
 
-  LETTERS_AZERI_AZ_LATN(locale("az", "", "", "LATN"),
+  LETTERS_AZERBAIJANI_az_Latn(locale("az", "", "", "Latn"),
       new char[]{
           'A', 'a', 'B', 'b', 'C', 'c', 'Ç', 'ç', 'D', 'd', 'E', 'e', 'Ə', 'ə', 'F', 'f', 'G',
           'g', 'Ğ', 'ğ', 'H', 'h', 'X', 'x', 'I', 'ı', 'İ', 'i', 'J', 'j', 'K', 'k', 'Q', 'q', 'L',
           'l', 'M', 'm', 'N', 'n', 'O', 'o', 'Ö', 'ö', 'P', 'p', 'R', 'r', 'S', 's', 'Ş', 'ş', 'T',
-          't', 'U', 'u', 'Ü', 'ü', 'V', 'v', 'Y', 'y', 'Z', 'z'}),
+          't', 'U', 'u', 'Ü', 'ü', 'V', 'v', 'Y', 'y', 'Z', 'z'},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Azerbaijani_alphabet" target="_blank">Azerbaijani alphabet
+               – Wikipedia</a> provided information about the Azerbaijani alphabet and what
+               diacritics are supported.
+               
+          @see <a href="https://azerbaijan.az/en/information/107" target="_blank">Azerbaijani language
+               – Azerbaijan.az</a> provided information about the Azerbaijani language and alphabet."""),
 
   LETTERS_DANISH_DA(locale("da"),
       new char[]{
@@ -91,7 +103,7 @@ public enum LanguageData {
                the Unicode encodings for characters in the Greek and Coptic scripts."""),
 
   LETTERS_ENGLISH_EN(locale("en"),
-      new CharRange[]{
+      new CodePointRange[]{
           range('A', 'Z'), range('a', 'z')},
       LANGUAGE_ALPHABET_AIM_JAVADOC,
       LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
@@ -170,7 +182,7 @@ public enum LanguageData {
           'व', 'श', 'ष', 'स', 'ह',
           // Virama/halant
           '\u094d'},
-      new CharRange[]{
+      new CodePointRange[]{
           range('\u0902', '\u0903'), // Anusvara/bindu, Visarga
           range('\u093c', '\u093d'), // Nukta, Avagraha
           range('\u093e', '\u094c')  // Hindi dependant vowel signs
@@ -211,18 +223,111 @@ public enum LanguageData {
           'S', 's', 'T', 't', 'U', 'u', 'Ú', 'ú', 'V', 'v', 'X', 'x', 'Y', 'y',
           'Ý', 'ý', 'Z', 'z', 'Þ', 'þ', 'Æ', 'æ', 'Ö', 'ö'}),
 
+  LETTERS_ITALIAN_it(locale("it"),
+      new char[]{
+          'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h',
+          'I', 'i', 'L', 'l', 'M', 'm', 'N', 'n', 'O', 'o', 'P', 'p', 'Q', 'q', 'R', 'r',
+          'S', 's', 'T', 't', 'U', 'u', 'V', 'v', 'Z', 'z',
+          // Letters with acute accent
+          'É', 'é', 'Ó', 'ó',
+          // Letters with grave accent
+          'À', 'à', 'È', 'è', 'Ì', 'ì', 'Ò', 'ò', 'Ù', 'ù',
+          // Letters with circumflex
+          'Î', 'î'},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      """
+          <p>If you would like to extends this subset of letters with the extra letters commonly found in
+             loan-words in Italian you could create your own constant:</p>
+          <pre>
+            public static final Subset LETTERS_ITALIAN_WITH_EXTRAS =
+                LETTERS_ITALIAN_it.toBuilder()
+                    .addChar('J', 'j', 'K', 'k', 'W', 'w', 'X', 'x', 'Y', 'y')
+                    .build();
+          </pre>
+          """,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Italian_orthography" target="_blank">Italian Orthography
+               – Wikipedia</a> provided information about the Italian alphabet and what
+               diacritics are supported – it also highlighted which letters are not in the official alphabet
+               but are often found in loan-words.
+
+          @see <a href="https://www.thinkinitalian.com/the-italian-alphabet" target="_blank">The Italian alphabet
+               – Think in Italian</a> provided information about the Italian alphabet and confirmed Wikipedia
+               information about which letters are not in the official alphabet but are often found in loan-words.
+               
+          @see <a href="https://accademiadellacrusca.it/it/consulenza/denominazione-e-genere-delle-lettere-straniere-j-k-w-x-y/84"
+               target="_blank">Denominazione e genere delle lettere straniere (J, K, W, X, Y)
+               – Accademia della Crusca</a> provided information about the Italian alphabet and confirmed the official
+               21 letters in the Italian Alphabet. But it also left me wondering if perhaps they were accepted letters
+               in terms of official institutions and organizations when registering, for example, personal or business names.""",
+      SEE_ALSO_ALPHABETS_LETTERS_AND_DIACRITICS_IN_EUROPEAN_LANGUAGES),
 
   LETTERS_JAPANESE_JA_HIRA(locale("ja", "", "", "Hira"),
-      new CharRange[]{
+      new CodePointRange[]{
           // Hiragana letters
           range('\u3041', '\u3094'),
           // Small letters – should these be included – ゕ Ka, ゖ Ke
-          range('\u3095', '\u3096')}),
+          range('\u3095', '\u3096')},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Hiragana" target="_blank">Hiragana
+               – Wikipedia</a> provided information about the Hiragana script.
+               
+          @see <a href="https://unicode.org/charts/PDF/U3040.pdf" target="_blank">Hiragana
+               Unicode Chart – Unicode Standard v14</a> provided information about
+               the Unicode encodings for characters in the Hiragana script."""),
 
   LETTERS_JAPANESE_JA_Kana(locale("ja", "", "", "Kana"),
-      new CharRange[]{
+      new CodePointRange[]{
           // Katakana letters
-          range('\u30A1', '\u30FA')}),
+          range('\u30A1', '\u30FA')},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Katakana" target="_blank">Katakana
+               – Wikipedia</a> provided information about the Katakana script.
+                    
+          @see <a href="https://unicode.org/charts/PDF/U30A0.pdf" target="_blank">Katakana
+               Unicode Chart – Unicode Standard v14</a> provided information about
+               the Unicode encodings for characters in the Katakana script."""),
+
+  // The unified Han (Hanzi, Kanji, Hanja) unicode "letters"
+  LETTERS_JAPANESE_JA_Hani(locale("ja", "", "", "Hani"),
+      CJKUtils.getCJKLettersCodePointRanges(),
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
+               – Wikipedia</a> provided information about the Kanji script and its relationship to
+               the Chinese family of scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Han_unification" target="_blank">Han
+               Unification – Wikipedia</a> provided information about the unified Unicode
+               Hanzi, Kanji, Hanja scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Chinese_family_of_scripts" target="_blank">Chinese
+               family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/List_of_CJK_fonts" target="_blank">List of CJK
+               fonts – Wikipedia</a> provided information about some of the notable set of fonts for
+               rendering CJK fonts.
+
+          @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
+               FAQs – Unicode Org</a> provided information about
+               the Unicode Unified CJK encodings.
+               
+          @see <a href="doc-files/JAPANESE_ja_Hani.html" target="_blank">JAPANESE_ja_Hani</a>
+               for code points in this language set."""),
 
   // For Japanese information on Kun'yomi (native reading) and On'yomi (Sino-Japanese reading) reading of
   // Kanji see:
@@ -247,10 +352,6 @@ public enum LanguageData {
   //    - kIRG_VSource (Vietnam)
   //
 
-  /**
-   * Requires someone with intimate knowledge of the Norwegian Bokmål language to verify if the letters with diacritics (acute accent, grave accent
-   * and circumflex) are considered a valid part of the language alphabet. Letters with macron, I believe, are only used in Norwegian Bokmål.
-   */
   LETTERS_NORWEGIAN_BOKMÅL_NB(
       locale("nb"),
       new char[]{
@@ -265,13 +366,21 @@ public enum LanguageData {
           'Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô',
           'Ù', 'ù', 'Ú', 'ú', 'Û', 'û',
           // Letters with macron, I believe, are only used in Norwegian Bokmål and not in Norwegian Nynorsk
-          'Ā', 'ā', 'Ē', 'ē', 'Ī', 'ī', 'Ō', 'ō', 'Ū', 'ū'}
-  ),
+          'Ā', 'ā', 'Ē', 'ē', 'Ī', 'ī', 'Ō', 'ō', 'Ū', 'ū'},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
+               orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
+               diacritics are supported.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Bokmål" target="_blank">Bokmål
+               – Wikipedia</a> provided information about the Norwegian Bokmål alphabet and what
+               diacritics are supported.""",
+      SEE_ALSO_ALPHABETS_LETTERS_AND_DIACRITICS_IN_EUROPEAN_LANGUAGES),
 
-  /**
-   * Requires someone with intimate knowledge of the Norwegian Nynorsk language to verify if the letters with diacritics (acute accent, grave accent
-   * and circumflex) are considered a valid part of the language alphabet.
-   */
   LETTERS_NORWEGIAN_NYNORSK_NN(locale("nn"),
       new char[]{
           'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h',
@@ -283,7 +392,20 @@ public enum LanguageData {
           'È', 'è', 'É', 'é', 'Ê', 'ê',
           'Ì', 'ì', 'Í', 'í', 'Î', 'î',
           'Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô',
-          'Ù', 'ù', 'Ú', 'ú', 'Û', 'û'}),
+          'Ù', 'ù', 'Ú', 'ú', 'Û', 'û'},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
+               orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
+               diacritics are supported.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Nynorsk" target="_blank">Nynorsk
+               – Wikipedia</a> provided information about the Norwegian Nynorsk alphabet and what
+               diacritics are supported.""",
+      SEE_ALSO_ALPHABETS_LETTERS_AND_DIACRITICS_IN_EUROPEAN_LANGUAGES),
 
   /**
    * <p>Requires someone with intimate knowledge of the Dutch language to the alphabet.
@@ -295,7 +417,7 @@ public enum LanguageData {
    * </ul>
    */
   LETTERS_DUTCH_NL(locale("nl"),
-      new CharRange[]{
+      new CodePointRange[]{
           range('A', 'Z'), range('a', 'z')},
       new char[]{
           // Letters with acute accent and diaeresis
@@ -306,7 +428,7 @@ public enum LanguageData {
           'Ú', 'ú', 'Ü', 'ü'}),
 
   LETTERS_DUTCH_BELGIUM_NL(locale("nl", "BE"),
-      new CharRange[]{
+      new CodePointRange[]{
           range('A', 'Z'), range('a', 'z')}),
 
   LETTERS_PORTUGUESE_PT(locale("pt"),
@@ -349,7 +471,15 @@ public enum LanguageData {
           'Ấ', 'ạ', 'Ạ', 'ả', 'Ả', 'đ', '₫', 'Đ', 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I',
           'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'a', 'b',
           'c', 'd', 'e', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-          'u', 'v', 'x', 'y'}),
+          'u', 'v', 'x', 'y'},
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Vietnamese_alphabet" target="_blank">Vietnamese alphabet
+               – Wikipedia</a> provided information about the Vietnamese alphabet and what
+               diacritics are supported."""),
 
 //  NUMBERS(new CharRange[]{
 //      range('0', '9')}),
@@ -372,15 +502,15 @@ public enum LanguageData {
     this(locale, chars, null, javadoc);
   }
 
-  LanguageData(final ULocale locale, final CharRange[] charRanges, String... javadoc) {
-    this(locale, null, charRanges, javadoc);
+  LanguageData(final ULocale locale, final CodePointRange[] codePointRanges, String... javadoc) {
+    this(locale, null, codePointRanges, javadoc);
   }
 
-  LanguageData(final ULocale locale, final CharRange[] charRanges, final char[] chars, String... javadoc) {
-    this(locale, chars, charRanges, javadoc);
+  LanguageData(final ULocale locale, final CodePointRange[] codePointRanges, final char[] chars, String... javadoc) {
+    this(locale, chars, codePointRanges, javadoc);
   }
 
-  LanguageData(final ULocale locale, final char[] chars, final CharRange[] charRanges, String... javadoc) {
+  LanguageData(final ULocale locale, final char[] chars, final CodePointRange[] codePointRanges, String... javadoc) {
     this.locale = locale;
     this.javadoc = javadoc;
     final UnicodeSet set = new UnicodeSet();
@@ -389,8 +519,8 @@ public enum LanguageData {
         set.add(ch);
       }
     }
-    if (charRanges != null) {
-      for (CharRange range : charRanges) {
+    if (codePointRanges != null) {
+      for (CodePointRange range : codePointRanges) {
         set.add(range.fromCodePoint, range.toCodePoint);
       }
     }
@@ -415,6 +545,20 @@ public enum LanguageData {
     return unicodeSet;
   }
 
+  public String getLocaleDisplayLanguage() {
+    return locale.getDisplayLanguage();
+  }
+
+  public String getLocaleLanguageTag() {
+    return locale.toLanguageTag().replaceAll("[\s_-]+", "_");
+  }
+
+  public String getTargetEnumName() {
+    return String.format("%s_%s",
+        getLocaleDisplayLanguage().toUpperCase().replaceAll("[\s_-]+", "_"),
+        getLocaleLanguageTag());
+  }
+
   static ULocale locale(String language) {
     return locale(language, "", "", "");
   }
@@ -434,24 +578,5 @@ public enum LanguageData {
         .setVariant(variant)
         .setScript(script)
         .build();
-  }
-
-  static CharRange range(char fromChar, char toChar) {
-    return new CharRange((int) fromChar, (int) toChar);
-  }
-
-  static CharRange range(int fromCodePoint, int toCodePoint) {
-    return new CharRange(fromCodePoint, toCodePoint);
-  }
-
-  static class CharRange {
-
-    final int fromCodePoint;
-    final int toCodePoint;
-
-    CharRange(int fromCodePoint, int toCodePoint) {
-      this.fromCodePoint = fromCodePoint;
-      this.toCodePoint = toCodePoint;
-    }
   }
 }

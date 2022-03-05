@@ -1,5 +1,9 @@
 package land.artli.easytype;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import land.artli.easytype.Subset.CodePointRange;
+
 interface RangedSubsetUtils {
 
   static boolean contains(
@@ -101,6 +105,24 @@ interface RangedSubsetUtils {
 
   static int getInclusiveTo(final long codePointRange) {
     return (int) (codePointRange & 0x00000000_ffffffffL);
+  }
+
+  static Collection<CodePointRange> ranges(
+      final char[] singleByteCodePointRanges,
+      final int[] doubleByteCodePointRanges,
+      final long[] tripleByteCodePointRanges) {
+
+    final ArrayList<CodePointRange> result = new ArrayList<>();
+    for (char range : singleByteCodePointRanges) {
+      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+    }
+    for (int range : doubleByteCodePointRanges) {
+      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+    }
+    for (long range : tripleByteCodePointRanges) {
+      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+    }
+    return result;
   }
 
 }

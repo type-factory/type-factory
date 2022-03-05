@@ -109,6 +109,7 @@
           <detectLinks>true</detectLinks>
           <failOnWarnings>false</failOnWarnings>
           <failOnError>false</failOnError>
+          <docfilessubdirs>true</docfilessubdirs>
           <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
         </configuration>
         <executions>

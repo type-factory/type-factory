@@ -1,5 +1,7 @@
 package land.artli.easytype;
 
+import java.util.Collection;
+
 interface SubsetBuilder {
 
   SubsetBuilder addChar(final char ch);
@@ -13,6 +15,10 @@ interface SubsetBuilder {
   SubsetBuilder addCodePoints(final int... codePoints);
 
   SubsetBuilder addCodePointRange(int inclusiveFrom, int inclusiveTo);
+
+  SubsetBuilder addSubset(final Subset... subsets);
+
+  SubsetBuilder addSubset(final Collection<Subset> subsets);
 
   Subset build();
 

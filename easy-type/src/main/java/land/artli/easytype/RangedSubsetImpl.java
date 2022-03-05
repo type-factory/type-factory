@@ -6,6 +6,7 @@ import static land.artli.easytype.RangedSubsetUtils.getInclusiveFrom;
 import static land.artli.easytype.RangedSubsetUtils.getInclusiveTo;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 final class RangedSubsetImpl implements RangedSubset {
 
@@ -157,6 +158,14 @@ final class RangedSubsetImpl implements RangedSubset {
     return (((long) min(inclusiveFrom, inclusiveTo) << 32)) | max(inclusiveFrom, inclusiveTo);
   }
 
+  @Override
+  public Collection<CodePointRange> ranges() {
+    return RangedSubsetUtils.ranges(
+        singleByteCodePointRanges,
+        doubleByteCodePointRanges,
+        tripleByteCodePointRanges);
+  }
+
   static class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
 
     private char[] singleByteCodePointRanges = new char[16];
@@ -201,29 +210,66 @@ final class RangedSubsetImpl implements RangedSubset {
       return this;
     }
 
-    public RangedSubsetBuilderImpl addRangedSubset(final RangedSubset subset) {
-      if (subset != null && subset.isNotEmpty()) {
-        final char[] singleByteRanges = subset.getSingleByteCodePointRanges();
-        ensureSingleByteCapacity(singleByteRanges.length);
-        for (char c : singleByteRanges) {
-          addCodePointRange(
-              getInclusiveFrom(c),
-              getInclusiveTo(c));
+    public RangedSubsetBuilderImpl addSubset(final Subset... subsets) {
+      if (subsets != null) {
+        for (Subset subset : subsets) {
+          if (subset != null && subset.isNotEmpty()) {
+            if (subset instanceof RangedSubset rangedSubset) {
+              // More efficiently adds the ranges
+              addSubset(rangedSubset);
+            } else {
+              for (CodePointRange range : subset.ranges()) {
+                addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
+              }
+            }
+          }
         }
-        final int[] doubleByteRanges = subset.getDoubleByteCodePointRanges();
-        ensureDoubleByteCapacity(doubleByteRanges.length);
-        for (int j : doubleByteRanges) {
-          addCodePointRange(
-              getInclusiveFrom(j),
-              getInclusiveTo(j));
+      }
+      return this;
+    }
+
+    public RangedSubsetBuilderImpl addSubset(final Collection<Subset> subsets) {
+      if (subsets != null) {
+        for (Subset subset : subsets) {
+          if (subset != null && subset.isNotEmpty()) {
+            if (subset instanceof RangedSubset rangedSubset) {
+              // More efficiently adds the ranges
+              addSubset(rangedSubset);
+            } else {
+              for (CodePointRange range : subset.ranges()) {
+                addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
+              }
+            }
+          }
         }
-        final long[] tripleByteRanges = subset.getTripleByteCodePointRanges();
-        ensureTripleByteCapacity(tripleByteRanges.length);
-        for (long l : tripleByteRanges) {
-          addCodePointRange(
-              getInclusiveFrom(l),
-              getInclusiveTo(l));
-        }
+      }
+      return this;
+    }
+
+    public RangedSubsetBuilderImpl addSubset(final RangedSubset subset) {
+      if (subset == null || subset.isEmpty()) {
+        return this;
+      }
+      final char[] singleByteRanges = subset.getSingleByteCodePointRanges();
+      ensureSingleByteCapacity(singleByteRanges.length);
+      for (char c : singleByteRanges) {
+        addCodePointRange(
+            getInclusiveFrom(c),
+            getInclusiveTo(c));
+      }
+      final int[] doubleByteRanges = subset.getDoubleByteCodePointRanges();
+      ensureDoubleByteCapacity(doubleByteRanges.length);
+      for (int j : doubleByteRanges) {
+        addCodePointRange(
+            getInclusiveFrom(j),
+            getInclusiveTo(j));
+      }
+      final long[] tripleByteRanges = subset.getTripleByteCodePointRanges();
+      ensureTripleByteCapacity(tripleByteRanges.length);
+      for (long l : tripleByteRanges) {
+        addCodePointRange(
+            getInclusiveFrom(l),
+            getInclusiveTo(l));
       }
       return this;
     }

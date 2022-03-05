@@ -5,6 +5,8 @@ import land.artli.easytype.RangedSubsetImpl.RangedSubsetBuilderImpl;
 
 public interface Subset {
 
+  Collection<CodePointRange> ranges();
+
   boolean isEmpty();
 
   default boolean isNotEmpty() {
@@ -26,21 +28,43 @@ public interface Subset {
   }
 
   /**
+   * <p>Creates a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}.</p>
+   *
+   * @return a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}..
+   */
+  default SubsetBuilder toBuilder() {
+    return builder().addSubset(this);
+  }
+
+  /**
    * <p>Creates a {@link SubsetBuilder} to create {@link Subset} instances.</p>
    *
-   * <p>Package-scoped because we should only be invoking this as an implementation detail.</p>
-   *
-   * @return A {@link RangedSubsetBuilder} to create {@link RangedSubset} instances.
+   * @return A {@link SubsetBuilder} to create {@link Subset} instances.
    */
   static SubsetBuilder builder() {
     return new RangedSubsetBuilderImpl();
   }
 
   static Subset of(final Subset... subsets) {
-    return new CompositeSubsetImpl(subsets);
+    return builder()
+        .addSubset(subsets)
+        .build();
   }
 
   static Subset of(final Collection<Subset> subsets) {
-    return new CompositeSubsetImpl(subsets);
+    return builder()
+        .addSubset(subsets)
+        .build();
+  }
+
+  class CodePointRange {
+
+    public final int inclusiveFrom;
+    public final int inclusiveTo;
+
+    public CodePointRange(final int inclusiveFrom, final int inclusiveTo) {
+      this.inclusiveFrom = inclusiveFrom;
+      this.inclusiveTo = inclusiveTo;
+    }
   }
 }
