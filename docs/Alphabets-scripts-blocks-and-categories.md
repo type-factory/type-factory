@@ -15,10 +15,10 @@ In software, you need to define what you believe to be valid alphabet characters
 
 ```java
 "Nicholas".matches("[a-zA-Z]+");      // returns true
-    "Νικόλαος".matches("[ΆΈΉΊΌΎ-ΡΣ-ώ]+"); // returns true
+"Νικόλαος".matches("[ΆΈΉΊΌΎ-ΡΣ-ώ]+"); // returns true
 
-    "Ŋʅʗƕᴑꝲɐƨ".matches("[a-zA-Z]+");      // returns false
-    "ͶͱϏϖϡἇϙϟ".matches("[ΆΈΉΊΌΎ-ΡΣ-ώ]+"); // returns false
+"Ŋʅʗƕᴑꝲɐƨ".matches("[a-zA-Z]+");      // returns false
+"ͶͱϏϖϡἇϙϟ".matches("[ΆΈΉΊΌΎ-ΡΣ-ώ]+"); // returns false
 ```
 
 ## Scripts
@@ -32,7 +32,7 @@ They can already be used in Java regular expressions prefixing their ISO code or
 
 ```java
 "Nicholas".matches("\\p{IsLatin}+"); // returns true
-    "Νικόλαος".matches("\\p{IsGreek}+"); // returns true
+"Νικόλαος".matches("\\p{IsGreek}+"); // returns true
 ```
 
 Unfortunately, scripts also contain many characters that a native speaker would *not*
@@ -43,7 +43,7 @@ For example:
 
 ```java
 "Ŋʅʗƕᴑꝲɐƨ".matches("\\p{IsLatin}+"); // returns true – ouch!
-    "ͶͱϏϖϡἇϙϟ".matches("\\p{IsGreek}+"); // returns true – ouch!
+"ͶͱϏϖϡἇϙϟ".matches("\\p{IsGreek}+"); // returns true – ouch!
 ```
 
 ## Blocks
@@ -57,7 +57,7 @@ They can already be used in Java regular expressions prefixing their block name 
 
 ```java
 "Nicholas".matches("\\p{InBasicLatin}+");     // returns true
-    "Νικόλαος".matches("\\p{InGreekAndCoptic}+"); // returns true
+"Νικόλαος".matches("\\p{InGreekAndCoptic}+"); // returns true
 ```
 
 Unfortunately, block also contain many characters that a native speaker would *not*
@@ -68,7 +68,7 @@ For example:
 
 ```java
 "N1(<0L&$".matches("\\p{InBasicLatin}+");     // returns true – ouch!
-    "ͶͱϏϖϡϫϙϟ".matches("\\p{InGreekAndCoptic}+"); // returns true – ouch!
+"ͶͱϏϖϡϫϙϟ".matches("\\p{InGreekAndCoptic}+"); // returns true – ouch!
 ```
 
 ## Categories
