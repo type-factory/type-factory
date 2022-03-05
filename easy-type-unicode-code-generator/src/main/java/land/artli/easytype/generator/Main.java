@@ -26,7 +26,9 @@ public class Main {
     final UnicodeGroupDataLoader loader = new UnicodeGroupDataLoader(inputXml);
 
     final StringBuilder enumOtherValues = new StringBuilder();
-    enumOtherValues.append(LINE_SEPARATOR).append("    public static final Other WHITESPACE = new Other(")
+    enumOtherValues
+        .append(LINE_SEPARATOR)
+        .append("    public static final Other WHITESPACE = new Other(")
         .append(LINE_SEPARATOR)
         .append("\"WHITESPACE\", \"Whitespace\",");
     final RangedSubset whitespaceRangedSubset = loader.getWhitespaceRangedSubset();

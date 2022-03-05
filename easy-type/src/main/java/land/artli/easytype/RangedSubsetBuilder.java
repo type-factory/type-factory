@@ -1,5 +1,7 @@
 package land.artli.easytype;
 
+import java.util.Collection;
+
 interface RangedSubsetBuilder extends SubsetBuilder {
 
   @Override
@@ -17,10 +19,14 @@ interface RangedSubsetBuilder extends SubsetBuilder {
   @Override
   RangedSubsetBuilder addCodePoints(final int... codePoints);
 
-  RangedSubsetBuilder addRangedSubset(final RangedSubset subset);
-
   @Override
   RangedSubsetBuilder addCodePointRange(int inclusiveFrom, int inclusiveTo);
+
+  @Override
+  RangedSubsetBuilder addSubset(final Subset... subset);
+
+  @Override
+  RangedSubsetBuilder addSubset(final Collection<Subset> subsets);
 
   @Override
   RangedSubset build();

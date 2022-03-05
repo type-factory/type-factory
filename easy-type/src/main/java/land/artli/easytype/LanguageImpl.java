@@ -1,6 +1,7 @@
 package land.artli.easytype;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 
 class LanguageImpl implements Language, RangedSubset {
@@ -100,5 +101,13 @@ class LanguageImpl implements Language, RangedSubset {
     return tripleByteCodePointRanges == EMPTY_TRIPLE_BYTE_ARRAY
         ? tripleByteCodePointRanges
         : Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
+  }
+
+  @Override
+  public Collection<CodePointRange> ranges() {
+    return RangedSubsetUtils.ranges(
+        singleByteCodePointRanges,
+        doubleByteCodePointRanges,
+        tripleByteCodePointRanges);
   }
 }

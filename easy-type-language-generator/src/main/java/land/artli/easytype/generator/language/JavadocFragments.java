@@ -9,9 +9,9 @@ public interface JavadocFragments {
   String LANGUAGE_ALPHABET_INCLUDED_JAVADOC = """
       <b>Included in this alphabet</b>
             
-      <p>This language alphabet should capture the official
-         standard alphabet for words or names as would be accepted by government
-         institutions and corporate organizations that must adhere to statutory
+      <p>This language code-point subset should capture the official
+         standard alphabet or ideographs for words or names as would be accepted by
+         institutions and organizations that are required to adhere to statutory
          regulations.</p>""";
 
   String LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC = """

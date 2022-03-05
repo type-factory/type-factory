@@ -23,7 +23,6 @@ public class TypeParserBuilder {
   private long acceptedUnicodeCategories = 0; // bit values, currently 32-bit 'int' is enough but new categories have been defined, so we use 'long'.
   private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
   private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
-  private final List<Subset> otherSubsets = new ArrayList<>();
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
 
@@ -58,17 +57,13 @@ public class TypeParserBuilder {
    * For example - assuming a valid parseable value of "ABC":
    * </p>
    * <pre>
-   *   parseToString(null)                     ⟶ null
-   *   parseToString("")                       ⟶ ""
-   *   parseToString("ABC")                    ⟶ "ABC"
+   *   parseToString(null)                          ⟶ null
+   *   parseToString("")                            ⟶ ""
+   *   parseToString("ABC")                         ⟶ "ABC"
    *
-   *   parseToClass(null,  TargetClass::new)   ⟶ null
-   *   parseToClass("",    TargetClass::new)   ⟶ new TargetClass("")
-   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
-   *
-   *   parseToRecord(null,  TargetRecord::new) ⟶ null
-   *   parseToRecord("",    TargetRecord::new) ⟶ new TargetRecord("")
-   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   *   parseToStringType(null,  TargetClass::new)   ⟶ null
+   *   parseToStringType("",    TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToStringType("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
    * </pre>
    *
    * @return this builder.
@@ -76,7 +71,6 @@ public class TypeParserBuilder {
    * @see #convertNullToEmpty()
    * @see TypeParser#parseToString(CharSequence)
    * @see TypeParser#parseToStringType(CharSequence, Function)
-   * @see TypeParser#parseToRecord(CharSequence, Function)
    */
   public TypeParserBuilder preserveNullAndEmpty() {
     nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
@@ -89,17 +83,13 @@ public class TypeParserBuilder {
    * For example - assuming a valid parseable value of "ABC":
    * </p>
    * <pre>
-   *   parseToString(null)                     ⟶ ""
-   *   parseToString("")                       ⟶ ""
-   *   parseToString("ABC")                    ⟶ "ABC"
+   *   parseToString(null)                          ⟶ ""
+   *   parseToString("")                            ⟶ ""
+   *   parseToString("ABC")                         ⟶ "ABC"
    *
-   *   parseToClass(null,  TargetClass::new)   ⟶ new TargetClass("")
-   *   parseToClass("",    TargetClass::new)   ⟶ new TargetClass("")
-   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
-   *
-   *   parseToRecord(null,  TargetRecord::new) ⟶ new TargetRecord("")
-   *   parseToRecord("",    TargetRecord::new) ⟶ new TargetRecord("")
-   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   *   parseToStringType(null,  TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToStringType("",    TargetClass::new)   ⟶ new TargetClass("")
+   *   parseToStringType("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
    * </pre>
    *
    * @return this builder.
@@ -107,7 +97,6 @@ public class TypeParserBuilder {
    * @see #convertEmptyToNull() ()
    * @see TypeParser#parseToString(CharSequence)
    * @see TypeParser#parseToStringType(CharSequence, Function)
-   * @see TypeParser#parseToRecord(CharSequence, Function)
    */
   public TypeParserBuilder convertNullToEmpty() {
     nullHandling = NullHandling.CONVERT_NULL_TO_EMPTY;
@@ -120,17 +109,13 @@ public class TypeParserBuilder {
    * For example - assuming a valid parseable value of "ABC":
    * </p>
    * <pre>
-   *   parseToString(null)                     ⟶ null
-   *   parseToString("")                       ⟶ null
-   *   parseToString("ABC")                    ⟶ "ABC"
+   *   parseToString(null)                          ⟶ null
+   *   parseToString("")                            ⟶ null
+   *   parseToString("ABC")                         ⟶ "ABC"
    *
-   *   parseToClass(null,  TargetClass::new)   ⟶ null
-   *   parseToClass("",    TargetClass::new)   ⟶ null
-   *   parseToClass("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
-   *
-   *   parseToRecord(null,  TargetRecord::new) ⟶ null
-   *   parseToRecord("",    TargetRecord::new) ⟶ null
-   *   parseToRecord("ABC", TargetRecord::new) ⟶ new TargetRecord("ABC")
+   *   parseToStringType(null,  TargetClass::new)   ⟶ null
+   *   parseToStringType("",    TargetClass::new)   ⟶ null
+   *   parseToStringType("ABC", TargetClass::new)   ⟶ new TargetClass("ABC")
    * </pre>
    *
    * @return this builder.
@@ -138,7 +123,6 @@ public class TypeParserBuilder {
    * @see #convertNullToEmpty()
    * @see TypeParser#parseToString(CharSequence)
    * @see TypeParser#parseToStringType(CharSequence, Function)
-   * @see TypeParser#parseToRecord(CharSequence, Function)
    */
   public TypeParserBuilder convertEmptyToNull() {
     nullHandling = NullHandling.CONVERT_EMPTY_TO_NULL;
@@ -258,20 +242,12 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptLanguage(final Language language) {
-    if (language instanceof RangedSubset rangedSubset) {
-      rangedSubsetBuilder.addRangedSubset(rangedSubset);
-    } else {
-      otherSubsets.add(language);
-    }
+    rangedSubsetBuilder.addSubset(language);
     return this;
   }
 
   public TypeParserBuilder acceptLanguages(final Language... languages) {
-    if (languages != null && languages.length > 0) {
-      for (int i = 0; i < languages.length; ++i) {
-        acceptLanguage(languages[i]);
-      }
-    }
+    rangedSubsetBuilder.addSubset(languages);
     return this;
   }
 
@@ -417,13 +393,6 @@ public class TypeParserBuilder {
   }
 
   public TypeParserImpl build() {
-    final Subset subset;
-    if (otherSubsets.isEmpty()) {
-      subset = rangedSubsetBuilder.build();
-    } else {
-      otherSubsets.add(rangedSubsetBuilder.build());
-      subset = new CompositeSubsetImpl(otherSubsets);
-    }
     return new TypeParserImpl(
         targetClass, errorMessage, targetCase,
         whiteSpace, convertWhiteSpaceToCodePoints,
@@ -431,7 +400,7 @@ public class TypeParserBuilder {
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
         acceptedUnicodeCategories,
-        subset,
+        rangedSubsetBuilder.build(),
         codePointConversionsBuilder.build());
   }
 }
