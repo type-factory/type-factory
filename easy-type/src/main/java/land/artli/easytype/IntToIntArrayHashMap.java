@@ -36,8 +36,6 @@ class IntToIntArrayHashMap {
 
   /**
    * We will re-hash the map its size exceeds this threshold.  (The value of this field is (int)(capacity * loadFactor).)
-   *
-   * @serial
    */
   private int threshold;
 

@@ -4,21 +4,37 @@ import java.util.Collection;
 
 interface SubsetBuilder {
 
-  SubsetBuilder addChar(final char ch);
+  SubsetBuilder includeChar(final char ch);
 
-  SubsetBuilder addChars(final char... chars);
+  SubsetBuilder includeChars(final char... chars);
 
-  SubsetBuilder addCharRange(final char inclusiveFrom, final char inclusiveTo);
+  SubsetBuilder includeCharRange(final char inclusiveFrom, final char inclusiveTo);
 
-  SubsetBuilder addCodePoint(final int codePoint);
+  SubsetBuilder includeCodePoint(final int codePoint);
 
-  SubsetBuilder addCodePoints(final int... codePoints);
+  SubsetBuilder includeCodePoints(final int... codePoints);
 
-  SubsetBuilder addCodePointRange(int inclusiveFrom, int inclusiveTo);
+  SubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
-  SubsetBuilder addSubset(final Subset... subsets);
+  SubsetBuilder includeSubset(final Subset... subsets);
 
-  SubsetBuilder addSubset(final Collection<Subset> subsets);
+  SubsetBuilder includeSubset(final Collection<Subset> subsets);
+
+  SubsetBuilder excludeChar(final char ch);
+
+  SubsetBuilder excludeChars(final char... chars);
+
+  SubsetBuilder excludeCharRange(final char inclusiveFrom, final char inclusiveTo);
+
+  SubsetBuilder excludeCodePoint(final int codePoint);
+
+  SubsetBuilder excludeCodePoints(final int... codePoints);
+
+  SubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo);
+
+  SubsetBuilder excludeSubset(final Subset... subset);
+
+  SubsetBuilder excludeSubset(final Collection<Subset> subsets);
 
   Subset build();
 

@@ -1,7 +1,6 @@
 package land.artli.easytype;
 
 import java.util.Collection;
-import land.artli.easytype.RangedSubsetImpl.RangedSubsetBuilderImpl;
 
 public interface Subset {
 
@@ -33,7 +32,7 @@ public interface Subset {
    * @return a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}..
    */
   default SubsetBuilder toBuilder() {
-    return builder().addSubset(this);
+    return builder().includeSubset(this);
   }
 
   /**
@@ -47,13 +46,13 @@ public interface Subset {
 
   static Subset of(final Subset... subsets) {
     return builder()
-        .addSubset(subsets)
+        .includeSubset(subsets)
         .build();
   }
 
   static Subset of(final Collection<Subset> subsets) {
     return builder()
-        .addSubset(subsets)
+        .includeSubset(subsets)
         .build();
   }
 

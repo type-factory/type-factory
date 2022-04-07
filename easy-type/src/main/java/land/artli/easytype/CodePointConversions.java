@@ -112,19 +112,19 @@ class CodePointConversions {
       addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
     }
 
-    void addCodePointConversions(final RangedSubsetImpl subset, final CharSequence toCharSequence) {
+    void addCodePointConversions(final RangedSubset subset, final CharSequence toCharSequence) {
       addCodePointConversions(subset, toCharSequence.codePoints().toArray());
     }
 
-    void addCodePointConversions(final RangedSubsetImpl subset, final char toChar) {
+    void addCodePointConversions(final RangedSubset subset, final char toChar) {
       addCodePointConversions(subset, new int[]{toChar});
     }
 
-    void addCodePointConversions(final RangedSubsetImpl subset, final int toCodePoint) {
+    void addCodePointConversions(final RangedSubset subset, final int toCodePoint) {
       addCodePointConversions(subset, new int[]{toCodePoint});
     }
 
-    void addCodePointConversions(final RangedSubsetImpl subset, final int[] toCodePoints) {
+    void addCodePointConversions(final RangedSubset subset, final int[] toCodePoints) {
 
       if (subset != null) {
         final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();

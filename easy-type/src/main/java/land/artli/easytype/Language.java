@@ -10,13 +10,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0621..063A   ء آ أ ؤ إ ئ ا ب ة ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ
@@ -24,24 +25,29 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Arabic_script" target="_blank">Arabic
-   * Script – Wikipedia</a> provided information about the Arabic script.
+   *      Script – Wikipedia</a> provided information about the Arabic script.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Arabic_alphabet" target="_blank">Arabic
-   * Alphabet – Wikipedia</a> provided information about the Arabic alphabet.
+   *      Alphabet – Wikipedia</a> provided information about the Arabic alphabet.
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U0600.pdf" target="_blank">Arabic
-   * Unicode Chart – Unicode Standard v14</a> provided information about the Unicode encodings for characters in the Arabic script.
+   *      Unicode Chart – Unicode Standard v14</a> provided information about
+   *      the Unicode encodings for characters in the Arabic script.
    */
   Language ARABIC_ar = new LanguageImpl(
       new Locale("ar", "", ""),
@@ -52,13 +58,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..0056   A B C D E F G H I J K L M N O P Q R S T U V
@@ -79,22 +86,26 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Azerbaijani_alphabet" target="_blank">Azerbaijani alphabet
-   * – Wikipedia</a> provided information about the Azerbaijani alphabet and what diacritics are supported.
+   *      – Wikipedia</a> provided information about the Azerbaijani alphabet and what
+   *      diacritics are supported.
+   * 
    * @see <a href="https://azerbaijan.az/en/information/107" target="_blank">Azerbaijani language
-   * – Azerbaijan.az</a> provided information about the Azerbaijani language and alphabet.
+   *      – Azerbaijan.az</a> provided information about the Azerbaijani language and alphabet.
    */
   Language AZERBAIJANI_az_Latn = new LanguageImpl(
       new Locale.Builder().setLanguage("az").setRegion("").setVariant("").setScript("Latn").build(),
@@ -123,7 +134,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -149,16 +160,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -166,7 +177,7 @@ public interface Language extends Subset {
    * @see <a href="https://en.wikipedia.org/wiki/Danish_orthography" target="_blank">Danish
    *      Orthography – Wikipedia</a> provided information about the Danish alphabet and what
    *      diacritics are supported.
-   *
+   * 
    * @see <a href="https://www.danishnet.com/culture/danish-alphabet" target="_blank">Danish
    *      Alphabet – Danishnet.com</a> provided information about the Danish alphabet.
    *
@@ -198,13 +209,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..005A   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
@@ -220,23 +232,28 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/German_orthography" target="_blank">German
-   * Orthography – Wikipedia</a> provided information about the German alphabet and what diacritics are supported.
+   *      Orthography – Wikipedia</a> provided information about the German alphabet and what
+   *      diacritics are supported.
+   *
    * @see <a href="https://nordendivision.nfi.ku.dk/about_ungegn/romanization/Leira%20Vigleik%20_2008_%20Alphabets%20Letters%20and%20Diacritics%20in%20European%20Languages.pdf"
-   * target="_blank">Alphabets, Letters and Diacritics in European Languages – Vigleik Leira</a> provides a good primer, or starting point, for
-   * learning about the European language alphabets that use the the Latin script.
+   *      target="_blank">Alphabets, Letters and Diacritics in European Languages –
+   *      Vigleik Leira</a> provides a good primer, or starting point, for learning
+   *      about the European language alphabets that use the the Latin script.
    */
   Language GERMAN_de = new LanguageImpl(
       new Locale("de", "", ""),
@@ -260,7 +277,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -276,16 +293,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -293,7 +310,7 @@ public interface Language extends Subset {
    * @see <a href="https://en.wikipedia.org/wiki/Greek_alphabet" target="_blank">Greek
    *      Alphabet – Wikipedia</a> provided information about the Greek alphabet and what
    *      diacritics are supported.
-   *
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U0370.pdf" target="_blank">Greek and Coptic
    *      Unicode Chart – Unicode Standard v14</a> provided information about
    *      the Unicode encodings for characters in the Greek and Coptic scripts.
@@ -306,7 +323,7 @@ public interface Language extends Subset {
           0x038c_038c, //  Ό
           0x038e_03a1, //  Ύ Ώ ΐ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ
           0x03a3_03ce, //  Σ Τ Υ Φ Χ Ψ Ω Ϊ Ϋ ά έ ή ί ΰ α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π
-          //  ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ
+                       //  ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ
       });
 
   /**
@@ -314,7 +331,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -326,23 +343,23 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/English_alphabet" target="_blank">English
    *      Alphabet – Wikipedia</a> provided information about the English alphabet.
-   *
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U0000.pdf" target="_blank">Controls and Basic Latin
    *      Unicode Chart – Unicode Standard v14</a> provided information about
    *      the Unicode encodings for characters in the Basic Latin scripts.
@@ -364,7 +381,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -390,16 +407,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -439,7 +456,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -457,16 +474,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -500,7 +517,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -529,16 +546,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -583,7 +600,7 @@ public interface Language extends Subset {
    *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
    *    standard alphabet or ideographs for words or names as would be accepted by
    *    institutions and organizations that are required to adhere to statutory
@@ -601,31 +618,31 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Hindi" target="_blank">Hindi
    *      – Wikipedia</a> provided information about the Hindi alphabet.
-   *
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Devanagari" target="_blank">Devanagari
    *      – Wikipedia</a> provided information about the Devanagari script and what
    *      dependant vowel sounds and diacritic signs are used.
-   *
+   * 
    * @see <a href="https://www.careerpower.in/hindi-alphabet-varnamala.html" target="_blank">Hindi
    *      Alphabet – Career Power, India</a> provided information about the Hindi alphabet and what
    *      dependant vowel sounds and diacritic signs are used.
-   *
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U0900.pdf" target="_blank">Devanagari
    *      Unicode Chart – Unicode Standard v14</a> provided information about
    *      the Unicode encodings for characters in the Devanagari script.
@@ -646,9 +663,9 @@ public interface Language extends Subset {
       new Locale("hy", "", ""),
       new int[]{
           0x0531_0556, //  Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ
-          //  Տ Ր Ց Ւ Փ Ք Օ Ֆ
+                       //  Տ Ր Ց Ւ Փ Ք Օ Ֆ
           0x0561_0586, //  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ
-          //  տ ր ց ւ փ ք օ ֆ
+                       //  տ ր ց ւ փ ք օ ֆ
       });
   Language ICELANDIC_is = new LanguageImpl(
       new Locale("is", "", ""),
@@ -683,13 +700,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..0049   A B C D E F G H I
@@ -713,41 +731,49 @@ public interface Language extends Subset {
    * </pre>
    *
    * <p>If you would like to extends this subset of letters with the extra letters commonly found in
-   * loan-words in Italian you could create your own constant:</p>
+   *    loan-words in Italian you could create your own constant:</p>
    * <pre>
    *   public static final Subset LETTERS_ITALIAN_WITH_EXTRAS =
    *       LETTERS_ITALIAN_it.toBuilder()
    *           .addChar('J', 'j', 'K', 'k', 'W', 'w', 'X', 'x', 'Y', 'y')
    *           .build();
    * </pre>
-   *
+   * 
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Italian_orthography" target="_blank">Italian Orthography
-   * – Wikipedia</a> provided information about the Italian alphabet and what diacritics are supported – it also highlighted which letters are not in
-   * the official alphabet but are often found in loan-words.
+   *      – Wikipedia</a> provided information about the Italian alphabet and what
+   *      diacritics are supported – it also highlighted which letters are not in the official alphabet
+   *      but are often found in loan-words.
+   * 
    * @see <a href="https://www.thinkinitalian.com/the-italian-alphabet" target="_blank">The Italian alphabet
-   * – Think in Italian</a> provided information about the Italian alphabet and confirmed Wikipedia information about which letters are not in the
-   * official alphabet but are often found in loan-words.
+   *      – Think in Italian</a> provided information about the Italian alphabet and confirmed Wikipedia
+   *      information about which letters are not in the official alphabet but are often found in loan-words.
+   * 
    * @see <a href="https://accademiadellacrusca.it/it/consulenza/denominazione-e-genere-delle-lettere-straniere-j-k-w-x-y/84"
-   * target="_blank">Denominazione e genere delle lettere straniere (J, K, W, X, Y) – Accademia della Crusca</a> provided information about the
-   * Italian alphabet and confirmed the official 21 letters in the Italian Alphabet. But it also left me wondering if perhaps they were accepted
-   * letters in terms of official institutions and organizations when registering, for example, personal or business names.
+   *      target="_blank">Denominazione e genere delle lettere straniere (J, K, W, X, Y)
+   *      – Accademia della Crusca</a> provided information about the Italian alphabet and confirmed the official
+   *      21 letters in the Italian Alphabet. But it also left me wondering if perhaps they were accepted letters
+   *      in terms of official institutions and organizations when registering, for example, personal or business names.
+   *
    * @see <a href="https://nordendivision.nfi.ku.dk/about_ungegn/romanization/Leira%20Vigleik%20_2008_%20Alphabets%20Letters%20and%20Diacritics%20in%20European%20Languages.pdf"
-   * target="_blank">Alphabets, Letters and Diacritics in European Languages – Vigleik Leira</a> provides a good primer, or starting point, for
-   * learning about the European language alphabets that use the the Latin script.
+   *      target="_blank">Alphabets, Letters and Diacritics in European Languages –
+   *      Vigleik Leira</a> provides a good primer, or starting point, for learning
+   *      about the European language alphabets that use the the Latin script.
    */
   Language ITALIAN_it = new LanguageImpl(
       new Locale("it", "", ""),
@@ -774,13 +800,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    3041..3096   ぁ あ ぃ い ぅ う ぇ え ぉ お か が き ぎ く ぐ け げ こ ご さ ざ し じ す ず せ ぜ そ ぞ
@@ -789,40 +816,45 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Hiragana" target="_blank">Hiragana
-   * – Wikipedia</a> provided information about the Hiragana script.
+   *      – Wikipedia</a> provided information about the Hiragana script.
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U3040.pdf" target="_blank">Hiragana
-   * Unicode Chart – Unicode Standard v14</a> provided information about the Unicode encodings for characters in the Hiragana script.
+   *      Unicode Chart – Unicode Standard v14</a> provided information about
+   *      the Unicode encodings for characters in the Hiragana script.
    */
   Language JAPANESE_ja_Hira = new LanguageImpl(
       new Locale.Builder().setLanguage("ja").setRegion("").setVariant("").setScript("Hira").build(),
       new int[]{
           0x3041_3096, //  ぁ あ ぃ い ぅ う ぇ え ぉ お か が き ぎ く ぐ け げ こ ご さ ざ し じ す ず せ ぜ そ ぞ
-          //  た だ ち ぢ っ つ づ て で と ど な に ぬ ね の は ば ぱ ひ び ぴ ふ ぶ ぷ へ べ ぺ ほ ぼ
-          //  ぽ ま み む め も ゃ や ゅ ゆ ょ よ ら り る れ ろ ゎ わ ゐ ゑ を ん ゔ ゕ ゖ
+                       //  た だ ち ぢ っ つ づ て で と ど な に ぬ ね の は ば ぱ ひ び ぴ ふ ぶ ぷ へ べ ぺ ほ ぼ
+                       //  ぽ ま み む め も ゃ や ゅ ゆ ょ よ ら り る れ ろ ゎ わ ゐ ゑ を ん ゔ ゕ ゖ
       });
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    30A1..30FA   ァ ア ィ イ ゥ ウ ェ エ ォ オ カ ガ キ ギ ク グ ケ ゲ コ ゴ サ ザ シ ジ ス ズ セ ゼ ソ ゾ
@@ -831,70 +863,86 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Katakana" target="_blank">Katakana
-   * – Wikipedia</a> provided information about the Katakana script.
+   *      – Wikipedia</a> provided information about the Katakana script.
+   * 
    * @see <a href="https://unicode.org/charts/PDF/U30A0.pdf" target="_blank">Katakana
-   * Unicode Chart – Unicode Standard v14</a> provided information about the Unicode encodings for characters in the Katakana script.
+   *      Unicode Chart – Unicode Standard v14</a> provided information about
+   *      the Unicode encodings for characters in the Katakana script.
    */
   Language JAPANESE_ja_Kana = new LanguageImpl(
       new Locale.Builder().setLanguage("ja").setRegion("").setVariant("").setScript("Kana").build(),
       new int[]{
           0x30a1_30fa, //  ァ ア ィ イ ゥ ウ ェ エ ォ オ カ ガ キ ギ ク グ ケ ゲ コ ゴ サ ザ シ ジ ス ズ セ ゼ ソ ゾ
-          //  タ ダ チ ヂ ッ ツ ヅ テ デ ト ド ナ ニ ヌ ネ ノ ハ バ パ ヒ ビ ピ フ ブ プ ヘ ベ ペ ホ ボ
-          //  ポ マ ミ ム メ モ ャ ヤ ュ ユ ョ ヨ ラ リ ル レ ロ ヮ ワ ヰ ヱ ヲ ン ヴ ヵ ヶ ヷ ヸ ヹ ヺ
+                       //  タ ダ チ ヂ ッ ツ ヅ テ デ ト ド ナ ニ ヌ ネ ノ ハ バ パ ヒ ビ ピ フ ブ プ ヘ ベ ペ ホ ボ
+                       //  ポ マ ミ ム メ モ ャ ヤ ュ ユ ョ ヨ ラ リ ル レ ロ ヮ ワ ヰ ヱ ヲ ン ヴ ヵ ヶ ヷ ヸ ヹ ヺ
       });
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
-   * <p>There are too many unicode code-points in this set to display here. See separate
-   * <a href='./doc-files/JAPANESE_ja_Hani.html'>JAPANESE_ja_Hani</a>
-   * file for a complete list of the unicode code-points or in this language set.</p>
+   * <p>There are too many unicode code-points in this set to display here. See separate 
+   *    <a href='./doc-files/JAPANESE_ja_Hani.html'>JAPANESE_ja_Hani</a>
+   *    file for a complete list of the unicode code-points or in this language set.</p>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
-   * – Wikipedia</a> provided information about the Kanji script and its relationship to the Chinese family of scripts.
+   *      – Wikipedia</a> provided information about the Kanji script and its relationship to
+   *      the Chinese family of scripts.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Han_unification" target="_blank">Han
-   * Unification – Wikipedia</a> provided information about the unified Unicode Hanzi, Kanji, Hanja scripts.
+   *      Unification – Wikipedia</a> provided information about the unified Unicode
+   *      Hanzi, Kanji, Hanja scripts.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Chinese_family_of_scripts" target="_blank">Chinese
-   * family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
+   *      family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/List_of_CJK_fonts" target="_blank">List of CJK
-   * fonts – Wikipedia</a> provided information about some of the notable set of fonts for rendering CJK fonts.
+   *      fonts – Wikipedia</a> provided information about some of the notable set of fonts for
+   *      rendering CJK fonts.
+   * 
    * @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
-   * FAQs – Unicode Org</a> provided information about the Unicode Unified CJK encodings.
+   *      FAQs – Unicode Org</a> provided information about
+   *      the Unicode Unified CJK encodings.
+   * 
    * @see <a href="doc-files/JAPANESE_ja_Hani.html" target="_blank">JAPANESE_ja_Hani</a>
-   * for code points in this language set.
+   *      for code points in this language set.
    */
   Language JAPANESE_ja_Hani = new LanguageImpl(
       new Locale.Builder().setLanguage("ja").setRegion("").setVariant("").setScript("Hani").build(),
@@ -917,13 +965,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..005A   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
@@ -948,25 +997,32 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
-   * orthography – Wikipedia</a> provided information about the Norwegian alphabet and what diacritics are supported.
+   *      orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
+   *      diacritics are supported.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Bokmål" target="_blank">Bokmål
-   * – Wikipedia</a> provided information about the Norwegian Bokmål alphabet and what diacritics are supported.
+   *      – Wikipedia</a> provided information about the Norwegian Bokmål alphabet and what
+   *      diacritics are supported.
+   *
    * @see <a href="https://nordendivision.nfi.ku.dk/about_ungegn/romanization/Leira%20Vigleik%20_2008_%20Alphabets%20Letters%20and%20Diacritics%20in%20European%20Languages.pdf"
-   * target="_blank">Alphabets, Letters and Diacritics in European Languages – Vigleik Leira</a> provides a good primer, or starting point, for
-   * learning about the European language alphabets that use the the Latin script.
+   *      target="_blank">Alphabets, Letters and Diacritics in European Languages –
+   *      Vigleik Leira</a> provides a good primer, or starting point, for learning
+   *      about the European language alphabets that use the the Latin script.
    */
   Language NORWEGIAN_BOKMÅL_nb = new LanguageImpl(
       new Locale("nb", "", ""),
@@ -996,13 +1052,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..005A   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
@@ -1022,25 +1079,32 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
-   * orthography – Wikipedia</a> provided information about the Norwegian alphabet and what diacritics are supported.
+   *      orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
+   *      diacritics are supported.
+   * 
    * @see <a href="https://en.wikipedia.org/wiki/Nynorsk" target="_blank">Nynorsk
-   * – Wikipedia</a> provided information about the Norwegian Nynorsk alphabet and what diacritics are supported.
+   *      – Wikipedia</a> provided information about the Norwegian Nynorsk alphabet and what
+   *      diacritics are supported.
+   *
    * @see <a href="https://nordendivision.nfi.ku.dk/about_ungegn/romanization/Leira%20Vigleik%20_2008_%20Alphabets%20Letters%20and%20Diacritics%20in%20European%20Languages.pdf"
-   * target="_blank">Alphabets, Letters and Diacritics in European Languages – Vigleik Leira</a> provides a good primer, or starting point, for
-   * learning about the European language alphabets that use the the Latin script.
+   *      target="_blank">Alphabets, Letters and Diacritics in European Languages –
+   *      Vigleik Leira</a> provides a good primer, or starting point, for learning
+   *      about the European language alphabets that use the the Latin script.
    */
   Language NORWEGIAN_NYNORSK_nn = new LanguageImpl(
       new Locale("nn", "", ""),
@@ -1126,16 +1190,16 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
    *    not contained in this alphabet. Even if they appear occasionally in loan-words
    *    or foreign names.</p>
-   *
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
    *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
    *    to us and provide sources / references that support what you think should
    *    be added to, or removed from, the alphabet.</p>
@@ -1143,7 +1207,7 @@ public interface Language extends Subset {
    * @see <a href="https://en.wikipedia.org/wiki/Swedish_orthography" target="_blank">Swedish
    *      Orthography – Wikipedia</a> provided information about the Swedish alphabet and what
    *      diacritics are supported.
-   *
+   * 
    * @see <a href="https://learningswedish.se/courses/1/pages/the-alphabet" target="_blank">Swedish
    *      Alphabet– Swedish Institute</a> provided by the Svenska institutet (Swedish
    *      Institute) as part of their Learning Swedish course.
@@ -1166,13 +1230,14 @@ public interface Language extends Subset {
 
   /**
    * <p>The primary aim of this language alphabet is to assist in the creation of
-   * software data-types.<p>
+   *    software data-types.<p>
    *
    * <b>Included in this alphabet</b>
-   *
+   * 
    * <p>This language code-point subset should capture the official
-   * standard alphabet or ideographs for words or names as would be accepted by institutions and organizations that are required to adhere to
-   * statutory regulations.</p>
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
    *
    * <pre>
    *    0041..0045   A B C D E
@@ -1208,20 +1273,23 @@ public interface Language extends Subset {
    * </pre>
    *
    * <b>Not included in this alphabet</b>
-   *
+   * 
    * <p>Letters, diacritics or modifiers that are not part of the official language are
-   * not contained in this alphabet. Even if they appear occasionally in loan-words or foreign names.</p>
-   *
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
    * <p>Punctuation characters are also not part of this alphabet – they are considered
-   * to be a structural component to forming sentences in a language.</p>
+   *    to be a structural component to forming sentences in a language.</p>
    *
    * <b>Do you see a mistake?</b>
-   *
+   * 
    * <p>If you believe there are errors in this alphabet please reach out
-   * to us and provide sources / references that support what you think should be added to, or removed from, the alphabet.</p>
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
    *
    * @see <a href="https://en.wikipedia.org/wiki/Vietnamese_alphabet" target="_blank">Vietnamese alphabet
-   * – Wikipedia</a> provided information about the Vietnamese alphabet and what diacritics are supported.
+   *      – Wikipedia</a> provided information about the Vietnamese alphabet and what
+   *      diacritics are supported.
    */
   Language VIETNAMESE_vi = new LanguageImpl(
       new Locale("vi", "", ""),
@@ -1255,8 +1323,8 @@ public interface Language extends Subset {
           0x01a0_01a1, //  Ơ ơ
           0x01af_01b0, //  Ư ư
           0x1ea0_1ef9, //  Ạ ạ Ả ả Ấ ấ Ầ ầ Ẩ ẩ Ẫ ẫ Ậ ậ Ắ ắ Ằ ằ Ẳ ẳ Ẵ ẵ Ặ ặ Ẹ ẹ Ẻ ẻ Ẽ ẽ
-          //  Ế ế Ề ề Ể ể Ễ ễ Ệ ệ Ỉ ỉ Ị ị Ọ ọ Ỏ ỏ Ố ố Ồ ồ Ổ ổ Ỗ ỗ Ộ ộ Ớ ớ
-          //  Ờ ờ Ở ở Ỡ ỡ Ợ ợ Ụ ụ Ủ ủ Ứ ứ Ừ ừ Ử ử Ữ ữ Ự ự Ỳ ỳ Ỵ ỵ Ỷ ỷ Ỹ ỹ
+                       //  Ế ế Ề ề Ể ể Ễ ễ Ệ ệ Ỉ ỉ Ị ị Ọ ọ Ỏ ỏ Ố ố Ồ ồ Ổ ổ Ỗ ỗ Ộ ộ Ớ ớ
+                       //  Ờ ờ Ở ở Ỡ ỡ Ợ ợ Ụ ụ Ủ ủ Ứ ứ Ừ ừ Ử ử Ữ ữ Ự ự Ỳ ỳ Ỵ ỵ Ỷ ỷ Ỹ ỹ
           0x20ab_20ab, //  ₫
       });
 }

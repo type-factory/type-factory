@@ -1,10 +1,20 @@
 package land.artli.easytype;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import land.artli.easytype.Subset.CodePointRange;
 
-interface RangedSubsetUtils {
+class RangedSubsetUtils {
+
+  private RangedSubsetUtils() {
+  }
+
+  static final char[] EMPTY_CHAR_ARRAY = new char[0];
+  static final int[] EMPTY_INT_ARRAY = new int[0];
+  static final long[] EMPTY_LONG_ARRAY = new long[0];
 
   static boolean contains(
       final int codePoint,
@@ -123,6 +133,54 @@ interface RangedSubsetUtils {
       result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
     }
     return result;
+  }
+
+  /**
+   * Converts to to-from range to a 16-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the to-from as a 16-bit value.
+   */
+  static char rangeToChar(final int inclusiveFrom, final int inclusiveTo) {
+    return (char) ((min(inclusiveFrom, inclusiveTo) << 8) | (max(inclusiveFrom, inclusiveTo) & 0x00_ff));
+  }
+
+  /**
+   * Converts to to-from range to a 32-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the to-from as a 32-bit value.
+   */
+  static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
+    return (min(inclusiveFrom, inclusiveTo) << 16) | (max(inclusiveFrom, inclusiveTo) & 0x0000_ffff);
+  }
+
+  /**
+   * Converts to to-from range to a 64-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the to-from as a 64-bit value.
+   */
+  static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
+    return (((long) min(inclusiveFrom, inclusiveTo) << 32)) | max(inclusiveFrom, inclusiveTo);
+  }
+
+  static char[] defaultIfNullOrEmpty(final char[] array, final char[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
+  }
+
+  static int[] defaultIfNullOrEmpty(final int[] array, final int[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
+  }
+
+  static long[] defaultIfNullOrEmpty(final long[] array, final long[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
   }
 
 }

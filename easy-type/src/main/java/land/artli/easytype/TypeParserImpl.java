@@ -21,7 +21,6 @@ class TypeParserImpl implements TypeParser {
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
-  private final long acceptedUnicodeCategories; // bit values, currently 'int' is enough but new categories have been defined.
   private final Subset acceptedCodePoints;
   private final CodePointConversions codePointConversions;
 
@@ -35,7 +34,6 @@ class TypeParserImpl implements TypeParser {
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
-      final long acceptedUnicodeCategories,
       final Subset acceptedCodePoints,
       final CodePointConversions codePointConversions) {
     this.targetClass = targetClass;
@@ -47,7 +45,6 @@ class TypeParserImpl implements TypeParser {
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
-    this.acceptedUnicodeCategories = acceptedUnicodeCategories;
     this.acceptedCodePoints = acceptedCodePoints;
     this.codePointConversions = codePointConversions;
   }
@@ -221,9 +218,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   private boolean isAcceptedCodePoint(final int codePoint) {
-    return (acceptedUnicodeCategories > 0L
-        && (acceptedUnicodeCategories & (0x1L << Character.getType(codePoint))) > 0L)
-        || acceptedCodePoints.contains(codePoint);
+    return acceptedCodePoints.contains(codePoint);
   }
 
   private static int[] appendCodePoint(int[] result, final int index, final int codePoint) {
