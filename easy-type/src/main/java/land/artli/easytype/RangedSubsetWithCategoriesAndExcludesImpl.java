@@ -104,7 +104,7 @@ class RangedSubsetWithCategoriesAndExcludesImpl extends RangedSubsetWithCategori
   }
 
   public Collection<CodePointRange> excludeRanges() {
-    return RangedSubsetUtils.ranges(
+    return RangedSubsetUtils.aggregateCodePointRangeData(
         excludeSingleByteCodePointRanges,
         excludeDoubleByteCodePointRanges,
         excludeTripleByteCodePointRanges);

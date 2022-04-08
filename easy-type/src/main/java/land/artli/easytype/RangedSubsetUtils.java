@@ -16,6 +16,211 @@ class RangedSubsetUtils {
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
+  /**
+   * <p>Extracts the 8-bit 'inclusive-from' value from a code-point range comprised of two 8-bit values stored in a {@code char} primitive. The
+   * 'inclusive-from' is stored in the 8 most-significant bits of the {@code char} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToChar(int, int)} to create a code-point range.</p>
+   *
+   * @param codePointRange a code-point range specifying two 8-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 8 most-significant bits and the 'inclusive-to' occupies the 8 least significant bits.
+   * @return the 8-bit 'inclusive-from' code-point value as an {@code int} primitive.
+   * @see #rangeToChar(int, int)
+   */
+  static int getInclusiveFrom(final char codePointRange) {
+    return codePointRange >>> 8;
+  }
+
+  /**
+   * <p>Extracts the 8-bit 'inclusive-to' value from a code-point range comprised of two 8-bit values stored in a {@code char} primitive. The
+   * 'inclusive-to' is stored in the 8 least-significant bits of the {@code char} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToChar(int, int)} to create a code-point range.</p>
+   *
+   * @param codePointRange a code-point range specifying two 8-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 8 most-significant bits and the 'inclusive-to' occupies the 8 least significant bits.
+   * @return the 8-bit 'inclusive-to' code-point value as an {@code int} primitive.
+   * @see #rangeToChar(int, int)
+   */
+  static int getInclusiveTo(final char codePointRange) {
+    return codePointRange & 0x00_ff;
+  }
+
+  /**
+   * <p>Extracts the 16-bit 'inclusive-from' value from a code-point range comprised of two 16-bit values stored in an {@code int} primitive. The
+   * 'inclusive-from' is stored in the 16 most-significant bits of the {@code int} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToInt(int, int)} to create a code-point range.</p>
+   *
+   * <p>Note: you may may be wondering if this is possible since an {@code int} primitive is a 'signed' value in Java. Let go of that and think
+   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller
+   * values stored within it.</p>
+   *
+   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @return the 16-bit 'inclusive-from' code-point value as an {@code int} primitive.
+   * @see #rangeToInt(int, int)
+   */
+  static int getInclusiveFrom(final int codePointRange) {
+    return codePointRange >>> 16;
+  }
+
+  /**
+   * <p>Extracts the 16-bit 'inclusive-to' value from a code-point range comprised of two 16-bit values stored in a {@code int} primitive. The
+   * 'inclusive-to' is stored in the 16 least-significant bits of the {@code int} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToInt(int, int)} to create a code-point range.</p>
+   *
+   * <p>Note: you may may be wondering if this is possible since an {@code int} primitive is a 'signed' value in Java. Let go of that and think
+   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller
+   * values stored within it.</p>
+   *
+   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @return the 16-bit 'inclusive-to' code-point value as an {@code int} primitive.
+   * @see #rangeToInt(int, int)
+   */
+  static int getInclusiveTo(final int codePointRange) {
+    return codePointRange & 0x0000_ffff;
+  }
+
+  /**
+   * <p>Extracts the 24-bit 'inclusive-from' value from a code-point range comprised of two 24-bit values stored in an {@code long} primitive. The
+   * 'inclusive-from' is stored in the 32 most-significant bits of the {@code long} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToLong(int, int)} to create a code-point range.</p>
+   *
+   * <p>Note: you may may be wondering if this is possible since a {@code long} primitive is a 'signed' value in Java. Let go of that and think
+   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about
+   * the sign bit - it will always be zero.</p>
+   *
+   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @return the 24-bit 'inclusive-from' code-point value as an {@code int} primitive.
+   * @see #rangeToLong(int, int)
+   */
+  static int getInclusiveFrom(final long codePointRange) {
+    return (int) (codePointRange >>> 32);
+  }
+
+  /**
+   * <p>Extracts the 24-bit 'inclusive-to' value from a code-point range comprised of two 24-bit values stored in a {@code long} primitive. The
+   * 'inclusive-to' is stored in the 32 least-significant bits of the {@code long} primitive.</p>
+   *
+   * <p>The complement to this method is the {@link #rangeToLong(int, int)} to create a code-point range.</p>
+   *
+   * <p>Note: you may may be wondering if this is possible since a {@code long} primitive is a 'signed' value in Java. Let go of that and think
+   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about
+   * the sign bit - it will always be zero.</p>
+   *
+   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                       occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @return the 24-bit 'inclusive-to' code-point value as an {@code int} primitive.
+   * @see #rangeToLong(int, int)
+   */
+  static int getInclusiveTo(final long codePointRange) {
+    return (int) (codePointRange & 0x00000000_ffffffffL);
+  }
+
+  /**
+   * <p>Converts an inclusive-from to inclusive-to code-point range to a 16-bit {@code char} value.
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.</p>
+   *
+   * <p>The complement to this method are the {@link #getInclusiveFrom(char)} and {@link #getInclusiveTo(char)} methods
+   * to extract the individual values from from the range.</p>
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the inclusive-from to inclusive-to code-point range as a 16-bit {@code char} value.
+   */
+  static char rangeToChar(final int inclusiveFrom, final int inclusiveTo) {
+    return (char) ((min(inclusiveFrom, inclusiveTo) << 8) | (max(inclusiveFrom, inclusiveTo) & 0x00_ff));
+  }
+
+  /**
+   * <p>Converts an inclusive-from to inclusive-to code-point range to a 32-bit {@code int} value.
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.</p>
+   *
+   * <p>The complement to this method are the {@link #getInclusiveFrom(int)} and {@link #getInclusiveTo(int)} methods
+   * to extract the individual values from from the range.</p>
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the inclusive-from to inclusive-to code-point range as a 32-bit {@code int} value.
+   */
+  static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
+    return (min(inclusiveFrom, inclusiveTo) << 16) | (max(inclusiveFrom, inclusiveTo) & 0x0000_ffff);
+  }
+
+  /**
+   * <p>Converts an inclusive-from to inclusive-to code-point range to a 64-bit {@code long} value.
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
+   * values have accidentally been reversed.</p>
+   *
+   * <p>The complement to this method are the {@link #getInclusiveFrom(long)} and {@link #getInclusiveTo(long)} methods
+   * to extract the individual values from from the range.</p>
+   *
+   * @param inclusiveFrom the inclusive 'from' code-point.
+   * @param inclusiveTo   the inclusive 'to' code-point.
+   * @return the inclusive-from to inclusive-to code-point range as a 64-bit {@code int} value.
+   */
+  static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
+    return (((long) min(inclusiveFrom, inclusiveTo) << 32)) | max(inclusiveFrom, inclusiveTo);
+  }
+
+  static char[] defaultIfNullOrEmpty(final char[] array, final char[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
+  }
+
+  static int[] defaultIfNullOrEmpty(final int[] array, final int[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
+  }
+
+  static long[] defaultIfNullOrEmpty(final long[] array, final long[] defaultArray) {
+    return array == null || array.length == 0 ? defaultArray : array;
+  }
+
+  /**
+   * Returns a collection of {@link CodePointRange} objects represent code-point ranges from the raw range data stored
+   * in the three specified arrays of primitives.
+   *
+   * @param singleByteCodePointRanges An array of {@code char} primitives with each value containing a code-point range specifying
+   *                                  two 8-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                                  occupies the 8 most-significant bits and the 'inclusive-to' occupies the 8 least significant bits.
+   * @param doubleByteCodePointRanges An array of {@code int} primitives with each value containing a code-point range specifying
+   *                                  two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                                  occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @param tripleByteCodePointRanges An array of {@code long} primitives with each value containing a code-point range specifying
+   *                                  two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
+   *                                  occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @return a collection of {@link CodePointRange} objects representing code-point ranges.
+   */
+  static Collection<CodePointRange> aggregateCodePointRangeData(
+      final char[] singleByteCodePointRanges,
+      final int[] doubleByteCodePointRanges,
+      final long[] tripleByteCodePointRanges) {
+
+    final ArrayList<CodePointRange> result = new ArrayList<>();
+    if (singleByteCodePointRanges != null) {
+      for (char range : singleByteCodePointRanges) {
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+      }
+    }
+    if (doubleByteCodePointRanges != null) {
+      for (int range : doubleByteCodePointRanges) {
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+      }
+    }
+    if (tripleByteCodePointRanges != null) {
+      for (long range : tripleByteCodePointRanges) {
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+      }
+    }
+    return result;
+  }
+
   static boolean contains(
       final int codePoint,
       final char[] singleByteCodePointRanges,
@@ -92,95 +297,4 @@ class RangedSubsetUtils {
     }
     return false; // not found
   }
-
-  static int getInclusiveFrom(final char codePointRange) {
-    return codePointRange >>> 8;
-  }
-
-  static int getInclusiveTo(final char codePointRange) {
-    return codePointRange & 0x00_ff;
-  }
-
-  static int getInclusiveFrom(final int codePointRange) {
-    return codePointRange >>> 16;
-  }
-
-  static int getInclusiveTo(final int codePointRange) {
-    return codePointRange & 0x0000_ffff;
-  }
-
-  static int getInclusiveFrom(final long codePointRange) {
-    return (int) (codePointRange >>> 32);
-  }
-
-  static int getInclusiveTo(final long codePointRange) {
-    return (int) (codePointRange & 0x00000000_ffffffffL);
-  }
-
-  static Collection<CodePointRange> ranges(
-      final char[] singleByteCodePointRanges,
-      final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges) {
-
-    final ArrayList<CodePointRange> result = new ArrayList<>();
-    for (char range : singleByteCodePointRanges) {
-      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
-    }
-    for (int range : doubleByteCodePointRanges) {
-      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
-    }
-    for (long range : tripleByteCodePointRanges) {
-      result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
-    }
-    return result;
-  }
-
-  /**
-   * Converts to to-from range to a 16-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.
-   *
-   * @param inclusiveFrom the inclusive 'from' code-point.
-   * @param inclusiveTo   the inclusive 'to' code-point.
-   * @return the to-from as a 16-bit value.
-   */
-  static char rangeToChar(final int inclusiveFrom, final int inclusiveTo) {
-    return (char) ((min(inclusiveFrom, inclusiveTo) << 8) | (max(inclusiveFrom, inclusiveTo) & 0x00_ff));
-  }
-
-  /**
-   * Converts to to-from range to a 32-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.
-   *
-   * @param inclusiveFrom the inclusive 'from' code-point.
-   * @param inclusiveTo   the inclusive 'to' code-point.
-   * @return the to-from as a 32-bit value.
-   */
-  static int rangeToInt(final int inclusiveFrom, final int inclusiveTo) {
-    return (min(inclusiveFrom, inclusiveTo) << 16) | (max(inclusiveFrom, inclusiveTo) & 0x0000_ffff);
-  }
-
-  /**
-   * Converts to to-from range to a 64-bit (char) value. It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.
-   *
-   * @param inclusiveFrom the inclusive 'from' code-point.
-   * @param inclusiveTo   the inclusive 'to' code-point.
-   * @return the to-from as a 64-bit value.
-   */
-  static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
-    return (((long) min(inclusiveFrom, inclusiveTo) << 32)) | max(inclusiveFrom, inclusiveTo);
-  }
-
-  static char[] defaultIfNullOrEmpty(final char[] array, final char[] defaultArray) {
-    return array == null || array.length == 0 ? defaultArray : array;
-  }
-
-  static int[] defaultIfNullOrEmpty(final int[] array, final int[] defaultArray) {
-    return array == null || array.length == 0 ? defaultArray : array;
-  }
-
-  static long[] defaultIfNullOrEmpty(final long[] array, final long[] defaultArray) {
-    return array == null || array.length == 0 ? defaultArray : array;
-  }
-
 }
