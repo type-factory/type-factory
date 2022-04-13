@@ -5,6 +5,7 @@ import static land.artli.easytype.RangedSubsetUtils.EMPTY_INT_ARRAY;
 import static land.artli.easytype.RangedSubsetUtils.EMPTY_LONG_ARRAY;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import land.artli.easytype.Subset.CodePointRange;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,7 @@ import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class RangedSubsetUtils_Test {
 
@@ -208,6 +210,116 @@ class RangedSubsetUtils_Test {
 
     assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
     assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_LONG_ARRAY)).isSameAs(sampleArray);
+  }
+
+  @Test
+  void aggregateCodePointRangeData_handlesNullArguments() {
+    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(null, null, null))
+        .isNotNull()
+        .isEmpty();
+  }
+
+  @Test
+  void aggregateCodePointRangeData_handlesEmptyArguments() {
+    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
+        .isNotNull()
+        .isEmpty();
+  }
+
+  @Test
+  void aggregateCodePointRangeData_handlesCodePointRanges() {
+    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
+        .isNotNull()
+        .containsExactly(
+            new CodePointRange(0x21, 0x22),
+            new CodePointRange(0x30, 0x44),
+            new CodePointRange(0x1122, 0x1133),
+            new CodePointRange(0xAA11, 0xBB00),
+            new CodePointRange(0x00445500, 0x00446600),
+            new CodePointRange(0x00BB1100, 0x00BB2200));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0x30,
+      0x35,
+      0x44,
+      0x1133,
+      0x00112233,
+  })
+  void contains_returnFalseForNullInputRanges(final int codePoint) {
+    assertThat(RangedSubsetUtils.contains(codePoint, null, null, null))
+        .isFalse();
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0x30,
+      0x35,
+      0x44,
+      0x1133,
+      0x00112233,
+  })
+  void contains_returnFalseForEmptyInputRanges(final int codePoint) {
+    assertThat(RangedSubsetUtils.contains(codePoint, EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
+        .isFalse();
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0x21,
+      0x22,
+      0x30,
+      0x35,
+      0x44,
+      0x1122,
+      0x1130,
+      0x1133,
+      0xAA11,
+      0xAA99,
+      0xBB00,
+      0x00445500,
+      0x00445900,
+      0x00446600,
+      0x00BB1100,
+      0x00BB1199,
+      0x00BB2200
+  })
+  void contains_returnTrueForCodePointsInclusivelyWithinRanges(final int codePoint) {
+    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+
+    assertThat(RangedSubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
+        .isTrue();
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0x00,
+      0x20,
+      0x23,
+      0x45,
+      0x1121,
+      0x1134,
+      0xAA10,
+      0xBB01,
+      0x00445499,
+      0x00446601,
+      0x00BB1099,
+      0x00BB2201,
+      0x00FFFFFF,
+  })
+  void contains_returnFalseForCodePointsOutsideOfRanges(final int codePoint) {
+    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+
+    assertThat(RangedSubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
+        .isFalse();
   }
 
   static class SingleByteRangeConverter implements ArgumentConverter {
