@@ -3,6 +3,8 @@ package land.artli.easytype;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
+import land.artli.easytype.Subset.CodePointRange;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -83,6 +85,57 @@ class Subset_Test {
       }
     };
     assertThat(subset.doesNotContain('A')).isEqualTo(!containsValue);
-    assertThat(subset.doesNotContain((int)'9')).isEqualTo(!containsValue);
+    assertThat(subset.doesNotContain((int) '9')).isEqualTo(!containsValue);
+  }
+
+  @Test
+  void builder_returnsRangedSubsetBuilder() {
+    final SubsetBuilder actual = Subset.builder();
+    assertThat(actual)
+        .isNotNull()
+        .isInstanceOf(RangedSubsetBuilder.class)
+        .isExactlyInstanceOf(RangedSubsetBuilderImpl.class);
+  }
+
+  @Test
+  void toBuilder_returnsEmptySubsetWhenTheInitialSubsetIsItselfEmpty() {
+
+    final Subset subset = new Subset() {
+      @Override
+      public Collection<CodePointRange> ranges() {
+        return null;
+      }
+
+      @Override
+      public boolean isEmpty() {
+        return true;
+      }
+
+      @Override
+      public boolean contains(int codePoint) {
+        return false;
+      }
+    };
+
+    final Subset actual = subset.toBuilder().build();
+    assertThat(actual.isEmpty()).isTrue();
+  }
+
+  @Test
+  void toBuilder_returnsSubsetWithSameRangesAsTheInitialSubset() {
+
+    final Subset subset = Subset.builder().includeChars('A', 'B', 'C', 'X', 'Y', 'Z').build();
+    assertThat(subset.isNotEmpty()).isTrue();
+
+    final Subset actual = subset.toBuilder().build();
+    assertThat(actual.isNotEmpty()).isTrue();
+    assertThat(actual.ranges())
+        .isNotEmpty()
+        .hasSameSizeAs(subset.ranges())
+        .hasSize(2)
+        .containsExactly(
+            new CodePointRange('A', 'C'),
+            new CodePointRange('X', 'Z')
+        );
   }
 }
