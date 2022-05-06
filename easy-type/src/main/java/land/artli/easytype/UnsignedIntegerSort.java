@@ -2,6 +2,9 @@ package land.artli.easytype;
 
 public class UnsignedIntegerSort {
 
+  private UnsignedIntegerSort() {
+  }
+
   public static void sort(int[] a) {
     sort(a, 0, a.length);
   }

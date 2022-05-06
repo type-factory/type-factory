@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public abstract class NumberType<V extends Number & Comparable<V>, T extends NumberType<V, T>>
+    extends Number
     implements Type<V, T>, Comparable<T> {
 
   @Serial
@@ -31,7 +32,7 @@ public abstract class NumberType<V extends Number & Comparable<V>, T extends Num
     if (this == o) {
       return true;
     }
-    if (o == null || !this.getClass().isAssignableFrom(o.getClass())) {
+    if (o == null || this.getClass() != o.getClass()) {
       return false;
     }
     return Objects.equals(value, ((NumberType<V, T>) o).value);
@@ -47,4 +48,24 @@ public abstract class NumberType<V extends Number & Comparable<V>, T extends Num
     return Objects.compare(value(), (o == null ? null : o.value()), Comparator.nullsFirst(Comparator.naturalOrder()));
   }
 
+
+  @Override
+  public int intValue() {
+    return value.intValue();
+  }
+
+  @Override
+  public long longValue() {
+    return value.longValue();
+  }
+
+  @Override
+  public float floatValue() {
+    return value.floatValue();
+  }
+
+  @Override
+  public double doubleValue() {
+    return value.doubleValue();
+  }
 }

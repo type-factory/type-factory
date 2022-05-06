@@ -21,7 +21,7 @@ public abstract class StringType implements CharSequenceType<StringType> {
 
   @Override
   public String toString() {
-    return value;
+    return isNull() ? "" : value;
   }
 
   @Override
@@ -29,7 +29,7 @@ public abstract class StringType implements CharSequenceType<StringType> {
     if (this == o) {
       return true;
     }
-    if (o == null || !this.getClass().isAssignableFrom(o.getClass())) {
+    if (o == null || this.getClass() != o.getClass()) {
       return false;
     }
     return Objects.equals(value, ((StringType) o).value);

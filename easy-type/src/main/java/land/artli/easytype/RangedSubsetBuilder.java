@@ -4,29 +4,57 @@ import java.util.Collection;
 
 interface RangedSubsetBuilder extends SubsetBuilder {
 
-  @Override
-  RangedSubsetBuilder addChar(final char ch);
+  RangedSubsetBuilder includeUnicodeCategory(final Category category);
+
+  RangedSubsetBuilder includeUnicodeCategories(final Category... categories);
 
   @Override
-  RangedSubsetBuilder addChars(final char... chars);
+  RangedSubsetBuilder includeChar(final char ch);
 
   @Override
-  RangedSubsetBuilder addCharRange(final char inclusiveFrom, final char inclusiveTo);
+  RangedSubsetBuilder includeChars(final char... chars);
 
   @Override
-  RangedSubsetBuilder addCodePoint(final int codePoint);
+  RangedSubsetBuilder includeCharRange(final char inclusiveFrom, final char inclusiveTo);
 
   @Override
-  RangedSubsetBuilder addCodePoints(final int... codePoints);
+  RangedSubsetBuilder includeCodePoint(final int codePoint);
 
   @Override
-  RangedSubsetBuilder addCodePointRange(int inclusiveFrom, int inclusiveTo);
+  RangedSubsetBuilder includeCodePoints(final int... codePoints);
 
   @Override
-  RangedSubsetBuilder addSubset(final Subset... subset);
+  RangedSubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
   @Override
-  RangedSubsetBuilder addSubset(final Collection<Subset> subsets);
+  RangedSubsetBuilder includeSubset(final Subset... subset);
+
+  @Override
+  RangedSubsetBuilder includeSubset(final Collection<Subset> subsets);
+
+  @Override
+  RangedSubsetBuilder excludeChar(final char ch);
+
+  @Override
+  RangedSubsetBuilder excludeChars(final char... chars);
+
+  @Override
+  RangedSubsetBuilder excludeCharRange(final char inclusiveFrom, final char inclusiveTo);
+
+  @Override
+  RangedSubsetBuilder excludeCodePoint(final int codePoint);
+
+  @Override
+  RangedSubsetBuilder excludeCodePoints(final int... codePoints);
+
+  @Override
+  RangedSubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo);
+
+  @Override
+  RangedSubsetBuilder excludeSubset(final Subset... subset);
+
+  @Override
+  RangedSubsetBuilder excludeSubset(final Collection<Subset> subsets);
 
   @Override
   RangedSubset build();

@@ -4,7 +4,7 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static land.artli.easytype.generator.language.JavadocFragments.LANGUAGE_ALPHABET_INCLUDED_JAVADOC;
-import static land.artli.easytype.generator.language.LanguageData.LETTERS_JAPANESE_JA_Hani;
+import static land.artli.easytype.generator.language.LanguageData.LETTERS_JAPANESE_JA_HANI;
 
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
@@ -12,8 +12,12 @@ import com.ibm.icu.util.ULocale;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
+
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(String... args) {
 
@@ -33,7 +37,6 @@ public class Main {
         public interface Language extends Subset {""");
 
     for (LanguageData languageData : LanguageData.values()) {
-      final UnicodeSet unicodeSet = languageData.getUnicodeSet();
       final ULocale locale = languageData.getLocale();
       final String localeLanguage = locale.getLanguage();
       final String localeCountry = locale.getCountry();
@@ -74,7 +77,7 @@ public class Main {
       fileWriter.append(s.toString());
       fileWriter.flush();
     } catch (final IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, e.getMessage(), e);
     }
   }
 
@@ -104,14 +107,14 @@ public class Main {
       final int to = range.codepointEnd;
       if (from <= rangeEnd && to >= rangeStart) {
         if (!arrayStarted) {
-          if (languageData == LETTERS_JAPANESE_JA_Hani) {
+          if (languageData == LETTERS_JAPANESE_JA_HANI) {
             s.append("\n      // See Javadoc for full set of unicode code points in the following ranges.");
           }
           s.append("\n      new ").append(rangeArrayType).append("[]{\n");
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
-        if (languageData == LETTERS_JAPANESE_JA_Hani) {
+        if (languageData == LETTERS_JAPANESE_JA_HANI) {
           for (int c = from; c <= min(to, from + 20); ++c) {
             s.append(' ').appendCodePoint(c);
           }
@@ -152,6 +155,7 @@ public class Main {
     }
   }
 
+  @SuppressWarnings("java:S3776")
   private static void appendAlphabetCharactersJavadoc(
       final StringBuilder s,
       final LanguageData languageData,
@@ -162,7 +166,7 @@ public class Main {
     if (unicodeSet == null || unicodeSet.isEmpty()) {
       return;
     }
-    if (languageData == LETTERS_JAPANESE_JA_Hani) {
+    if (languageData == LETTERS_JAPANESE_JA_HANI) {
       s.append("\n   * <p>There are too many unicode code-points in this set to display here. See separate ");
       s.append("\n   *    <a href='./doc-files/").append(enumName).append(".html'>JAPANESE_ja_Hani</a>");
       s.append("\n   *    file for a complete list of the unicode code-points or in this language set.</p>");
@@ -204,16 +208,22 @@ public class Main {
       return;
     }
     s.append(String.format("""
-            <html>
+            <!DOCTYPE html>
+            <html lang="en">
             <head>
+                <title>Characters &ndash; %s %s</title>
+                <meta content="text/html; charset=utf-8" />
             </head>
             <body>
             <h1>%s</h1>
             <h1>Characters include in the %s %s set.</h1>
-            <pre>""",
+            <pre lang="%s">""",
         languageData.getTargetEnumName(),
         languageData.getLocaleDisplayLanguage(),
-        languageData.getLocaleLanguageTag()));
+        languageData.getLocaleLanguageTag(),
+        languageData.getLocaleDisplayLanguage(),
+        languageData.getLocaleLanguageTag(),
+        languageData.getLocale().getName()));
 
     for (EntryRange range : unicodeSet.ranges()) {
       final int from = range.codepoint;
@@ -252,7 +262,5 @@ public class Main {
     } catch (final IOException e) {
       e.printStackTrace();
     }
-
   }
-
 }

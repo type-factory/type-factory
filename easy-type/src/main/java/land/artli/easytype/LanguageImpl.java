@@ -105,7 +105,7 @@ class LanguageImpl implements Language, RangedSubset {
 
   @Override
   public Collection<CodePointRange> ranges() {
-    return RangedSubsetUtils.ranges(
+    return RangedSubsetUtils.aggregateCodePointRangeData(
         singleByteCodePointRanges,
         doubleByteCodePointRanges,
         tripleByteCodePointRanges);

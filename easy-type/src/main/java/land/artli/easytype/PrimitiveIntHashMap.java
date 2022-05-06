@@ -2,7 +2,7 @@ package land.artli.easytype;
 
 import java.util.Arrays;
 
-class IntToIntArrayHashMap {
+class PrimitiveIntHashMap {
 
   /**
    * The load factor for the hash map.
@@ -36,8 +36,6 @@ class IntToIntArrayHashMap {
 
   /**
    * We will re-hash the map its size exceeds this threshold.  (The value of this field is (int)(capacity * loadFactor).)
-   *
-   * @serial
    */
   private int threshold;
 
@@ -47,7 +45,7 @@ class IntToIntArrayHashMap {
 
   private int size;
 
-  IntToIntArrayHashMap() {
+  PrimitiveIntHashMap() {
     final int initialCapacity = 20;
     this.hashTable = new HashTable();
     this.hashTable.keys = new int[initialCapacity][];

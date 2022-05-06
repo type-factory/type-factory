@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
+class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER = TypeParser.builder(SomeType.class)
       .errorMessage("Must be made up of French letters only.")

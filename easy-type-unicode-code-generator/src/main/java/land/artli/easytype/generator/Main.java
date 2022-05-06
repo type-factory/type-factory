@@ -9,12 +9,17 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import land.artli.easytype.generator.Unicode.RangedSubset;
 import land.artli.easytype.generator.Unicode.RangedSubset.RangedSubsetBuilder;
 import org.unicode.ns._2003.ucd._1.Block;
 
 public class Main {
+
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
@@ -61,13 +66,14 @@ public class Main {
 
     final Map<String, RangedSubset> scriptRangedSubsets = loader.getScriptRangedSubsets();
     final StringBuilder enumScriptValues = new StringBuilder();
-    for (String script : scriptRangedSubsets.keySet()) {
+    for (Entry<String, RangedSubset> entry : scriptRangedSubsets.entrySet()) {
+      final String script = entry.getKey();
       enumScriptValues.append(LINE_SEPARATOR).append("    public static final Script ")
           .append(script.toUpperCase()).append(" = new Script(")
           .append(LINE_SEPARATOR).append("      \"")
           .append(script.toUpperCase()).append("\", \"")
           .append(script).append("\",");
-      final RangedSubset scriptRangedSubset = scriptRangedSubsets.get(script);
+      final RangedSubset scriptRangedSubset = entry.getValue();
       writeCodeRangeArrays(enumScriptValues, scriptRangedSubset);
       enumScriptValues.append(");");
     }
@@ -75,7 +81,8 @@ public class Main {
     final Map<String, RangedSubset> blockRangedSubsets = loader.getBlockRangedSubsets();
     final Map<String, Block> blockMap = loader.getBlocksByTheirAbbreviation();
     final StringBuilder enumBlockValues = new StringBuilder();
-    for (String blockAbbreviation : blockRangedSubsets.keySet()) {
+    for (Entry<String, RangedSubset> entry : blockRangedSubsets.entrySet()) {
+      final String blockAbbreviation = entry.getKey();
       final Block block = blockMap.get(blockAbbreviation);
       final String blockName = block.getName().toUpperCase().replace(' ', '_').replace('-', '_');
       enumBlockValues.append(LINE_SEPARATOR).append("    public static final Block ")
@@ -86,7 +93,7 @@ public class Main {
           .append(LINE_SEPARATOR).append("      ")
           .append(String.format("0x%08x", Integer.parseInt(block.getFirstCp(), 16))).append(", ")
           .append(String.format("0x%08x", Integer.parseInt(block.getLastCp(), 16))).append(", ");
-      final RangedSubset blockRangedSubset = blockRangedSubsets.get(blockAbbreviation);
+      final RangedSubset blockRangedSubset = entry.getValue();
       writeCodeRangeArrays(enumBlockValues, blockRangedSubset);
       enumBlockValues.append(");");
     }
@@ -113,7 +120,7 @@ public class Main {
       fileWriter.append(unicodeFile);
       fileWriter.flush();
     } catch (final IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, e.getMessage(), e);
     }
   }
 

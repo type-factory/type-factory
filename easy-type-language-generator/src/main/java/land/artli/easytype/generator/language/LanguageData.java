@@ -23,7 +23,7 @@ public enum LanguageData {
       LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
       SEE_ALSO_COMMON_ARABIC_SCRIPT_REFERENCES),
 
-  LETTERS_AZERBAIJANI_az_Latn(locale("az", "", "", "Latn"),
+  LETTERS_AZERBAIJANI_AZ_LATN(locale("az", "", "", "Latn"),
       new char[]{
           'A', 'a', 'B', 'b', 'C', 'c', 'Ç', 'ç', 'D', 'd', 'E', 'e', 'Ə', 'ə', 'F', 'f', 'G',
           'g', 'Ğ', 'ğ', 'H', 'h', 'X', 'x', 'I', 'ı', 'İ', 'i', 'J', 'j', 'K', 'k', 'Q', 'q', 'L',
@@ -223,7 +223,7 @@ public enum LanguageData {
           'S', 's', 'T', 't', 'U', 'u', 'Ú', 'ú', 'V', 'v', 'X', 'x', 'Y', 'y',
           'Ý', 'ý', 'Z', 'z', 'Þ', 'þ', 'Æ', 'æ', 'Ö', 'ö'}),
 
-  LETTERS_ITALIAN_it(locale("it"),
+  LETTERS_ITALIAN_IT(locale("it"),
       new char[]{
           'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h',
           'I', 'i', 'L', 'l', 'M', 'm', 'N', 'n', 'O', 'o', 'P', 'p', 'Q', 'q', 'R', 'r',
@@ -283,7 +283,7 @@ public enum LanguageData {
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Hiragana script."""),
 
-  LETTERS_JAPANESE_JA_Kana(locale("ja", "", "", "Kana"),
+  LETTERS_JAPANESE_JA_KANA(locale("ja", "", "", "Kana"),
       new CodePointRange[]{
           // Katakana letters
           range('\u30A1', '\u30FA')},
@@ -300,7 +300,7 @@ public enum LanguageData {
                the Unicode encodings for characters in the Katakana script."""),
 
   // The unified Han (Hanzi, Kanji, Hanja) unicode "letters"
-  LETTERS_JAPANESE_JA_Hani(locale("ja", "", "", "Hani"),
+  LETTERS_JAPANESE_JA_HANI(locale("ja", "", "", "Hani"),
       CJKUtils.getCJKLettersCodePointRanges(),
       LANGUAGE_ALPHABET_AIM_JAVADOC,
       LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
@@ -352,7 +352,7 @@ public enum LanguageData {
   //    - kIRG_VSource (Vietnam)
   //
 
-  LETTERS_NORWEGIAN_BOKMÅL_NB(
+  LETTERS_NORWEGIAN_BOKMAL_NB(
       locale("nb"),
       new char[]{
           'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h',

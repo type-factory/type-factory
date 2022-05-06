@@ -12,6 +12,7 @@ public record CountryCode(String value) implements RecordType {
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder(CountryCode.class)
           .errorMessage("must be a 2-character ISO 3166-1 country value")
+          .convertNullToEmpty()
           .acceptLettersAtoZ()
           .fixedSizeNumberOfCodePoints(2)
           .toUpperCase()
