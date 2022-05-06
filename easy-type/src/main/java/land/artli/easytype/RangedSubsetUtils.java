@@ -167,7 +167,7 @@ class RangedSubsetUtils {
    * @return the inclusive-from to inclusive-to code-point range as a 64-bit {@code int} value.
    */
   static long rangeToLong(final int inclusiveFrom, final int inclusiveTo) {
-    return (((long) min(inclusiveFrom, inclusiveTo) << 32)) | max(inclusiveFrom, inclusiveTo);
+    return ((long) min(inclusiveFrom, inclusiveTo) << 32) | max(inclusiveFrom, inclusiveTo);
   }
 
   static char[] defaultIfNullOrEmpty(final char[] array, final char[] defaultArray) {

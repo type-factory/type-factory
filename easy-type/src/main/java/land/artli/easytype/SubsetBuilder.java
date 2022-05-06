@@ -37,18 +37,4 @@ interface SubsetBuilder {
   SubsetBuilder excludeSubset(final Collection<Subset> subsets);
 
   Subset build();
-
-//  B addChar(final char ch);
-//
-//  B addChars(final char... chars);
-//
-//  B addCharRange(final char inclusiveFrom, final char inclusiveTo);
-//
-//  B addCodePoint(final int codePoint);
-//
-//  B addCodePoints(final int... codePoints);
-//
-//  B addCodePointRange(int inclusiveFrom, int inclusiveTo);
-//
-//  S build();
 }

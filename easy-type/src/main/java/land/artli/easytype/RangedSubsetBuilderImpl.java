@@ -382,6 +382,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
       }
     }
 
+    @SuppressWarnings("java:S3776")
     void addSubset(final Subset... subsets) {
       if (subsets != null) {
         for (Subset subset : subsets) {
@@ -494,6 +495,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
       --tripleByteEndIndex;
     }
 
+    @SuppressWarnings({"java:S3776", "java:S1199"})
     void compact() {
       {
         Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);

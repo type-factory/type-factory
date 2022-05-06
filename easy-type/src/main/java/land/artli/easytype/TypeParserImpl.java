@@ -122,7 +122,7 @@ class TypeParserImpl implements TypeParser {
     final int length = value.length();
     final int endIndex = endIndexIgnoringTrailingWhitespace(value);
     final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
-    int[] result = new int[Math.min(length, codePointConversions.maxToCodePointsLength)];
+    int[] result = new int[Math.min(length, codePointConversions.getMaxConvertedLength())];
     if ((endIndex - startIndex) == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";

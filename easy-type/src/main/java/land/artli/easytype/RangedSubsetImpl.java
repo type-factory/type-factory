@@ -53,6 +53,7 @@ class RangedSubsetImpl implements RangedSubset {
    *
    * @return an array of 1-byte code-point ranges stored as char values.
    */
+  @Override
   public char[] getSingleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length);
@@ -65,6 +66,7 @@ class RangedSubsetImpl implements RangedSubset {
    *
    * @return an array of 2-byte code-point ranges stored as integer values.
    */
+  @Override
   public int[] getDoubleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length);
@@ -77,6 +79,7 @@ class RangedSubsetImpl implements RangedSubset {
    *
    * @return an array of 4-byte code-point ranges stored as long values.
    */
+  @Override
   public long[] getTripleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
@@ -90,6 +93,7 @@ class RangedSubsetImpl implements RangedSubset {
     return alias;
   }
 
+  @Override
   public boolean contains(final int codePoint) {
     return RangedSubsetUtils.contains(
         codePoint,
@@ -127,5 +131,4 @@ class RangedSubsetImpl implements RangedSubset {
         doubleByteCodePointRanges,
         tripleByteCodePointRanges);
   }
-
 }

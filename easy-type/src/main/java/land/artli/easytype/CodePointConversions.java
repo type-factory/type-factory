@@ -8,32 +8,42 @@ class CodePointConversions {
   /**
    * Hash-map of Character categories to code-point arrays:
    */
-  final IntToIntArrayHashMap categoryConversionToCodePoint;
+  private final PrimitiveIntHashMap categoryConversionToCodePoint;
 
   /**
    * Hash-map of code-points to code-point arrays:
    */
-  final IntToIntArrayHashMap codePointConversions;
+  private final PrimitiveIntHashMap codePointConversionMap;
 
-  final int maxToCodePointsLength;
+  /**
+   * The maximum number of code-points that a single code-point could be converted to.
+   */
+  private final int maxConvertedLength;
+
+  /**
+   * The maximum number of code-points that a single code-point could be converted to.
+   */
+  public int getMaxConvertedLength() {
+    return maxConvertedLength;
+  }
 
   static CodePointConversionsBuilder builder() {
     return new CodePointConversionsBuilder();
   }
 
   private CodePointConversions(
-      final IntToIntArrayHashMap categoryConversionToCodePoint,
-      final IntToIntArrayHashMap codePointConversions) {
+      final PrimitiveIntHashMap categoryConversionToCodePoint,
+      final PrimitiveIntHashMap codePointConversionMap) {
     this.categoryConversionToCodePoint = categoryConversionToCodePoint;
-    this.codePointConversions = codePointConversions;
+    this.codePointConversionMap = codePointConversionMap;
     int max = 0;
     if (categoryConversionToCodePoint != null && !categoryConversionToCodePoint.isEmpty()) {
       max = Math.max(max, categoryConversionToCodePoint.getMaxValueArrayLength());
     }
-    if (codePointConversions != null && !codePointConversions.isEmpty()) {
-      max = Math.max(max, codePointConversions.getMaxValueArrayLength());
+    if (codePointConversionMap != null && !codePointConversionMap.isEmpty()) {
+      max = Math.max(max, codePointConversionMap.getMaxValueArrayLength());
     }
-    this.maxToCodePointsLength = max;
+    this.maxConvertedLength = max;
   }
 
   int[] getCodePointConversion(final int fromCodePoint) {
@@ -43,8 +53,8 @@ class CodePointConversions {
         return toCodePoints;
       }
     }
-    if (codePointConversions != null) {
-      final int[] toCodePoints = codePointConversions.get(fromCodePoint);
+    if (codePointConversionMap != null) {
+      final int[] toCodePoints = codePointConversionMap.get(fromCodePoint);
       if (toCodePoints != null) {
         return toCodePoints;
       }
@@ -66,9 +76,9 @@ class CodePointConversions {
    */
   static class CodePointConversionsBuilder {
 
-    private IntToIntArrayHashMap categoryConversionToCodePoint = new IntToIntArrayHashMap();
+    private PrimitiveIntHashMap categoryConversionToCodePoint = new PrimitiveIntHashMap();
 
-    private IntToIntArrayHashMap codePointConversions = new IntToIntArrayHashMap();
+    private PrimitiveIntHashMap codePointConversions = new PrimitiveIntHashMap();
 
     private CodePointConversionsBuilder() {
     }
