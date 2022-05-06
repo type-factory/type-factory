@@ -36,4 +36,16 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<St
     return Objects.compare(value(), (o == null ? null : o.value()), Comparator.nullsFirst(Comparator.naturalOrder()));
   }
 
+  /**
+   * <p>A null-safe method to return the value of this type as a string.</p>
+   *
+   * <p>A {@code null} will be returned for a null value.</p>
+   *
+   * @param type the data-type value that want as a string value.
+   * @param <T> the data-type class type.
+   * @return the data-type value as a string or {@code null} if the specified {@code type} argument was null;
+   */
+  static <T extends CharSequenceType<T>> String toString(T type) {
+    return type == null ? null : type.value();
+  }
 }

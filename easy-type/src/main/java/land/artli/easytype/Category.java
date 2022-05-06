@@ -324,15 +324,16 @@ public enum Category {
     int i = 0;
     for (Category category : categories) {
       tempBitMask |= category.bitMask;
-      if (i == tempCharacterCategories.length) {
-        tempCharacterCategories = Arrays.copyOf(tempCharacterCategories, tempCharacterCategories.length + 8);
-      }
       for (int characterCategory : category.characterCategories) {
+        if (i == tempCharacterCategories.length) {
+          tempCharacterCategories = Arrays.copyOf(tempCharacterCategories, tempCharacterCategories.length + 8);
+        }
         tempCharacterCategories[i++] = characterCategory;
       }
     }
     this.characterCategories = i < tempCharacterCategories.length
-        ? Arrays.copyOf(tempCharacterCategories, --i) : tempCharacterCategories;
+        ? Arrays.copyOf(tempCharacterCategories, --i)
+        : tempCharacterCategories;
     this.bitMask = tempBitMask;
   }
 

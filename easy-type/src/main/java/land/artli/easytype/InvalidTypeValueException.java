@@ -60,6 +60,10 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     return parserErrorMessage;
   }
 
+  public String getInvalidValue() {
+    return invalidValue;
+  }
+
   @Override
   public String getLocalizedMessage() {
     if (localizationResourceBundle == null) {

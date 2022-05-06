@@ -11,7 +11,7 @@ class CodePointRange {
   }
 
   static CodePointRange range(char fromChar, char toChar) {
-    return new CodePointRange((int) fromChar, (int) toChar);
+    return new CodePointRange(fromChar, toChar);
   }
 
   static CodePointRange range(int fromCodePoint, int toCodePoint) {

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.xml.bind.JAXBContext;
@@ -36,14 +37,14 @@ public class UnicodeGroupDataLoader {
     this.ucd = loadUnicodeContentFromXml(unicodeAllGroupedXmlFileName);
 
     final List<Block> blocks = getBlocks();
-    final BlocksByTheirAbbreviation blocksByTheirAbbreviation = new BlocksByTheirAbbreviation();
+    final BlocksByTheirAbbreviation tempBlocksByTheirAbbreviation = new BlocksByTheirAbbreviation();
     final MapOfRangedSubsetBuilders<String> blockRangedSubsetBuilders = new MapOfRangedSubsetBuilders<>();
     final MapOfRangedSubsetBuilders<String> scriptRangedSubsetBuilders = new MapOfRangedSubsetBuilders<>();
     final MapOfRangedSubsetBuilders<UnicodeCategory> categoryRangedSubsetBuilders = new MapOfRangedSubsetBuilders<>();
     final RangedSubsetBuilder whitespaceRangedSubsetBuilder = RangedSubset.builder();
     for (UnicodeCodePoint c : getUnicodeCodePoints()) {
       if (c.getCodePoint() != null) {
-        blocksByTheirAbbreviation.add(c, blocks);
+        tempBlocksByTheirAbbreviation.add(c, blocks);
         blockRangedSubsetBuilders.putUnicodeCodePoint(c.getBlock(), c);
         scriptRangedSubsetBuilders.putUnicodeCodePoint(c.getScript(), c);
         categoryRangedSubsetBuilders.putUnicodeCodePoint(UnicodeCategory.of(c.getGeneralCategory()), c);
@@ -56,7 +57,7 @@ public class UnicodeGroupDataLoader {
         }
       }
     }
-    this.blocksByTheirAbbreviation = blocksByTheirAbbreviation.entrySet().stream()
+    this.blocksByTheirAbbreviation = tempBlocksByTheirAbbreviation.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, TreeMap::new));
     this.blockRangedSubsets = blockRangedSubsetBuilders.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().build(), (a, b) -> a, TreeMap::new));
@@ -67,19 +68,19 @@ public class UnicodeGroupDataLoader {
     this.whitespaceRangedSubset = whitespaceRangedSubsetBuilder.build();
   }
 
-  public TreeMap<String, Block> getBlocksByTheirAbbreviation() {
+  public SortedMap<String, Block> getBlocksByTheirAbbreviation() {
     return blocksByTheirAbbreviation;
   }
 
-  public TreeMap<String, RangedSubset> getBlockRangedSubsets() {
+  public SortedMap<String, RangedSubset> getBlockRangedSubsets() {
     return blockRangedSubsets;
   }
 
-  public TreeMap<String, RangedSubset> getScriptRangedSubsets() {
+  public SortedMap<String, RangedSubset> getScriptRangedSubsets() {
     return scriptRangedSubsets;
   }
 
-  public TreeMap<UnicodeCategory, RangedSubset> getCategoryRangedSubsets() {
+  public SortedMap<UnicodeCategory, RangedSubset> getCategoryRangedSubsets() {
     return categoryRangedSubsets;
   }
 
@@ -89,7 +90,6 @@ public class UnicodeGroupDataLoader {
 
   private static Ucd loadUnicodeContentFromXml(final String unicodeAllGroupedXmlFileName) {
     System.out.println("trying to load " + unicodeAllGroupedXmlFileName);
-//    final URL resourceUrl = UnicodeGroupDataLoader.class.getResource(unicodeAllGroupedXmlFileName);
     try (final InputStream resourceStream = new FileInputStream(unicodeAllGroupedXmlFileName)) {
       final JAXBContext jaxbContext = JAXBContext.newInstance(Ucd.class);
       final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

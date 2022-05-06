@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
+class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {

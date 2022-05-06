@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 
-public class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
+class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
 
   enum WordsWithDiacriticModifiers {
     GREEK_CAFFEINE("καφεΐνη", 'κ', 'α', 'φ', 'ε', 'ι', '̈', '́', 'ν', 'η'),
