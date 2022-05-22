@@ -2,6 +2,15 @@ package land.artli.easytype;
 
 import java.util.Arrays;
 
+/**
+ * <p>This is a hash-map of integer keys mapped to integer-array values.</p>
+ *
+ * <p>We can use it to map:</p>
+ * <ul>
+ *   <li>a single code point to a sequence of code points.</li>
+ *   <li>a unicode category identified by an integer to a sequence of code points.</li>
+ * </ul>
+ */
 class PrimitiveIntHashMap {
 
   /**
@@ -35,7 +44,7 @@ class PrimitiveIntHashMap {
   }
 
   /**
-   * We will re-hash the map its size exceeds this threshold.  (The value of this field is (int)(capacity * loadFactor).)
+   * We will re-hash the map if its size exceeds this threshold.  The value of this field is (int)(capacity * loadFactor).
    */
   private int threshold;
 

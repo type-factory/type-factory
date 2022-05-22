@@ -314,6 +314,11 @@ public class TypeParserBuilder {
     return this;
   }
 
+  public TypeParserBuilder convertChar(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
+    codePointConversionsBuilder.addCharConversion(fromCharSequence, toCharSequence);
+    return this;
+  }
+
 
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final int toCodePoint) {
     codePointConversionsBuilder.addCodePointConversion(fromCodePoint, toCodePoint);

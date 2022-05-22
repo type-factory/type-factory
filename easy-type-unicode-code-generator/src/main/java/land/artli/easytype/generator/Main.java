@@ -100,7 +100,7 @@ public class Main {
 
     final InputStream unicodeTemplateStream = Main.class.getClassLoader().getResourceAsStream("Unicode_Template.java");
     final String unicodeTemplate = new BufferedReader(new InputStreamReader(unicodeTemplateStream))
-        .lines().collect(Collectors.joining("\n"));
+        .lines().collect(Collectors.joining(LINE_SEPARATOR));
 
     final String generatedMessage = String.format("""
         @javax.annotation.processing.Generated(

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
+import land.artli.easytype.CodePointConversions.ConverterResults;
 
 class TypeParserImpl implements TypeParser {
 
@@ -136,6 +137,8 @@ class TypeParserImpl implements TypeParser {
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
 
+    ConverterResults converterResults = codePointConversions.createConverterResults();
+
     while (i < length) {
       ch = value.charAt(i);
       if (Character.isSurrogate(ch)) {
@@ -189,7 +192,14 @@ class TypeParserImpl implements TypeParser {
             break;
         }
       }
-      toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
+      if (codePointConversions.codePointConversionRequired(codePoint, k, converterResults)) {
+        k = converterResults.getConvertFromIndex();
+        toCodePoints = converterResults.getConvertToCodePointSequence();
+      } else {
+        reusableSingleCodePointArray[0] = codePoint;
+        toCodePoints = reusableSingleCodePointArray;
+      }
+//      toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
         if (!isAcceptedCodePoint(codePoint)) {
