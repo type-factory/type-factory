@@ -5,7 +5,6 @@ import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import land.artli.easytype.CodePointConversions.CodePointConversionsBuilder;
 
 public class TypeParserBuilder {
 
@@ -20,7 +19,7 @@ public class TypeParserBuilder {
   private boolean ignoreModifiersForMinMaxSize = false;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
   private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
-  private final CodePointConversionsBuilder codePointConversionsBuilder = CodePointConversions.builder();
+  private final ConverterBuilder converterBuilder = Converter.builder();
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
 
@@ -305,28 +304,28 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder convertChar(final char fromChar, final char toChar) {
-    codePointConversionsBuilder.addCharConversion(fromChar, toChar);
+    converterBuilder.addCharConversion(fromChar, toChar);
     return this;
   }
 
   public TypeParserBuilder convertChar(final char fromChar, final CharSequence toCharSequence) {
-    codePointConversionsBuilder.addCharConversion(fromChar, toCharSequence);
+    converterBuilder.addCharConversion(fromChar, toCharSequence);
     return this;
   }
 
   public TypeParserBuilder convertChar(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
-    codePointConversionsBuilder.addCharConversion(fromCharSequence, toCharSequence);
+    converterBuilder.addCharConversion(fromCharSequence, toCharSequence);
     return this;
   }
 
 
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final int toCodePoint) {
-    codePointConversionsBuilder.addCodePointConversion(fromCodePoint, toCodePoint);
+    converterBuilder.addCodePointConversion(fromCodePoint, toCodePoint);
     return this;
   }
 
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final CharSequence toCharSequence) {
-    codePointConversionsBuilder.addCodePointConversion(fromCodePoint, toCharSequence);
+    converterBuilder.addCodePointConversion(fromCodePoint, toCharSequence);
     return this;
   }
 
@@ -485,7 +484,7 @@ public class TypeParserBuilder {
    */
   public TypeParserBuilder convertAllDashesTo(final int toCodePoint) {
     acceptCodePoint(toCodePoint);
-    codePointConversionsBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCodePoint);
+    converterBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCodePoint);
     return this;
   }
 
@@ -511,7 +510,7 @@ public class TypeParserBuilder {
    */
   public TypeParserBuilder convertAllDashesTo(final CharSequence toCharSequence) {
     acceptCodePointsInCharSequence(toCharSequence);
-    codePointConversionsBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCharSequence);
+    converterBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCharSequence);
     return this;
   }
 
@@ -650,6 +649,6 @@ public class TypeParserBuilder {
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
         rangedSubsetBuilder.build(),
-        codePointConversionsBuilder.build());
+        converterBuilder.build());
   }
 }

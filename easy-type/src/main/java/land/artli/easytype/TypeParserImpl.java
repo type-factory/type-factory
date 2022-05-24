@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
-import land.artli.easytype.CodePointConversions.ConverterResults;
+import land.artli.easytype.Converter.ConverterResults;
 
 class TypeParserImpl implements TypeParser {
 
@@ -23,7 +23,7 @@ class TypeParserImpl implements TypeParser {
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
   private final Subset acceptedCodePoints;
-  private final CodePointConversions codePointConversions;
+  private final Converter converter;
 
   TypeParserImpl(
       final Class<?> targetClass,
@@ -36,7 +36,7 @@ class TypeParserImpl implements TypeParser {
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
       final Subset acceptedCodePoints,
-      final CodePointConversions codePointConversions) {
+      final Converter converter) {
     this.targetClass = targetClass;
     this.errorMessage = errorMessage;
     this.targetCase = targetCase;
@@ -47,7 +47,7 @@ class TypeParserImpl implements TypeParser {
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
     this.acceptedCodePoints = acceptedCodePoints;
-    this.codePointConversions = codePointConversions;
+    this.converter = converter;
   }
 
   @Override
@@ -123,7 +123,7 @@ class TypeParserImpl implements TypeParser {
     final int length = value.length();
     final int endIndex = endIndexIgnoringTrailingWhitespace(value);
     final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
-    int[] result = new int[Math.min(length, codePointConversions.getMaxConvertedLength())];
+    int[] result = converter == null ? new int [length] : new int[length + converter.getMaxConvertedLength() * 2];
     if ((endIndex - startIndex) == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
@@ -137,7 +137,7 @@ class TypeParserImpl implements TypeParser {
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
 
-    ConverterResults converterResults = codePointConversions.createConverterResults();
+    ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
     while (i < length) {
       ch = value.charAt(i);
@@ -192,14 +192,15 @@ class TypeParserImpl implements TypeParser {
             break;
         }
       }
-      if (codePointConversions.codePointConversionRequired(codePoint, k, converterResults)) {
+      if (converter != null &&
+          converter.isCodePointConversionRequired(codePoint, k, converterResults)) {
         k = converterResults.getConvertFromIndex();
         toCodePoints = converterResults.getConvertToCodePointSequence();
       } else {
         reusableSingleCodePointArray[0] = codePoint;
         toCodePoints = reusableSingleCodePointArray;
       }
-//      toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
+//      toCodePoints = converter.convertCodePoint(codePoint, reusableSingleCodePointArray);
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
         if (!isAcceptedCodePoint(codePoint)) {

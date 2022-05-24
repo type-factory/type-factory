@@ -32,6 +32,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
+      " semi-trailer    | s          | d           |              |           |                 |       | demi-trailer        ",
       " semi-trailer    | semi       | articulated |              |           |                 |       | articulated-trailer ",
       " semi-trailer    | semi       | articulated | semi-trailer | lorry     |                 |       | lorry               ",
       " semi-trailer    | semi       | articulated | trailer      | vehicle   |                 |       | articulated-vehicle ",
