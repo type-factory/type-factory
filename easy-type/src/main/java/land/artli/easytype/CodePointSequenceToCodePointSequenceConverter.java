@@ -5,19 +5,15 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import land.artli.easytype.CodePointConversions.ConverterResults;
 
 public class CodePointSequenceToCodePointSequenceConverter {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
-  private final List<Conversion> conversions;
-
   private final RootNode rootNode = new RootNode();
 
   public CodePointSequenceToCodePointSequenceConverter(List<Conversion> conversions) {
-    this.conversions = conversions;
     for (Conversion conversion : conversions) {
       rootNode.add(conversion);
     }
@@ -73,21 +69,12 @@ public class CodePointSequenceToCodePointSequenceConverter {
     return result;
   }
 
-//  private Node prepare(final List<Conversion> conversions) {
-//    final Node rootNode = new Node(null);
-//    for (Conversion conversion : conversions) {
-//      for (int codePoint : conversion.fromSequence) {
-//
-//      }
-//    }
-//  }
-
   static class ConverterResultsImpl implements ConverterResults {
 
     private int convertFromIndex;
     private int[] convertToCodePointSequence;
 
-    private final List<Integer> indexesToFromConvertFrom = new ArrayList<>();
+    private final PrimitiveListOfInt indexesToFromConvertFrom = new PrimitiveListOfInt();
 
     private final List<Node> nodesCurrentlyInPlay = new ArrayList<>();
 
@@ -126,11 +113,11 @@ public class CodePointSequenceToCodePointSequenceConverter {
 
     public Node(final int[] toSequence) {
       this.toSequence = toSequence;
-      this.nodesByCodePoint = new CodePointToNodeHashMap();
+      this.nodesByCodePoint = new PrimitiveHashMapOfIntKeyToObjectValue<>();
     }
 
     private int[] toSequence = new int[0];
-    private final CodePointToNodeHashMap nodesByCodePoint;
+    private final PrimitiveHashMapOfIntKeyToObjectValue<Node> nodesByCodePoint;
 
     void put(final int codePoint, final Node node) {
       nodesByCodePoint.put(codePoint, node);
@@ -140,8 +127,8 @@ public class CodePointSequenceToCodePointSequenceConverter {
       return nodesByCodePoint.get(codePoint);
     }
 
-    Set<Integer> codePoints() {
-      return nodesByCodePoint.keySet();
+    int [] codePoints() {
+      return nodesByCodePoint.keys();
     }
 
     boolean hasToSequence() {
@@ -187,11 +174,11 @@ public class CodePointSequenceToCodePointSequenceConverter {
       final Deque<Node> nodeStack = new ArrayDeque<>();
       final Deque<Integer> indexStack = new ArrayDeque<>();
       Node currentNode = this;
-      Integer[] codePoints = currentNode.codePoints().toArray(new Integer[0]);
+      int[] codePoints = currentNode.codePoints();
       int i = 0;
       int j = 0;
       while (i < codePoints.length) {
-        Integer codePoint = codePoints[i];
+        int codePoint = codePoints[i];
         for (int k = 1; k < j; ++k) {
           s.append(' ');
         }
@@ -208,18 +195,18 @@ public class CodePointSequenceToCodePointSequenceConverter {
             s.append(new String(node.toSequence, 0, node.toSequence.length));
             s.append(LINE_SEPARATOR);
           }
-          if (!node.codePoints().isEmpty()) {
+          if (!node.isLeafNode()) {
             ++j;
             s.append(LINE_SEPARATOR);
             nodeStack.push(currentNode);
             indexStack.push(i);
             currentNode = node;
-            codePoints = currentNode.codePoints().toArray(new Integer[0]);
+            codePoints = currentNode.codePoints();
             i = 0;
           } else {
             do {
               currentNode = nodeStack.pop();
-              codePoints = currentNode.codePoints().toArray(new Integer[0]);
+              codePoints = currentNode.codePoints();
               i = indexStack.pop();
               ++i;
               --j;

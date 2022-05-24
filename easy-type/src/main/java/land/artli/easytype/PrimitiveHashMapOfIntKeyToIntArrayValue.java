@@ -11,7 +11,7 @@ import java.util.Arrays;
  *   <li>a unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
-class PrimitiveIntHashMap {
+class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   /**
    * The load factor for the hash map.
@@ -54,7 +54,7 @@ class PrimitiveIntHashMap {
 
   private int size;
 
-  PrimitiveIntHashMap() {
+  PrimitiveHashMapOfIntKeyToIntArrayValue() {
     final int initialCapacity = 20;
     this.hashTable = new HashTable();
     this.hashTable.keys = new int[initialCapacity][];
@@ -108,15 +108,15 @@ class PrimitiveIntHashMap {
     }
     put(key, value, hashTable);
     maxValueArrayLength = Math.max(maxValueArrayLength, value.length);
-    ++size;
   }
 
-  private static void put(final int key, final int[] value, final HashTable hashTable) {
+  private void put(final int key, final int[] value, final HashTable hashTable) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
       hashTable.values[hashIndex] = new int[][]{value};
+      ++size;
     } else {
       int bucketIndex = 0;
       while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
@@ -125,6 +125,7 @@ class PrimitiveIntHashMap {
       if (bucketIndex == bucket.length) {
         hashTable.keys[hashIndex] = Arrays.copyOf(hashTable.keys[hashIndex], bucketIndex + 1);
         hashTable.values[hashIndex] = Arrays.copyOf(hashTable.values[hashIndex], bucketIndex + 1);
+        ++size;
       }
       hashTable.keys[hashIndex][bucketIndex] = key;
       hashTable.values[hashIndex][bucketIndex] = value;

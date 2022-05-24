@@ -13,12 +13,12 @@ class CodePointConversions {
   /**
    * Hash-map of Character categories to code-point arrays:
    */
-  private final PrimitiveIntHashMap categoryToCodePointSequence;
+  private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence;
 
   /**
    * Hash-map of code-points to code-point arrays:
    */
-  private final PrimitiveIntHashMap codePointToCodePointSequence;
+  private final PrimitiveHashMapOfIntKeyToIntArrayValue codePointToCodePointSequence;
 
   /**
    * Hash-map of code-points to code-point arrays:
@@ -55,8 +55,8 @@ class CodePointConversions {
   }
 
   private CodePointConversions(
-      final PrimitiveIntHashMap categoryToCodePointSequence,
-      final PrimitiveIntHashMap codePointToCodePointSequence,
+      final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence,
+      final PrimitiveHashMapOfIntKeyToIntArrayValue codePointToCodePointSequence,
       final CodePointSequenceToCodePointSequenceConverter codePointSequenceToCodePointSequenceConverter) {
     this.categoryToCodePointSequence = categoryToCodePointSequence;
     this.codePointToCodePointSequence = codePointToCodePointSequence;
@@ -115,9 +115,9 @@ class CodePointConversions {
    */
   static class CodePointConversionsBuilder {
 
-    private final PrimitiveIntHashMap categoryToCodePointSequence = new PrimitiveIntHashMap();
+    private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence = new PrimitiveHashMapOfIntKeyToIntArrayValue();
 
-    private final PrimitiveIntHashMap codePointToCodePointSequence = new PrimitiveIntHashMap();
+    private final PrimitiveHashMapOfIntKeyToIntArrayValue codePointToCodePointSequence = new PrimitiveHashMapOfIntKeyToIntArrayValue();
 
     private final List<Conversion> conversions = new ArrayList<>();
 

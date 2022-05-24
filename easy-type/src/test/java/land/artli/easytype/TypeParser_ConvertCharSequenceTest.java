@@ -13,7 +13,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
       " One red elephant   | red   | blue | One blue elephant ",
       " One pink elephant  | pink  | blue | One blue elephant ",
       " One white elephant | white | blue | One blue elephant ",
-      " One fullstop       | full  | stop | One stopstop      ",
+      " One full stop      | full  | stop | One stop stop      ",
   }, delimiter = '|')
   void should_parse_preserving_case(
       final String input,
