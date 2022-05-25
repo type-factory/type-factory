@@ -11,7 +11,6 @@ public class TypeParserBuilder {
   private final Class<?> targetClass;
   private String errorMessage;
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
-  private int[] convertWhiteSpaceToCodePoints;
   private NullHandling nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
   private Normalizer.Form targetCharacterNormalizationForm = Form.NFC;
   private int minNumberOfCodePoints = 0;
@@ -303,29 +302,131 @@ public class TypeParserBuilder {
     return this;
   }
 
+  /**
+   * <p>Configures the type-parser to convert any {@code fromChar} in the input sequence to a {@code toChar}.</p>
+   *
+   * <p>By default, this method also configures the type-parser to accept {@code fromChar} characters in the input
+   * sequence. It does this using the {@link #acceptChar(char)} method.</p>
+   *
+   * <p><b>Note</b> it is not necessary for the {@code toChar} to be an “accepted” character in the input value. Conversion
+   * occurs after each input character has been vetted as accepted.</p>
+   *
+   * @param fromChar the character to convert from
+   * @param toChar   the character to convert to
+   * @return this {@code TypeParserBuilder}.
+   * @see #acceptChar(char)
+   */
   public TypeParserBuilder convertChar(final char fromChar, final char toChar) {
     converterBuilder.addCharConversion(fromChar, toChar);
+    acceptChar(fromChar);
     return this;
   }
 
+  /**
+   * <p>Configures the type-parser to convert any {@code fromChar} in the input sequence to a {@code toCharSequence}.</p>
+   *
+   * <p>By default, this method also configures the type-parser to accept {@code fromChar} characters in the input
+   * sequence. It does this using the {@link #acceptChar(char)} method.</p>
+   *
+   * <p><b>Note</b> it is not necessary for the characters that make up the {@code toCharSequence} to be “accepted” characters in the input value.
+   * Conversion occurs after each input character has been vetted as accepted.</p>
+   *
+   * @param fromChar       the character to convert from
+   * @param toCharSequence the character sequence to convert to. May be {@code null} or empty.
+   * @return this {@code TypeParserBuilder}.
+   * @see #acceptChar(char)
+   */
   public TypeParserBuilder convertChar(final char fromChar, final CharSequence toCharSequence) {
     converterBuilder.addCharConversion(fromChar, toCharSequence);
+    acceptChar(fromChar);
     return this;
   }
 
+  /**
+   * <p>Configures the type-parser to convert any {@code fromCharSequence} in the input sequence to a {@code toCharSequence}.</p>
+   *
+   * <p>Conversion is carried out in the reading order of the input sequence.</p>
+   *
+   * <p><b>Nested matches</b></p>
+   * Preference is given to the longest match when multiple {@code fromCharSequence} could be considered nested. For example, the following table
+   * shows how a type-parser configured with 1, 2 or 3 conversions would convert an input value:</p>
+   * <pre>
+   *   Input value  | conversion 1       | Conversion 2           | Conversion 3         | After Conversion
+   *   =============|====================|========================|======================|=====================
+   *   semi-trailer | s    ⟶ d           |                        |                      | demi-trailer
+   *   semi-trailer | s    ⟶ d           | semi-trailer ⟶ lorry   |                      | lorry
+   *   semi-trailer | semi ⟶ articulated |                        |                      | articulated-trailer
+   *   semi-trailer | semi ⟶ articulated | semi-trailer ⟶ lorry   |                      | lorry
+   *   semi-trailer | semi ⟶ articulated | trailer      ⟶ vehicle |                      | articulated-vehicle
+   *   semi-trailer | semi ⟶ articulated | trailer      ⟶ vehicle | semi-trailer ⟶ lorry | lorry
+   * </pre>
+   *
+   * <p><b>Overlapping matches</b></p>
+   * <p>Preference is given to the earliest and longest complete match. For example, the following table shows how a type-parser configured with 1, 2
+   * or 3 conversions would convert an input value:</p>
+   * <pre>
+   *   Input value     | conversion 1           | Conversion 2           | Conversion 3           | After Conversion
+   *   ================|========================|========================|========================|==================
+   *   full stop light | full stop  ⟶ period    |                        |                        | period light
+   *   full stop light | stop light ⟶ red light |                        |                        | full red light
+   *   full stop light | full stop  ⟶ period    | stop light ⟶ red light |                        | period light
+   *   full stop light | full stop  ⟶ period    | stop light ⟶ red light | full stop light ⟶ skid | skid
+   * </pre>
+   *
+   * <p>By default, this method also configures the type-parser to accept all the code-points found in
+   * the {@code fromCharSequence} in the input sequence. This would be the same calling the {@link #acceptCodePoints(int...)} method.</p>
+   *
+   * <p><b>Note</b> it is not necessary for the characters that make up the {@code toCharSequence} to be “accepted” characters in the input value.
+   * Conversion occurs after each input character has been vetted as accepted.</p>
+   *
+   * @param fromCharSequence the character sequence to convert from
+   * @param toCharSequence   the character sequence to convert to. May be {@code null} or empty.
+   * @return this {@code TypeParserBuilder}.
+   * @see #acceptCodePoints(int...)
+   */
   public TypeParserBuilder convertChar(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
     converterBuilder.addCharConversion(fromCharSequence, toCharSequence);
+    acceptCodePointsInCharSequence(fromCharSequence);
     return this;
   }
 
-
+  /**
+   * <p>Configures the type-parser to convert any {@code fromCodePoint} in the input sequence to a {@code toCodePoint}.</p>
+   *
+   * <p>By default, this method also configures the type-parser to accept {@code fromCodePoint} characters in the input
+   * sequence. It does this using the {@link #acceptCodePoint(int)} method.</p>
+   *
+   * <p><b>Note</b> it is not necessary for the {@code toCodePoint} to be an “accepted” code-point in the input value.
+   * Conversion occurs after each input character has been vetted as accepted.</p>
+   *
+   * @param fromCodePoint the code-point to convert from
+   * @param toCodePoint   the code-point to convert to
+   * @return this {@code TypeParserBuilder}.
+   * @see #acceptCodePoint(int)
+   */
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final int toCodePoint) {
     converterBuilder.addCodePointConversion(fromCodePoint, toCodePoint);
+    acceptCodePoint(fromCodePoint);
     return this;
   }
 
+  /**
+   * <p>Configures the type-parser to convert any {@code fromCodePoint} in the input sequence to a {@code toCodePoint}.</p>
+   *
+   * <p>By default, this method also configures the type-parser to accept {@code fromCodePoint} characters in the input
+   * sequence. It does this using the {@link #acceptCodePoint(int)} method.</p>
+   *
+   * <p><b>Note</b> it is not necessary for the characters that make up the {@code toCharSequence} to be “accepted” characters in the input value.
+   * Conversion occurs after each input character has been vetted as accepted.</p>
+   *
+   * @param fromCodePoint  the code-point to convert from
+   * @param toCharSequence the character sequence to convert to. May be {@code null} or empty.
+   * @return this {@code TypeParserBuilder}.
+   * @see #acceptCodePoint(int)
+   */
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final CharSequence toCharSequence) {
     converterBuilder.addCodePointConversion(fromCodePoint, toCharSequence);
+    acceptCodePoint(fromCodePoint);
     return this;
   }
 
@@ -356,8 +457,8 @@ public class TypeParserBuilder {
   /**
    * Configures the type parser to accepts all letters [a-zA-Z] that are in the ASCII portion of the Unicode character set.
    * <p>
-   * If you wish for the letters to be converted to upper or lower case then remember to configure the {@link TypeParser} by calling {@link
-   * #toLowerCase()} or {@link #toUpperCase()} in the {@link TypeParserBuilder}
+   * If you wish for the letters to be converted to upper or lower case then remember to configure the {@link TypeParser} by calling
+   * {@link #toLowerCase()} or {@link #toUpperCase()} in the {@link TypeParserBuilder}
    * <p>
    * If you want to accept <em>all</em> letters in the Unicode set (this could mean mixed-languages) then use: {@link #acceptAllUnicodeLetters()}
    * <p>
@@ -421,8 +522,8 @@ public class TypeParserBuilder {
    * <p>This method implicitly configures the builder to accept the {@code '-' (U+002D)} hyphen character.</p>
    *
    * <p><b>Note:</b> This conversion might make sense for certain data-types and not others. For example, in language specific data-types you may
-   * may wish to preserve language specific dashes. For example, for an Armenian data-type, perhaps preserving the Armenian Hyphen {@code '֊'
-   * (U+058A)} makes more sense than converting it to a hyphen.</p>
+   * may wish to preserve language specific dashes. For example, for an Armenian data-type, perhaps preserving the Armenian Hyphen
+   * {@code '֊' (U+058A)} makes more sense than converting it to a hyphen.</p>
    *
    * @return this {@code TypeParserBuilder}
    * @see Character#DASH_PUNCTUATION
@@ -449,8 +550,8 @@ public class TypeParserBuilder {
    * to the specified {@code toChar} argument.</p>
    *
    * <p>This is useful to ensure that other kinds of dashes, like en-dashes, em-dashes, non-breaking hyphens, etc, are converted to
-   * some character/code-point of your liking. For example, you may wish to convert any dash or hyphen character to an underscore character {@code '_'
-   * (U+005F)}.</p>
+   * some character/code-point of your liking. For example, you may wish to convert any dash or hyphen character to an underscore character
+   * {@code '_' (U+005F)}.</p>
    *
    * <p>This method implicitly configures the builder to accept the specified {@code toChar} argument.</p>
    *
@@ -470,8 +571,8 @@ public class TypeParserBuilder {
    * to the specified {@code toCodePoint} argument.</p>
    *
    * <p>This is useful to ensure that other kinds of dashes, like en-dashes, em-dashes, non-breaking hyphens, etc, are converted to
-   * some character/code-point of your liking. For example, you may wish to convert any dash or hyphen character to an underscore character {@code '_'
-   * (U+005F)}.</p>
+   * some character/code-point of your liking. For example, you may wish to convert any dash or hyphen character to an underscore character
+   * {@code '_' (U+005F)}.</p>
    *
    * <p>This method implicitly configures the builder to accept the specified {@code toCodePoint} argument.</p>
    *
@@ -493,8 +594,8 @@ public class TypeParserBuilder {
    * to the specified {@code toCharSequence} argument.</p>
    *
    * <p>This is useful to ensure that other kinds of dashes, like en-dashes, em-dashes, non-breaking hyphens, etc, are converted to
-   * some char-sequence of your liking. For example, you may wish to convert any dash or hyphen character to the sequence {@code '~~~' (U+007E,
-   * U+007E, U+007E)}.</p>
+   * some char-sequence of your liking. For example, you may wish to convert any dash or hyphen character to the sequence
+   * {@code '~~~' (U+007E, U+007E, U+007E)}.</p>
    *
    * <p>This method implicitly configures the builder to accept the all code-points in the specified {@code toCharSequence} argument.</p>
    *
@@ -554,7 +655,8 @@ public class TypeParserBuilder {
    */
   public TypeParserBuilder normalizeAndConvertWhitespaceTo(final char toChar) {
     whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = new int[]{toChar};
+    acceptChar(toChar);
+    convertChar(' ', toChar);
     return this;
   }
 
@@ -571,7 +673,8 @@ public class TypeParserBuilder {
    */
   public TypeParserBuilder normalizeAndConvertWhitespaceTo(final int toCodePoint) {
     whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = new int[]{toCodePoint};
+    acceptCodePoint(toCodePoint);
+    convertCodePoint(' ', toCodePoint);
     return this;
   }
 
@@ -591,7 +694,8 @@ public class TypeParserBuilder {
    */
   public TypeParserBuilder normalizeAndConvertWhitespaceTo(final CharSequence toCharSequence) {
     whiteSpace = WhiteSpace.NORMALIZE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = toCharSequence == null ? null : toCharSequence.codePoints().toArray();
+    acceptCodePointsInCharSequence(toCharSequence);
+    convertCodePoint(' ', toCharSequence);
     return this;
   }
 
@@ -621,30 +725,30 @@ public class TypeParserBuilder {
    * @see Character#isWhitespace(int)
    */
   public TypeParserBuilder preserveAndConvertWhitespaceTo(final char toChar) {
-    acceptChar(toChar);
     whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = new int[]{toChar};
+    acceptChar(toChar);
+    convertChar(' ', toChar);
     return this;
   }
 
   public TypeParserBuilder preserveAndConvertWhitespaceTo(final int toCodePoint) {
-    acceptCodePoint(toCodePoint);
     whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = new int[]{toCodePoint};
+    acceptCodePoint(toCodePoint);
+    convertCodePoint(' ', toCodePoint);
     return this;
   }
 
   public TypeParserBuilder preserveAndConvertWhitespaceTo(final CharSequence toCharSequence) {
-    acceptCodePointsInCharSequence(toCharSequence);
     whiteSpace = WhiteSpace.PRESERVE_AND_CONVERT_WHITESPACE;
-    convertWhiteSpaceToCodePoints = toCharSequence == null ? null : toCharSequence.codePoints().toArray();
+    acceptCodePointsInCharSequence(toCharSequence);
+    convertCodePoint(' ', toCharSequence);
     return this;
   }
 
   public TypeParserImpl build() {
     return new TypeParserImpl(
         targetClass, errorMessage, targetCase,
-        whiteSpace, convertWhiteSpaceToCodePoints,
+        whiteSpace,
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,

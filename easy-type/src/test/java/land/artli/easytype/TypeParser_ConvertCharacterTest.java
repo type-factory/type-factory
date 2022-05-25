@@ -32,13 +32,8 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
             .convertChar('_', '-')
             .normalizeAndConvertWhitespaceTo('-')
             .acceptHyphenAndConvertAllDashesToHyphen()
-            .acceptCharRange('0', '6')
-            .acceptCharRange('8', '9')
-            .acceptCharRange('A', 'H')
-            .acceptCharRange('J', 'K')
-            .acceptCharRange('M', 'N')
-            .acceptCharRange('P', 'R')
-            .acceptCharRange('T', 'Y')
+            .acceptDigits0to9()
+            .acceptLettersAtoZ()
             .build();
 
     Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
