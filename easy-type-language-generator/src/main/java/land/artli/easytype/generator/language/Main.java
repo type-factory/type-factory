@@ -19,6 +19,8 @@ public class Main {
 
   private static final Logger logger = Logger.getLogger(Main.class.getName());
 
+  private static final String LINE_SEPARATOR = System.lineSeparator();
+
   public static void main(String... args) {
 
     final String outputDirectory = args[0];
@@ -46,7 +48,7 @@ public class Main {
       final String displayLanguage = locale.getDisplayLanguage().replaceAll("[\s_-]+", "_");
       final String enumName = String.format("%s_%s", displayLanguage.toUpperCase(), localeLanguageTag);
 
-      s.append("\n");
+      s.append(LINE_SEPARATOR);
       appendJavadoc(s, languageData, enumName);
       if ("Hani".equalsIgnoreCase(localeScript)) {
         createAlphabetCharactersHtml(languageData, outputDirectory);
@@ -68,7 +70,7 @@ public class Main {
       s.append(");");
     }
 
-    s.append('\n');
+    s.append(LINE_SEPARATOR);
     s.append("""
         }
         """);
@@ -108,9 +110,10 @@ public class Main {
       if (from <= rangeEnd && to >= rangeStart) {
         if (!arrayStarted) {
           if (languageData == LETTERS_JAPANESE_JA_HANI) {
-            s.append("\n      // See Javadoc for full set of unicode code points in the following ranges.");
+            s.append(LINE_SEPARATOR)
+                .append("      // See Javadoc for full set of unicode code points in the following ranges.");
           }
-          s.append("\n      new ").append(rangeArrayType).append("[]{\n");
+          s.append(LINE_SEPARATOR).append("      new ").append(rangeArrayType).append("[]{").append(LINE_SEPARATOR);
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
@@ -118,15 +121,15 @@ public class Main {
           for (int c = from; c <= min(to, from + 20); ++c) {
             s.append(' ').appendCodePoint(c);
           }
-          s.append(" ...\n");
+          s.append(" ...").append(LINE_SEPARATOR);
         } else {
           for (int c = from, i = 1; c <= to; ++c, ++i) {
             s.append(' ').appendCodePoint(c);
             if (i % 30 == 0 && to - c > 2) {
-              s.append('\n').append(indent).append("// ");
+              s.append(LINE_SEPARATOR).append(indent).append("// ");
             }
           }
-          s.append("\n");
+          s.append(LINE_SEPARATOR);
         }
       }
     }
@@ -141,17 +144,18 @@ public class Main {
       final String enumName) {
 
     if (languageData.hasJavadoc()) {
-      s.append("\n  /**");
+      s.append(LINE_SEPARATOR).append("  /**");
+      final String javadocLineStart = LINE_SEPARATOR + "   * ";
       for (String javadoc : languageData.getJavadoc()) {
-        s.append("\n   * ");
-        s.append(javadoc.replace("\n", "\n   * "));
-        s.append("\n   *");
+        s.append(LINE_SEPARATOR).append("   * ");
+        s.append(javadoc.replace(LINE_SEPARATOR, javadocLineStart));
+        s.append(LINE_SEPARATOR).append("   *");
         if (LANGUAGE_ALPHABET_INCLUDED_JAVADOC.equals(javadoc)) {
           appendAlphabetCharactersJavadoc(s, languageData, enumName);
-          s.append("\n   *");
+          s.append(LINE_SEPARATOR).append("   *");
         }
       }
-      s.append("/\n");
+      s.append("/").append(LINE_SEPARATOR);
     }
   }
 
@@ -167,32 +171,32 @@ public class Main {
       return;
     }
     if (languageData == LETTERS_JAPANESE_JA_HANI) {
-      s.append("\n   * <p>There are too many unicode code-points in this set to display here. See separate ");
-      s.append("\n   *    <a href='./doc-files/").append(enumName).append(".html'>JAPANESE_ja_Hani</a>");
-      s.append("\n   *    file for a complete list of the unicode code-points or in this language set.</p>");
+      s.append(LINE_SEPARATOR).append("   * <p>There are too many unicode code-points in this set to display here. See separate ");
+      s.append(LINE_SEPARATOR).append("   *    <a href='./doc-files/").append(enumName).append(".html'>JAPANESE_ja_Hani</a>");
+      s.append(LINE_SEPARATOR).append("   *    file for a complete list of the unicode code-points or in this language set.</p>");
     } else {
-      s.append("\n   * <pre>");
+      s.append(LINE_SEPARATOR).append("   * <pre>");
       for (EntryRange range : unicodeSet.ranges()) {
         final int from = range.codepoint;
         final int to = range.codepointEnd;
         if (range.codepointEnd > range.codepoint) {
-          s.append('\n');
+          s.append(LINE_SEPARATOR);
           s.append(String.format("   *    %04X..%04X  ", from, to));
           for (int c = from, i = 1; c <= to; ++c, ++i) {
             s.append(' ').appendCodePoint(c);
             if (i % 30 == 0 && to - c > 2) {
-              s.append("\n   *                ");
+              s.append(LINE_SEPARATOR).append("   *                ");
             }
           }
         } else {
-          s.append('\n');
+          s.append(LINE_SEPARATOR);
           s.append(String.format("   *    %04X        ", from));
           for (int c = from; c <= to; ++c) {
             s.append(' ').appendCodePoint(c);
           }
         }
       }
-      s.append("\n   * </pre>");
+      s.append(LINE_SEPARATOR).append("   * </pre>");
     }
   }
 
@@ -228,20 +232,20 @@ public class Main {
     for (EntryRange range : unicodeSet.ranges()) {
       final int from = range.codepoint;
       final int to = range.codepointEnd;
-      s.append('\n');
-      s.append("\n-------------------------\n");
+      s.append(LINE_SEPARATOR);
+      s.append(LINE_SEPARATOR).append("-------------------------").append(LINE_SEPARATOR);
       s.append(String.format("%04X..%04X  Unicode Range ", from, to));
-      s.append("\n-------------------------");
+      s.append(LINE_SEPARATOR).append("-------------------------");
       if (range.codepointEnd > range.codepoint) {
         for (int c = from, i = 0; c <= to; ++c, ++i) {
           if (i % 32 == 0 && to - c > 0) {
-            s.append('\n');
+            s.append(LINE_SEPARATOR);
             s.append(String.format("%04X..%04X  ", from + i, from + i + 31));
           }
           s.append(' ').appendCodePoint(c);
         }
       } else {
-        s.append('\n');
+        s.append(LINE_SEPARATOR);
         s.append(String.format("%04X        ", from));
         for (int c = from; c <= to; ++c) {
           s.append(' ').appendCodePoint(c);

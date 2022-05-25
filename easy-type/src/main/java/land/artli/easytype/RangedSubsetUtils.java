@@ -12,10 +12,6 @@ class RangedSubsetUtils {
   private RangedSubsetUtils() {
   }
 
-  static final char[] EMPTY_CHAR_ARRAY = new char[0];
-  static final int[] EMPTY_INT_ARRAY = new int[0];
-  static final long[] EMPTY_LONG_ARRAY = new long[0];
-
   /**
    * <p>Extracts the 8-bit 'inclusive-from' value from a code-point range comprised of two 8-bit values stored in a {@code char} primitive. The
    * 'inclusive-from' is stored in the 8 most-significant bits of the {@code char} primitive.</p>

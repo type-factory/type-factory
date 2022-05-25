@@ -10,8 +10,8 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
   
   @ParameterizedTest
   @CsvSource(value = {
-      "Flood \t Plains|FloodPlains",
-      "Deep \s  \t  \s Valley|DeepValley",
+      " Flood \t Plains        | FloodPlains ",
+      " Deep \s  \t  \s Valley | DeepValley  ",
   }, delimiter = '|')
   void should_parse_and_remove_all_whitespace(final String value, final String expected) throws ParseException {
 
@@ -27,8 +27,8 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Flood \t Plains|FloodPlains",
-      "Deep \s  \t  \s Valley|DeepValley",
+      " Flood \t Plains        | FloodPlains ",
+      " Deep \s  \t  \s Valley | DeepValley  ",
   }, delimiter = '|')
   void should_parse_and_remove_all_accepted_whitespace(final String value, final String expected) throws ParseException {
 
@@ -45,8 +45,8 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Flood \t Plains|Flood Plains",
-      "Deep \s  \t  \s Valley|Deep Valley",
+      " Flood \t Plains        | Flood Plains ",
+      " Deep \s  \t  \s Valley | Deep Valley  ",
   }, delimiter = '|')
   void should_parse_to_normalized_whitespace(final String value, final String expected) throws ParseException {
 
@@ -62,15 +62,35 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "-|Flood \t Plains|Flood-Plains",
-      "-|Deep \s  \t  \s Valley|Deep-Valley",
-      "_|Flood \t Plains|Flood_Plains",
-      "_|Deep \s  \t  \s Valley|Deep_Valley",
-      "~|Flood \t Plains|Flood~Plains",
-      "~|Deep \s  \t  \s Valley|Deep~Valley",
+      " - | Flood \t Plains        | Flood-Plains ",
+      " - | Deep \s  \t  \s Valley | Deep-Valley  ",
+      " _ | Flood \t Plains        | Flood_Plains ",
+      " _ | Deep \s  \t  \s Valley | Deep_Valley  ",
+      " ~ | Flood \t Plains        | Flood~Plains ",
+      " ~ | Deep \s  \t  \s Valley | Deep~Valley  ",
   }, delimiter = '|')
   void should_parse_to_normalized_and_converted_whitespace(
       final char convertTo, final String value, final String expected) throws ParseException {
+
+    final TypeParser typeParser =
+        TypeParser.builder(SomeType.class)
+            .normalizeAndConvertWhitespaceTo(convertTo)
+            .acceptCharRange('a', 'z')
+            .acceptCharRange('A', 'Z')
+            .build();
+
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(value = {
+      " .. | Flood \t Plains        | Flood..Plains ",
+      " .. | Deep \s  \t  \s Valley | Deep..Valley  ",
+      " <> | Flood \t Plains        | Flood<>Plains ",
+      " <> | Deep \s  \t  \s Valley | Deep<>Valley  ",
+  }, delimiter = '|')
+  void should_parse_to_normalized_and_converted_whitespace(
+      final String convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
@@ -101,12 +121,12 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "-|Flood \t Plains|Flood---Plains",
-      "-|Deep \s \t \s Valley|Deep-------Valley",
-      "_|Flood \t Plains|Flood___Plains",
-      "_|Deep \s \t \s Valley|Deep_______Valley",
-      "~|Flood \t Plains|Flood~~~Plains",
-      "~|Deep \s \t \s Valley|Deep~~~~~~~Valley",
+      " - | Flood \t Plains      | Flood---Plains    ",
+      " - | Deep \s \t \s Valley | Deep-------Valley ",
+      " _ | Flood \t Plains      | Flood___Plains    ",
+      " _ | Deep \s \t \s Valley | Deep_______Valley ",
+      " ~ | Flood \t Plains      | Flood~~~Plains    ",
+      " ~ | Deep \s \t \s Valley | Deep~~~~~~~Valley ",
   }, delimiter = '|')
   void should_parse_to_preserved_and_converted_whitespace(
       final char convertTo, final String value, final String expected) throws ParseException {
@@ -120,4 +140,25 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
 
     Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
   }
+
+  @ParameterizedTest
+  @CsvSource(value = {
+      " .. | Flood \t Plains      | Flood......Plains        ",
+      " .. | Deep \s \t \s Valley | Deep..............Valley ",
+      " <> | Flood \t Plains      | Flood<><><>Plains        ",
+      " <> | Deep \s \t \s Valley | Deep<><><><><><><>Valley ",
+  }, delimiter = '|')
+  void should_parse_to_preserved_and_converted_whitespace(
+      final String convertTo, final String value, final String expected) throws ParseException {
+
+    final TypeParser typeParser =
+        TypeParser.builder(SomeType.class)
+            .preserveAndConvertWhitespaceTo(convertTo)
+            .acceptCharRange('a', 'z')
+            .acceptCharRange('A', 'Z')
+            .build();
+
+    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+  }
+
 }

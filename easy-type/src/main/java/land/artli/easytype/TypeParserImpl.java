@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
+import land.artli.easytype.Converter.ConverterResults;
 
 class TypeParserImpl implements TypeParser {
 
@@ -16,37 +17,34 @@ class TypeParserImpl implements TypeParser {
   private final String errorMessage;
   private final TargetCase targetCase;
   private final WhiteSpace whiteSpace;
-  private final int[] convertWhiteSpaceToCodePoints;
   private final NullHandling nullHandling;
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
   private final Subset acceptedCodePoints;
-  private final CodePointConversions codePointConversions;
+  private final Converter converter;
 
   TypeParserImpl(
       final Class<?> targetClass,
       final String errorMessage,
       final TargetCase targetCase,
       final WhiteSpace whiteSpace,
-      final int[] convertWhiteSpaceToCodePoints,
       final NullHandling nullHandling,
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
       final Subset acceptedCodePoints,
-      final CodePointConversions codePointConversions) {
+      final Converter converter) {
     this.targetClass = targetClass;
     this.errorMessage = errorMessage;
     this.targetCase = targetCase;
     this.whiteSpace = whiteSpace;
-    this.convertWhiteSpaceToCodePoints = convertWhiteSpaceToCodePoints;
     this.nullHandling = nullHandling;
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
     this.acceptedCodePoints = acceptedCodePoints;
-    this.codePointConversions = codePointConversions;
+    this.converter = converter;
   }
 
   @Override
@@ -122,19 +120,22 @@ class TypeParserImpl implements TypeParser {
     final int length = value.length();
     final int endIndex = endIndexIgnoringTrailingWhitespace(value);
     final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
-    int[] result = new int[Math.min(length, codePointConversions.getMaxConvertedLength())];
+    int[] result = converter == null ? new int [length] : new int[length + converter.getMaxConvertedLength() * 2];
     if ((endIndex - startIndex) == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
         case CONVERT_EMPTY_TO_NULL -> null;
       };
     }
-    int i = startIndex;
-    int k = 0;
+    int i = startIndex; // index of source
+    int k = 0;          // index of target / result
     char ch;
     int codePoint;
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
+    boolean codePointWasWhitespace = false;
+
+    ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
     while (i < length) {
       ch = value.charAt(i);
@@ -153,48 +154,43 @@ class TypeParserImpl implements TypeParser {
           case FORBID_WHITESPACE:
             throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, ch);
           case PRESERVE_WHITESPACE:
-            result = appendCodePoint(result, k++, codePoint);
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i))) {
-              result = appendCodePoint(result, k++, codePoint);
-            }
+            // do nothing
             break;
           case PRESERVE_AND_CONVERT_WHITESPACE:
-            for (int j = 0; j < convertWhiteSpaceToCodePoints.length; ++j) {
-              result = appendCodePoint(result, k++, convertWhiteSpaceToCodePoints[j]);
-            }
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i))) {
-              for (int j = 0; j < convertWhiteSpaceToCodePoints.length; ++j) {
-                result = appendCodePoint(result, k++, convertWhiteSpaceToCodePoints[j]);
-              }
-            }
+            codePoint = ' ';
             break;
           case NORMALIZE_WHITESPACE:
-            result = appendCodePoint(result, k++, ' ');
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i))) {
-              // ignore extra whitespace
-            }
-            break;
           case NORMALIZE_AND_CONVERT_WHITESPACE:
-            for (int j = 0; j < convertWhiteSpaceToCodePoints.length; ++j) {
-              result = appendCodePoint(result, k++, convertWhiteSpaceToCodePoints[j]);
+            if (codePointWasWhitespace) { // if previous code-point was whitespace
+              ++i;
+              continue;
             }
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i))) {
-              // ignore extra whitespace
-            }
+            codePoint = ' ';
             break;
           case REMOVE_WHITESPACE:
-            while (++i < length && Character.isWhitespace(codePoint = value.charAt(i))) {
-              // ignore extra whitespace
-            }
-            break;
+            ++i;
+            continue;
         }
+        codePointWasWhitespace = true;
+      } else {
+        codePointWasWhitespace = false;
       }
-      toCodePoints = codePointConversions.convertCodePoint(codePoint, reusableSingleCodePointArray);
+
+      if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {
+        throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
+      }
+
+      if (converter != null &&
+          converter.isCodePointConversionRequired(codePoint, k, converterResults)) {
+        k = converterResults.getConvertFromIndex();
+        toCodePoints = converterResults.getConvertToCodePointSequence();
+      } else {
+        reusableSingleCodePointArray[0] = codePoint;
+        toCodePoints = reusableSingleCodePointArray;
+      }
+
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
-        if (!isAcceptedCodePoint(codePoint)) {
-          throw InvalidTypeValueException.forInvalidCodePoint(errorMessage, targetClass, value, i, codePoint);
-        }
         if (k >= maxNumberOfCodePoints) {
           throw InvalidTypeValueException.forValueTooLong(errorMessage, targetClass, value, maxNumberOfCodePoints);
         }
