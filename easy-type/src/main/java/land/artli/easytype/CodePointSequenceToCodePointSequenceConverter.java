@@ -1,13 +1,14 @@
 package land.artli.easytype;
 
+import static land.artli.easytype.Constants.EMPTY_INT_ARRAY;
+import static land.artli.easytype.Constants.LINE_SEPARATOR;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
 class CodePointSequenceToCodePointSequenceConverter implements Converter {
-
-  private static final String LINE_SEPARATOR = System.lineSeparator();
 
   private final RootTreeNode rootTreeNode;
 
@@ -104,7 +105,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
     if (result) {
       for (int i = converterResults.treeNodesInPlaySize() - 1; i >= 0; --i) {
-        if (converterResults.getConvertFromIndexForNodeInPlay(i) != converterResults.convertFromIndex) {
+        if (converterResults.getConvertFromIndexForNodeInPlay(i) > converterResults.convertFromIndex) {
           converterResults.removeTreeNodeInPlay(i);
         }
       }
@@ -190,7 +191,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
   private static class TreeNode {
 
     public TreeNode() {
-      this(new int[0]);
+      this(EMPTY_INT_ARRAY);
     }
 
     public TreeNode(final int[] toSequence) {
@@ -198,7 +199,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
       this.nodesByCodePoint = new PrimitiveHashMapOfIntKeyToObjectValue<>();
     }
 
-    private int[] toSequence = new int[0];
+    private int[] toSequence = EMPTY_INT_ARRAY;
     private final PrimitiveHashMapOfIntKeyToObjectValue<TreeNode> nodesByCodePoint;
 
     void put(final int codePoint, final TreeNode treeNode) {
@@ -272,18 +273,22 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
         for (int k = 1; k < j; ++k) {
           s.append(' ');
         }
-        if (i < codePoints.length - 1) {
-          s.append('├');
-        } else if (j > 0) {
-          s.append('└');
+        if (currentTreeNode != this) {
+          if (i < codePoints.length - 1) {
+            s.append('├');
+          } else if (j > 0) {
+            s.append('└');
+          }
         }
         s.appendCodePoint(codePoint);
         TreeNode treeNode = currentTreeNode.get(codePoint);
         if (treeNode != null) {
           if (treeNode.hasToSequence()) {
-            s.append(" —→ ");
+            s.append(" ⟶ ");
             s.append(new String(treeNode.toSequence, 0, treeNode.toSequence.length));
-            s.append(LINE_SEPARATOR);
+            if (i == codePoints.length - 1) {
+              s.append(LINE_SEPARATOR);
+            }
           }
           if (!treeNode.isLeafNode()) {
             ++j;
@@ -294,13 +299,18 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
             codePoints = currentTreeNode.codePoints();
             i = 0;
           } else {
-            do {
-              currentTreeNode = treeNodeStack.pop();
-              codePoints = currentTreeNode.codePoints();
-              i = indexStack.pop();
+            if (currentTreeNode == this) { // is root node
               ++i;
               --j;
-            } while (i >= codePoints.length && !indexStack.isEmpty());
+            } else {
+              do {
+                currentTreeNode = treeNodeStack.pop();
+                codePoints = currentTreeNode.codePoints();
+                i = indexStack.pop();
+                ++i;
+                --j;
+              } while (i >= codePoints.length && !indexStack.isEmpty());
+            }
           }
         }
       }
@@ -312,6 +322,9 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
     final RootTreeNode rootNode = new RootTreeNode();
     rootNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
     rootNode.add("abef".codePoints().toArray(), "tuv".codePoints().toArray());
+    rootNode.add("full stop".codePoints().toArray(), "period".codePoints().toArray());
+    rootNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
+    rootNode.add("l".codePoints().toArray(), "n".codePoints().toArray());
     System.out.println("N-Ary tree size = " + rootNode.size());
     System.out.println("N-Ary tree" + LINE_SEPARATOR + rootNode.toString());
   }

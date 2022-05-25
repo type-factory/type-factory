@@ -39,6 +39,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
       " semi-trailer    | semi       | articulated | trailer      | vehicle   |                 |       | articulated-vehicle ",
       " semi-trailer    | semi       | articulated | trailer      | vehicle   | semi-trailer    | lorry | lorry               ",
       " full stop light | full stop  | period      |              |           |                 |       | period light        ",
+      " full stop light | full stop  | period      | l            | n         |                 |       | period night        ",
       " full stop light | stop light | red light   |              |           |                 |       | full red light      ",
       " full stop light | full stop  | period      | stop light   | red light |                 |       | period light        ",
       " full stop light | full stop  | period      | stop light   | red light | full stop light | skid  | skid                ",

@@ -1,6 +1,6 @@
 package land.artli.easytype;
 
-import static land.artli.easytype.RangedSubsetUtils.EMPTY_INT_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_INT_ARRAY;
 import static land.artli.easytype.RangedSubsetUtils.getInclusiveFrom;
 import static land.artli.easytype.RangedSubsetUtils.getInclusiveTo;
 
@@ -141,6 +141,13 @@ class ConverterBuilder {
 
   Converter build() {
     if (!codePointSequenceToCodePointSequence.isEmpty()) {
+      if (!codePointToCodePointSequence.isEmpty()) {
+        int[] temp = new int[1];
+        for (int key : codePointToCodePointSequence.keys()) {
+          temp[0] = key;
+          codePointSequenceToCodePointSequence.add(temp, codePointToCodePointSequence.get(key));
+        }
+      }
       return new CodePointSequenceToCodePointSequenceConverter(
           codePointSequenceToCodePointSequence,
           categoryToCodePointSequence);

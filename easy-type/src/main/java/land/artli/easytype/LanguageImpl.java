@@ -1,14 +1,18 @@
 package land.artli.easytype;
 
+import static land.artli.easytype.Constants.EMPTY_CHAR_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_INT_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_LONG_ARRAY;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 
 class LanguageImpl implements Language, RangedSubset {
 
-  private static final char[] EMPTY_SINGLE_BYTE_ARRAY = new char[0];
-  private static final int[] EMPTY_DOUBLE_BYTE_ARRAY = new int[0];
-  private static final long[] EMPTY_TRIPLE_BYTE_ARRAY = new long[0];
+  private static final char[] EMPTY_SINGLE_BYTE_ARRAY = EMPTY_CHAR_ARRAY;
+  private static final int[] EMPTY_DOUBLE_BYTE_ARRAY = EMPTY_INT_ARRAY;
+  private static final long[] EMPTY_TRIPLE_BYTE_ARRAY = EMPTY_LONG_ARRAY;
 
   private final Locale locale;
 

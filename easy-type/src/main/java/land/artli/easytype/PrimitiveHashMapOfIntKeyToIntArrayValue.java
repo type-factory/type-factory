@@ -1,5 +1,8 @@
 package land.artli.easytype;
 
+import static land.artli.easytype.Constants.EMPTY_INT_ARRAY;
+import static land.artli.easytype.Constants.LINE_SEPARATOR;
+
 import java.util.Arrays;
 
 /**
@@ -52,7 +55,9 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   private int maxValueArrayLength = 0;
 
-  private int size;
+  private int size = 0;
+
+  private int[] keys = null;
 
   PrimitiveHashMapOfIntKeyToIntArrayValue() {
     final int initialCapacity = 20;
@@ -86,6 +91,26 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
     return maxValueArrayLength;
   }
 
+  int[] keys() {
+    if (isEmpty()) {
+      return EMPTY_INT_ARRAY;
+    }
+    if (keys == null) {
+      final int[] tempKeys = new int[size];
+      int tempKeyIndex = 0;
+      for (int i = 0; i < hashTable.keys.length; ++i) {
+        int[] keyValues = hashTable.keys[i];
+        if (keyValues != null) {
+          for (int j = 0; j < keyValues.length; ++j) {
+            tempKeys[tempKeyIndex++] = keyValues[j];
+          }
+        }
+      }
+      keys = tempKeys;
+    }
+    return keys;
+  }
+
   int[] get(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -103,6 +128,7 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
     if (value == null) {
       return;
     }
+    keys = null; // reset keys because we are updating the map.
     if (threshold < (int) (size * LOAD_FACTOR)) {
       rehash();
     }
@@ -146,5 +172,21 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
       }
     }
     this.hashTable = newHashTable;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder s = new StringBuilder();
+    int[] value = null;
+    for (int key : keys()) {
+      value = get(key);
+      s.append(key)
+          .append(" [")
+          .appendCodePoint(key)
+          .append("] ⟶ ")
+          .append(new String(value, 0, value.length))
+          .append(LINE_SEPARATOR);
+    }
+    return s.toString();
   }
 }

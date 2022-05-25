@@ -1,8 +1,8 @@
 package land.artli.easytype;
 
-import static land.artli.easytype.RangedSubsetUtils.EMPTY_CHAR_ARRAY;
-import static land.artli.easytype.RangedSubsetUtils.EMPTY_INT_ARRAY;
-import static land.artli.easytype.RangedSubsetUtils.EMPTY_LONG_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_CHAR_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_INT_ARRAY;
+import static land.artli.easytype.Constants.EMPTY_LONG_ARRAY;
 import static land.artli.easytype.RangedSubsetUtils.defaultIfNullOrEmpty;
 
 import java.util.Arrays;
