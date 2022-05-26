@@ -1,4 +1,4 @@
-package land.artli.easytype.generator;
+package org.datatypeproject.generator;
 
 import org.unicode.ns._2003.ucd._1.Boolean;
 import org.unicode.ns._2003.ucd._1.CodePoint;

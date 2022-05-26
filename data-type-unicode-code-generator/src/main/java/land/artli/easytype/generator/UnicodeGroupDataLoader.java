@@ -1,4 +1,4 @@
-package land.artli.easytype.generator;
+package org.datatypeproject.generator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import land.artli.easytype.generator.Unicode.RangedSubset;
-import land.artli.easytype.generator.Unicode.RangedSubset.RangedSubsetBuilder;
+import org.datatypeproject.generator.Unicode.RangedSubset;
+import org.datatypeproject.generator.Unicode.RangedSubset.RangedSubsetBuilder;
 import org.unicode.ns._2003.ucd._1.Block;
 import org.unicode.ns._2003.ucd._1.Blocks;
 import org.unicode.ns._2003.ucd._1.CodePoint;

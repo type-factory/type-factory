@@ -1,4 +1,4 @@
-package land.artli.easytype.generator;
+package org.datatypeproject.generator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import land.artli.easytype.generator.Unicode.RangedSubset;
-import land.artli.easytype.generator.Unicode.RangedSubset.RangedSubsetBuilder;
+import org.datatypeproject.generator.Unicode.RangedSubset;
+import org.datatypeproject.generator.Unicode.RangedSubset.RangedSubsetBuilder;
 import org.unicode.ns._2003.ucd._1.Block;
 
 public class Main {
@@ -106,10 +106,10 @@ public class Main {
         @javax.annotation.processing.Generated(
             comments = "This file is partly generated from the Unicode file 'ucd.all.grouped.xml'",
             date="%tFT%tT",
-            value = "land.artli:data-type-unicode-code-generator")""", LocalDate.now(), LocalTime.now());
+            value = "org.datatypeproject:data-type-unicode-code-generator")""", LocalDate.now(), LocalTime.now());
 
     final String unicodeFile = unicodeTemplate
-        .replace("package land.artli.easytype.generator;", "package land.artli.easytype;")
+        .replace("package org.datatypeproject.generator;", "package org.datatypeproject;")
         .replace("// INSERT-GENERATED-MESSAGE", generatedMessage)
         .replace("    // INSERT-OTHER-VALUES-HERE", enumOtherValues.toString())
         .replace("    // INSERT-CATEGORY-VALUES-HERE", enumCategoryValues.toString())
