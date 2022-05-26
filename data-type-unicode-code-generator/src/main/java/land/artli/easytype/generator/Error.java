@@ -1,4 +1,4 @@
-package land.artli.easytype.generator;
+package org.datatypeproject.generator;
 
 
 public enum Error {

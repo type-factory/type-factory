@@ -1,4 +1,4 @@
-package land.artli.easytype.generator;
+package org.datatypeproject.generator;
 
 import java.util.Arrays;
 import java.util.HashMap;

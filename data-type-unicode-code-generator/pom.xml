@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>land.artli</groupId>
+    <groupId>org.datatypeproject</groupId>
     <artifactId>data-type-project</artifactId>
     <version>develop</version>
   </parent>
 
-  <groupId>land.artli</groupId>
+  <groupId>org.datatypeproject</groupId>
   <artifactId>data-type-unicode-code-generator</artifactId>
   <packaging>jar</packaging>
 
