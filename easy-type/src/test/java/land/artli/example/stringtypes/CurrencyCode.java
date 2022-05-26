@@ -9,11 +9,13 @@ public final class CurrencyCode extends StringType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder(CurrencyCode.class)
-          .errorMessage("must be a 3-character ISO 4217 currency value")
-          .acceptLettersAtoZ()
+          .errorMessage("must be a 3-character ISO 4217 currency code")
+          .acceptCharRange('a', 'z')
+          .acceptCharRange('A', 'Z')
           .fixedSizeNumberOfCodePoints(3)
+          .removeAllWhitespace()
+          .preserveNullAndEmpty()
           .toUpperCase()
-          .convertEmptyToNull()
           .build();
 
   private CurrencyCode(final String value) {
