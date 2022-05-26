@@ -1,6 +1,6 @@
 # Alphabets, scripts, blocks and categories
 
-Before going further let us define what we mean by alphabets, scripts, blocks and categories.
+Let us define what we mean by alphabets, scripts, blocks and categories.
 
 ## Alphabets
 
