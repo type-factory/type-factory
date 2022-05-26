@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>land.artli</groupId>
+    <artifactId>data-type-project</artifactId>
+    <version>develop</version>
+  </parent>
+
+  <groupId>land.artli</groupId>
+  <artifactId>data-type-unicode-code-generator</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jvnet.jaxb2_commons</groupId>
+      <artifactId>jaxb2-basics-runtime</artifactId>
+      <version>0.12.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.relaxng</groupId>
+      <artifactId>trang</artifactId>
+      <version>20181222</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>create-schema-directory-in-build-dir</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="${project.build.directory}/generated-sources"/>
+                <mkdir dir="${project.build.directory}/generated-schema"/>
+                <copy
+                  file="${basedir}/src/main/unicode/bindings.xjb"
+                  tofile="${project.build.directory}/generated-schema/bindings.xjb"/>
+                <copy
+                  file="${basedir}/src/main/java/land/artli/easytype/generator/Unicode.java"
+                  tofile="${project.build.directory}/classes/Unicode_Template.java"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>convert-unicode-relax-ng-schema-to-xsd-schema</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-classpath</argument>
+            <classpath>
+              <dependency>org.relaxng:trang</dependency>
+            </classpath>
+            <argument>com.thaiopensource.relaxng.translate.Driver</argument>
+            <argument>${basedir}/src/main/unicode/tr42-28.rnc</argument>
+            <argument>${project.build.directory}/generated-schema/tr42-28.xsd</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.14.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.5</version>
+            <!--            <version>3.0.2</version>-->
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>generate-unicode-object-model-from-xsd-schema</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <strict>false</strict>
+              <bindingDirectory>${project.build.directory}/generated-schema/</bindingDirectory>
+              <schemaDirectory>${project.build.directory}/generated-schema/</schemaDirectory>
+              <generateDirectory>${project.build.directory}/generated-sources/</generateDirectory>
+              <!--
+              <extension>false</extension>
+              <args>
+                <arg>-Xannotate</arg>
+                <arg>-XautoNameResolution</arg>
+                <arg>-no-header</arg>
+                <arg>-XtoString</arg>
+                <arg>-Xequals</arg>
+                <arg>-XhashCode</arg>
+                <arg>-Xinheritance</arg>
+              </args>
+              <plugins>
+                <plugin>
+                  <groupId>org.jvnet.jaxb2_commons</groupId>
+                  <artifactId>jaxb2-basics</artifactId>
+                  <version>0.12.0</version>
+                </plugin>
+                <plugin>
+                  <groupId>org.jvnet.jaxb2_commons</groupId>
+                  <artifactId>jaxb2-basics-annotate</artifactId>
+                  <version>1.1.0</version>
+                </plugin>
+              </plugins>
+              -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+
+</project>

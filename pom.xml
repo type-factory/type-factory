@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>land.artli</groupId>
-  <artifactId>easy-type-project</artifactId>
+  <artifactId>data-type-project</artifactId>
   <version>develop</version>
   <packaging>pom</packaging>
 
@@ -32,11 +32,11 @@
   </properties>
 
   <modules>
-    <module>easy-type-bom</module>
-    <module>easy-type-language-generator</module>
-    <module>easy-type-unicode-code-generator</module>
-    <module>easy-type-parent</module>
-    <module>easy-type</module>
+    <module>data-type-bom</module>
+    <module>data-type-language-generator</module>
+    <module>data-type-unicode-code-generator</module>
+    <module>data-type-parent</module>
+    <module>data-type</module>
   </modules>
 
   <dependencyManagement>
@@ -44,25 +44,25 @@
 
       <dependency>
         <groupId>land.artli</groupId>
-        <artifactId>easy-type</artifactId>
+        <artifactId>data-type</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>land.artli</groupId>
-        <artifactId>easy-type-bom</artifactId>
+        <artifactId>data-type-bom</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>land.artli</groupId>
-        <artifactId>easy-type-parent</artifactId>
+        <artifactId>data-type-parent</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>land.artli</groupId>
-        <artifactId>easy-type-unicode-code-generator</artifactId>
+        <artifactId>data-type-unicode-code-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 
