@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>land.artli</groupId>
+    <artifactId>data-type-project</artifactId>
+    <version>develop</version>
+  </parent>
+
+  <groupId>land.artli</groupId>
+  <artifactId>data-type</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.21.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>land.artli</groupId>-->
+    <!--      <artifactId>data-type-unicode-code-generator</artifactId>-->
+    <!--      <version>${project.version}</version>-->
+    <!--    </dependency>-->
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>generate-language-classes</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includePluginDependencies>true</includePluginDependencies>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <mainClass>land.artli.easytype.generator.language.Main</mainClass>
+          <arguments>
+            <argument>${basedir}/src/main/java/land/artli/easytype</argument>
+          </arguments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>land.artli</groupId>
+            <artifactId>data-type-language-generator</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j-charset</artifactId>
+            <version>70.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
