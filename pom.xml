@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>land.artli</groupId>
+  <groupId>org.datatypeproject</groupId>
   <artifactId>data-type-project</artifactId>
   <version>develop</version>
   <packaging>pom</packaging>
@@ -32,38 +32,49 @@
   </properties>
 
   <modules>
-    <module>data-type-bom</module>
-    <module>data-type-language-generator</module>
+    <module>data-type-examples</module>
+    <module>data-type-language-code-generator</module>
     <module>data-type-unicode-code-generator</module>
-    <module>data-type-parent</module>
-    <module>data-type</module>
+    <module>data-type-parser</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
 
       <dependency>
-        <groupId>land.artli</groupId>
-        <artifactId>data-type</artifactId>
+        <groupId>org.datatypeproject</groupId>
+        <artifactId>data-type-parser</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>land.artli</groupId>
-        <artifactId>data-type-bom</artifactId>
+        <groupId>org.datatypeproject</groupId>
+        <artifactId>data-type-examples</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>land.artli</groupId>
-        <artifactId>data-type-parent</artifactId>
+        <groupId>org.datatypeproject</groupId>
+        <artifactId>data-type-language-code-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>land.artli</groupId>
+        <groupId>org.datatypeproject</groupId>
         <artifactId>data-type-unicode-code-generator</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.7.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.21.0</version>
       </dependency>
 
       <dependency>
