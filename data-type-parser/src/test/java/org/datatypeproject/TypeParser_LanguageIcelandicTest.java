@@ -31,7 +31,7 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
       "hvίtabjörninn", // Icelandic 'Polar Bear' with Greek 'ί' iοta
   })
   void should_throw_exception_with_non_icelandic_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Icelandic letters only.");
   }

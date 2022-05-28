@@ -31,7 +31,7 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
       "die Weiße Τaube", // German 'Dove' with Greek 'Τ' taf
   })
   void should_throw_exception_with_non_german_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of German letters only.");
   }

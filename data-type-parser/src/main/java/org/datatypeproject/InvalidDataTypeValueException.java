@@ -2,8 +2,9 @@ package org.datatypeproject;
 
 import java.io.Serial;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
-public class InvalidTypeValueException extends IllegalArgumentException {
+public class InvalidDataTypeValueException extends IllegalArgumentException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
@@ -12,7 +13,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
   private final String parserErrorMessage;
   private final String invalidValue;
 
-  InvalidTypeValueException(
+  InvalidDataTypeValueException(
       final String parserErrorMessage, 
       final String message,
       final int[] successfullyParsedCodePoints, 
@@ -23,7 +24,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     this.invalidValue = new String(successfullyParsedCodePoints, 0, successfullyParsedCount);
   }
 
-  InvalidTypeValueException(
+  InvalidDataTypeValueException(
       final String parserErrorMessage, 
       final String message,
       final int[] successfullyParsedCodePoints, 
@@ -35,7 +36,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
   }
 
-  InvalidTypeValueException(
+  InvalidDataTypeValueException(
       final String parserErrorMessage, 
       final String message, 
       final CharSequence invalidValue) {
@@ -45,7 +46,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
   }
 
-  InvalidTypeValueException(
+  InvalidDataTypeValueException(
       final String parserErrorMessage, 
       final String message, 
       final CharSequence invalidValue, 
@@ -76,7 +77,7 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     }
   }
 
-  public static InvalidTypeValueException forValueTooShort(
+  public static InvalidDataTypeValueException forValueTooShort(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
@@ -88,10 +89,10 @@ public class InvalidTypeValueException extends IllegalArgumentException {
         .append(" value - too short, min length must be '")
         .append(minLength)
         .append("'.");
-    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
-  public static InvalidTypeValueException forValueTooLong(
+  public static InvalidDataTypeValueException forValueTooLong(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
@@ -103,10 +104,10 @@ public class InvalidTypeValueException extends IllegalArgumentException {
         .append(" value - too long, max length must be '")
         .append(maxLength)
         .append("'.");
-    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
   }
 
-  public static InvalidTypeValueException forInvalidCodePoint(
+  public static InvalidDataTypeValueException forInvalidCodePoint(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
@@ -123,7 +124,34 @@ public class InvalidTypeValueException extends IllegalArgumentException {
     parserErrorMessage.append("character '");
     appendCodePoint(parserErrorMessage, invalidCodePoint);
     parserErrorMessage.append("'.");
-    return new InvalidTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+  }
+
+  public static InvalidDataTypeValueException forValueNotMatchRegex(
+      final String message,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final Pattern regex) {
+
+    final StringBuilder parserErrorMessage = new StringBuilder();
+    parserErrorMessage.append("Invalid ")
+        .append(targetTypeClass.getSimpleName())
+        .append(" value - does not match pattern ")
+        .append(regex.toString());
+    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+  }
+
+  public static InvalidDataTypeValueException forValueNotValidUsingCustomValidation(
+      final String message,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final Exception cause) {
+
+    final StringBuilder parserErrorMessage = new StringBuilder();
+    parserErrorMessage.append("Invalid ")
+        .append(targetTypeClass.getSimpleName())
+        .append(" value - does not pass custom validation");
+    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value, cause);
   }
 
   private static StringBuilder appendCodePoint(final StringBuilder s, final int invalidCodePoint) {

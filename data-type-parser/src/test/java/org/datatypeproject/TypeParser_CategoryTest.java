@@ -40,7 +40,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidTypeValueException.class)
+        .isInstanceOf(InvalidDataTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -80,7 +80,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidTypeValueException.class)
+        .isInstanceOf(InvalidDataTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -122,7 +122,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
     Assertions.setMaxStackTraceElementsDisplayed(16);
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidTypeValueException.class)
+        .isInstanceOf(InvalidDataTypeValueException.class)
         .hasMessage("Some type must be uppercase alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }

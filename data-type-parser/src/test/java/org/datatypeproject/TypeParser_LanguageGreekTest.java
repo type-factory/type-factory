@@ -31,7 +31,7 @@ class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
       "Mαϊμού", // Greek 'Monkey' with English 'M'
   })
   void should_throw_exception_with_non_greek_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Greek letters only.");
   }

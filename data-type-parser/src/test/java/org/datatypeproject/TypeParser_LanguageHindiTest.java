@@ -35,7 +35,7 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
       "कबू\uD805\uDE1Dर", // Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead 'त' (ta) from the Devanagari script
   })
   void should_throw_exception_with_non_hindi_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Hindi letters only.");
   }
