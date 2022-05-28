@@ -31,7 +31,7 @@ class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
       "Ζürafə", // Azeri 'Girrafe' with Greek 'Ζ' zita
   })
   void should_throw_exception_with_non_azeri_latin_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Azeri Latin letters only.");
   }

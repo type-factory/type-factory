@@ -32,7 +32,7 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
       "le léoρard", // French 'Leopard' with Greek 'ρ' rho
   })
   void should_throw_exception_with_non_french_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of French letters only.");
   }

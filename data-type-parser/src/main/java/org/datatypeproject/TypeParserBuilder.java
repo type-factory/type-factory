@@ -5,6 +5,7 @@ import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class TypeParserBuilder {
 
@@ -17,8 +18,13 @@ public class TypeParserBuilder {
   private int maxNumberOfCodePoints = 64;
   private boolean ignoreModifiersForMinMaxSize = false;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
+
+  private Pattern regex = null;
+
+  private Function<String, Boolean> validationFunction = null;
   private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
+
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
 
@@ -745,6 +751,16 @@ public class TypeParserBuilder {
     return this;
   }
 
+  public TypeParserBuilder matchesRegex(final Pattern regex) {
+    this.regex = regex;
+    return this;
+  }
+
+  public TypeParserBuilder withCustomValidation(final Function<String, Boolean> validationFunction) {
+    this.validationFunction = validationFunction;
+    return this;
+  }
+
   public TypeParserImpl build() {
     return new TypeParserImpl(
         targetClass, errorMessage, targetCase,
@@ -752,6 +768,8 @@ public class TypeParserBuilder {
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
+        regex,
+        validationFunction,
         rangedSubsetBuilder.build(),
         converterBuilder.build());
   }

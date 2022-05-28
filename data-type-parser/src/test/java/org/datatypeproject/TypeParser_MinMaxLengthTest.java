@@ -42,7 +42,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidTypeValueException.class)
+        .isInstanceOf(InvalidDataTypeValueException.class)
         .hasMessage("Some type must be 4 alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -64,7 +64,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidTypeValueException.class)
+        .isInstanceOf(InvalidDataTypeValueException.class)
         .hasMessage("Some type must be 4 alpha characters.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }

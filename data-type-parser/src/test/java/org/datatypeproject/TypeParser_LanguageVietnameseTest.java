@@ -31,7 +31,7 @@ class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
       "Con Κhỉ", // Vietnamese 'Monkey' with Greek 'Κ' kappa
   })
   void should_throw_exception_with_non_vietnamese_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessage("Must be made up of Vietnamese letters only.");
   }
