@@ -11,7 +11,7 @@ public final class IataAirportCode extends StringType {
       TypeParser.builder(IataAirportCode.class)
           .errorMessage("must be a 3-character IATA airport value")
           .acceptLettersAtoZ()
-          .fixedSizeNumberOfCodePoints(3)
+          .fixedSize(3)
           .toUpperCase()
           .convertNullToEmpty()
           .build();

@@ -18,7 +18,7 @@ public record CurrencyCode(String value) implements RecordType {
       TypeParser.builder(CurrencyCode.class)
           .errorMessage("must be a 3-character ISO 4217 currency code")
           .acceptLettersAtoZ()
-          .fixedSizeNumberOfCodePoints(3)
+          .fixedSize(3)
           .toUpperCase()
           .build();
 }

@@ -20,8 +20,8 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
-            .minSizeNumberOfCodePoints(4)
-            .maxSizeNumberOfCodePoints(44)
+            .minSize(4)
+            .maxSize(44)
             .toUpperCase()
             .convertChar('7', '1')
             .convertChar('I', '1')

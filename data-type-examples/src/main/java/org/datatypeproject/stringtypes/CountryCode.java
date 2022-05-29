@@ -11,7 +11,7 @@ public final class CountryCode extends StringType {
       TypeParser.builder(CountryCode.class)
           .errorMessage("must be a 2-character ISO 3166-1 country value")
           .acceptLettersAtoZ()
-          .fixedSizeNumberOfCodePoints(2)
+          .fixedSize(2)
           .toUpperCase()
           .preserveNullAndEmpty()
           .build();

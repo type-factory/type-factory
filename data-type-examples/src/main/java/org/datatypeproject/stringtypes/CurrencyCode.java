@@ -12,7 +12,7 @@ public final class CurrencyCode extends StringType {
           .errorMessage("must be a 3-character ISO 4217 currency code")
           .acceptCharRange('a', 'z')
           .acceptCharRange('A', 'Z')
-          .fixedSizeNumberOfCodePoints(3)
+          .fixedSize(3)
           .removeAllWhitespace()
           .preserveNullAndEmpty()
           .toUpperCase()
