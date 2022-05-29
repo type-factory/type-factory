@@ -18,7 +18,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
-            .fixedSizeNumberOfCodePoints(4)
+            .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
@@ -36,7 +36,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
             .errorMessage("Some type must be 4 alpha characters.")
-            .fixedSizeNumberOfCodePoints(4)
+            .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();
@@ -58,7 +58,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder(SomeType.class)
             .errorMessage("Some type must be 4 alpha characters.")
-            .fixedSizeNumberOfCodePoints(4)
+            .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .build();

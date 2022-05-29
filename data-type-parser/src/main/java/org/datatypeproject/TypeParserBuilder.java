@@ -37,19 +37,86 @@ public class TypeParserBuilder {
     return this;
   }
 
-  public TypeParserBuilder minSizeNumberOfCodePoints(final int min) {
-    minNumberOfCodePoints = Math.max(min, 0);
+  /**
+   * <p>The minimum number of Unicode characters (code-points) that the parsed value must contain. </p>
+   *
+   * <p><b>Note</b>, the {@code minSize} refers to the minimum number of actual Unicode characters (code-points). For Unicode characters in the
+   * range:</p>
+   * <ul>
+   *   <li>{@code U+0000..U+FFFF} — each Unicode code-point will fit into a single Java {@code char}. This range includes almost all
+   *   modern day languages.</li>
+   *   <li>{@code U+010000..U+10FFFF} – each Unicode code-point will require two Java {@code char}s. This includes many archaic languages,
+   *   symbols and emoticons.</li>
+   * </ul>
+   *
+   * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+   * blocks in the U+010000..U+10FFFF codepoint range.</p>
+   *
+   * @param minSize the minimum number of Unicode characters (code-points) that the parsed value must contain.
+   * @return this builder.
+   * @see <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a>
+   */
+  public TypeParserBuilder minSize(final int minSize) {
+    minNumberOfCodePoints = Math.max(minSize, 0);
     return this;
   }
 
-  public TypeParserBuilder maxSizeNumberOfCodePoints(final int max) {
-    maxNumberOfCodePoints = max;
+  /**
+   * <p>The maximum number of Unicode characters (code-points) that the parsed value must contain. </p>
+   *
+   * <p><b>Note</b>, the {@code maxSize} refers to the maximum number of actual Unicode characters (code-points). For Unicode characters in the
+   * range:</p>
+   * <ul>
+   *   <li>{@code U+0000..U+FFFF} — each Unicode code-point will fit into a single Java {@code char}. This range includes almost all modern
+   *   day languages.</li>
+   *   <li>{@code U+010000..U+10FFFF} – each Unicode code-point will require two Java {@code char}s. This includes many archaic languages,
+   *   symbols and emoticons.</li>
+   * </ul>
+   *
+   * <p>So be aware that if you create a data-type with {@code maxSize} of, say, 10 and allow for Unicode characters (like emoticons) in
+   * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
+   *
+   * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+   * blocks in the U+010000..U+10FFFF codepoint range.</p>
+   *
+   * @param maxSize the maximum number of Unicode characters (code-points) that the parsed value must contain.
+   * @return this builder.
+   * @see <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a>
+   */
+  public TypeParserBuilder maxSize(final int maxSize) {
+    maxNumberOfCodePoints = maxSize;
     return this;
   }
 
-  public TypeParserBuilder fixedSizeNumberOfCodePoints(final int size) {
-    minSizeNumberOfCodePoints(size);
-    maxSizeNumberOfCodePoints(size);
+  /**
+   * <p>The fixed number of Unicode characters (code-points) that the parsed value must contain.</p>
+   *
+   * <p>This is a convenience method that simply calls both the {@link #minSize(int)} and {@link #maxSize(int)} methods
+   * passing the {@code size} argument to both.</p>
+   *
+   * <p><b>Note</b>, the {@code maxSize} refers to the maximum number of actual Unicode characters (code-points). For Unicode characters in the
+   * range:</p>
+   * <ul>
+   *   <li>{@code U+0000..U+FFFF} — each Unicode code-point will fit into a single Java {@code char}. This range includes almost all modern
+   *   day languages.</li>
+   *   <li>{@code U+010000..U+10FFFF} – each Unicode code-point will require two Java {@code char}s. This includes many archaic languages,
+   *   symbols and emoticons.</li>
+   * </ul>
+   *
+   * <p>So be aware that if you create a data-type with fixed {@code size} of, say, 10 and allow for Unicode characters (like emoticons) in
+   * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
+   *
+   * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+   * blocks in the U+010000..U+10FFFF codepoint range.</p>
+   *
+   *
+   * @param size the fixed number of Unicode characters (code-points) that the parsed value must contain.
+   * @return this builder.
+   * @see <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a>
+   */
+  public TypeParserBuilder fixedSize(final int size) {
+    minSize(size);
+    maxSize(size);
     return this;
   }
 
@@ -751,12 +818,79 @@ public class TypeParserBuilder {
     return this;
   }
 
+  /**
+   * <p>The type parser will ensure that the fully parsed value matches the provided {@code regex} pattern.</p>
+   *
+   * <p><b>Example usage:</b></p>
+   * Imagine some data-type that is required to start with two alpha characters and is followed by 8 numeric digits. We could declare a regular
+   * expression shown at ① and then configure the type parser to use the regular expression at ②:
+   * <pre>
+   *   private static final Pattern VALID_DATA_TYPE_PATTERN = Pattern.compile("[A-Z]{2}[0-9]{8}"); ①
+   *
+   *   private static final TypeParser TYPE_PARSER =
+   *     TypeParser.builder(ExampleDataType.class)
+   *       .errorMessage("must be a valid 10 character example code")
+   *       .acceptLettersAtoZ()
+   *       .acceptDigits0to9()
+   *       .fixedSize(10)
+   *       .removeAllWhitespace()
+   *       .toUpperCase()
+   *       .matchesRegex(VALID_DATA_TYPE_PATTERN) ②
+   *       .build();
+   * </pre>
+   *
+   * @param regex the regular expression that the fully parsed value should conform to.
+   * @return this {@code TypeParserBuilder}
+   * @see Pattern
+   */
   public TypeParserBuilder matchesRegex(final Pattern regex) {
     this.regex = regex;
     return this;
   }
 
-  public TypeParserBuilder withCustomValidation(final Function<String, Boolean> validationFunction) {
+  /**
+   * <p>The type parser will ensure that the fully parsed value passed the provided custom {@code validationFunction}.</p>
+   *
+   * <p>The custom validation function that you provide should:</p>
+   * <ul>
+   *   <li>return {@code true} if the fully parsed string value provided to it is <em>valid</em>.</li>
+   *   <li>return {@code false} or throw an exception if the fully parsed string value provided to it is <em>invalid</em>.</li>
+   * </ul>
+   *
+   * <p>Example usage:</p>
+   * <pre>
+   *   private static final TypeParser TYPE_PARSER =
+   *     TypeParser.builder(ExampleDataType.class)
+   *       .errorMessage("must be a valid 6..8 character example code")
+   *       .acceptLettersAtoZ()
+   *       .acceptDigits0to9()
+   *       .minSize(6)
+   *       .maxSize(8)
+   *       .removeAllWhitespace()
+   *       .toUpperCase()
+   *       .customValidator(ExampleDataType::isValidExampleCode)  ①
+   *       .build();
+   * </pre>
+   * where the custom validation function ① is defined as:
+   * <pre>
+   *   private static boolean isValidExampleCode(final String value) {
+   *     boolean isValid = false;
+   *     // ... your validation code
+   *     if (isValid) {
+   *       return Boolean.TRUE;
+   *     }
+   *     return Boolean.FALSE;
+   *   }
+   * </pre>
+   * <p>where:</p>
+   *
+   * @param validationFunction a static function, or a functional interface, that accepts the fully parsed value as a {@link String} argument and
+   *                           returns a boolean value indicating {@code true} if the provided value is <em>valid</em>. It can either return
+   *                           {@code false} or throw an exception to indicate that the provided value is <em>invalid</em>.
+   * @return this {@code TypeParserBuilder}
+   * @see Function
+   */
+  public TypeParserBuilder customValidator(final Function<String, Boolean> validationFunction) {
     this.validationFunction = validationFunction;
     return this;
   }

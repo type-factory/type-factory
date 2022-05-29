@@ -10,7 +10,7 @@ public final class ProductId extends LongType {
           .errorMessage("must be a 16-digit number")
           .removeAllWhitespace()
           .acceptDigits0to9()
-          .fixedSizeNumberOfCodePoints(16)
+          .fixedSize(16)
           .build();
 
   private ProductId(final Long value) {
