@@ -19,7 +19,7 @@ public record CountryCode(String value) implements RecordType {
           .errorMessage("must be a 2-character ISO 3166-1 country code")
           .convertNullToEmpty()
           .acceptLettersAtoZ()
-          .fixedSizeNumberOfCodePoints(2)
+          .fixedSize(2)
           .toUpperCase()
           .build();
 }
