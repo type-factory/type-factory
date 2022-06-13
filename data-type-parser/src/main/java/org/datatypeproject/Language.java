@@ -659,6 +659,81 @@ public interface Language extends Subset {
           0x0935_0939, //  व श ष स ह
           0x093c_094d, //  ़ ऽ ा ि ी ु ू ृ ॄ ॅ ॆ े ै ॉ ॊ ो ौ ्
       });
+
+  /**
+   * <p>The primary aim of this language alphabet is to assist in the creation of
+   *    software data-types.<p>
+   *
+   * Nepali is written using a subset of the Devanagari script which is a left-to-right
+   * syllabic writing system made by combining consonants with vowels. For example,
+   * combining "क" /k/ and "ि" /i/ to make the "कि" /ki/ syllable.
+   *
+   * <b>Included in this alphabet</b>
+   * 
+   * <p>This language code-point subset should capture the official
+   *    standard alphabet or ideographs for words or names as would be accepted by
+   *    institutions and organizations that are required to adhere to statutory
+   *    regulations.</p>
+   *
+   * <pre>
+   *    0901..0903   ँ ं ः
+   *    0905..090B   अ आ इ ई उ ऊ ऋ
+   *    090F..0910   ए ऐ
+   *    0913..0928   ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न
+   *    092A..0930   प फ ब भ म य र
+   *    0932         ल
+   *    0935..0939   व श ष स ह
+   *    093E..094D   ा ि ी ु ू ृ ॄ ॅ ॆ े ै ॉ ॊ ो ौ ्
+   *    0960         ॠ
+   * </pre>
+   *
+   * <b>Not included in this alphabet</b>
+   * 
+   * <p>Letters, diacritics or modifiers that are not part of the official language are
+   *    not contained in this alphabet. Even if they appear occasionally in loan-words
+   *    or foreign names.</p>
+   * 
+   * <p>Punctuation characters are also not part of this alphabet – they are considered
+   *    to be a structural component to forming sentences in a language.</p>
+   *
+   * <b>Do you see a mistake?</b>
+   * 
+   * <p>If you believe there are errors in this alphabet please reach out
+   *    to us and provide sources / references that support what you think should
+   *    be added to, or removed from, the alphabet.</p>
+   *
+   * @see <a href="https://en.wikipedia.org/wiki/Nepalese_scripts" target="_blank">Nepalese Scripts
+   *      – Wikipedia</a> provided information about the Nepalese scripts.
+   * 
+   * @see <a href="https://en.wikipedia.org/wiki/Devanagari" target="_blank">Devanagari
+   *      – Wikipedia</a> provided information about the Devanagari script and what
+   *      dependant vowel sounds and diacritic signs are used.
+   * 
+   * @see <a href="https://nepalilanguage.org/alphabet/" target="_blank">Nepali
+   *      Alphabet – Nepali Language Resource Center</a> provided information about the Nepalese alphabet and what
+   *      dependant vowel sounds and diacritic signs are used.
+   * 
+   * @see <a href="https://www.easynepalityping.com/nepali-alphabet" target="_blank">Nepali
+   *      Alphabet – Easy Nepali Typing</a> provided information about the Nepalese alphabet and what
+   *      dependant vowel sounds and diacritic signs are used.
+   * 
+   * @see <a href="https://unicode.org/charts/PDF/U0900.pdf" target="_blank">Devanagari
+   *      Unicode Chart – Unicode Standard v14</a> provided information about
+   *      the Unicode encodings for characters in the Devanagari script.
+   */
+  Language NEPALI_ne = new LanguageImpl(
+      new Locale("ne", "", ""),
+      new int[]{
+          0x0901_0903, //  ँ ं ः
+          0x0905_090b, //  अ आ इ ई उ ऊ ऋ
+          0x090f_0910, //  ए ऐ
+          0x0913_0928, //  ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न
+          0x092a_0930, //  प फ ब भ म य र
+          0x0932_0932, //  ल
+          0x0935_0939, //  व श ष स ह
+          0x093e_094d, //  ा ि ी ु ू ृ ॄ ॅ ॆ े ै ॉ ॊ ो ौ ्
+          0x0960_0960, //  ॠ
+      });
   Language ARMENIAN_hy = new LanguageImpl(
       new Locale("hy", "", ""),
       new int[]{

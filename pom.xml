@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +15,11 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <junit-jupiter.version>5.7.2</junit-jupiter.version>
+    <assertj-core.version>3.23.1</assertj-core.version>
+    <icu4j.version>70.1</icu4j.version>
+
 
     <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
 
@@ -68,31 +72,31 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.7.2</version>
+        <version>${junit-jupiter.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
-        <version>3.21.0</version>
+        <version>${assertj-core.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.ibm.icu</groupId>
         <artifactId>icu4j</artifactId>
-        <version>70.1</version>
+        <version>${icu4j.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.ibm.icu</groupId>
         <artifactId>icu4j-charset</artifactId>
-        <version>70.1</version>
+        <version>${icu4j.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.ibm.icu</groupId>
         <artifactId>icu4j-localespi</artifactId>
-        <version>70.1</version>
+        <version>${icu4j.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -102,7 +106,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -126,15 +130,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.0</version>
         <configuration>
           <nohelp>true</nohelp>
           <doclint>none</doclint>
-          <detectLinks>true</detectLinks>
+          <detectLinks>false</detectLinks>
+          <detectJavaApiLink>true</detectJavaApiLink>
           <failOnWarnings>false</failOnWarnings>
           <failOnError>false</failOnError>
           <docfilessubdirs>true</docfilessubdirs>
-          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
         </configuration>
         <executions>
           <execution>
@@ -181,7 +185,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
+        <version>3.0.0-M6</version>
         <configuration>
           <forkCount>1C</forkCount>
           <reuseForks>true</reuseForks>
@@ -196,6 +200,38 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.2.7</version>
+        <configuration></configuration>
+        <executions>
+          <!-- enable flattening -->
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <!-- ensure proper cleanup -->
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
