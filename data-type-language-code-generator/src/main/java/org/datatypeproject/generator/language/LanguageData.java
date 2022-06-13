@@ -207,6 +207,52 @@ public enum LanguageData {
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Devanagari script."""),
 
+  LETTERS_NEPALI_NE(locale("ne"),
+      new char[]{
+          // Independent Vowels
+          'अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ए', 'ऐ', 'ओ', 'औ', 'अ', 'अ', 'ऋ', 'ॠ',
+          // Dependent Vowels
+          'ा', 'ि', 'ी', 'ु', 'ू', 'ृ', 'ॄ', 'ॅ', 'ॆ', 'े', 'ै', 'ॉ', 'ॊ', 'ो', 'ौ',
+          // Nepali Consonants
+          'क', 'ख', 'ग', 'घ', 'ङ', 'च', 'छ', 'ज', 'झ', 'ञ', 'ट', 'ठ', 'ड', 'ढ', 'ण',
+          'त', 'थ', 'द', 'ध', 'न', 'प', 'फ', 'ब', 'भ', 'म', 'य', 'र', 'ल',
+          'व', 'श', 'ष', 'स', 'ह',
+          // Hal
+          '्',
+          // Chandrabindu and Shirbindu
+          'ँ', 'ं',
+          // Bisarga
+          'ः'
+      },
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      """
+          Nepali is written using a subset of the Devanagari script which is a left-to-right
+          syllabic writing system made by combining consonants with vowels. For example,
+          combining "क" /k/ and "ि" /i/ to make the "कि" /ki/ syllable.""",
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Nepalese_scripts" target="_blank">Nepalese Scripts
+               – Wikipedia</a> provided information about the Nepalese scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Devanagari" target="_blank">Devanagari
+               – Wikipedia</a> provided information about the Devanagari script and what
+               dependant vowel sounds and diacritic signs are used.
+                    
+          @see <a href="https://nepalilanguage.org/alphabet/" target="_blank">Nepali
+               Alphabet – Nepali Language Resource Center</a> provided information about the Nepalese alphabet and what
+               dependant vowel sounds and diacritic signs are used.
+               
+          @see <a href="https://www.easynepalityping.com/nepali-alphabet" target="_blank">Nepali
+               Alphabet – Easy Nepali Typing</a> provided information about the Nepalese alphabet and what
+               dependant vowel sounds and diacritic signs are used.
+               
+          @see <a href="https://unicode.org/charts/PDF/U0900.pdf" target="_blank">Devanagari
+               Unicode Chart – Unicode Standard v14</a> provided information about
+               the Unicode encodings for characters in the Devanagari script."""),
+
+
   LETTERS_ARMENIAN_HY(locale("hy"),
       new char[]{
           'Ա', 'Բ', 'Գ', 'Դ', 'Ե', 'Զ', 'Է', 'Ը', 'Թ', 'Ժ', 'Ի', 'Լ', 'Խ', 'Ծ', 'Կ',
