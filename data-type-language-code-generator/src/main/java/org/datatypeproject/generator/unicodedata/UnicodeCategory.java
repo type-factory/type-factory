@@ -1,4 +1,4 @@
-package org.datatypeproject.generator;
+package org.datatypeproject.generator.unicodedata;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -95,10 +95,11 @@ public enum UnicodeCategory {
    */
   DASH_PUNCTUATION(Character.DASH_PUNCTUATION, "Pd", "Dash_Punctuation", "a dash or hyphen punctuation mark"),
 
-//  /** Ps – an opening punctuation mark (of a pair) */
-//  OPEN_PUNCTUATION("Ps", "Open_Punctuation",  "an opening punctuation mark (of a pair)"),
-//  /** Pe – a closing punctuation mark (of a pair) */
-//  CLOSE_PUNCTUATION("Pe", "Close_Punctuation",  "a closing punctuation mark (of a pair)"),
+  /** Ps – an opening punctuation mark (of a pair) */
+  OPEN_PUNCTUATION(Character.START_PUNCTUATION, "Ps", "Open_Punctuation",  "an opening punctuation mark (of a pair)"),
+
+  /** Pe – a closing punctuation mark (of a pair) */
+  CLOSE_PUNCTUATION(Character.END_PUNCTUATION, "Pe", "Close_Punctuation",  "a closing punctuation mark (of a pair)"),
 
   /**
    * Pi – an initial quotation mark

@@ -32,6 +32,11 @@ public class UnicodeGroupDataLoader {
   private final TreeMap<UnicodeCategory, RangedSubset> categoryRangedSubsets;
   private final RangedSubset whitespaceRangedSubset;
 
+  private final RangedSubset jSourceSubset;
+  private final RangedSubset kSourceSubset;
+  private final RangedSubset gSourceSubset;
+  private final RangedSubset tSourceSubset;
+
   public UnicodeGroupDataLoader(final String unicodeAllGroupedXmlFileName) {
     this.unicodeAllGroupedXmlFileName = unicodeAllGroupedXmlFileName;
     this.ucd = loadUnicodeContentFromXml(unicodeAllGroupedXmlFileName);
@@ -42,19 +47,21 @@ public class UnicodeGroupDataLoader {
     final MapOfRangedSubsetBuilders<String> scriptRangedSubsetBuilders = new MapOfRangedSubsetBuilders<>();
     final MapOfRangedSubsetBuilders<UnicodeCategory> categoryRangedSubsetBuilders = new MapOfRangedSubsetBuilders<>();
     final RangedSubsetBuilder whitespaceRangedSubsetBuilder = RangedSubset.builder();
+    final RangedSubsetBuilder jSourceSubsetBuilder = RangedSubset.builder();
+    final RangedSubsetBuilder kSourceSubsetBuilder = RangedSubset.builder();
+    final RangedSubsetBuilder gSourceSubsetBuilder = RangedSubset.builder();
+    final RangedSubsetBuilder tSourceSubsetBuilder = RangedSubset.builder();
     for (UnicodeCodePoint c : getUnicodeCodePoints()) {
       if (c.getCodePoint() != null) {
         tempBlocksByTheirAbbreviation.add(c, blocks);
         blockRangedSubsetBuilders.putUnicodeCodePoint(c.getBlock(), c);
         scriptRangedSubsetBuilders.putUnicodeCodePoint(c.getScript(), c);
         categoryRangedSubsetBuilders.putUnicodeCodePoint(UnicodeCategory.of(c.getGeneralCategory()), c);
-        if (c.isWhitespace()) {
-          if (c.hasCodePoint()) {
-            whitespaceRangedSubsetBuilder.addCodePoint(c.getCodePoint());
-          } else if (c.hasCodePointRange()) {
-            whitespaceRangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
-          }
-        }
+        handleWhitespace(whitespaceRangedSubsetBuilder, c);
+        handleJSource(jSourceSubsetBuilder, c);
+        handleKSource(kSourceSubsetBuilder, c);
+        handleGSource(gSourceSubsetBuilder, c);
+        handleTSource(tSourceSubsetBuilder, c);
       }
     }
     this.blocksByTheirAbbreviation = tempBlocksByTheirAbbreviation.entrySet().stream()
@@ -66,6 +73,60 @@ public class UnicodeGroupDataLoader {
     this.categoryRangedSubsets = categoryRangedSubsetBuilders.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().build(), (a, b) -> a, TreeMap::new));
     this.whitespaceRangedSubset = whitespaceRangedSubsetBuilder.build();
+    this.jSourceSubset = jSourceSubsetBuilder.build();
+    this.kSourceSubset = kSourceSubsetBuilder.build();
+    this.gSourceSubset = gSourceSubsetBuilder.build();
+    this.tSourceSubset = tSourceSubsetBuilder.build();
+  }
+
+  private void handleJSource(RangedSubsetBuilder rangedSubsetBuilder, UnicodeCodePoint c) {
+    if (c.hasJSource()) {
+      if (c.hasCodePoint()) {
+        rangedSubsetBuilder.addCodePoint(c.getCodePoint());
+      } else if (c.hasCodePointRange()) {
+        rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+      }
+    }
+  }
+
+  private void handleKSource(RangedSubsetBuilder rangedSubsetBuilder, UnicodeCodePoint c) {
+    if (c.hasKSource()) {
+      if (c.hasCodePoint()) {
+        rangedSubsetBuilder.addCodePoint(c.getCodePoint());
+      } else if (c.hasCodePointRange()) {
+        rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+      }
+    }
+  }
+
+  private void handleGSource(RangedSubsetBuilder rangedSubsetBuilder, UnicodeCodePoint c) {
+    if (c.hasGSource()) {
+      if (c.hasCodePoint()) {
+        rangedSubsetBuilder.addCodePoint(c.getCodePoint());
+      } else if (c.hasCodePointRange()) {
+        rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+      }
+    }
+  }
+
+  private void handleTSource(RangedSubsetBuilder rangedSubsetBuilder, UnicodeCodePoint c) {
+    if (c.hasGSource()) {
+      if (c.hasCodePoint()) {
+        rangedSubsetBuilder.addCodePoint(c.getCodePoint());
+      } else if (c.hasCodePointRange()) {
+        rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+      }
+    }
+  }
+
+  private void handleWhitespace(RangedSubsetBuilder rangedSubsetBuilder, UnicodeCodePoint c) {
+    if (c.isWhitespace()) {
+      if (c.hasCodePoint()) {
+        rangedSubsetBuilder.addCodePoint(c.getCodePoint());
+      } else if (c.hasCodePointRange()) {
+        rangedSubsetBuilder.addCodePointRange(c.getFirstCodePoint(), c.getLastCodePoint());
+      }
+    }
   }
 
   public SortedMap<String, Block> getBlocksByTheirAbbreviation() {

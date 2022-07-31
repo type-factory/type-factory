@@ -5,6 +5,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.datatypeproject.generator.language.JavadocFragments.LANGUAGE_ALPHABET_INCLUDED_JAVADOC;
 import static org.datatypeproject.generator.language.LanguageData.LETTERS_JAPANESE_JA_HANI;
+import static org.datatypeproject.generator.language.LanguageData.LETTERS_JAPANESE_JA_JSOURCE;
 
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
@@ -14,16 +15,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.datatypeproject.generator.unicodedata.UnicodeGroupData;
 
-public class Main {
+public class LanguageClassGenerator {
 
-  private static final Logger logger = Logger.getLogger(Main.class.getName());
+  private static final Logger logger = Logger.getLogger(LanguageClassGenerator.class.getName());
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
-  public static void main(String... args) {
+  private final File outputDirectory;
+  private final UnicodeGroupData unicodeGroupData;
 
-    final String outputDirectory = args[0];
+  public LanguageClassGenerator(final File outputDirectory, final UnicodeGroupData unicodeGroupData) {
+    this.outputDirectory = outputDirectory;
+    this.unicodeGroupData = unicodeGroupData;
+  }
+
+  public void generateLanguageClass() {
 
     final StringBuilder s = new StringBuilder();
 
@@ -35,7 +43,7 @@ public class Main {
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
-            value = "org.datatypeproject:data-type-language-code-generator")       
+            value = "org.datatypeproject:data-type-language-code-generator")     
         public interface Language extends Subset {""");
 
     for (LanguageData languageData : LanguageData.values()) {
@@ -51,7 +59,7 @@ public class Main {
       s.append(LINE_SEPARATOR);
       appendJavadoc(s, languageData, enumName);
       if ("Hani".equalsIgnoreCase(localeScript)) {
-        createAlphabetCharactersHtml(languageData, outputDirectory);
+        createAlphabetCharactersHtml(languageData);
       }
 
       s.append(String.format("  Language %s = new LanguageImpl(", enumName));
@@ -63,9 +71,13 @@ public class Main {
             localeLanguage, localeCountry, localeVariant, localeScript));
       }
 
-      appendCodepointArrayRanges(s, languageData, 0x00, 0xFF, "char", "0x%02x_%02x");
-      appendCodepointArrayRanges(s, languageData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
-      appendCodepointArrayRanges(s, languageData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
+      final UnicodeSet unicodeSet = LETTERS_JAPANESE_JA_JSOURCE == languageData
+          ? createJapaneseJSourceSet()
+          : languageData.getUnicodeSet();
+
+      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x00, 0xFF, "char", "0x%02x_%02x");
+      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
+      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
       s.setLength(s.length() - 1);
       s.append(");");
     }
@@ -83,15 +95,14 @@ public class Main {
     }
   }
 
-  private static void appendCodepointArrayRanges(
+  private void appendCodepointArrayRanges(
       final StringBuilder s,
+      final UnicodeSet unicodeSet,
       final LanguageData languageData,
       final int rangeStart,
       final int rangeEnd,
       final String rangeArrayType,
       final String rangeFormat) {
-
-    final UnicodeSet unicodeSet = languageData.getUnicodeSet();
 
     final String indentedRangeFormat = "          " + rangeFormat + ", // ";
     if (unicodeSet == null || unicodeSet.isEmpty()) {
@@ -200,9 +211,20 @@ public class Main {
     }
   }
 
-  private static void createAlphabetCharactersHtml(
-      final LanguageData languageData,
-      final String outputDirectory) {
+  private UnicodeSet createJapaneseJSourceSet() {
+    final UnicodeSet result = new UnicodeSet();
+    for (EntryRange range : unicodeGroupData.getJSourceSubset().ranges()) {
+      for (int codePoint = range.codepoint; codePoint <= range.codepointEnd; ++codePoint) {
+        if (Character.isAlphabetic(codePoint)) {
+          result.add(codePoint);
+        }
+      }
+    }
+    return result.compact().freeze();
+  }
+
+  private void createAlphabetCharactersHtml(
+      final LanguageData languageData) {
 
     final UnicodeSet unicodeSet = languageData.getUnicodeSet();
 

@@ -11,6 +11,30 @@ import static org.datatypeproject.generator.language.JavadocFragments.SEE_ALSO_C
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
+// For Japanese information on Kun'yomi (native reading) and On'yomi (Sino-Japanese reading) reading of
+// Kanji see:
+// - https://en.wikipedia.org/wiki/Kanji
+// – https://www.thoughtco.com/learning-japanese-4070947
+// - https://speechling.com/blog/the-best-way-to-learn-japanese-onyomi-and-kunyomi/
+//
+// CJK Han Unification
+// - https://en.wikipedia.org/wiki/Han_unification
+// - https://unicode.org/charts/PDF/U4E00.pdf CJK tables
+//
+// How to read the CJK attributes in the above link
+// - https://www.unicode.org/reports/tr38/tr38-31.html
+// - https://www.unicode.org/reports/tr38/tr38-31.html#N10106
+// -  IRG source fields:
+//    - kIRG_GSource (China and Singapore),
+//    - kIRG_HSource (Hong Kong SAR),
+//    - kIRG_JSource (Japan),
+//    - kIRG_KPSource (North Korea),
+//    - kIRG_KSource (South Korea),
+//    - kIRG_MSource (Macao SAR),
+//    - kIRG_VSource (Vietnam)
+//
+
+
 public enum LanguageData {
 
   LETTERS_ARABIC_AR(locale("ar"),
@@ -375,28 +399,62 @@ public enum LanguageData {
           @see <a href="doc-files/JAPANESE_ja_Hani.html" target="_blank">JAPANESE_ja_Hani</a>
                for code points in this language set."""),
 
-  // For Japanese information on Kun'yomi (native reading) and On'yomi (Sino-Japanese reading) reading of
-  // Kanji see:
-  // - https://en.wikipedia.org/wiki/Kanji
-  // – https://www.thoughtco.com/learning-japanese-4070947
-  // - https://speechling.com/blog/the-best-way-to-learn-japanese-onyomi-and-kunyomi/
-  //
-  // CJK Han Unification
-  // - https://en.wikipedia.org/wiki/Han_unification
-  // - https://unicode.org/charts/PDF/U4E00.pdf CJK tables
-  //
-  // How to read the CJK attributes in the above link
-  // - https://www.unicode.org/reports/tr38/tr38-31.html
-  // - https://www.unicode.org/reports/tr38/tr38-31.html#N10106
-  // -  IRG source fields:
-  //    - kIRG_GSource (China and Singapore),
-  //    - kIRG_HSource (Hong Kong SAR),
-  //    - kIRG_JSource (Japan),
-  //    - kIRG_KPSource (North Korea),
-  //    - kIRG_KSource (South Korea),
-  //    - kIRG_MSource (Macao SAR),
-  //    - kIRG_VSource (Vietnam)
-  //
+  LETTERS_JAPANESE_JA_JSOURCE(locale("ja", "", "JSource", "Hani"),
+      LANGUAGE_ALPHABET_AIM_JAVADOC,
+      LANGUAGE_ALPHABET_INCLUDED_JAVADOC,
+      """
+          <p>The Japanese characters that are this subset appear in one of the following
+          Japanese national standards or lists. They have been identified
+          by the Ideographic Research Group (IRG) and are designated
+          in the Unicode Group Data via the
+          <a href='http://www.unicode.org/reports/tr38/tr38-30.html#kIRG_JSource'><tt>kIRG_JSource</tt> property</a>.</p>
+                    
+          <ul>      
+            <li>J0 JIS X 0208-1990</li>
+            <li>J1 JIS X 0212-1990</li>
+            <li>J4 JIS X 0213:2004 level-4</li>
+            <li>J3 JIS X 0213:2004 level-3</li>
+            <li>J3A JIS X 0213:2004 level-3 addendum from JIS X 0213:2000 level-3</li>
+            <li>J13 JIS X 0213:2004 level-3 characters replacing J1 characters</li>
+            <li>J13A JIS X 0213:2004 level-3 character addendum from JIS X 0213:2000 level-3 replacing J1 characters</li>
+            <li>J14 JIS X 0213:2004 level-4 characters replacing J1 characters</li>
+            <li>JA Unified Japanese IT Vendors Contemporary Ideographs, 1993</li>
+            <li>JA3 JIS X 0213:2004 level-3 characters replacing JA characters</li>
+            <li>JA4 JIS X 0213:2004 level-4 characters replacing JA characters</li>
+            <li>JARIB Association of Radio Industries and Businesses (ARIB) ARIB STD-B24 Version 5.1, March 14 2007</li>
+            <li>JH Hanyo-Denshi Program (汎用電子情報交換環境整備プログラム), 2002-2009</li>
+            <li>JK Japanese KOKUJI Collection</li>
+            <li>JMJ Moji Joho Kiban Project (文字情報基盤整備事業)</li>
+          </ul>""",
+      LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
+      LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
+      """
+          @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
+               – Wikipedia</a> provided information about the Kanji script and its relationship to
+               the Chinese family of scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Han_unification" target="_blank">Han
+               Unification – Wikipedia</a> provided information about the unified Unicode
+               Hanzi, Kanji, Hanja scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/Chinese_family_of_scripts" target="_blank">Chinese
+               family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
+                    
+          @see <a href="https://en.wikipedia.org/wiki/List_of_CJK_fonts" target="_blank">List of CJK
+               fonts – Wikipedia</a> provided information about some of the notable set of fonts for
+               rendering CJK fonts.
+
+          @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
+               FAQs – Unicode Org</a> provided information about
+               the Unicode Unified CJK encodings.
+               
+          @see <a href="http://www.unicode.org/reports/tr38/tr38-30.html" target="_blank">Unicode
+            Han Database (UNIHAN), Proposed Update Unicode® Standard Annex #38</a>
+               for information on Ideographic Research Group (IRG), and in particular the
+               <tt>kIRG_JSource</tt> property.
+               
+          @see <a href="doc-files/JAPANESE_ja_Hani.html" target="_blank">JAPANESE_ja_Hani</a>
+               for code points in this language set."""),
 
   LETTERS_NORWEGIAN_BOKMAL_NB(
       locale("nb"),
@@ -543,6 +601,10 @@ public enum LanguageData {
   private final ULocale locale;
   private final UnicodeSet unicodeSet;
   private final String[] javadoc;
+
+  LanguageData(final ULocale locale, String... javadoc) {
+    this(locale, (char[])null, (CodePointRange[])null, javadoc);
+  }
 
   LanguageData(final ULocale locale, final char[] chars, String... javadoc) {
     this(locale, chars, null, javadoc);

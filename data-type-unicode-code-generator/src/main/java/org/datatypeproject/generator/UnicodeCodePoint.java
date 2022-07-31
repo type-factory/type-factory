@@ -90,5 +90,20 @@ public class UnicodeCodePoint {
     return Boolean.Y == codePoint.getWhitespace() || Boolean.Y == group.getWhitespace();
   }
 
+  public boolean hasJSource() {
+    return codePoint.getKIRGJSource() != null && !codePoint.getKIRGJSource().isBlank();
+  }
+
+  public boolean hasKSource() {
+    return codePoint.getKIRGKSource() != null && !codePoint.getKIRGKSource().isBlank();
+  }
+
+  public boolean hasGSource() {
+    return codePoint.getKIRGGSource() != null && !codePoint.getKIRGGSource().isBlank();
+  }
+
+  public boolean hasTSource() {
+    return codePoint.getKIRGTSource() != null && !codePoint.getKIRGTSource().isBlank();
+  }
 
 }
