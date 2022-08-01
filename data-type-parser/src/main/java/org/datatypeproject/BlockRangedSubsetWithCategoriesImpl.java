@@ -1,30 +1,28 @@
 package org.datatypeproject;
 
-class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl {
+class BlockRangedSubsetWithCategoriesImpl extends BlockRangedSubsetImpl {
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
   private long unicodeCategoryBitFlags;
 
-  RangedSubsetWithCategoriesImpl(
+  BlockRangedSubsetWithCategoriesImpl(
       final long includeUnicodeCategoryBitFlags,
-      final char[] singleByteCodePointRanges,
-      final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges) {
+      final int[] blocks,
+      final char[][] singleByteCodePointRangeByBlock) {
     this("", "",
         includeUnicodeCategoryBitFlags,
-        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+        blocks, singleByteCodePointRangeByBlock);
   }
 
-  RangedSubsetWithCategoriesImpl(
+  BlockRangedSubsetWithCategoriesImpl(
       final String name,
       final String alias,
       final long unicodeCategoryBitFlags,
-      final char[] singleByteCodePointRanges,
-      final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges) {
-    super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+      final int[] blocks,
+      final char[][] singleByteCodePointRangeByBlock) {
+    super(name, alias, blocks, singleByteCodePointRangeByBlock);
     this.unicodeCategoryBitFlags = unicodeCategoryBitFlags;
   }
 

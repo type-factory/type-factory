@@ -509,7 +509,7 @@ public class TypeParserBuilder {
   }
 
   public TypeParserBuilder acceptLanguages(final Language... languages) {
-    rangedSubsetBuilder.includeSubset(languages);
+    rangedSubsetBuilder.includeSubsets(languages);
     return this;
   }
 

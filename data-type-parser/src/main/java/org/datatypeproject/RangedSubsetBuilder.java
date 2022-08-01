@@ -27,10 +27,13 @@ interface RangedSubsetBuilder extends SubsetBuilder {
   RangedSubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
   @Override
-  RangedSubsetBuilder includeSubset(final Subset... subset);
+  RangedSubsetBuilder includeSubset(final Subset subset);
 
   @Override
-  RangedSubsetBuilder includeSubset(final Collection<Subset> subsets);
+  RangedSubsetBuilder includeSubsets(final Subset... subsets);
+
+  @Override
+  RangedSubsetBuilder includeSubsets(final Collection<Subset> subsets);
 
   @Override
   RangedSubsetBuilder excludeChar(final char ch);
@@ -51,10 +54,13 @@ interface RangedSubsetBuilder extends SubsetBuilder {
   RangedSubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
   @Override
-  RangedSubsetBuilder excludeSubset(final Subset... subset);
+  RangedSubsetBuilder excludeSubset(final Subset subsets);
 
   @Override
-  RangedSubsetBuilder excludeSubset(final Collection<Subset> subsets);
+  RangedSubsetBuilder excludeSubsets(final Subset... subsets);
+
+  @Override
+  RangedSubsetBuilder excludeSubsets(final Collection<Subset> subsets);
 
   @Override
   RangedSubset build();

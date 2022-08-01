@@ -201,17 +201,17 @@ class RangedSubsetUtils {
     final ArrayList<CodePointRange> result = new ArrayList<>();
     if (singleByteCodePointRanges != null) {
       for (char range : singleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (doubleByteCodePointRanges != null) {
       for (int range : doubleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (tripleByteCodePointRanges != null) {
       for (long range : tripleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     return result;
@@ -292,5 +292,19 @@ class RangedSubsetUtils {
       }
     }
     return false; // not found
+  }
+
+  static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
+    int temp;
+    for (int i = fromIndex; i < toIndex; i++) {
+      for (int j = fromIndex; j < toIndex - i - 1; j++) {
+        if ((0x00000000_ffffffffL & values[j]) > (0x00000000_ffffffffL & values[j + 1])) {
+          // swap the elements
+          temp = values[j];
+          values[j] = values[j + 1];
+          values[j + 1] = temp;
+        }
+      }
+    }
   }
 }

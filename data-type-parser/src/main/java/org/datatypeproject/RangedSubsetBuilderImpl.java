@@ -5,6 +5,7 @@ import static org.datatypeproject.Constants.EMPTY_INT_ARRAY;
 import static org.datatypeproject.Constants.EMPTY_LONG_ARRAY;
 import static org.datatypeproject.RangedSubsetUtils.getInclusiveFrom;
 import static org.datatypeproject.RangedSubsetUtils.getInclusiveTo;
+import static org.datatypeproject.RangedSubsetUtils.unsignedIntegerBubbleSort;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,29 +16,29 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   /**
    * Code-points to include in the set
    */
-  private Ranges includes = new Ranges();
+  protected Ranges includes = new Ranges();
 
   /**
    * Code-points to exclude from the set
    */
-  private Ranges excludes = new Ranges();
+  protected Ranges excludes = new Ranges();
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
-  private long includeUnicodeCategoryBitFlags;
+  protected long includeUnicodeCategoryBitFlags;
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
-  private long excludeUnicodeCategoryBitFlags;
+  protected long excludeUnicodeCategoryBitFlags;
 
-  public RangedSubsetBuilderImpl includeUnicodeCategory(final Category category) {
+  public RangedSubsetBuilder includeUnicodeCategory(final Category category) {
     includeUnicodeCategoryBitFlags |= category.bitMask;
     return this;
   }
 
-  public RangedSubsetBuilderImpl includeUnicodeCategories(final Category... categories) {
+  public RangedSubsetBuilder includeUnicodeCategories(final Category... categories) {
     if (categories != null) {
       for (Category category : categories) {
         includeUnicodeCategory(category);
@@ -46,12 +47,12 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeUnicodeCategory(final Category category) {
+  public RangedSubsetBuilder excludeUnicodeCategory(final Category category) {
     excludeUnicodeCategoryBitFlags |= category.bitMask;
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeUnicodeCategory(final Category... categories) {
+  public RangedSubsetBuilder excludeUnicodeCategory(final Category... categories) {
     if (categories != null) {
       for (Category category : categories) {
         excludeUnicodeCategory(category);
@@ -61,107 +62,119 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeChar(final char ch) {
+  public RangedSubsetBuilder includeChar(final char ch) {
     includes.addChar(ch);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeChars(final char... chars) {
+  public RangedSubsetBuilder includeChars(final char... chars) {
     includes.addChars(chars);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCharRange(final char inclusiveFrom, final char inclusiveTo) {
+  public RangedSubsetBuilder includeCharRange(final char inclusiveFrom, final char inclusiveTo) {
     includes.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePoint(final int codePoint) {
+  public RangedSubsetBuilder includeCodePoint(final int codePoint) {
     includes.addCodePoint(codePoint);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePoints(final int... codePoints) {
+  public RangedSubsetBuilder includeCodePoints(final int... codePoints) {
     includes.addCodePoints(codePoints);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePointRange(int inclusiveFrom, int inclusiveTo) {
+  public RangedSubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo) {
     includes.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeSubset(final Subset... subsets) {
+  public RangedSubsetBuilder includeSubset(final Subset subsets) {
     includes.addSubset(subsets);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeSubset(final Collection<Subset> subsets) {
-    includes.addSubset(subsets);
+  public RangedSubsetBuilder includeSubsets(final Subset... subsets) {
+    includes.addSubsets(subsets);
     return this;
   }
 
-  public RangedSubsetBuilderImpl includeSubset(final RangedSubset subset) {
+  @Override
+  public RangedSubsetBuilder includeSubsets(final Collection<Subset> subsets) {
+    includes.addSubsets(subsets);
+    return this;
+  }
+
+  public RangedSubsetBuilder includeSubset(final RangedSubset subset) {
     includes.addSubset(subset);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeChar(final char ch) {
+  public RangedSubsetBuilder excludeChar(final char ch) {
     excludes.addChar(ch);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeChars(final char... chars) {
+  public RangedSubsetBuilder excludeChars(final char... chars) {
     excludes.addChars(chars);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCharRange(final char inclusiveFrom, final char inclusiveTo) {
+  public RangedSubsetBuilder excludeCharRange(final char inclusiveFrom, final char inclusiveTo) {
     excludes.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePoint(final int codePoint) {
+  public RangedSubsetBuilder excludeCodePoint(final int codePoint) {
     excludes.addCodePoint(codePoint);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePoints(final int... codePoints) {
+  public RangedSubsetBuilder excludeCodePoints(final int... codePoints) {
     excludes.addCodePoints(codePoints);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePointRange(int inclusiveFrom, int inclusiveTo) {
+  public RangedSubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo) {
     excludes.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeSubset(final Subset... subsets) {
+  public RangedSubsetBuilder excludeSubset(final Subset subsets) {
     excludes.addSubset(subsets);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeSubset(final Collection<Subset> subsets) {
-    excludes.addSubset(subsets);
+  public RangedSubsetBuilder excludeSubsets(final Subset... subsets) {
+    excludes.addSubsets(subsets);
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeSubset(final RangedSubset subset) {
+  @Override
+  public RangedSubsetBuilder excludeSubsets(final Collection<Subset> subsets) {
+    excludes.addSubsets(subsets);
+    return this;
+  }
+
+  public RangedSubsetBuilder excludeSubset(final RangedSubset subset) {
     excludes.addSubset(subset);
     return this;
   }
@@ -206,7 +219,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
         includes.copyOfTripleByteCodePointRanges());
   }
 
-  private static class Ranges {
+  static class Ranges {
 
     private char[] singleByteCodePointRanges = EMPTY_CHAR_ARRAY;
     private int[] doubleByteCodePointRanges = EMPTY_INT_ARRAY;
@@ -383,35 +396,30 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     }
 
     @SuppressWarnings("java:S3776")
-    void addSubset(final Subset... subsets) {
+    void addSubsets(final Subset... subsets) {
       if (subsets != null) {
         for (Subset subset : subsets) {
-          if (subset != null && subset.isNotEmpty()) {
-            if (subset instanceof RangedSubset rangedSubset) {
-              // More efficiently adds the ranges
-              addSubset(rangedSubset);
-            } else {
-              for (CodePointRange range : subset.ranges()) {
-                addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
-              }
-            }
-          }
+          addSubset(subset);
         }
       }
     }
 
-    void addSubset(final Collection<Subset> subsets) {
+    void addSubsets(final Collection<Subset> subsets) {
       if (subsets != null) {
         for (Subset subset : subsets) {
-          if (subset != null && subset.isNotEmpty()) {
-            if (subset instanceof RangedSubset rangedSubset) {
-              // More efficiently adds the ranges
-              addSubset(rangedSubset);
-            } else {
-              for (CodePointRange range : subset.ranges()) {
-                addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
-              }
-            }
+          addSubset(subset);
+        }
+      }
+    }
+
+    void addSubset(final Subset subset) {
+      if (subset != null && subset.isNotEmpty()) {
+        if (subset instanceof RangedSubset rangedSubset) {
+          // More efficiently adds the ranges
+          addSubset(rangedSubset);
+        } else {
+          for (CodePointRange range : subset.ranges()) {
+            addCodePointRange(range.getInclusiveFrom(), range.getInclusiveTo());
           }
         }
       }
@@ -497,99 +505,94 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
 
     @SuppressWarnings({"java:S3776", "java:S1199"})
     void compact() {
-      {
-        Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
-        int previousInclusiveFrom;
-        int previousInclusiveTo;
-        int currentInclusiveFrom;
-        int currentInclusiveTo;
-        int i = 0;
-        int j = 1;
-        while (j < singleByteEndIndex) {
-          previousInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[i]);
-          previousInclusiveTo = getInclusiveTo(singleByteCodePointRanges[i]);
-          currentInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[j]);
-          currentInclusiveTo = getInclusiveTo(singleByteCodePointRanges[j]);
-          if (previousInclusiveTo >= currentInclusiveFrom) {
-            if (previousInclusiveTo <= currentInclusiveTo) {
-              singleByteCodePointRanges[i] = RangedSubsetUtils.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
-            }
-            removeSingleByteElement(j);
-          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-            singleByteCodePointRanges[i] = RangedSubsetUtils.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
-            removeSingleByteElement(j);
-          } else {
-            ++i;
-            ++j;
-          }
-        }
-      }
-      {
-        unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, doubleByteEndIndex);
-        int previousInclusiveFrom;
-        int previousInclusiveTo;
-        int currentInclusiveFrom;
-        int currentInclusiveTo;
-        int i = 0;
-        int j = 1;
-        while (j < doubleByteEndIndex) {
-          previousInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[i]);
-          previousInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[i]);
-          currentInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[j]);
-          currentInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[j]);
-          if (previousInclusiveTo >= currentInclusiveFrom) {
-            if (previousInclusiveTo <= currentInclusiveTo) {
-              doubleByteCodePointRanges[i] = RangedSubsetUtils.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-            }
-            removeDoubleByteElement(j);
-          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
-            doubleByteCodePointRanges[i] = RangedSubsetUtils.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
-            removeDoubleByteElement(j);
-          } else {
-            ++i;
-            ++j;
-          }
-        }
-      }
-      {
-        Arrays.sort(tripleByteCodePointRanges, 0, tripleByteEndIndex);
-        int previousInclusiveFrom;
-        int previousInclusiveTo;
-        int currentInclusiveFrom;
-        int currentInclusiveTo;
-        int i = 0;
-        int j = 1;
-        while (j < tripleByteEndIndex) {
-          previousInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[i]);
-          previousInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[i]);
-          currentInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[j]);
-          currentInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[j]);
-          if (previousInclusiveTo >= currentInclusiveFrom) {
-            if (previousInclusiveTo <= currentInclusiveTo) {
-              tripleByteCodePointRanges[i] = RangedSubsetUtils.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-            }
-            removeTripleByteElement(j);
-          } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+      compactSingleByteCodePointRanges();
+      compactDoubleByteCodePointRanges();
+      compactTripleByteCodePointRanges();
+    }
+
+    void compactTripleByteCodePointRanges() {
+
+      Arrays.sort(tripleByteCodePointRanges, 0, tripleByteEndIndex);
+      int previousInclusiveFrom;
+      int previousInclusiveTo;
+      int currentInclusiveFrom;
+      int currentInclusiveTo;
+      int i = 0;
+      int j = 1;
+      while (j < tripleByteEndIndex) {
+        previousInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[i]);
+        previousInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[i]);
+        currentInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[j]);
+        currentInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[j]);
+        if (previousInclusiveTo >= currentInclusiveFrom) {
+          if (previousInclusiveTo <= currentInclusiveTo) {
             tripleByteCodePointRanges[i] = RangedSubsetUtils.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
-            removeTripleByteElement(j);
-          } else {
-            ++i;
-            ++j;
           }
+          removeTripleByteElement(j);
+        } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+          tripleByteCodePointRanges[i] = RangedSubsetUtils.rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+          removeTripleByteElement(j);
+        } else {
+          ++i;
+          ++j;
         }
       }
     }
 
-    private static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
-      int temp;
-      for (int i = fromIndex; i < toIndex; i++) {
-        for (int j = fromIndex; j < toIndex - i - 1; j++) {
-          if ((0x00000000_ffffffffL & values[j]) > (0x00000000_ffffffffL & values[j + 1])) {
-            // swap the elements
-            temp = values[j];
-            values[j] = values[j + 1];
-            values[j + 1] = temp;
+    void compactDoubleByteCodePointRanges() {
+
+      unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, doubleByteEndIndex);
+      int previousInclusiveFrom;
+      int previousInclusiveTo;
+      int currentInclusiveFrom;
+      int currentInclusiveTo;
+      int i = 0;
+      int j = 1;
+      while (j < doubleByteEndIndex) {
+        previousInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[i]);
+        previousInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[i]);
+        currentInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[j]);
+        currentInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[j]);
+        if (previousInclusiveTo >= currentInclusiveFrom) {
+          if (previousInclusiveTo <= currentInclusiveTo) {
+            doubleByteCodePointRanges[i] = RangedSubsetUtils.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
           }
+          removeDoubleByteElement(j);
+        } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+          doubleByteCodePointRanges[i] = RangedSubsetUtils.rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+          removeDoubleByteElement(j);
+        } else {
+          ++i;
+          ++j;
+        }
+      }
+    }
+
+    void compactSingleByteCodePointRanges() {
+
+      Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
+      int previousInclusiveFrom;
+      int previousInclusiveTo;
+      int currentInclusiveFrom;
+      int currentInclusiveTo;
+      int i = 0;
+      int j = 1;
+      while (j < singleByteEndIndex) {
+        previousInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[i]);
+        previousInclusiveTo = getInclusiveTo(singleByteCodePointRanges[i]);
+        currentInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[j]);
+        currentInclusiveTo = getInclusiveTo(singleByteCodePointRanges[j]);
+        if (previousInclusiveTo >= currentInclusiveFrom) {
+          if (previousInclusiveTo <= currentInclusiveTo) {
+            singleByteCodePointRanges[i] = RangedSubsetUtils.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+          }
+          removeSingleByteElement(j);
+        } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+          singleByteCodePointRanges[i] = RangedSubsetUtils.rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+          removeSingleByteElement(j);
+        } else {
+          ++i;
+          ++j;
         }
       }
     }

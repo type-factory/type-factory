@@ -16,9 +16,11 @@ interface SubsetBuilder {
 
   SubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
-  SubsetBuilder includeSubset(final Subset... subsets);
+  SubsetBuilder includeSubset(final Subset subset);
 
-  SubsetBuilder includeSubset(final Collection<Subset> subsets);
+  SubsetBuilder includeSubsets(final Subset... subsets);
+
+  SubsetBuilder includeSubsets(final Collection<Subset> subsets);
 
   SubsetBuilder excludeChar(final char ch);
 
@@ -32,9 +34,11 @@ interface SubsetBuilder {
 
   SubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
-  SubsetBuilder excludeSubset(final Subset... subset);
+  SubsetBuilder excludeSubset(final Subset subset);
 
-  SubsetBuilder excludeSubset(final Collection<Subset> subsets);
+  SubsetBuilder excludeSubsets(final Subset... subset);
+
+  SubsetBuilder excludeSubsets(final Collection<Subset> subsets);
 
   Subset build();
 }

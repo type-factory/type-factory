@@ -6,7 +6,6 @@ import static org.datatypeproject.Constants.EMPTY_LONG_ARRAY;
 import static org.datatypeproject.RangedSubsetUtils.defaultIfNullOrEmpty;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 class RangedSubsetWithCategoriesAndExcludesImpl extends RangedSubsetWithCategoriesImpl {
 
@@ -103,12 +102,12 @@ class RangedSubsetWithCategoriesAndExcludesImpl extends RangedSubsetWithCategori
         && !isExcluded(codePoint);
   }
 
-  public Collection<CodePointRange> excludeRanges() {
-    return RangedSubsetUtils.aggregateCodePointRangeData(
-        excludeSingleByteCodePointRanges,
-        excludeDoubleByteCodePointRanges,
-        excludeTripleByteCodePointRanges);
-  }
+//  public Collection<CodePointRange> excludeRanges() {
+//    return RangedSubsetUtils.aggregateCodePointRangeData(
+//        excludeSingleByteCodePointRanges,
+//        excludeDoubleByteCodePointRanges,
+//        excludeTripleByteCodePointRanges);
+//  }
 
   private boolean isExcluded(final int codePoint) {
     return (
