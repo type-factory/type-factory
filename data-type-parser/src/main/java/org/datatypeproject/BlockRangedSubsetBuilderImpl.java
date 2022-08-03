@@ -3,8 +3,10 @@ package org.datatypeproject;
 import static org.datatypeproject.RangedSubsetUtils.getInclusiveFrom;
 import static org.datatypeproject.RangedSubsetUtils.getInclusiveTo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.datatypeproject.Subset.CodePointRange;
 
 public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
@@ -167,21 +169,28 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
     return excludes.isNotEmpty() || excludeUnicodeCategoryBitFlags > 0;
   }
 
+  private void compactCategories() {
+    // remove excluded categories
+    includeUnicodeCategoryBitFlags &= ~excludeUnicodeCategoryBitFlags;
+  }
+
   @Override
   public BlockRangedSubset build() {
     excludes.compact();
     includes.removeCodePointRanges(excludes);
+    includes.removeCodepointCategories(excludeUnicodeCategoryBitFlags);
     includes.compact();
+    compactCategories();
 
-    if (containsExcludes()) {
-      return new BlockRangedSubsetWithCategoriesAndExcludesImpl(
-          includeUnicodeCategoryBitFlags,
-          excludeUnicodeCategoryBitFlags,
-          includes.blocks,
-          includes.singleByteCodePointRangeByBlock,
-          excludes.blocks,
-          excludes.singleByteCodePointRangeByBlock);
-    }
+//    if (containsExcludes()) {
+//      return new BlockRangedSubsetWithCategoriesAndExcludesImpl(
+//          includeUnicodeCategoryBitFlags,
+//          excludeUnicodeCategoryBitFlags,
+//          includes.blocks,
+//          includes.singleByteCodePointRangeByBlock,
+//          excludes.blocks,
+//          excludes.singleByteCodePointRangeByBlock);
+//    }
 
     if (containsUnicodeCategories()) {
       return new BlockRangedSubsetWithCategoriesImpl(
@@ -260,11 +269,10 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
       }
     }
 
-
     void addCodePointRange(int inclusiveFrom, int inclusiveTo) {
 
       if (inclusiveFrom > inclusiveTo) {
-        int temp = inclusiveFrom;
+        final int temp = inclusiveFrom;
         inclusiveFrom = inclusiveTo;
         inclusiveTo = temp;
       }
@@ -273,7 +281,7 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
       int blockKeyTo = inclusiveTo >> 8;
 
       for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
-        int index = blocksSize == 0 ? 0 : Arrays.binarySearch(blocks, 0, blocksSize, blockKey);
+        final int index = blocksSize == 0 ? 0 : Arrays.binarySearch(blocks, 0, blocksSize, blockKey);
         ensureBlockCapacity();
         if (blocksSize == 0 || blocks[index] != blockKey) {
           System.arraycopy(
@@ -294,8 +302,8 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
           blocksSize++;
         }
         ensureSingleByteCapacity(index);
-        int from = blockKey == blockKeyFrom ? (inclusiveFrom & VALUE_MASK) : 0x00;
-        int to = blockKey == blockKeyTo ? (inclusiveTo & VALUE_MASK) : 0xFF;
+        final int from = blockKey == blockKeyFrom ? (inclusiveFrom & VALUE_MASK) : 0x00;
+        final int to = blockKey == blockKeyTo ? (inclusiveTo & VALUE_MASK) : 0xFF;
         singleByteCodePointRangeByBlock[index][singleByteCodePointRangeSizes[index]] = RangedSubsetUtils.rangeToChar(from, to);
         singleByteCodePointRangeSizes[index]++;
       }
@@ -304,7 +312,7 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
     void removeCodePointRanges(final BlockRanges blockRanges) {
       for (int index = 0; index < blockRanges.blocksSize; ++index) {
         final int block = blockRanges.blocks[index] << 8;
-        final char [] singleByteCodePointRange = blockRanges.singleByteCodePointRangeByBlock[index];
+        final char[] singleByteCodePointRange = blockRanges.singleByteCodePointRangeByBlock[index];
         final int singleByteCodePointRangeSize = blockRanges.singleByteCodePointRangeSizes[index];
         for (int j = 0; j < singleByteCodePointRangeSize; ++j) {
           final int inclusiveFrom = block | getInclusiveFrom(singleByteCodePointRange[j]);
@@ -314,23 +322,27 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
       }
     }
 
+    void removeCodePoint(final int codePoint) {
+      removeCodePointRange(codePoint, codePoint);
+    }
+
     void removeCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
 
       if (removeInclusiveFrom > removeInclusiveTo) {
-        int temp = removeInclusiveFrom;
+        final int temp = removeInclusiveFrom;
         removeInclusiveFrom = removeInclusiveTo;
         removeInclusiveTo = temp;
       }
 
-      int blockKeyFrom = removeInclusiveFrom >> 8;
-      int blockKeyTo = removeInclusiveTo >> 8;
+      final int blockKeyFrom = removeInclusiveFrom >> 8;
+      final int blockKeyTo = removeInclusiveTo >> 8;
       removeInclusiveFrom |= VALUE_MASK;
       removeInclusiveTo |= VALUE_MASK;
 
       for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
-        int index = blocksSize == 0 ? 0 : Arrays.binarySearch(blocks, 0, blocksSize, blockKey);
+        final int index = blocksSize == 0 ? 0 : Arrays.binarySearch(blocks, 0, blocksSize, blockKey);
         if (blocksSize == 0 || blocks[index] != blockKey) {
-          char[] singleByteCodePointRanges = singleByteCodePointRangeByBlock[index];
+          final char[] singleByteCodePointRanges = singleByteCodePointRangeByBlock[index];
           for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
             final char range = singleByteCodePointRanges[i];
             final int inclusiveFrom = getInclusiveFrom(range);
@@ -348,6 +360,33 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
             }
           }
         }
+      }
+    }
+
+    void removeCodepointCategories(final long unicodeCategoryBitFlags) {
+      if (unicodeCategoryBitFlags == 0L) {
+        return;
+      }
+      final List<Integer> codepointsToRemove = new ArrayList<>();
+
+      for (int blockIndex = 0; blockIndex < blocksSize; ++blockIndex) {
+        final int blockKey = blocks[blockIndex];
+        final int blockRange = blockKey << 8;
+        final char[] singleByteCodePointRanges = singleByteCodePointRangeByBlock[blockIndex];
+        for (int rangeIndex = 0; rangeIndex < singleByteCodePointRanges.length; ++rangeIndex) {
+          final char range = singleByteCodePointRanges[rangeIndex];
+          final int inclusiveFrom = blockRange | getInclusiveFrom(range);
+          final int inclusiveTo = blockRange | getInclusiveTo(range);
+          for (int codePoint = inclusiveFrom; codePoint <= inclusiveTo; ++codePoint) {
+            if ((unicodeCategoryBitFlags & (0x1L << Character.getType(codePoint))) > 0L) {
+              codepointsToRemove.add(codePoint);
+            }
+          }
+        }
+      }
+
+      for (int codepoint : codepointsToRemove) {
+        removeCodePoint(codepoint);
       }
     }
 
@@ -373,7 +412,8 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
         /*if (subset instanceof BlockRangedSubset blockRangedSubset) { // TODO this should BlockedSubset
           // More efficiently adds the ranges
           addSubset(blockRangedSubset);
-        } else */ if (subset instanceof RangedSubset rangedSubset) {
+        } else */
+        if (subset instanceof RangedSubset rangedSubset) {
           // More efficiently adds the ranges
           addSubset(rangedSubset);
         } else {
@@ -411,7 +451,7 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
       singleByteCodePointRangeByBlock = Arrays.copyOf(singleByteCodePointRangeByBlock, blocksSize);
       singleByteCodePointRangeSizes = Arrays.copyOf(singleByteCodePointRangeSizes, blocksSize);
       for (int blockIndex = 0; blockIndex < blocksSize; ++blockIndex) {
-        char [] singleByteCodePointRanges = singleByteCodePointRangeByBlock[blockIndex];
+        char[] singleByteCodePointRanges = singleByteCodePointRangeByBlock[blockIndex];
         int singleByteEndIndex = singleByteCodePointRangeSizes[blockIndex];
         Arrays.sort(singleByteCodePointRanges, 0, singleByteEndIndex);
         int previousInclusiveFrom;
@@ -447,7 +487,8 @@ public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
             singleByteCodePointRangeSizes[blockIndex]);
       }
     }
-    private void removeArrayElement(final char [] array, final int index) {
+
+    private void removeArrayElement(final char[] array, final int index) {
       System.arraycopy(array, index + 1, array, index, array.length - index - 1);
     }
 

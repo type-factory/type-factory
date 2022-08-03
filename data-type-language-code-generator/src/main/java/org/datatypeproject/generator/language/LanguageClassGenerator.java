@@ -13,6 +13,15 @@ import com.ibm.icu.util.ULocale;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.datatypeproject.generator.unicodedata.UnicodeGroupData;
@@ -211,7 +220,219 @@ public class LanguageClassGenerator {
     }
   }
 
-  private UnicodeSet createJapaneseJSourceSet() {
+  public void organizeIntoBlockRanged(final UnicodeSet unicodeSet) {
+
+    final Set<Integer> blockKeys = new TreeSet();
+    for (EntryRange entryRange : unicodeSet.ranges()) {
+      final int inclusiveFrom = entryRange.codepoint;
+      final int inclusiveTo = entryRange.codepointEnd;
+      final int blockKeyFrom = inclusiveFrom >> 8;
+      final int blockKeyTo = inclusiveTo >> 8;
+      for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+        blockKeys.add(blockKey);
+      }
+    }
+    final StringBuilder s = new StringBuilder();
+    final HashSlotData hashSlotData = findOptimalNumberOfBlockKeyHashSlots(blockKeys);
+    if (hashSlotData.hasMultipleKeysPerSlot()) {
+      s.append(LINE_SEPARATOR).append("  // hashSlotData.getSlots().size() =").append(hashSlotData.getSlots().size());
+      s.append(LINE_SEPARATOR).append("  final int [][] blockKeys = new int[][]{");
+      for (Map.Entry<Integer, SortedSet<Integer>> slot : hashSlotData.getSlots().entrySet()) {
+        s.append(LINE_SEPARATOR).append("    {");
+        if (slot.getValue() == null || slot.getValue().isEmpty()) {
+          s.append("      null, ");
+        } else {
+          for (int blockKey : slot.getValue()) {
+            s.append(String.format("      0x%04X", blockKey)).append(", ");
+          }
+        }
+        s.setLength(s.length() - 2);
+        s.append("    },");
+      }
+      s.setLength(s.length() - 1);
+      s.append(LINE_SEPARATOR).append("  }");
+    } else {
+      s.append(LINE_SEPARATOR).append("  // hashSlotData.getSlots().size() =").append(hashSlotData.getSlots().size());
+      s.append(LINE_SEPARATOR).append("  final int [] blockKeys = new int[] {");
+      for (Map.Entry<Integer, SortedSet<Integer>> slot : hashSlotData.getSlots().entrySet()) {
+        if (slot.getValue() == null || slot.getValue().isEmpty()) {
+          s.append(LINE_SEPARATOR).append("      null,");
+        } else {
+          int blockKey = slot.getValue().first();
+          s.append(LINE_SEPARATOR).append(String.format("      0x%04X", blockKey)).append(",");
+        }
+      }
+      s.setLength(s.length() - 1);
+      s.append("    }");
+      s.append(LINE_SEPARATOR).append("  }");
+    }
+    logger.info("Block language:\n" + s);
+  }
+
+  HashSlotData findOptimalNumberOfBlockKeyHashSlots(final Set<Integer> blockKeys) {
+    final int blockKeyCount = blockKeys.size();
+    final int start = Math.max(7, (int) Math.floor(blockKeyCount * 0.7D));
+    final int end = Math.max(7, (int) Math.ceil(blockKeyCount * 1.1D));
+    final List<HashSlotData> hashSlotDataList = new ArrayList<>();
+    for (int i = start; i <= end; ++i) {
+      final HashSlotData hashSlotData = new HashSlotData(i);
+      for (int blockKey : blockKeys) {
+        hashSlotData.addBlockKey(blockKey);
+      }
+      hashSlotDataList.add(hashSlotData);
+    }
+    hashSlotDataList.sort(Comparator.comparingDouble(HashSlotData::getWeight));
+    final StringBuilder s = new StringBuilder();
+    s.append(LINE_SEPARATOR).append("keys  slots   weight  0-keys  1-key  2-keys  3-keys  4-keys  5+keys");
+    for (HashSlotData hashSlotData : hashSlotDataList) {
+      s.append(LINE_SEPARATOR).append(hashSlotData);
+    }
+    logger.info("" + s);
+    return hashSlotDataList.get(0);
+  }
+
+  private static class HashSlotData {
+
+    private final int numberOfSlots;
+
+    private final int[] hashSlots;
+
+    private int countOfBlockKeys = 0;
+    boolean hasMultipleKeysPerSlot = false;
+
+    private final TreeMap<Integer, SortedSet<Integer>> slots;
+
+    public HashSlotData(int numberOfSlots) {
+      this.numberOfSlots = numberOfSlots;
+      this.hashSlots = new int[numberOfSlots];
+      this.slots = new TreeMap<>();
+      for (int i = 0; i < numberOfSlots; ++i) {
+        this.slots.put(i, new TreeSet<>());
+      }
+    }
+
+    public int getNumberOfSlots() {
+      return numberOfSlots;
+    }
+
+    public SortedMap<Integer, SortedSet<Integer>> getSlots() {
+      return slots;
+    }
+
+    double getWeight() {
+      int countOfHashSlotsWithNoKeys = 0;
+      int countOfHashSlotsWithExactly1Key = 0;
+      int countOfHashSlotsWithExactly2Keys = 0;
+      int countOfHashSlotsWithExactly3Keys = 0;
+      int countOfHashSlotsWithExactly4Keys = 0;
+      int countOfHashSlotsWith5OrMoreKeys = 0;
+
+      for (Map.Entry<Integer, SortedSet<Integer>> entry : slots.entrySet()) {
+        switch (entry.getValue().size()) {
+          case 0:
+            countOfHashSlotsWithNoKeys++;
+            break;
+          case 1:
+            countOfHashSlotsWithExactly1Key++;
+            break;
+          case 2:
+            countOfHashSlotsWithExactly2Keys++;
+            break;
+          case 3:
+            countOfHashSlotsWithExactly3Keys++;
+            break;
+          case 4:
+            countOfHashSlotsWithExactly4Keys++;
+            break;
+          default:
+            countOfHashSlotsWith5OrMoreKeys++;
+            break;
+        }
+      }
+      return 0
+          // memory of keys 2D - array
+//          + 8 // reference to 1st level keys array (8 bytes)
+//          + 8 * numberOfSlots // reference to 2nd level keys arrays (may be null)
+//          + 4D * countOfBlockKeys // 4 byte block keys stored in 2nd level keys arrays
+//          + 8 // reference to 1st level values array (8 bytes)
+//          + 8 * numberOfSlots // reference to 2nd level values arrays (may be null)
+////              + 2D * numberOfCodePoints // 4 byte block keys stored in 2nd level keys arrays
+//          + 2.0 * (
+          + numberOfSlots * 16D // penalty for too many slots
+          + countOfHashSlotsWithNoKeys * 4D // penalty for wasting space
+          + countOfHashSlotsWithExactly1Key * 1D
+          + countOfHashSlotsWithExactly2Keys * 32D // performance penalty for iterating over multiple keys
+          + countOfHashSlotsWithExactly3Keys * 512D // performance penalty for iterating over multiple keys
+          + countOfHashSlotsWithExactly4Keys * 1000D // performance penalty for iterating over multiple keys
+          + countOfHashSlotsWith5OrMoreKeys * 10000D; // performance penalty for iterating over multiple keys
+    }
+
+    @Override
+    public String toString() {
+      int countOfHashSlotsWithNoKeys = 0;
+      int countOfHashSlotsWithExactly1Key = 0;
+      int countOfHashSlotsWithExactly2Keys = 0;
+      int countOfHashSlotsWithExactly3Keys = 0;
+      int countOfHashSlotsWithExactly4Keys = 0;
+      int countOfHashSlotsWith5OrMoreKeys = 0;
+
+      for (Map.Entry<Integer, SortedSet<Integer>> entry : slots.entrySet()) {
+        switch (entry.getValue().size()) {
+          case 0:
+            countOfHashSlotsWithNoKeys++;
+            break;
+          case 1:
+            countOfHashSlotsWithExactly1Key++;
+            break;
+          case 2:
+            countOfHashSlotsWithExactly2Keys++;
+            break;
+          case 3:
+            countOfHashSlotsWithExactly3Keys++;
+            break;
+          case 4:
+            countOfHashSlotsWithExactly4Keys++;
+            break;
+          default:
+            countOfHashSlotsWith5OrMoreKeys++;
+            break;
+        }
+      }
+      return String.format("%4d  %5d   %6d  %6d  %5d  %6d  %6d  %6d  %6d",
+          countOfBlockKeys, numberOfSlots, (int) getWeight(),
+          countOfHashSlotsWithNoKeys, countOfHashSlotsWithExactly1Key,
+          countOfHashSlotsWithExactly2Keys, countOfHashSlotsWithExactly3Keys,
+          countOfHashSlotsWithExactly4Keys, countOfHashSlotsWith5OrMoreKeys);
+//
+//      s.append("\nkeys   ").append(countOfBlockKeys);
+//      s.append("\nslots  ").append(numberOfSlots);
+//      s.append("\nweight ").append(getWeight());
+//      s.append("\n0 keys ").append(countOfHashSlotsWithNoKeys);
+//      s.append("\n1 keys ").append(countOfHashSlotsWithExactly1Key);
+//      s.append("\n2 keys ").append(countOfHashSlotsWithExactly2Keys);
+//      s.append("\n3 keys ").append(countOfHashSlotsWithExactly3Keys);
+//      s.append("\n4 keys ").append(countOfHashSlotsWithExactly4Keys);
+//      s.append("\n5 keys ").append(countOfHashSlotsWith5OrMoreKeys);
+//      return s.toString();
+    }
+
+    boolean hasMultipleKeysPerSlot() {
+      return hasMultipleKeysPerSlot;
+    }
+
+    public void addBlockKey(final int blockKey) {
+      countOfBlockKeys++;
+      final int hashSlot = blockKey % numberOfSlots;
+      hashSlots[hashSlot]++;
+      SortedSet<Integer> blockKeys = slots.get(hashSlot);
+      blockKeys.add(blockKey);
+      if (blockKeys.size() > 1) {
+        hasMultipleKeysPerSlot = true;
+      }
+    }
+  }
+
+  public UnicodeSet createJapaneseJSourceSet() {
     final UnicodeSet result = new UnicodeSet();
     for (EntryRange range : unicodeGroupData.getJSourceSubset().ranges()) {
       for (int codePoint = range.codepoint; codePoint <= range.codepointEnd; ++codePoint) {
