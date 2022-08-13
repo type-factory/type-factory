@@ -4,6 +4,7 @@ import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -13,7 +14,7 @@ class RangedSubsetOptimiser {
    * <p>The set of unique sorted block-keys in ascending order. This enables iteration of the
    * code-point ranges in order from lowest to highest.</p>
    */
-  private final int[] blockKeySet;
+  private final char[] blockKeySet;
   private final int minHashBuckets;
   private final int maxHashBuckets;
   private final HashMapStats[] hashMapStats;
@@ -31,13 +32,13 @@ class RangedSubsetOptimiser {
      *
      * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
      * <pre>
-     *       ┌──── hashIndex     - an index to the hash-bucket
-     *       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
-     *       │  │
-     *   int[ ][ ] blockKeys
+     *        ┌──── hashIndex     - an index to the hash-bucket
+     *        │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
+     *        │  │
+     *   char[ ][ ] blockKeys
      * </pre>
      */
-    private final int[][] blockKeys;
+    private final char[][] blockKeys;
 
     /**
      * <p>The hashed inclusive-from values of the code-point ranges.</p>
@@ -71,12 +72,12 @@ class RangedSubsetOptimiser {
     private int codePointsSize = 0;
 
     public HashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
-      blockKeys = new int[optimalNumberOfHashBuckets][];
+      blockKeys = new char[optimalNumberOfHashBuckets][];
       inclusiveFroms = new int[optimalNumberOfHashBuckets][][];
       inclusiveTos = new int[optimalNumberOfHashBuckets][][];
     }
 
-    public int[][] getBlockKeys() {
+    public char[][] getBlockKeys() {
       return blockKeys;
     }
 
@@ -107,7 +108,7 @@ class RangedSubsetOptimiser {
           inclusiveFroms[hashIndex] = null;
           inclusiveTos[hashIndex] = null;
         } else {
-          blockKeys[hashIndex] = new int[hashBucketCounts[hashIndex]];
+          blockKeys[hashIndex] = new char[hashBucketCounts[hashIndex]];
           inclusiveFroms[hashIndex] = new int[hashBucketCounts[hashIndex]][];
           inclusiveTos[hashIndex] = new int[hashBucketCounts[hashIndex]][];
           codePointRangesSizes[hashIndex] = new int[hashBucketCounts[hashIndex]];
@@ -115,13 +116,13 @@ class RangedSubsetOptimiser {
       }
       // Add all unicode code-point ranges to the hash-map of blocked code-point ranges.
       for (EntryRange entryRange : unicodeSet.ranges()) {
-        final int blockKeyFrom = entryRange.codepoint >> 8;
-        final int blockKeyTo = entryRange.codepointEnd >> 8;
-        for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
-          final int inclusiveFrom = blockKey == blockKeyFrom ? entryRange.codepoint : 0x00;
-          final int inclusiveTo = blockKey == blockKeyTo ? entryRange.codepointEnd : 0xFF;
+        final char blockKeyFrom = (char)((entryRange.codepoint >> 8) & 0xFFFF);
+        final char blockKeyTo = (char)((entryRange.codepointEnd >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          final char inclusiveFrom = (char)(blockKey == blockKeyFrom ? (entryRange.codepoint & 0xFF) : 0x00);
+          final int inclusiveTo = (char)(blockKey == blockKeyTo ? (entryRange.codepointEnd & 0xFF) : 0xFF);
           final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
-          final int[] hashBucket = blockKeys[hashIndex];
+          final char[] hashBucket = blockKeys[hashIndex];
           int hashBucketIndex = 0;
           while (hashBucketIndex < hashBucketSizes[hashIndex]
               && hashBucketIndex < hashBucket.length
@@ -182,12 +183,12 @@ class RangedSubsetOptimiser {
      *
      * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
      * <pre>
-     *       ┌─ hashIndex - an index to the hash-bucket
-     *       │
-     *   int[ ] blockKeys
+     *        ┌─ hashIndex - an index to the hash-bucket
+     *        │
+     *   char[ ] blockKeys
      * </pre>
      */
-    private final int[] blockKeys;
+    private final char[] blockKeys;
 
     /**
      * <p>The hashed inclusive-from values of the code-point ranges.</p>
@@ -219,13 +220,13 @@ class RangedSubsetOptimiser {
     private int codePointsSize = 0;
 
     public OptimalHashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
-      blockKeys = new int[optimalNumberOfHashBuckets];
+      blockKeys = new char[optimalNumberOfHashBuckets];
       inclusiveFroms = new int[optimalNumberOfHashBuckets][];
       inclusiveTos = new int[optimalNumberOfHashBuckets][];
     }
 
 
-    public int[] getBlockKeys() {
+    public char[] getBlockKeys() {
       return blockKeys;
     }
 
@@ -252,7 +253,7 @@ class RangedSubsetOptimiser {
       // Create the 1st-dimension arrays to the exact optimal size of hash-buckets.
       for (int hashIndex = 0; hashIndex < hashBucketCounts.length; ++hashIndex) {
         if (hashBucketCounts[hashIndex] == 0) {
-          blockKeys[hashIndex] = -1;
+          blockKeys[hashIndex] = 0xFFFF;
           inclusiveFroms[hashIndex] = null;
           inclusiveTos[hashIndex] = null;
         } else {
@@ -263,11 +264,11 @@ class RangedSubsetOptimiser {
       }
       // Add all unicode code-point ranges to the hash-map of blocked code-point ranges.
       for (EntryRange entryRange : unicodeSet.ranges()) {
-        final int blockKeyFrom = entryRange.codepoint >> 8;
-        final int blockKeyTo = entryRange.codepointEnd >> 8;
-        for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
-          final int inclusiveFrom = blockKey == blockKeyFrom ? entryRange.codepoint : 0x00;
-          final int inclusiveTo = blockKey == blockKeyTo ? entryRange.codepointEnd : 0xFF;
+        final char blockKeyFrom = (char)((entryRange.codepoint >> 8) & 0xFFFF);
+        final char blockKeyTo = (char)((entryRange.codepointEnd >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          final int inclusiveFrom = (char)(blockKey == blockKeyFrom ? (entryRange.codepoint & 0xFF) : 0x00);
+          final int inclusiveTo = (char)(blockKey == blockKeyTo ? (entryRange.codepointEnd & 0xFF) : 0xFF);
           final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
           if (inclusiveFroms[hashIndex] == null) {
             inclusiveFroms[hashIndex] = new int[32];
@@ -296,7 +297,7 @@ class RangedSubsetOptimiser {
       }
       // Make copies of arrays to exact required sizes to minimize wasted space.
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
-        if (blockKeys[hashIndex] >= 0) {
+        if (blockKeys[hashIndex] != 0xFFFF) {
           inclusiveFroms[hashIndex] = Arrays.copyOf(
               inclusiveFroms[hashIndex],
               codePointRangesSizes[hashIndex]);
@@ -333,7 +334,7 @@ class RangedSubsetOptimiser {
     return optimalHashMapStats.containsHashBucketsWithMultipleKeys();
   }
 
-  public int[] getSortedBlockKeySet() {
+  public char[] getSortedBlockKeySet() {
     return blockKeySet;
   }
 
@@ -345,21 +346,25 @@ class RangedSubsetOptimiser {
     return optimalHashedRangedSubsetData;
   }
 
-  private static int[] getBlockKeys(final UnicodeSet unicodeSet) {
-    final SortedSet<Integer> blockKeys = new TreeSet();
+  private static char[] getBlockKeys(final UnicodeSet unicodeSet) {
+    final SortedSet<Character> blockKeys = new TreeSet();
     for (EntryRange entryRange : unicodeSet.ranges()) {
-      final int blockKeyFrom = entryRange.codepoint >> 8;
-      final int blockKeyTo = entryRange.codepointEnd >> 8;
-      for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+      final char blockKeyFrom = (char)((entryRange.codepoint >> 8) & 0xFFFF);
+      final char blockKeyTo = (char)((entryRange.codepointEnd >> 8) & 0xFFFF);
+      for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
         blockKeys.add(blockKey);
       }
     }
-    return blockKeys.stream()
-        .mapToInt(Integer::intValue)
-        .toArray();
+    final char [] result = new char [blockKeys.size()];
+    int i = 0;
+    final Iterator<Character> iter = blockKeys.iterator();
+    while (iter.hasNext()) {
+      result[i++] = iter.next().charValue();
+    }
+    return result;
   }
 
-  private static HashMapStats[] calculatePossibleHashMapStats(final int[] blockKeys, final int minHashBuckets, final int maxHashBuckets) {
+  private static HashMapStats[] calculatePossibleHashMapStats(final char[] blockKeys, final int minHashBuckets, final int maxHashBuckets) {
     final HashMapStats[] result = new HashMapStats[maxHashBuckets - minHashBuckets + 1];
     for (int i = 0, j = minHashBuckets; i < result.length; ++i, ++j) {
       result[i] = new HashMapStats(j, blockKeys);
@@ -400,7 +405,7 @@ class RangedSubsetOptimiser {
 
     private HashMapStats(
         final int numberOfHashBuckets,
-        final int[] blockKeys) {
+        final char[] blockKeys) {
       this.numberOfHashBuckets = numberOfHashBuckets;
       this.hashBucketCounts = new int[numberOfHashBuckets];
       this.countOfHashBucketsWith0Keys = numberOfHashBuckets;

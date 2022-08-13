@@ -9,8 +9,8 @@ public class Letters_Japanese_ja_Hani_jsource {
 
   public static final Subset SUBSET = new HashedRangedSubsetImpl(
 
-      // int [][] blockKeys
-      new int[][] {
+      // char [][] blockKeys
+      new char[][] {
         {0x02b8}        , {0x02b9}        , {0x02ba}        , {0x02bb}        , {0x02bc}        , {0x02bd}        , {0x02be}        , {0x02bf}        , 
         {0x02c0}        , {0x02c1}        , {0x02c2}        , {0x02c3}        , {0x02c4}        , {0x02c5}        , {0x02c6}        , {0x02c7}        , 
         {0x02c8}        , {0x02c9}        , {0x02ca}        , {0x02cb}        , {0x02cc}        , {0x02cd}        , {0x02ce}        , {0x02cf}        , 
@@ -1433,5 +1433,5 @@ public class Letters_Japanese_ja_Hani_jsource {
         // number of code-point ranges
         6795,
         // number of code-points
-        24162);
+        16226);
 }

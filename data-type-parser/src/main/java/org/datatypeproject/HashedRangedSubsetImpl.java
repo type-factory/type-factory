@@ -27,13 +27,13 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
    *
    * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
    * <pre>
-   *       ┌──── hashIndex       - an index to the hash-bucket
-   *       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
-   *       │  │
-   *   int[ ][ ] blockKeys
+   *        ┌──── hashIndex       - an index to the hash-bucket
+   *        │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
+   *        │  │
+   *   char[ ][ ] blockKeys
    * </pre>
    */
-  private final int[][] blockKeys;
+  private final char[][] blockKeys;
 
   /**
    * <p>The hashed single-byte code-point ranges. The ranges are actually the least significant bytes of the
@@ -55,7 +55,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   private final int codePointsSize;
 
   HashedRangedSubsetImpl(
-      final int[][] blockKeys,
+      final char[][] blockKeys,
       final char[][][] singleByteCodePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize) {
@@ -66,7 +66,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   HashedRangedSubsetImpl(
       final String name,
       final String alias,
-      final int[][] blockKeys,
+      final char[][] blockKeys,
       final char[][][] singleByteCodePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize) {
@@ -85,9 +85,9 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
-    final int blockKey = codePoint >> 8;
+    final char blockKey = (char)((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
-    final int[] availableBlockKeys = blockKeys[hashIndex];
+    final char[] availableBlockKeys = blockKeys[hashIndex];
     if (availableBlockKeys == null || availableBlockKeys.length == 0) {
       return false;
     }
@@ -138,7 +138,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public int[][] getBlockKeys() {
+  public char[][] getBlockKeys() {
     return blockKeys;
   }
 
@@ -175,7 +175,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       }
       final int blockKey = blockKeySet[keySetIndex];
       hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
-      final int[] availableBlockKeys = blockKeys[hashIndex];
+      final char[] availableBlockKeys = blockKeys[hashIndex];
       while (hashBucketIndex < availableBlockKeys.length && blockKey != availableBlockKeys[hashBucketIndex]) {
         ++hashBucketIndex;
       }

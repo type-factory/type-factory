@@ -316,13 +316,13 @@ public class LanguageClassGenerator {
       final RangedSubsetOptimiser rangedSubsetOptimiser) {
 
     final var hashedRangedSubsetData = rangedSubsetOptimiser.getHashedRangedSubsetData();
-    final int[][] keys = hashedRangedSubsetData.getBlockKeys();
+    final char[][] keys = hashedRangedSubsetData.getBlockKeys();
     final int[][][] inclusiveFroms = hashedRangedSubsetData.getInclusiveFroms();
     final int[][][] inclusiveTos = hashedRangedSubsetData.getInclusiveTos();
-    s.append(LINE_SEPARATOR).append("      // int [][] blockKeys");
-    s.append(LINE_SEPARATOR).append("      new int[][] {");
+    s.append(LINE_SEPARATOR).append("      // char [][] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new char[][] {");
     for (int i = 0; i < keys.length; ++i) {
-      final int[] buckets = keys[i];
+      final char[] buckets = keys[i];
       if (i % 8 == 0) {
         s.append(LINE_SEPARATOR).append("        ");
       }
@@ -332,15 +332,15 @@ public class LanguageClassGenerator {
       } else {
         switch (buckets.length) {
           case 1:
-            temp.append(String.format("{0x%04x}        ", buckets[0]));
+            temp.append(String.format("{0x%04x}        ", (int)buckets[0]));
             break;
           case 2:
-            temp.append(String.format("{0x%04x, 0x%04x}", buckets[0], buckets[1]));
+            temp.append(String.format("{0x%04x, 0x%04x}", (int)buckets[0], (int)buckets[1]));
             break;
           default:
             temp.append("{");
             for (int j = 0; j < buckets.length; ++j) {
-              temp.append(String.format("0x%04x, ", buckets[j]));
+              temp.append(String.format("0x%04x, ", (int)buckets[j]));
             }
             temp.append("}");
             break;
@@ -353,7 +353,7 @@ public class LanguageClassGenerator {
     s.append(LINE_SEPARATOR).append("      // char [][][] codePointRanges");
     s.append(LINE_SEPARATOR).append("      new char[][][] {");
     for (int i = 0; i < keys.length; ++i) {
-      final int[] keyBuckets = keys[i];
+      final char[] keyBuckets = keys[i];
       final int[][] fromBuckets = inclusiveFroms[i];
       final int[][] toBuckets = inclusiveTos[i];
       if (keyBuckets == null) {
@@ -400,17 +400,17 @@ public class LanguageClassGenerator {
       final RangedSubsetOptimiser rangedSubsetOptimiser) {
 
     final var optimalHashedRangedSubsetData = rangedSubsetOptimiser.getOptimalHashedRangedSubsetData();
-    final int[] keys = optimalHashedRangedSubsetData.getBlockKeys();
+    final char[] keys = optimalHashedRangedSubsetData.getBlockKeys();
     final int[][] inclusiveFroms = optimalHashedRangedSubsetData.getInclusiveFroms();
     final int[][] inclusiveTos = optimalHashedRangedSubsetData.getInclusiveTos();
-    s.append(LINE_SEPARATOR).append("      // int [] blockKeys");
-    s.append(LINE_SEPARATOR).append("      new int[] {");
+    s.append(LINE_SEPARATOR).append("      // char [] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new char[] {");
     for (int i = 0; i < keys.length; ++i) {
       final int key = keys[i];
       if (i % 8 == 0) {
         s.append(LINE_SEPARATOR).append("        ");
       }
-      s.append(String.format("0x%08x, ", key));
+      s.append(String.format("0x%04x, ", key));
     }
     s.setLength(s.length() - 2);
     s.append("  },");
@@ -420,7 +420,7 @@ public class LanguageClassGenerator {
       final int key = keys[i];
       final int[] froms = inclusiveFroms[i];
       final int[] tos = inclusiveTos[i];
-      if (key < 0) {
+      if (key == 0xFFFF) {
         s.append(LINE_SEPARATOR).append("        null,");
       } else {
         s.append(LINE_SEPARATOR).append("        {");

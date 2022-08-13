@@ -11,7 +11,7 @@ class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSub
 
   OptimalHashedRangedSubsetWithCategoriesImpl(
       final long includeUnicodeCategoryBitFlags,
-      final int[] blocks,
+      final char[] blocks,
       final char[][] codePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize,
@@ -29,7 +29,7 @@ class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSub
       final String name,
       final String alias,
       final long unicodeCategoryBitFlags,
-      final int[] blocks,
+      final char[] blocks,
       final char[][] codePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize,

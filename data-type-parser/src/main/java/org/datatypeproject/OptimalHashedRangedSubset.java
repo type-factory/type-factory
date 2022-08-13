@@ -16,7 +16,7 @@ interface OptimalHashedRangedSubset extends Subset {
 
   int[] getBlockKeySet();
 
-  int[] getBlockKeys();
+  char[] getBlockKeys();
 
   char[][] getSingleByteCodePointRangesByBlock();
 }

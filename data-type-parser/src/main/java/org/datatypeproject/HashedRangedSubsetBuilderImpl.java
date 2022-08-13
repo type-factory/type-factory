@@ -224,7 +224,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
      *   int[ ][ ] blockKeys
      * </pre>
      */
-    private int[][] blockKeys = new int[INITIAL_BUCKET_CAPACITY][];
+    private char[][] blockKeys = new char[INITIAL_BUCKET_CAPACITY][];
 
     /**
      * <p>The hashed single-byte code-point ranges. The ranges are actually the least significant bytes of the
@@ -319,9 +319,9 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
         inclusiveTo = temp;
       }
 
-      final int blockKeyFrom = inclusiveFrom >> 8;
-      final int blockKeyTo = inclusiveTo >> 8;
-      for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+      final char blockKeyFrom = (char)((inclusiveFrom >> 8) & 0xFF);
+      final char blockKeyTo = (char)((inclusiveTo >> 8) & 0xFF);
+      for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
         // Insert block key into sorted blockKeySet
         final int blockKeySetIndex = blockKeySetSize == 0 ? 0 : Arrays.binarySearch(blockKeySet, 0, blockKeySetSize, blockKey);
         if (blockKeySetSize == 0 || blockKeySet[blockKeySetIndex] != blockKey) {
@@ -338,7 +338,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
         final int from = blockKey == blockKeyFrom ? inclusiveFrom & BYTE_MASK : 0x00;
         final int to = blockKey == blockKeyTo ? inclusiveTo & BYTE_MASK : 0xFF;
         final char codePointRange = RangedSubsetUtils.rangeToChar(from, to);
-        final int[] hashBucket = blockKeys[hashIndex];
+        final char[] hashBucket = blockKeys[hashIndex];
         int hashBucketIndex = 0;
         while (hashBucketIndex < hashBucketSizes[hashIndex]
             && hashBucketIndex < hashBucket.length
@@ -365,7 +365,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
 
     private void ensureHashBucketCapacity(final int hashIndex) {
       if (blockKeys[hashIndex] == null) {
-        blockKeys[hashIndex] = new int[INITIAL_BUCKET_CAPACITY];
+        blockKeys[hashIndex] = new char[INITIAL_BUCKET_CAPACITY];
         codePointRangesByBlock[hashIndex] = new char[INITIAL_BUCKET_CAPACITY][];
         codePointRangesSizes[hashIndex] = new int[INITIAL_BUCKET_CAPACITY];
       } else if (blockKeys[hashIndex].length == hashBucketSizes[hashIndex]) {
@@ -393,7 +393,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
 
     void removeCodePointRanges(final HashedBlockRanges hashedBlockRanges) {
       for (int hashIndex = 0; hashIndex < hashedBlockRanges.blockKeys.length; ++hashIndex) {
-        final int[] hashBucket = hashedBlockRanges.blockKeys[hashIndex];
+        final char[] hashBucket = hashedBlockRanges.blockKeys[hashIndex];
         if (hashBucket != null) {
           for (int hashBucketIndex = 0; hashBucketIndex < hashBucket.length; ++hashBucketIndex) {
             final int block = hashBucket[hashBucketIndex] << 8;
@@ -426,7 +426,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
       final int blockKeyTo = removeInclusiveTo >> 8;
       for (int blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
         final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
-        final int[] hashBucket = blockKeys[hashIndex];
+        final char[] hashBucket = blockKeys[hashIndex];
         int hashBucketIndex = 0;
         while (hashBucketIndex < hashBucketSizes[hashIndex]
             && hashBucketIndex < hashBucket.length
@@ -468,7 +468,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
       int codepointsToRemoveIndex = 0;
 
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
-        final int[] hashBucket = blockKeys[hashIndex];
+        final char[] hashBucket = blockKeys[hashIndex];
         if (hashBucket != null) {
           for (int hashBucketIndex = 0; hashBucketIndex < hashBucket.length; ++hashBucketIndex) {
             final int block = hashBucket[hashBucketIndex] << 8;
@@ -554,7 +554,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
     void compact() {
       blockKeySet = Arrays.copyOf(blockKeySet, blockKeySetSize);
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
-        final int[] hashBucket = blockKeys[hashIndex];
+        final char[] hashBucket = blockKeys[hashIndex];
         if (hashBucket != null) {
           final int hashBucketSize = hashBucketSizes[hashIndex];
           blockKeys[hashIndex] = Arrays.copyOf(blockKeys[hashIndex], hashBucketSize);

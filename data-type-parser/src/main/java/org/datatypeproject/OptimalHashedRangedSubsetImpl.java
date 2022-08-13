@@ -27,12 +27,12 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
    *
    * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
    * <pre>
-   *       ┌─ hashIndex - an index to the hash-bucket which has at most one key
-   *       │
-   *   int[ ] blockKeys
+   *        ┌─ hashIndex - an index to the hash-bucket which has at most one key
+   *        │
+   *   char[ ] blockKeys
    * </pre>
    */
-  private final int[] blockKeys;
+  private final char[] blockKeys;
 
   /**
    * <p>The hashed single-byte code-point ranges. The ranges are actually the least significant bytes of the
@@ -53,7 +53,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   private final int codePointsSize;
 
   OptimalHashedRangedSubsetImpl(
-      final int[] blockKeys,
+      final char[] blockKeys,
       final char[][] singleByteCodePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize) {
@@ -64,7 +64,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   OptimalHashedRangedSubsetImpl(
       final String name,
       final String alias,
-      final int[] blockKeys,
+      final char[] blockKeys,
       final char[][] singleByteCodePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize) {
@@ -83,7 +83,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
-    final int blockKey = codePoint >> 8;
+    final char blockKey = (char)((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final int availableBlockKey = blockKeys[hashIndex];
     if (availableBlockKey < 0 || blockKey != availableBlockKey) {
@@ -127,7 +127,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   }
 
   @Override
-  public int[] getBlockKeys() {
+  public char[] getBlockKeys() {
     return blockKeys;
   }
 
