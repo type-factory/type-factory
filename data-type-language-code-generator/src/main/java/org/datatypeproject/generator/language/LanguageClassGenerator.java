@@ -46,8 +46,8 @@ public class LanguageClassGenerator {
     s.append("""
         package org.datatypeproject;
                 
-        import java.util.Locale;
         import java.util.HashMap;
+        import java.util.Locale;
         import javax.annotation.processing.Generated;
                 
         @Generated(
