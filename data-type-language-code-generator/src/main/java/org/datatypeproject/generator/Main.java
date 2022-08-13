@@ -38,12 +38,12 @@ public class Main {
       System.exit(1);
     }
 
-    final UnicodeGroupData unicodeGroupData = new UnicodeGroupData();
+    final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
     final LanguageClassGenerator languageClassGenerator = new LanguageClassGenerator(outputDirectory, unicodeGroupData);
 
     languageClassGenerator.generateLanguageClass();
-
-    languageClassGenerator.organizeIntoBlockRanged(
-        languageClassGenerator.createJapaneseJSourceSet());
+//
+//    languageClassGenerator.organizeIntoBlockRanged(
+//        languageClassGenerator.createJapaneseJSourceSet());
   }
 }

@@ -1,6 +1,6 @@
 package org.datatypeproject;
 
-class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl {
+class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSubsetImpl {
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
@@ -9,32 +9,32 @@ class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl {
 
   private final int categoriesSize;
 
-  RangedSubsetWithCategoriesImpl(
+  OptimalHashedRangedSubsetWithCategoriesImpl(
       final long includeUnicodeCategoryBitFlags,
-      final char[] singleByteCodePointRanges,
-      final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges,
+      final int[] blocks,
+      final char[][] codePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize,
       final int categoriesSize) {
     this("", "",
         includeUnicodeCategoryBitFlags,
-        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        rangesSize, codePointsSize, categoriesSize);
+        blocks,
+        codePointRangesByBlock,
+        rangesSize,
+        codePointsSize,
+        categoriesSize);
   }
 
-  RangedSubsetWithCategoriesImpl(
+  OptimalHashedRangedSubsetWithCategoriesImpl(
       final String name,
       final String alias,
       final long unicodeCategoryBitFlags,
-      final char[] singleByteCodePointRanges,
-      final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges,
+      final int[] blocks,
+      final char[][] codePointRangesByBlock,
       final int rangesSize,
       final int codePointsSize,
       final int categoriesSize) {
-    super(name, alias, singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        rangesSize, codePointsSize);
+    super(name, alias, blocks, codePointRangesByBlock, rangesSize, codePointsSize);
     this.unicodeCategoryBitFlags = unicodeCategoryBitFlags;
     this.categoriesSize = categoriesSize;
   }

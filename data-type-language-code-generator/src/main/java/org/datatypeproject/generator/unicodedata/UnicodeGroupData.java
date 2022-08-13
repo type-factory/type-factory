@@ -22,6 +22,7 @@ import org.unicode.ns._2003.ucd._1.Ucd;
 
 public class UnicodeGroupData {
 
+  public static final UnicodeGroupData INSTANCE = new UnicodeGroupData();
   private final String unicodeAllGroupedXmlFileName;
   private final Ucd ucd;
   private final TreeMap<String, Block> blocksByTheirAbbreviation;
@@ -35,7 +36,7 @@ public class UnicodeGroupData {
   private final UnicodeSet gSourceSubset;
   private final UnicodeSet tSourceSubset;
 
-  public UnicodeGroupData() {
+  private UnicodeGroupData() {
     this.unicodeAllGroupedXmlFileName = "ucd.all.grouped.xml";
     this.ucd = loadUnicodeContentFromXml();
 

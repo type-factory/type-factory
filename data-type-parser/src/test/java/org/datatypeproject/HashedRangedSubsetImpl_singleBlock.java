@@ -2,11 +2,13 @@ package org.datatypeproject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class BlockRangedSubsetImpl_singleBlock {
+class HashedRangedSubsetImpl_singleBlock {
 
   @ParameterizedTest
   @ValueSource(strings = {
@@ -23,18 +25,18 @@ class BlockRangedSubsetImpl_singleBlock {
   })
   void includeChar_singleByteTest(final char value) {
 
-    final BlockRangedSubset actual = BlockRangedSubset.builder()
+    final HashedRangedSubset actual = HashedRangedSubset.builder()
         .includeChar(value)
         .build();
 
-    assertThat(actual).isNotNull().isExactlyInstanceOf(BlockRangedSubsetImpl.class);
+
+    assertThat(actual).isNotNull().isExactlyInstanceOf(HashedRangedSubsetImpl.class);
     assertThat(actual.isEmpty()).isFalse();
     assertThat(actual.isNotEmpty()).isTrue();
     assertThat(actual.contains(value)).isTrue();
-    assertThat(actual.getBlocks()).hasSize(1);
-    assertThat(actual.getBlocks()).containsOnly(0x00);
-    assertThat(actual.getSingleByteCodePointRangesByBlock()).hasDimensions(1, 1);
-    assertThat(actual.getSingleByteCodePointRangesByBlock()[0]).containsOnly(RangedSubsetUtils.rangeToChar(value, value));
+    assertThat(actual.getBlockKeySet()).hasSize(1);
+    assertThat(actual.getBlockKeySet()).containsOnly(0x00);
+    assertThat(actual.ranges()).containsOnly(new MutableCodePointRange(value, value));
   }
 
   enum SingleByteTestSource {
@@ -75,17 +77,27 @@ class BlockRangedSubsetImpl_singleBlock {
       this.chars = chars;
       this.expectedRanges = expectedRanges;
     }
+
+    Iterable<CodePointRange> expectedCodePointRanges() {
+      final List<CodePointRange> result = new ArrayList<>();
+      for (char expectedRange : expectedRanges) {
+        result.add(new MutableCodePointRange(
+            RangedSubsetUtils.getInclusiveFrom(expectedRange),
+            RangedSubsetUtils.getInclusiveTo(expectedRange)));
+      }
+      return result;
+    }
   }
 
   @ParameterizedTest
   @EnumSource(SingleByteTestSource.class)
   void includeChars_singleByteTest(final SingleByteTestSource testSource) {
 
-    final BlockRangedSubset actual = BlockRangedSubset.builder()
+    final HashedRangedSubset actual = HashedRangedSubset.builder()
         .includeChars(testSource.chars)
         .build();
 
-    assertThat(actual).isNotNull().isExactlyInstanceOf(BlockRangedSubsetImpl.class);
+    assertThat(actual).isNotNull().isExactlyInstanceOf(HashedRangedSubsetImpl.class);
     assertThat(actual.isEmpty()).isFalse();
     assertThat(actual.isNotEmpty()).isTrue();
 
@@ -93,9 +105,8 @@ class BlockRangedSubsetImpl_singleBlock {
       assertThat(actual.contains(ch)).isTrue();
     }
 
-    assertThat(actual.getBlocks()).hasSize(1);
-    assertThat(actual.getBlocks()).containsOnly(0x00);
-    assertThat(actual.getSingleByteCodePointRangesByBlock()).hasDimensions(1, testSource.chars.length);
-    assertThat(actual.getSingleByteCodePointRangesByBlock()[0]).containsOnly(testSource.expectedRanges);
+    assertThat(actual.getBlockKeySet()).hasSize(1);
+    assertThat(actual.getBlockKeySet()).containsOnly(0x00);
+    assertThat(actual.ranges()).containsAll(testSource.expectedCodePointRanges());
   }
 }

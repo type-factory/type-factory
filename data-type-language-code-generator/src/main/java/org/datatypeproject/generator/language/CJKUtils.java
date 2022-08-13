@@ -1,22 +1,13 @@
 package org.datatypeproject.generator.language;
 
-import static org.datatypeproject.generator.language.CodePointRange.range;
-
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
-import java.util.ArrayList;
+import org.datatypeproject.generator.unicodedata.UnicodeGroupData;
 
-interface CJKUtils {
+class CJKUtils {
 
-  static CodePointRange[] getCJKLettersCodePointRanges() {
-    final UnicodeSet cjkLetters = getCJKLetters();
-    final ArrayList<CodePointRange> codePointRanges = new ArrayList<>();
-    for (EntryRange entryRange : cjkLetters.ranges()) {
-      codePointRanges.add(range(entryRange.codepoint, entryRange.codepointEnd));
-    }
-    return codePointRanges.toArray(new CodePointRange[0]);
-  }
+  static UnicodeSet japaneseJSourceSet = null;
 
   static UnicodeSet getCJKLetters() {
     final UnicodeSet cjkRanges = new UnicodeSet();
@@ -45,9 +36,9 @@ interface CJKUtils {
     final UnicodeSet cjkLetters = new UnicodeSet();
 
     for (EntryRange entryRange : cjkRanges.ranges()) {
-      for (int cp = entryRange.codepoint; cp <= entryRange.codepointEnd; ++cp) {
-        if (UCharacter.isLetter(cp) && !UCharacter.isDigit(cp)) {
-          cjkLetters.add(cp);
+      for (int codePoint = entryRange.codepoint; codePoint <= entryRange.codepointEnd; ++codePoint) {
+        if (UCharacter.isLetter(codePoint)) {
+          cjkLetters.add(codePoint);
         }
       }
     }
@@ -55,4 +46,21 @@ interface CJKUtils {
     cjkRanges.freeze();
     return cjkLetters;
   }
+
+  static UnicodeSet getJapaneseJSourceLetters() {
+    if (japaneseJSourceSet == null) {
+      final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
+      final UnicodeSet result = new UnicodeSet();
+      for (EntryRange range : unicodeGroupData.getJSourceSubset().ranges()) {
+        for (int codePoint = range.codepoint; codePoint <= range.codepointEnd; ++codePoint) {
+          if (UCharacter.isLetter(codePoint)) {
+            result.add(codePoint);
+          }
+        }
+      }
+      japaneseJSourceSet = result.compact().freeze();
+    }
+    return japaneseJSourceSet;
+  }
+
 }

@@ -1,6 +1,5 @@
 package org.datatypeproject;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -17,10 +16,13 @@ public interface Subset {
   }
 
   /**
-   * An iterable of code-point ranges in this subset.
+   * <p>An iterable of code-point ranges in this subset.</p>
    *
-   * @return an iterable of the code-point ranges in this subset. You should assume that the {@link ImmutableCodePointRange} instance within the iterable is
-   * reused. If you need to keep {@link ImmutableCodePointRange} instances, then you should make a copy of them as you iterate over the elements.
+   * <p><b>Note:</b> The iterable {@link CodePointRange} instance is reused with each iteration.
+   * Use {@link CodePointRange#copy()} if you need to keep references to each of the code-point ranges.</p>
+   *
+   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each iteration.
+   * @see CodePointRange#copy()
    */
   Iterable<CodePointRange> ranges();
 
@@ -130,15 +132,6 @@ public interface Subset {
     return builder()
         .includeSubsets(subsets)
         .build();
-  }
-
-  interface CodePointRange extends Comparable<CodePointRange>, Serializable, Cloneable {
-
-    int getInclusiveFrom();
-
-    int getInclusiveTo();
-
-    CodePointRange copy();
   }
 
 }

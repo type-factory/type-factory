@@ -10,7 +10,7 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
       TypeParser.builder(SomeType.class)
           .errorMessage("Must be made up of Hindi letters only.")
           .toCharacterNormalizationFormNFC()
-          .acceptLanguage(Language.HINDI_hi)
+          .acceptSubset(Letters.HINDI_hi)
           .normalizeWhitespace()
           .build();
 

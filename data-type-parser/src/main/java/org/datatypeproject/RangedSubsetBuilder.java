@@ -63,5 +63,5 @@ interface RangedSubsetBuilder extends SubsetBuilder {
   RangedSubsetBuilder excludeSubsets(final Collection<Subset> subsets);
 
   @Override
-  RangedSubset build();
+  Subset build();
 }

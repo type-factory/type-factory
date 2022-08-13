@@ -22,7 +22,7 @@ interface BlockRangedSubset extends Subset {
 
   int[] getBlocks();
 
-  char[][] getSingleByteCodePointRangeByBlock();
+  char[][] getSingleByteCodePointRangesByBlock();
 
   @Override
   default boolean isEmpty() {
@@ -35,7 +35,7 @@ interface BlockRangedSubset extends Subset {
     final int index = Arrays.binarySearch(getBlocks(), blockKey);
     return RangedSubsetUtils.contains(
         codePoint | BYTE_MASK,
-        getSingleByteCodePointRangeByBlock()[index],
+        getSingleByteCodePointRangesByBlock()[index],
         EMPTY_INT_ARRAY,
         EMPTY_LONG_ARRAY);
   }

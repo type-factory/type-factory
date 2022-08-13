@@ -9,7 +9,7 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
   static final TypeParser TYPE_PARSER = TypeParser.builder(SomeType.class)
       .errorMessage("Must be made up of French letters only.")
       .toCharacterNormalizationFormNFC()
-      .acceptLanguage(Language.FRENCH_fr)
+      .acceptSubset(Letters.FRENCH_fr)
       .convertAllDashesToHyphen()
       .acceptChar('\'')
       .normalizeWhitespace()

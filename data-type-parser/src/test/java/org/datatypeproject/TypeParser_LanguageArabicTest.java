@@ -18,7 +18,7 @@ class TypeParser_LanguageArabicTest extends AbstractTypeParserTest {
         TypeParser.builder(SomeType.class)
             .errorMessage("Must be made up of Arabic letters only.")
             .toCharacterNormalizationFormNFC()
-            .acceptLanguage(Language.ARABIC_ar)
+            .acceptSubset(Letters.ARABIC_ar)
             .normalizeWhitespace()
             .build();
     Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);

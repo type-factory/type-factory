@@ -2,7 +2,6 @@ package org.datatypeproject;
 
 import java.io.Serial;
 import java.util.Objects;
-import org.datatypeproject.Subset.CodePointRange;
 
 /**
  * An immutable code-point range – a tuple of the inclusive-from and inclusive-to code-points.

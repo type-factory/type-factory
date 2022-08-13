@@ -1,7 +1,6 @@
 package org.datatypeproject;
 
 import java.util.Objects;
-import org.datatypeproject.Subset.CodePointRange;
 
 /**
  * A mutable code-point range – a tuple of the inclusive-from and inclusive-to code-points.

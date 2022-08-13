@@ -3,8 +3,8 @@ package org.datatypeproject;
 import java.util.Arrays;
 
 /**
- * Provides typesafe versions of the Unicode character categories defined in the {@link Character Character} class for use with the {@link
- * TypeParserBuilder}. Once built the {@link TypeParserImpl} will use a bit-mask for improved performance.
+ * Provides typesafe versions of the Unicode character categories defined in the {@link Character Character} class for use with the
+ * {@link TypeParserBuilder}. Once built the {@link TypeParserImpl} will use a bit-mask for improved performance.
  *
  * @see Character#COMBINING_SPACING_MARK
  * @see Character#CONNECTOR_PUNCTUATION
@@ -151,20 +151,20 @@ public enum Category {
    */
   DASH_PUNCTUATION(Character.DASH_PUNCTUATION, "Pd", "Dash_Punctuation"),
 
-//    TODO In latest Unicode standard – support when available in JDK
-//    /**
-//     * Ps, Open_Punctuation – an opening punctuation mark (of a pair).
-//     *
-//     * @see Character#OPEN_PUNCTUATION
-//     */
-//    OPEN_PUNCTUATION(Character.OPEN_PUNCTUATION, "Ps", "Open_Punctuation"),
-//
-//    /**
-//     * Pe, Close_Punctuation – a closing punctuation mark (of a pair).
-//     *
-//     * @see Character#CLOSE_PUNCTUATION
-//     */
-//    CLOSE_PUNCTUATION(Character.CLOSE_PUNCTUATION, "Pe", "Close_Punctuation"),
+  // TODO In latest Unicode standard – support when available in JDK
+  /**
+   * Ps, Open_Punctuation – an opening punctuation mark (of a pair).
+   *
+   * @see Character#START_PUNCTUATION
+   */
+  START_PUNCTUATION(Character.START_PUNCTUATION, "Ps", "Start_Punctuation"),
+
+  /**
+   * Pe, Close_Punctuation – a closing punctuation mark (of a pair).
+   *
+   * @see Character#END_PUNCTUATION
+   */
+  END_PUNCTUATION(Character.END_PUNCTUATION, "Pe", "End_Punctuation"),
 
   /**
    * Pi, Initial_Punctuation – an initial quotation mark.
@@ -191,7 +191,7 @@ public enum Category {
    * P, Punctuation – Pc | Pd | Ps | Pe | Pi | Pf | Po.
    */
   PUNCTUATION("P", "Punctuation", CONNECTOR_PUNCTUATION, DASH_PUNCTUATION,
-      /* OPEN_PUNCTUATION, CLOSE_PUNCTUATION */
+      START_PUNCTUATION, END_PUNCTUATION,
       INITIAL_QUOTE_PUNCTUATION, FINAL_QUOTE_PUNCTUATION, OTHER_PUNCTUATION),
 
   /**

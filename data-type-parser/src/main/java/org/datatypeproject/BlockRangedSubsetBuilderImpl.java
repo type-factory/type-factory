@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.datatypeproject.Subset.CodePointRange;
 
 public class BlockRangedSubsetBuilderImpl implements BlockRangedSubsetBuilder {
 

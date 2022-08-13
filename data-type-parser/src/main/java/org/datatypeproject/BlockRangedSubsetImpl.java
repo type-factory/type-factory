@@ -18,7 +18,7 @@ class BlockRangedSubsetImpl implements BlockRangedSubset {
 
   private final int[] blocks;
 
-  private final char[][] singleByteCodePointRangeByBlock;
+  private final char[][] singleByteCodePointRangesByBlock;
 
   BlockRangedSubsetImpl(
       final int[] blocks,
@@ -34,7 +34,7 @@ class BlockRangedSubsetImpl implements BlockRangedSubset {
     this.name = name;
     this.alias = alias;
     this.blocks = blocks;
-    this.singleByteCodePointRangeByBlock = singleByteCodePointRangeByBlock;
+    this.singleByteCodePointRangesByBlock = singleByteCodePointRangeByBlock;
   }
 
   @Override
@@ -52,7 +52,7 @@ class BlockRangedSubsetImpl implements BlockRangedSubset {
     }
     return RangedSubsetUtils.contains(
         codePoint & BYTE_MASK,
-        singleByteCodePointRangeByBlock[index],
+        singleByteCodePointRangesByBlock[index],
         EMPTY_INT_ARRAY,
         EMPTY_LONG_ARRAY);
   }
@@ -73,8 +73,8 @@ class BlockRangedSubsetImpl implements BlockRangedSubset {
   }
 
   @Override
-  public char[][] getSingleByteCodePointRangeByBlock() {
-    return singleByteCodePointRangeByBlock;
+  public char[][] getSingleByteCodePointRangesByBlock() {
+    return singleByteCodePointRangesByBlock;
   }
 
   @Override
@@ -99,16 +99,16 @@ class BlockRangedSubsetImpl implements BlockRangedSubset {
     @Override
     public boolean hasNext() {
       return index < blocks.length
-      || (index == blocks.length && singleByteIndex < singleByteCodePointRangeByBlock[index].length);
+      || (index == blocks.length && singleByteIndex < singleByteCodePointRangesByBlock[index].length);
     }
 
     @Override
     public CodePointRange next() {
-      if (singleByteIndex < singleByteCodePointRangeByBlock[index].length) {
-        result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRangeByBlock[index][singleByteIndex]);
-        result.inclusiveTo = getInclusiveTo(singleByteCodePointRangeByBlock[index][singleByteIndex]);
+      if (singleByteIndex < singleByteCodePointRangesByBlock[index].length) {
+        result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRangesByBlock[index][singleByteIndex]);
+        result.inclusiveTo = getInclusiveTo(singleByteCodePointRangesByBlock[index][singleByteIndex]);
         singleByteIndex++;
-        if (singleByteIndex == singleByteCodePointRangeByBlock[index].length) {
+        if (singleByteIndex == singleByteCodePointRangesByBlock[index].length) {
           index++;
           singleByteIndex = 0;
         }

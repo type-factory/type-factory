@@ -503,13 +503,13 @@ public class TypeParserBuilder {
     return this;
   }
 
-  public TypeParserBuilder acceptLanguage(final Language language) {
-    rangedSubsetBuilder.includeSubset(language);
+  public TypeParserBuilder acceptSubset(final Subset subset) {
+    rangedSubsetBuilder.includeSubset(subset);
     return this;
   }
 
-  public TypeParserBuilder acceptLanguages(final Language... languages) {
-    rangedSubsetBuilder.includeSubsets(languages);
+  public TypeParserBuilder acceptSubsets(final Subset... subsets) {
+    rangedSubsetBuilder.includeSubsets(subsets);
     return this;
   }
 

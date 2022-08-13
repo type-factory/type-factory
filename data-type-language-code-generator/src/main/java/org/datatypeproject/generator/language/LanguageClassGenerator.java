@@ -5,7 +5,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.datatypeproject.generator.language.JavadocFragments.LANGUAGE_ALPHABET_INCLUDED_JAVADOC;
 import static org.datatypeproject.generator.language.LanguageData.LETTERS_JAPANESE_JA_HANI;
-import static org.datatypeproject.generator.language.LanguageData.LETTERS_JAPANESE_JA_JSOURCE;
 
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
@@ -48,12 +47,35 @@ public class LanguageClassGenerator {
         package org.datatypeproject;
                 
         import java.util.Locale;
+        import java.util.HashMap;
         import javax.annotation.processing.Generated;
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
             value = "org.datatypeproject:data-type-language-code-generator")     
-        public interface Language extends Subset {""");
+        public class Letters {
+                
+          private static final Index index = new Index();
+          
+          private Letters() {
+            // don't instantiate
+          }
+          
+          private static class Index {
+            private HashMap<Locale, Subset> localeSubsets = new HashMap();
+            private void put(final Locale locale, final Subset subset) {
+              localeSubsets.put(locale, subset);
+            }
+            private Subset get(final Locale locale) {
+              return localeSubsets.get(locale);
+            }
+          }
+          
+          private static Subset registerSubset(final Locale locale, final Subset subset) {
+            index.put(locale, subset);
+            return subset;
+          }
+        """);
 
     for (LanguageData languageData : LanguageData.values()) {
       final ULocale locale = languageData.getLocale();
@@ -64,6 +86,7 @@ public class LanguageClassGenerator {
       final String localeLanguageTag = locale.toLanguageTag().replaceAll("[\s_-]+", "_");
       final String displayLanguage = locale.getDisplayLanguage().replaceAll("[\s_-]+", "_");
       final String enumName = String.format("%s_%s", displayLanguage.toUpperCase(), localeLanguageTag);
+      final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
 
       s.append(LINE_SEPARATOR);
       appendJavadoc(s, languageData, enumName);
@@ -71,7 +94,7 @@ public class LanguageClassGenerator {
         createAlphabetCharactersHtml(languageData);
       }
 
-      s.append(String.format("  Language %s = new LanguageImpl(", enumName));
+      s.append(String.format("  public static final Subset %s = registerSubset(", enumName));
       if (locale.getScript() == null || locale.getScript().isBlank()) {
         s.append(String.format("%n      new Locale(\"%s\", \"%s\", \"%s\"),",
             localeLanguage, localeCountry, localeVariant));
@@ -80,15 +103,23 @@ public class LanguageClassGenerator {
             localeLanguage, localeCountry, localeVariant, localeScript));
       }
 
-      final UnicodeSet unicodeSet = LETTERS_JAPANESE_JA_JSOURCE == languageData
-          ? createJapaneseJSourceSet()
-          : languageData.getUnicodeSet();
-
-      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x00, 0xFF, "char", "0x%02x_%02x");
-      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
-      appendCodepointArrayRanges(s, unicodeSet, languageData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
-      s.setLength(s.length() - 1);
-      s.append(");");
+      switch (languageData) {
+        case LETTERS_JAPANESE_JA_JSOURCE:
+        case LETTERS_JAPANESE_JA_JINMEIYO:
+          final String letterClassName = generateLettersClassForSingleLanguage(languageData);
+          s.append(LINE_SEPARATOR).append("      ").append(letterClassName).append(".SUBSET);");
+          break;
+        default:
+          s.append(LINE_SEPARATOR).append("      new RangedSubsetImpl(");
+          final Sizes singleByteSizes = appendCodepointArrayRanges(s, languageData, 0x00, 0xFF, "char", "0x%02x_%02x");
+          final Sizes doubleByteSizes = appendCodepointArrayRanges(s, languageData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
+          final Sizes tripleByteSizes = appendCodepointArrayRanges(s, languageData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
+          s.append(LINE_SEPARATOR).append("      ");
+          s.append(singleByteSizes.rangesSize + doubleByteSizes.rangesSize + tripleByteSizes.rangesSize).append(", ");
+          s.append(singleByteSizes.codePointsSize + doubleByteSizes.codePointsSize + tripleByteSizes.codePointsSize);
+          s.append("));");
+          break;
+      }
     }
 
     s.append(LINE_SEPARATOR);
@@ -96,7 +127,7 @@ public class LanguageClassGenerator {
         }
         """);
 
-    try (final FileWriter fileWriter = new FileWriter(outputDirectory + File.separator + "Language.java")) {
+    try (final FileWriter fileWriter = new FileWriter(outputDirectory + File.separator + "Letters.java")) {
       fileWriter.append(s.toString());
       fileWriter.flush();
     } catch (final IOException e) {
@@ -104,18 +135,72 @@ public class LanguageClassGenerator {
     }
   }
 
-  private void appendCodepointArrayRanges(
+  private String generateLettersClassForSingleLanguage(final LanguageData languageData) {
+    final ULocale locale = languageData.getLocale();
+    final String localeLanguageTag = locale.toLanguageTag().replaceAll("[\s_-]+", "_");
+    final String displayLanguage = locale.getDisplayLanguage().replaceAll("[\s_-]+", "_");
+    final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
+    final RangedSubsetOptimiser rangedSubsetOptimiser = new RangedSubsetOptimiser(languageData.getUnicodeSet());
+
+    final StringBuilder s = new StringBuilder();
+
+    s.append(String.format("""
+        package org.datatypeproject;
+                
+        import javax.annotation.processing.Generated;
+                
+        @Generated(
+            comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
+            value = "org.datatypeproject:data-type-language-code-generator")     
+        public class %s {
+                
+        """, lettersClassName));
+
+    if (rangedSubsetOptimiser.containsHashBucketsWithMultipleKeys()) {
+      s.append("  public static final Subset SUBSET = new HashedRangedSubsetImpl(").append(LINE_SEPARATOR);
+      appendHashedBlockRangedSubset(s, languageData, rangedSubsetOptimiser);
+    } else {
+      s.append("  public static final Subset SUBSET = new OptimalHashedRangedSubsetImpl(").append(LINE_SEPARATOR);
+      appendOptimalHashedBlockRangedSubset(s, languageData, rangedSubsetOptimiser);
+    }
+    s.append(");");
+
+    s.append(LINE_SEPARATOR);
+    s.append("""
+        }
+        """);
+
+    try (final FileWriter fileWriter = new FileWriter(
+        outputDirectory + /* TODO File.separator + "letters" + */ File.separator + lettersClassName + ".java")) {
+      fileWriter.append(s.toString());
+      fileWriter.flush();
+    } catch (final IOException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
+    }
+    return lettersClassName;
+  }
+
+  private static class Sizes {
+    public final int rangesSize;
+    public final int codePointsSize;
+
+    public Sizes(final int rangesSize, final int codePointsSize) {
+      this.rangesSize = rangesSize;
+      this.codePointsSize = codePointsSize;
+    }
+  }
+  private Sizes appendCodepointArrayRanges(
       final StringBuilder s,
-      final UnicodeSet unicodeSet,
       final LanguageData languageData,
       final int rangeStart,
       final int rangeEnd,
       final String rangeArrayType,
       final String rangeFormat) {
 
+    final UnicodeSet unicodeSet = languageData.getUnicodeSet();
     final String indentedRangeFormat = "          " + rangeFormat + ", // ";
     if (unicodeSet == null || unicodeSet.isEmpty()) {
-      return;
+      return new Sizes(0,0);
     }
     boolean arrayStarted = false;
     final String indent = switch (rangeArrayType) {
@@ -124,6 +209,8 @@ public class LanguageClassGenerator {
       case "long" -> new String(new char[32]).replace('\0', ' ');
       default -> "";
     };
+    int rangesSize = 0;
+    int codePointsSize = 0;
     for (EntryRange range : unicodeSet.ranges()) {
       final int from = range.codepoint;
       final int to = range.codepointEnd;
@@ -133,10 +220,12 @@ public class LanguageClassGenerator {
             s.append(LINE_SEPARATOR)
                 .append("      // See Javadoc for full set of unicode code points in the following ranges.");
           }
-          s.append(LINE_SEPARATOR).append("      new ").append(rangeArrayType).append("[]{").append(LINE_SEPARATOR);
+          s.append(LINE_SEPARATOR).append("        new ").append(rangeArrayType).append("[]{").append(LINE_SEPARATOR);
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
+        rangesSize++;
+        codePointsSize += (to - from + 1);
         if (languageData == LETTERS_JAPANESE_JA_HANI) {
           for (int c = from; c <= min(to, from + 20); ++c) {
             s.append(' ').appendCodePoint(c);
@@ -156,6 +245,7 @@ public class LanguageClassGenerator {
     if (arrayStarted) {
       s.append("      },");
     }
+    return new Sizes(rangesSize, codePointsSize);
   }
 
   private static void appendJavadoc(
@@ -220,6 +310,142 @@ public class LanguageClassGenerator {
     }
   }
 
+  private static void appendHashedBlockRangedSubset(
+      final StringBuilder s,
+      final LanguageData languageData,
+      final RangedSubsetOptimiser rangedSubsetOptimiser) {
+
+    final var hashedRangedSubsetData = rangedSubsetOptimiser.getHashedRangedSubsetData();
+    final int[][] keys = hashedRangedSubsetData.getBlockKeys();
+    final int[][][] inclusiveFroms = hashedRangedSubsetData.getInclusiveFroms();
+    final int[][][] inclusiveTos = hashedRangedSubsetData.getInclusiveTos();
+    s.append(LINE_SEPARATOR).append("      // int [][] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new int[][] {");
+    for (int i = 0; i < keys.length; ++i) {
+      final int[] buckets = keys[i];
+      if (i % 8 == 0) {
+        s.append(LINE_SEPARATOR).append("        ");
+      }
+      final StringBuilder temp = new StringBuilder();
+      if (buckets == null || buckets.length == 0) {
+        temp.append(" null           ");
+      } else {
+        switch (buckets.length) {
+          case 1:
+            temp.append(String.format("{0x%04x}        ", buckets[0]));
+            break;
+          case 2:
+            temp.append(String.format("{0x%04x, 0x%04x}", buckets[0], buckets[1]));
+            break;
+          default:
+            temp.append("{");
+            for (int j = 0; j < buckets.length; ++j) {
+              temp.append(String.format("0x%04x, ", buckets[j]));
+            }
+            temp.append("}");
+            break;
+        }
+      }
+      s.append(String.format("%-16s, ", temp));
+    }
+    s.setLength(s.length() - 2);
+    s.append("  },");
+    s.append(LINE_SEPARATOR).append("      // char [][][] codePointRanges");
+    s.append(LINE_SEPARATOR).append("      new char[][][] {");
+    for (int i = 0; i < keys.length; ++i) {
+      final int[] keyBuckets = keys[i];
+      final int[][] fromBuckets = inclusiveFroms[i];
+      final int[][] toBuckets = inclusiveTos[i];
+      if (keyBuckets == null) {
+        s.append(LINE_SEPARATOR).append("        null,");
+      } else {
+        s.append(LINE_SEPARATOR).append("        {");
+        for (int j = 0; j < fromBuckets.length; ++j) {
+          final int key = keyBuckets[j];
+          if (j > 0) {
+            s.append(LINE_SEPARATOR).append("         ");
+          }
+          s.append(String.format(" // 0x%04x__ codePoint ranges", key));
+          s.append(LINE_SEPARATOR).append("          ");
+          final int[] froms = fromBuckets[j];
+          final int[] tos = toBuckets[j];
+          s.append("{");
+          for (int k = 0; k < froms.length; ++k) {
+            if (k > 0 && k % 8 == 0) {
+              s.append(LINE_SEPARATOR).append("           ");
+            }
+            final int from = froms[k];
+            final int to = tos[k];
+            s.append(String.format("0x%02x_%02x, ", from & 0xFF, to & 0xFF));
+//            s.append(String.format("0x%06x_%06x, ", from, to));
+          }
+          s.setLength(s.length() - 2);
+          s.append("},");
+        }
+        s.setLength(s.length() - 1);
+        s.append("}, ");
+      }
+    }
+    s.setLength(s.length() - 2);
+    s.append("},");
+    s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
+    s.append(LINE_SEPARATOR).append("        ").append(hashedRangedSubsetData.getRangesSize()).append(",");
+    s.append(LINE_SEPARATOR).append("        // number of code-points");
+    s.append(LINE_SEPARATOR).append("        ").append(hashedRangedSubsetData.getCodePointsSize());
+  }
+
+  private static void appendOptimalHashedBlockRangedSubset(
+      final StringBuilder s,
+      final LanguageData languageData,
+      final RangedSubsetOptimiser rangedSubsetOptimiser) {
+
+    final var optimalHashedRangedSubsetData = rangedSubsetOptimiser.getOptimalHashedRangedSubsetData();
+    final int[] keys = optimalHashedRangedSubsetData.getBlockKeys();
+    final int[][] inclusiveFroms = optimalHashedRangedSubsetData.getInclusiveFroms();
+    final int[][] inclusiveTos = optimalHashedRangedSubsetData.getInclusiveTos();
+    s.append(LINE_SEPARATOR).append("      // int [] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new int[] {");
+    for (int i = 0; i < keys.length; ++i) {
+      final int key = keys[i];
+      if (i % 8 == 0) {
+        s.append(LINE_SEPARATOR).append("        ");
+      }
+      s.append(String.format("0x%08x, ", key));
+    }
+    s.setLength(s.length() - 2);
+    s.append("  },");
+    s.append(LINE_SEPARATOR).append("      // char [][] codePointRanges");
+    s.append(LINE_SEPARATOR).append("      new char[][] {");
+    for (int i = 0; i < keys.length; ++i) {
+      final int key = keys[i];
+      final int[] froms = inclusiveFroms[i];
+      final int[] tos = inclusiveTos[i];
+      if (key < 0) {
+        s.append(LINE_SEPARATOR).append("        null,");
+      } else {
+        s.append(LINE_SEPARATOR).append("        {");
+        s.append(String.format(" // 0x%04x__ codePoint ranges", key));
+        s.append(LINE_SEPARATOR).append("          ");
+        for (int j = 0; j < froms.length; ++j) {
+          if (j > 0 && j % 8 == 0) {
+            s.append(LINE_SEPARATOR).append("          ");
+          }
+          final int from = froms[j];
+          final int to = tos[j];
+          s.append(String.format("0x%02x_%02x, ", from & 0xFF, to & 0xFF));
+        }
+        s.setLength(s.length() - 2);
+        s.append("},");
+      }
+    }
+    s.setLength(s.length() - 1);
+    s.append("},");
+    s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
+    s.append(LINE_SEPARATOR).append("        ").append(optimalHashedRangedSubsetData.getRangesSize()).append(",");
+    s.append(LINE_SEPARATOR).append("        // number of code-points");
+    s.append(LINE_SEPARATOR).append("        ").append(optimalHashedRangedSubsetData.getCodePointsSize());
+  }
+
   public void organizeIntoBlockRanged(final UnicodeSet unicodeSet) {
 
     final Set<Integer> blockKeys = new TreeSet();
@@ -272,7 +498,7 @@ public class LanguageClassGenerator {
   HashSlotData findOptimalNumberOfBlockKeyHashSlots(final Set<Integer> blockKeys) {
     final int blockKeyCount = blockKeys.size();
     final int start = Math.max(7, (int) Math.floor(blockKeyCount * 0.7D));
-    final int end = Math.max(7, (int) Math.ceil(blockKeyCount * 1.1D));
+    final int end = Math.max(7, (int) Math.ceil(blockKeyCount * 2.1D));
     final List<HashSlotData> hashSlotDataList = new ArrayList<>();
     for (int i = start; i <= end; ++i) {
       final HashSlotData hashSlotData = new HashSlotData(i);
@@ -283,7 +509,7 @@ public class LanguageClassGenerator {
     }
     hashSlotDataList.sort(Comparator.comparingDouble(HashSlotData::getWeight));
     final StringBuilder s = new StringBuilder();
-    s.append(LINE_SEPARATOR).append("keys  slots   weight  0-keys  1-key  2-keys  3-keys  4-keys  5+keys");
+    s.append(LINE_SEPARATOR).append("keys  weight  slots  0-keys  1-key  2-keys  3-keys  4-keys  5+keys");
     for (HashSlotData hashSlotData : hashSlotDataList) {
       s.append(LINE_SEPARATOR).append(hashSlotData);
     }
@@ -430,18 +656,7 @@ public class LanguageClassGenerator {
         hasMultipleKeysPerSlot = true;
       }
     }
-  }
 
-  public UnicodeSet createJapaneseJSourceSet() {
-    final UnicodeSet result = new UnicodeSet();
-    for (EntryRange range : unicodeGroupData.getJSourceSubset().ranges()) {
-      for (int codePoint = range.codepoint; codePoint <= range.codepointEnd; ++codePoint) {
-        if (Character.isAlphabetic(codePoint)) {
-          result.add(codePoint);
-        }
-      }
-    }
-    return result.compact().freeze();
   }
 
   private void createAlphabetCharactersHtml(

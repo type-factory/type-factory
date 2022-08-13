@@ -23,7 +23,7 @@ class RangedSubsetImpl_singleByteTest {
   })
   void includeChar_singleByteTest(final char value) {
 
-    final RangedSubset actual = RangedSubset.builder()
+    final Subset actual = RangedSubset.builder()
         .includeChar(value)
         .build();
 
@@ -31,9 +31,11 @@ class RangedSubsetImpl_singleByteTest {
     assertThat(actual.isEmpty()).isFalse();
     assertThat(actual.isNotEmpty()).isTrue();
     assertThat(actual.contains(value)).isTrue();
-    assertThat(actual.getSingleByteCodePointRanges()).containsOnly(RangedSubsetUtils.rangeToChar(value, value));
-    assertThat(actual.getDoubleByteCodePointRanges()).isEmpty();
-    assertThat(actual.getTripleByteCodePointRanges()).isEmpty();
+
+    final RangedSubset rangedSubset = (RangedSubset)actual;
+    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(RangedSubsetUtils.rangeToChar(value, value));
+    assertThat(rangedSubset.getDoubleByteCodePointRanges()).isEmpty();
+    assertThat(rangedSubset.getTripleByteCodePointRanges()).isEmpty();
   }
 
   enum SingleByteTestSource {
@@ -63,7 +65,7 @@ class RangedSubsetImpl_singleByteTest {
   @EnumSource(SingleByteTestSource.class)
   void includeChars_singleByteTest(final SingleByteTestSource testSource) {
 
-    final RangedSubset actual = RangedSubset.builder()
+    final Subset actual = RangedSubset.builder()
         .includeChars(testSource.chars)
         .build();
 
@@ -75,8 +77,9 @@ class RangedSubsetImpl_singleByteTest {
       assertThat(actual.contains(ch)).isTrue();
     }
 
-    assertThat(actual.getSingleByteCodePointRanges()).containsOnly(testSource.expectedRanges);
-    assertThat(actual.getDoubleByteCodePointRanges()).isEmpty();
-    assertThat(actual.getTripleByteCodePointRanges()).isEmpty();
+    final RangedSubset rangedSubset = (RangedSubset)actual;
+    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(testSource.expectedRanges);
+    assertThat(rangedSubset.getDoubleByteCodePointRanges()).isEmpty();
+    assertThat(rangedSubset.getTripleByteCodePointRanges()).isEmpty();
   }
 }
