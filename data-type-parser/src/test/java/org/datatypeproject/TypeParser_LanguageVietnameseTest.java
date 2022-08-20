@@ -10,7 +10,7 @@ class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
       TypeParser.builder(SomeType.class)
           .errorMessage("Must be made up of Vietnamese letters only.")
           .toCharacterNormalizationFormNFC()
-          .acceptLanguage(Language.VIETNAMESE_vi)
+          .acceptSubset(Letters.VIETNAMESE_vi)
           .normalizeWhitespace()
           .build();
 

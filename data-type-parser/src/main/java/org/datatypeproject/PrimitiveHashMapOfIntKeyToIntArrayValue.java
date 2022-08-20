@@ -137,8 +137,8 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
   }
 
   private void put(final int key, final int[] value, final HashTable hashTable) {
-    int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
-    int[] bucket = hashTable.keys[hashIndex];
+    final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+    final int[] bucket = hashTable.keys[hashIndex];
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
       hashTable.values[hashIndex] = new int[][]{value};

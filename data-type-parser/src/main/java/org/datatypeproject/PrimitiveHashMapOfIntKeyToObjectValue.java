@@ -109,8 +109,8 @@ class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   }
 
   private void put(final int key, final T value, final HashTable<T> hashTable) {
-    int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
-    int[] bucket = hashTable.keys[hashIndex];
+    final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+    final int[] bucket = hashTable.keys[hashIndex];
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
       hashTable.values[hashIndex] = (T[]) new Object[]{value};

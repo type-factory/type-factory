@@ -16,7 +16,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <junit-jupiter.version>5.7.2</junit-jupiter.version>
+    <junit-jupiter.version>5.9.0</junit-jupiter.version>
     <assertj-core.version>3.23.1</assertj-core.version>
     <icu4j.version>70.1</icu4j.version>
 
@@ -72,6 +72,12 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
+        <version>${junit-jupiter.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
         <version>${junit-jupiter.version}</version>
       </dependency>
 

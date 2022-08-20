@@ -8,7 +8,8 @@ import static org.datatypeproject.RangedSubsetUtils.getInclusiveFrom;
 import static org.datatypeproject.RangedSubsetUtils.getInclusiveTo;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 class RangedSubsetImpl implements RangedSubset {
 
@@ -18,12 +19,71 @@ class RangedSubsetImpl implements RangedSubset {
   private final int[] doubleByteCodePointRanges;
   private final long[] tripleByteCodePointRanges;
 
+  private final int rangesSize;
+
+  private final int codePointsSize;
+
+
+  RangedSubsetImpl(
+      final char[] singleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
+    this(singleByteCodePointRanges, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY,
+        rangesSize, codePointsSize);
+  }
+
+  RangedSubsetImpl(
+      final int[] doubleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
+    this(EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
+        rangesSize, codePointsSize);
+  }
+
+  RangedSubsetImpl(
+      final long[] tripleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
+    this(EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
+        rangesSize, codePointsSize);
+  }
+
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges) {
+      final int rangesSize,
+      final int codePointsSize) {
+    this(singleByteCodePointRanges, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
+        rangesSize, codePointsSize);
+  }
+
+  RangedSubsetImpl(
+      final char[] singleByteCodePointRanges,
+      final long[] tripleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
+    this(singleByteCodePointRanges, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
+        rangesSize, codePointsSize);
+  }
+
+  RangedSubsetImpl(
+      final int[] doubleByteCodePointRanges,
+      final long[] tripleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
+    this(EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, tripleByteCodePointRanges,
+        rangesSize, codePointsSize);
+  }
+
+  RangedSubsetImpl(
+      final char[] singleByteCodePointRanges,
+      final int[] doubleByteCodePointRanges,
+      final long[] tripleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
     this("", "",
-        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
+        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
+        rangesSize, codePointsSize);
   }
 
   RangedSubsetImpl(
@@ -31,19 +91,21 @@ class RangedSubsetImpl implements RangedSubset {
       final String alias,
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
-      final long[] tripleByteCodePointRanges) {
+      final long[] tripleByteCodePointRanges,
+      final int rangesSize,
+      final int codePointsSize) {
     this.name = name;
     this.alias = alias;
     this.singleByteCodePointRanges = defaultIfNullOrEmpty(singleByteCodePointRanges, EMPTY_CHAR_ARRAY);
     this.doubleByteCodePointRanges = defaultIfNullOrEmpty(doubleByteCodePointRanges, EMPTY_INT_ARRAY);
     this.tripleByteCodePointRanges = defaultIfNullOrEmpty(tripleByteCodePointRanges, EMPTY_LONG_ARRAY);
+    this.rangesSize = rangesSize;
+    this.codePointsSize = codePointsSize;
   }
 
   @Override
   public boolean isEmpty() {
-    return singleByteCodePointRanges.length == 0
-        && doubleByteCodePointRanges.length == 0
-        && tripleByteCodePointRanges.length == 0;
+    return rangesSize == 0 && codePointsSize == 0;
   }
 
   /**
@@ -85,10 +147,12 @@ class RangedSubsetImpl implements RangedSubset {
     return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public String getAlias() {
     return alias;
   }
@@ -123,12 +187,56 @@ class RangedSubsetImpl implements RangedSubset {
     return s.toString();
   }
 
-
-  @Override
-  public Collection<CodePointRange> ranges() {
-    return RangedSubsetUtils.aggregateCodePointRangeData(
-        singleByteCodePointRanges,
-        doubleByteCodePointRanges,
-        tripleByteCodePointRanges);
+  public Iterable<CodePointRange> ranges() {
+    return new CodePointRangeIterable();
   }
+
+  private class CodePointRangeIterable implements Iterable<CodePointRange> {
+
+    @Override
+    public Iterator<CodePointRange> iterator() {
+      return new CodePointRangeIterator();
+    }
+  }
+
+  private class CodePointRangeIterator implements Iterator<CodePointRange> {
+
+    private int singleByteIndex = 0;
+    private int doubleByteIndex = 0;
+    private int tripleByteIndex = 0;
+    private CodePointRangeImpl result = new CodePointRangeImpl();
+
+    @Override
+    public boolean hasNext() {
+      return singleByteIndex < singleByteCodePointRanges.length
+          || doubleByteIndex < doubleByteCodePointRanges.length
+          || tripleByteIndex < tripleByteCodePointRanges.length;
+    }
+
+    @Override
+    public CodePointRange next() {
+      if (singleByteIndex < singleByteCodePointRanges.length) {
+        result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[singleByteIndex]);
+        result.inclusiveTo = getInclusiveTo(singleByteCodePointRanges[singleByteIndex]);
+        singleByteIndex++;
+      } else if (doubleByteIndex < doubleByteCodePointRanges.length) {
+        result.inclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[doubleByteIndex]);
+        result.inclusiveTo = getInclusiveTo(doubleByteCodePointRanges[doubleByteIndex]);
+        doubleByteIndex++;
+      } else if (tripleByteIndex < tripleByteCodePointRanges.length) {
+        result.inclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[tripleByteIndex]);
+        result.inclusiveTo = getInclusiveTo(tripleByteCodePointRanges[tripleByteIndex]);
+        tripleByteIndex++;
+      } else {
+        throw new NoSuchElementException();
+      }
+      return result;
+    }
+
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
 }
