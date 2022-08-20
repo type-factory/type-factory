@@ -4,8 +4,8 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import org.datatypeproject.Subset.CodePointRange;
 
 class RangedSubsetUtils {
 
@@ -49,11 +49,11 @@ class RangedSubsetUtils {
    * <p>The complement to this method is the {@link #rangeToInt(int, int)} to create a code-point range.</p>
    *
    * <p>Note: you may may be wondering if this is possible since an {@code int} primitive is a 'signed' value in Java. Let go of that and think
-   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller
-   * values stored within it.</p>
+   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller values
+   * stored within it.</p>
    *
-   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                       occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The
+   *                       'inclusive-from' occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
    * @return the 16-bit 'inclusive-from' code-point value as an {@code int} primitive.
    * @see #rangeToInt(int, int)
    */
@@ -68,11 +68,11 @@ class RangedSubsetUtils {
    * <p>The complement to this method is the {@link #rangeToInt(int, int)} to create a code-point range.</p>
    *
    * <p>Note: you may may be wondering if this is possible since an {@code int} primitive is a 'signed' value in Java. Let go of that and think
-   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller
-   * values stored within it.</p>
+   * of the {@code int} primitive as a house for data. We are never using the {@code int} directly, we are only ever using the two smaller values
+   * stored within it.</p>
    *
-   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                       occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @param codePointRange a code-point range specifying two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The
+   *                       'inclusive-from' occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
    * @return the 16-bit 'inclusive-to' code-point value as an {@code int} primitive.
    * @see #rangeToInt(int, int)
    */
@@ -87,11 +87,11 @@ class RangedSubsetUtils {
    * <p>The complement to this method is the {@link #rangeToLong(int, int)} to create a code-point range.</p>
    *
    * <p>Note: you may may be wondering if this is possible since a {@code long} primitive is a 'signed' value in Java. Let go of that and think
-   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about
-   * the sign bit - it will always be zero.</p>
+   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about the
+   * sign bit - it will always be zero.</p>
    *
-   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                       occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The
+   *                       'inclusive-from' occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
    * @return the 24-bit 'inclusive-from' code-point value as an {@code int} primitive.
    * @see #rangeToLong(int, int)
    */
@@ -106,11 +106,11 @@ class RangedSubsetUtils {
    * <p>The complement to this method is the {@link #rangeToLong(int, int)} to create a code-point range.</p>
    *
    * <p>Note: you may may be wondering if this is possible since a {@code long} primitive is a 'signed' value in Java. Let go of that and think
-   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about
-   * the sign bit - it will always be zero.</p>
+   * of the {@code long} primitive as a house for data. Our range values are only 24 bits and not 32 bits, so we will never have to worry about the
+   * sign bit - it will always be zero.</p>
    *
-   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                       occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @param codePointRange a code-point range specifying two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The
+   *                       'inclusive-from' occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
    * @return the 24-bit 'inclusive-to' code-point value as an {@code int} primitive.
    * @see #rangeToLong(int, int)
    */
@@ -120,8 +120,7 @@ class RangedSubsetUtils {
 
   /**
    * <p>Converts an inclusive-from to inclusive-to code-point range to a 16-bit {@code char} value.
-   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.</p>
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo} values have accidentally been reversed.</p>
    *
    * <p>The complement to this method are the {@link #getInclusiveFrom(char)} and {@link #getInclusiveTo(char)} methods
    * to extract the individual values from from the range.</p>
@@ -136,8 +135,7 @@ class RangedSubsetUtils {
 
   /**
    * <p>Converts an inclusive-from to inclusive-to code-point range to a 32-bit {@code int} value.
-   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.</p>
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo} values have accidentally been reversed.</p>
    *
    * <p>The complement to this method are the {@link #getInclusiveFrom(int)} and {@link #getInclusiveTo(int)} methods
    * to extract the individual values from from the range.</p>
@@ -152,8 +150,7 @@ class RangedSubsetUtils {
 
   /**
    * <p>Converts an inclusive-from to inclusive-to code-point range to a 64-bit {@code long} value.
-   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo}
-   * values have accidentally been reversed.</p>
+   * It will automatically correct the range if the {@code inclusiveFrom} and {@code inclusiveTo} values have accidentally been reversed.</p>
    *
    * <p>The complement to this method are the {@link #getInclusiveFrom(long)} and {@link #getInclusiveTo(long)} methods
    * to extract the individual values from from the range.</p>
@@ -179,18 +176,18 @@ class RangedSubsetUtils {
   }
 
   /**
-   * Returns a collection of {@link CodePointRange} objects represent code-point ranges from the raw range data stored
-   * in the three specified arrays of primitives.
+   * Returns a collection of {@link CodePointRange} objects represent code-point ranges from the raw range data stored in the three specified arrays
+   * of primitives.
    *
-   * @param singleByteCodePointRanges An array of {@code char} primitives with each value containing a code-point range specifying
-   *                                  two 8-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                                  occupies the 8 most-significant bits and the 'inclusive-to' occupies the 8 least significant bits.
-   * @param doubleByteCodePointRanges An array of {@code int} primitives with each value containing a code-point range specifying
-   *                                  two 16-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                                  occupies the 16 most-significant bits and the 'inclusive-to' occupies the 16 least significant bits.
-   * @param tripleByteCodePointRanges An array of {@code long} primitives with each value containing a code-point range specifying
-   *                                  two 24-bit values representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from'
-   *                                  occupies the 32 most-significant bits and the 'inclusive-to' occupies the 32 least significant bits.
+   * @param singleByteCodePointRanges An array of {@code char} primitives with each value containing a code-point range specifying two 8-bit values
+   *                                  representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from' occupies the 8 most-significant
+   *                                  bits and the 'inclusive-to' occupies the 8 least significant bits.
+   * @param doubleByteCodePointRanges An array of {@code int} primitives with each value containing a code-point range specifying two 16-bit values
+   *                                  representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from' occupies the 16 most-significant
+   *                                  bits and the 'inclusive-to' occupies the 16 least significant bits.
+   * @param tripleByteCodePointRanges An array of {@code long} primitives with each value containing a code-point range specifying two 24-bit values
+   *                                  representing an 'inclusive-from' and an 'inclusive-to'. The 'inclusive-from' occupies the 32 most-significant
+   *                                  bits and the 'inclusive-to' occupies the 32 least significant bits.
    * @return a collection of {@link CodePointRange} objects representing code-point ranges.
    */
   static Collection<CodePointRange> aggregateCodePointRangeData(
@@ -201,17 +198,17 @@ class RangedSubsetUtils {
     final ArrayList<CodePointRange> result = new ArrayList<>();
     if (singleByteCodePointRanges != null) {
       for (char range : singleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (doubleByteCodePointRanges != null) {
       for (int range : doubleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (tripleByteCodePointRanges != null) {
       for (long range : tripleByteCodePointRanges) {
-        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     return result;
@@ -292,5 +289,161 @@ class RangedSubsetUtils {
       }
     }
     return false; // not found
+  }
+
+  static void unsignedIntegerBubbleSort(final int[] values, int fromIndex, int toIndex) {
+    int temp;
+    for (int i = fromIndex; i < toIndex; i++) {
+      for (int j = fromIndex; j < toIndex - i - 1; j++) {
+        if ((0x00000000_FFFFFFFFL & values[j]) > (0x00000000_FFFFFFFFL & values[j + 1])) {
+          // swap the elements
+          temp = values[j];
+          values[j] = values[j + 1];
+          values[j + 1] = temp;
+        }
+      }
+    }
+  }
+
+  static int compactSingleByteCodePointRanges(final char[] singleByteCodePointRanges, final int length) {
+
+    Arrays.sort(singleByteCodePointRanges, 0, length);
+    int resultLength = length;
+    int previousInclusiveFrom;
+    int previousInclusiveTo;
+    int currentInclusiveFrom;
+    int currentInclusiveTo;
+    int i = 0;
+    int j = 1;
+    while (j < resultLength) {
+      previousInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[i]);
+      previousInclusiveTo = getInclusiveTo(singleByteCodePointRanges[i]);
+      currentInclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[j]);
+      currentInclusiveTo = getInclusiveTo(singleByteCodePointRanges[j]);
+      if (previousInclusiveTo >= currentInclusiveFrom) {
+        if (previousInclusiveTo <= currentInclusiveTo) {
+          singleByteCodePointRanges[i] = rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+        }
+        resultLength = removeSingleByteElement(singleByteCodePointRanges, resultLength, j);
+      } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+        singleByteCodePointRanges[i] = rangeToChar(previousInclusiveFrom, currentInclusiveTo);
+        resultLength = removeSingleByteElement(singleByteCodePointRanges, resultLength, j);
+      } else {
+        ++i;
+        ++j;
+      }
+    }
+    return resultLength;
+  }
+
+  static int compactDoubleByteCodePointRanges(final int[] doubleByteCodePointRanges, final int length) {
+
+    unsignedIntegerBubbleSort(doubleByteCodePointRanges, 0, length);
+    int resultLength = length;
+    int previousInclusiveFrom;
+    int previousInclusiveTo;
+    int currentInclusiveFrom;
+    int currentInclusiveTo;
+    int i = 0;
+    int j = 1;
+    while (j < resultLength) {
+      previousInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[i]);
+      previousInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[i]);
+      currentInclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[j]);
+      currentInclusiveTo = getInclusiveTo(doubleByteCodePointRanges[j]);
+      if (previousInclusiveTo >= currentInclusiveFrom) {
+        if (previousInclusiveTo <= currentInclusiveTo) {
+          doubleByteCodePointRanges[i] = rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+        }
+        resultLength = removeDoubleByteElement(doubleByteCodePointRanges, resultLength, j);
+      } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+        doubleByteCodePointRanges[i] = rangeToInt(previousInclusiveFrom, currentInclusiveTo);
+        resultLength = removeDoubleByteElement(doubleByteCodePointRanges, resultLength, j);
+      } else {
+        ++i;
+        ++j;
+      }
+    }
+    return resultLength;
+  }
+
+  static int compactTripleByteCodePointRanges(final long[] tripleByteCodePointRanges, final int length) {
+
+    Arrays.sort(tripleByteCodePointRanges, 0, length);
+    int resultLength = length;
+    int previousInclusiveFrom;
+    int previousInclusiveTo;
+    int currentInclusiveFrom;
+    int currentInclusiveTo;
+    int i = 0;
+    int j = 1;
+    while (j < resultLength) {
+      previousInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[i]);
+      previousInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[i]);
+      currentInclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[j]);
+      currentInclusiveTo = getInclusiveTo(tripleByteCodePointRanges[j]);
+      if (previousInclusiveTo >= currentInclusiveFrom) {
+        if (previousInclusiveTo <= currentInclusiveTo) {
+          tripleByteCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+        }
+        resultLength = removeTripleByteElement(tripleByteCodePointRanges, resultLength, j);
+      } else if ((previousInclusiveTo + 1) == currentInclusiveFrom) {
+        tripleByteCodePointRanges[i] = rangeToLong(previousInclusiveFrom, currentInclusiveTo);
+        resultLength = removeTripleByteElement(tripleByteCodePointRanges, resultLength, j);
+      } else {
+        ++i;
+        ++j;
+      }
+    }
+    return resultLength;
+  }
+
+  static int removeSingleByteElement(final char[] singleByteCodePointRanges, final int length, final int indexOfElementToRemove) {
+    System.arraycopy(
+        singleByteCodePointRanges,
+        indexOfElementToRemove + 1,
+        singleByteCodePointRanges,
+        indexOfElementToRemove,
+        singleByteCodePointRanges.length - indexOfElementToRemove - 1);
+    return length - 1;
+  }
+
+  static int removeDoubleByteElement(final int[] doubleByteCodePointRanges, final int length, final int indexOfElementToRemove) {
+    System.arraycopy(
+        doubleByteCodePointRanges,
+        indexOfElementToRemove + 1,
+        doubleByteCodePointRanges,
+        indexOfElementToRemove,
+        doubleByteCodePointRanges.length - indexOfElementToRemove - 1);
+    return length - 1;
+  }
+
+  static int removeTripleByteElement(final long[] tripleByteCodePointRanges, final int length, final int indexOfElementToRemove) {
+    System.arraycopy(
+        tripleByteCodePointRanges,
+        indexOfElementToRemove + 1,
+        tripleByteCodePointRanges,
+        indexOfElementToRemove,
+        tripleByteCodePointRanges.length - indexOfElementToRemove - 1);
+    return length - 1;
+  }
+
+  /**
+   * Count how many categories have been specified using category bit flags.
+   *
+   * @param categoryFlags
+   * @return the number categories that have been specified using category bit flags.
+   */
+  static int categoriesSizeFromCategoriesFlags(final long categoryFlags) {
+    int categoriesSize = 0;
+    // Count how many categories have been specified.
+    long flags = categoryFlags;
+    for (int i = 0; i < 64; ++i) {
+      if ((flags & 0x01) == 0x01) {
+        ++categoriesSize;
+      }
+      flags = flags >> 1;
+    }
+    return categoriesSize;
   }
 }

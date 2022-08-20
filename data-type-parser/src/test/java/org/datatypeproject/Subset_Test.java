@@ -2,8 +2,9 @@ package org.datatypeproject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import org.datatypeproject.Subset.CodePointRange;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -129,13 +130,17 @@ class Subset_Test {
 
     final Subset actual = subset.toBuilder().build();
     assertThat(actual.isNotEmpty()).isTrue();
-    assertThat(actual.ranges())
+
+    final List<CodePointRange> actualCodePointRanges = new ArrayList<>();
+    actual.ranges().forEach(codePointRange -> actualCodePointRanges.add(codePointRange.copy()));
+
+    assertThat(actualCodePointRanges)
         .isNotEmpty()
         .hasSameSizeAs(subset.ranges())
         .hasSize(2)
         .containsExactly(
-            new CodePointRange('A', 'C'),
-            new CodePointRange('X', 'Z')
+            new CodePointRangeImpl('A', 'C'),
+            new CodePointRangeImpl('X', 'Z')
         );
   }
 }

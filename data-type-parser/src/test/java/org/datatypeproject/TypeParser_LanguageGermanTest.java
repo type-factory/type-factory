@@ -10,7 +10,7 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
       TypeParser.builder(SomeType.class)
           .errorMessage("Must be made up of German letters only.")
           .toCharacterNormalizationFormNFC()
-          .acceptLanguage(Language.GERMAN_de)
+          .acceptSubset(Letters.GERMAN_de)
           .normalizeWhitespace()
           .build();
 
