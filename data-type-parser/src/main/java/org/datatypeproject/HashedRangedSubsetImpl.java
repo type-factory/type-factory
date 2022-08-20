@@ -20,7 +20,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
    * <p>The set of unique sorted block-keys in ascending order. This enables iteration of the
    * code-point ranges in order from lowest to highest.</p>
    */
-  private int[] blockKeySet = null;
+  private char[] blockKeySet = null;
 
   /**
    * <p>The hashed block-keys. A block-key is the two most significant bytes of a three-byte code-point.</p>
@@ -117,10 +117,10 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public int[] getBlockKeySet() {
+  public char[] getBlockKeySet() {
     if (blockKeySet == null) {
       int tempBlockKeySetSize = 0;
-      int [] tempBlockKeySet = new int[256];
+      char [] tempBlockKeySet = new char[256];
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
         if (blockKeys[hashIndex] != null) {
           for (int hashBucketIndex = 0; hashBucketIndex < blockKeys[hashIndex].length; ++hashBucketIndex) {
@@ -166,7 +166,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     private int hashIndex;
     private int hashBucketIndex;
     private int codePointRangeIndex;
-    private MutableCodePointRange result = new MutableCodePointRange();
+    private CodePointRangeImpl result = new CodePointRangeImpl();
 
     @Override
     public boolean hasNext() {

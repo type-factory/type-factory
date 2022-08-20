@@ -5,7 +5,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.datatypeproject.generator.language.LanguageClassGenerator;
+import org.datatypeproject.generator.letters.LettersClassGenerator;
 import org.datatypeproject.generator.unicodedata.UnicodeGroupData;
 
 public class Main {
@@ -39,11 +39,11 @@ public class Main {
     }
 
     final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
-    final LanguageClassGenerator languageClassGenerator = new LanguageClassGenerator(outputDirectory, unicodeGroupData);
+    final LettersClassGenerator lettersClassGenerator = new LettersClassGenerator(outputDirectory, unicodeGroupData);
 
-    languageClassGenerator.generateLanguageClass();
+    lettersClassGenerator.generateLanguageClass();
 //
-//    languageClassGenerator.organizeIntoBlockRanged(
-//        languageClassGenerator.createJapaneseJSourceSet());
+//    lettersClassGenerator.organizeIntoBlockRanged(
+//        lettersClassGenerator.createJapaneseJSourceSet());
   }
 }

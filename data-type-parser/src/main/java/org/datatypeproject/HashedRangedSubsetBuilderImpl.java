@@ -211,7 +211,7 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
      * <p>The set of unique sorted block-keys in ascending order. This enables iteration of the
      * code-point ranges in order from lowest to highest.</p>
      */
-    private int[] blockKeySet = new int[INITIAL_KEY_SET_CAPACITY];
+    private char[] blockKeySet = new char[INITIAL_KEY_SET_CAPACITY];
 
     /**
      * <p>The hashed block-keys. A block-key is the two most significant bytes of a three-byte code-point.</p>
@@ -323,8 +323,11 @@ public class HashedRangedSubsetBuilderImpl implements HashedRangedSubsetBuilder 
       final char blockKeyTo = (char)((inclusiveTo >> 8) & 0xFF);
       for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
         // Insert block key into sorted blockKeySet
-        final int blockKeySetIndex = blockKeySetSize == 0 ? 0 : Arrays.binarySearch(blockKeySet, 0, blockKeySetSize, blockKey);
-        if (blockKeySetSize == 0 || blockKeySet[blockKeySetIndex] != blockKey) {
+        int blockKeySetIndex = blockKeySetSize == 0 ? 0 : Arrays.binarySearch(blockKeySet, 0, blockKeySetSize, blockKey);
+        if (blockKeySetIndex < 0) {
+          blockKeySetIndex = - blockKeySetIndex - 1;
+        }
+        if (blockKeySetIndex == blockKeySetSize || blockKeySet[blockKeySetIndex] != blockKey) {
           blockKeySetSize++;
           ensureBlockKeySetCapacity();
           System.arraycopy(

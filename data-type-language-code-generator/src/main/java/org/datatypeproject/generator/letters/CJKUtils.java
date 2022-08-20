@@ -1,4 +1,4 @@
-package org.datatypeproject.generator.language;
+package org.datatypeproject.generator.letters;
 
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.UnicodeSet;

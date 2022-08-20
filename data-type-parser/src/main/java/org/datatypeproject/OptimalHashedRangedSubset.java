@@ -14,7 +14,7 @@ interface OptimalHashedRangedSubset extends Subset {
     return new HashedRangedSubsetBuilderImpl();
   }
 
-  int[] getBlockKeySet();
+  char[] getBlockKeySet();
 
   char[] getBlockKeys();
 

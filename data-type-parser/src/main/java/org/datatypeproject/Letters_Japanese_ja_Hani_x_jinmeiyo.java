@@ -3,9 +3,9 @@ package org.datatypeproject;
 import javax.annotation.processing.Generated;
 
 @Generated(
-    comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
-    value = "org.datatypeproject:data-type-language-code-generator")
-public class Letters_Japanese_ja_Hani_jinmeiyo {
+    comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
+    value = "org.datatypeproject:data-type-letters-code-generator")
+public class Letters_Japanese_ja_Hani_x_jinmeiyo {
 
   public static final Subset SUBSET = new OptimalHashedRangedSubsetImpl(
 
@@ -50,8 +50,8 @@ public class Letters_Japanese_ja_Hani_jinmeiyo {
           0x18_18, 0x1b_1b, 0x48_48, 0x4c_4c, 0x57_57, 0x66_66, 0x6a_6a, 0x6c_6c, 
           0x9e_9e, 0xa0_a0, 0xb5_b5, 0xb7_b7, 0xbd_bd, 0xfd_fd},
         { // 0x0060__ codePoint ranges
-          0x1c_1c, 0x46_46, 0x55_55, 0x62_62, 0x70_70, 0x89_89, 0x8c_8c, 0xc7_c7, 
-          0xda_da, 0xdf_e1, 0xe3_e3, 0xf9_fa},
+          0x1c_1c, 0x46_46, 0x55_55, 0x62_62, 0x70_70, 0x89_89, 0x8c_8c, 0x94_94, 
+          0xc7_c7, 0xda_da, 0xdf_e1, 0xe3_e3, 0xf9_fa},
         { // 0x0061__ codePoint ranges
           0x3c_3c, 0x67_67, 0x8e_8e, 0x90_90, 0xc9_c9, 0xf2_f2, 0xf7_f7},
         { // 0x0062__ codePoint ranges
@@ -124,7 +124,7 @@ public class Letters_Japanese_ja_Hani_jinmeiyo {
           0xd0_d0, 0xef_ef},
         { // 0x0079__ codePoint ranges
           0x3e_3e, 0x41_41, 0x47_49, 0x50_50, 0x55_56, 0x5d_5e, 0x62_62, 0x65_65, 
-          0x77_77, 0x7f_7f, 0x84_84, 0x8e_8f, 0xaa_aa, 0xae_ae, 0xb0_b1, 0xbd_be, 
+          0x77_77, 0x7f_7f, 0x84_84, 0x8d_8f, 0xaa_aa, 0xae_ae, 0xb0_b1, 0xbd_be, 
           0xe4_e4, 0xe6_e6},
         { // 0x007a__ codePoint ranges
           0x00_00, 0x14_14, 0x1c_1c, 0x1f_1f, 0x3b_3b, 0x40_40, 0x57_57, 0x63_63, 
@@ -175,7 +175,7 @@ public class Letters_Japanese_ja_Hani_jinmeiyo {
           0x0a_0a, 0x23_23, 0x3b_3b, 0x62_62, 0x6b_6b, 0xbc_bc, 0xc4_c4, 0xcf_cf, 
           0xd2_d2, 0xf8_f8, 0xfa_fa},
         { // 0x008b__ codePoint ranges
-          0x02_02, 0x20_20, 0x39_39, 0x83_83, 0x93_93},
+          0x01_02, 0x20_20, 0x39_39, 0x83_83, 0x93_93},
         { // 0x008c__ codePoint ranges
           0x79_79, 0xb0_b0, 0xd1_d1, 0xd3_d3, 0xe3_e3, 0xf4_f4},
         { // 0x008d__ codePoint ranges
@@ -226,7 +226,7 @@ public class Letters_Japanese_ja_Hani_jinmeiyo {
         null,
         null,
         { // 0x00fa__ codePoint ranges
-          0x16_16, 0x3d_3d, 0x46_46, 0x4a_4a, 0x4f_4f, 0x52_53, 0x62_62, 0x67_67},
+          0x16_16, 0x46_46, 0x4a_4a, 0x4f_4f, 0x53_53, 0x67_67},
         null,
         { // 0x004e__ codePoint ranges
           0x11_11, 0x1e_1e, 0x43_43, 0x4b_4b, 0x4e_4e, 0x58_58, 0x5f_5f, 0x91_91, 
@@ -253,7 +253,7 @@ public class Letters_Japanese_ja_Hani_jinmeiyo {
         { // 0x0056__ codePoint ranges
           0x06_06, 0x09_09, 0x17_17, 0x29_29, 0x42_42, 0x4c_4c, 0x68_68, 0xb4_b4}},
         // number of code-point ranges
-        817,
+        816,
         // number of code-points
         863);
 }

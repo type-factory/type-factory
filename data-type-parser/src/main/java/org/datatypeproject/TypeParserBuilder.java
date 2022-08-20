@@ -551,7 +551,7 @@ public class TypeParserBuilder {
   /**
    * Configures the type parser to accepts all digits number '0' through '9' that were originally in the ASCII range.
    * <p>
-   * If you want to accept all decimal digits in another language range then use the following:
+   * If you want to accept all decimal digits in another letters range then use the following:
    * <pre>
    *   acceptCharRange('०', '९') // Devanagari decimal digit range
    *   acceptCharRange('൦', '൯') // Malayalam decimal digit range
@@ -594,8 +594,8 @@ public class TypeParserBuilder {
    *
    * <p>This method implicitly configures the builder to accept the {@code '-' (U+002D)} hyphen character.</p>
    *
-   * <p><b>Note:</b> This conversion might make sense for certain data-types and not others. For example, in language specific data-types you may
-   * may wish to preserve language specific dashes. For example, for an Armenian data-type, perhaps preserving the Armenian Hyphen
+   * <p><b>Note:</b> This conversion might make sense for certain data-types and not others. For example, in letters specific data-types you may
+   * may wish to preserve letters specific dashes. For example, for an Armenian data-type, perhaps preserving the Armenian Hyphen
    * {@code '֊' (U+058A)} makes more sense than converting it to a hyphen.</p>
    *
    * @return this {@code TypeParserBuilder}

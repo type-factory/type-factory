@@ -20,7 +20,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
    * <p>The set of unique sorted block-keys in ascending order. This enables iteration of the
    * code-point ranges in order from lowest to highest.</p>
    */
-  private int[] blockKeySet = null;
+  private char[] blockKeySet = null;
 
   /**
    * <p>The hashed block-keys. A block-key is the two most significant bytes of a three-byte code-point.</p>
@@ -86,7 +86,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
     final char blockKey = (char)((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final int availableBlockKey = blockKeys[hashIndex];
-    if (availableBlockKey < 0 || blockKey != availableBlockKey) {
+    if (availableBlockKey == 0xFFFF || blockKey != availableBlockKey) {
       return false;
     }
     final char[] singleByteCodePointRanges = singleByteCodePointRangesByBlock[hashIndex];
@@ -108,18 +108,19 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   }
 
   @Override
-  public int[] getBlockKeySet() {
+  public char[] getBlockKeySet() {
     if (blockKeySet == null) {
       int tempBlockKeySetSize = 0;
-      int [] tempBlockKeySet = new int[256];
+      char [] tempBlockKeySet = new char[256];
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
         if (tempBlockKeySetSize == tempBlockKeySet.length) {
           tempBlockKeySet = Arrays.copyOf(tempBlockKeySet, tempBlockKeySet.length + 128);
         }
-        if (blockKeys[hashIndex] >= 0) {
+        if (blockKeys[hashIndex] != 0xFFFF) {
           tempBlockKeySet[tempBlockKeySetSize++] = blockKeys[hashIndex];
         }
       }
+      tempBlockKeySet = Arrays.copyOf(tempBlockKeySet, tempBlockKeySetSize);
       Arrays.sort(tempBlockKeySet);
       blockKeySet = tempBlockKeySet;
     }
@@ -145,38 +146,51 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator();
+      return new CodePointRangeIterator(getBlockKeySet());
     }
   }
 
   private class CodePointRangeIterator implements Iterator<CodePointRange> {
 
-    private int keySetIndex;
+    private final CodePointRangeImpl result = new CodePointRangeImpl();
+    private final char[] blockKeySet;
+    private int blockKeySetIndex;
+
+    private int blockKey;
+    private int codePointBlock;
     private int hashIndex;
     private int codePointRangeIndex;
-    private MutableCodePointRange result = new MutableCodePointRange();
+
+    public CodePointRangeIterator(final char[] blockKeySet) {
+      this.blockKeySet = blockKeySet;
+      this.blockKeySetIndex = 0;
+      this.blockKey = this.blockKeySet[blockKeySetIndex];
+      this.codePointBlock = blockKey << 8;
+      this.hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
+      this.codePointRangeIndex = 0;
+    }
 
     @Override
     public boolean hasNext() {
-      if (keySetIndex == blockKeySet.length) {
-        return false;
+      if (codePointRangeIndex == singleByteCodePointRangesByBlock[hashIndex].length) {
+        blockKeySetIndex++;
+        if (blockKeySetIndex == blockKeySet.length) {
+          return false;
+        }
+        this.blockKey = this.blockKeySet[blockKeySetIndex];
+        this.codePointBlock = blockKey << 8;
+        this.hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
+        this.codePointRangeIndex = 0;
       }
-      final int blockKey = blockKeySet[keySetIndex];
-      hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
-      return codePointRangeIndex < singleByteCodePointRangesByBlock[hashIndex].length;
+      return true;
     }
 
     @Override
     public CodePointRange next() {
-      if (hasNext() && codePointRangeIndex < singleByteCodePointRangesByBlock[hashIndex].length) {
-        result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
-        result.inclusiveTo = getInclusiveTo(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
+      if (hasNext()) {
+        result.inclusiveFrom = codePointBlock | getInclusiveFrom(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
+        result.inclusiveTo = codePointBlock | getInclusiveTo(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
         codePointRangeIndex++;
-        if (codePointRangeIndex == singleByteCodePointRangesByBlock[hashIndex].length) {
-          keySetIndex++;
-          hashIndex = 0;
-          codePointRangeIndex = 0;
-        }
       } else {
         throw new NoSuchElementException();
       }

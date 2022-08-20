@@ -3,6 +3,7 @@ package org.datatypeproject.generator.unicodedata;
 
 public enum Error {
   CANNOT_LOAD_UNICODE_ALL_GROUPED_XML_FILE_NAME(1, "Cannot load the Unicode grouped data file '%s'."),
+  CANNOT_LOAD_UNICODE_LETTERS_FROM_FILE_NAME(1, "Cannot load the Unicode letters data from the data file '%s'."),
   THERE_ARE_NO_REPERTOIRE_ELEMENTS_IN_THE_FILE(2, "There are no repertoire elements in the file '%s'."),
   THERE_ARE_TOO_MANY_REPERTOIRE_ELEMENTS_IN_THE_FILE(3, "There are too many repertoire elements in the file '%s'."),
   THERE_ARE_NO_GROUP_ELEMENTS_IN_THE_FILE(4, "There are no group elements in the file '%s'."),

@@ -198,17 +198,17 @@ class RangedSubsetUtils {
     final ArrayList<CodePointRange> result = new ArrayList<>();
     if (singleByteCodePointRanges != null) {
       for (char range : singleByteCodePointRanges) {
-        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (doubleByteCodePointRanges != null) {
       for (int range : doubleByteCodePointRanges) {
-        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (tripleByteCodePointRanges != null) {
       for (long range : tripleByteCodePointRanges) {
-        result.add(new ImmutableCodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     return result;

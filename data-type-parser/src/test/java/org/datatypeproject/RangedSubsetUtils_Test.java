@@ -233,12 +233,12 @@ class RangedSubsetUtils_Test {
     assertThat(RangedSubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isNotNull()
         .containsExactly(
-            new ImmutableCodePointRange(0x21, 0x22),
-            new ImmutableCodePointRange(0x30, 0x44),
-            new ImmutableCodePointRange(0x1122, 0x1133),
-            new ImmutableCodePointRange(0xAA11, 0xBB00),
-            new ImmutableCodePointRange(0x00445500, 0x00446600),
-            new ImmutableCodePointRange(0x00BB1100, 0x00BB2200));
+            new CodePointRangeImpl(0x21, 0x22),
+            new CodePointRangeImpl(0x30, 0x44),
+            new CodePointRangeImpl(0x1122, 0x1133),
+            new CodePointRangeImpl(0xAA11, 0xBB00),
+            new CodePointRangeImpl(0x00445500, 0x00446600),
+            new CodePointRangeImpl(0x00BB1100, 0x00BB2200));
   }
 
   @ParameterizedTest

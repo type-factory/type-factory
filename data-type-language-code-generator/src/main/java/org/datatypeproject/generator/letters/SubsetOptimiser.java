@@ -1,4 +1,4 @@
-package org.datatypeproject.generator.language;
+package org.datatypeproject.generator.letters;
 
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-class RangedSubsetOptimiser {
+class SubsetOptimiser {
 
   /**
    * <p>The set of unique sorted block-keys in ascending order. This enables iteration of the
@@ -32,7 +32,7 @@ class RangedSubsetOptimiser {
      *
      * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
      * <pre>
-     *        ┌──── hashIndex     - an index to the hash-bucket
+     *        ┌──── hashIndex       - an index to the hash-bucket
      *        │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
      *        │  │
      *   char[ ][ ] blockKeys
@@ -46,7 +46,7 @@ class RangedSubsetOptimiser {
      * <p>In the code of this class the three-dimensional indexes will be referred to as:</p>
      * <pre>
      *       ┌─────── hashIndex           - an index to the hash-bucket
-     *       │  ┌──── hashBucketIndex       - an index to the key within the hash-bucket
+     *       │  ┌──── hashBucketIndex     - an index to the matching key within the hash-bucket
      *       │  │  ┌─ codePointRangeIndex - an index to the from-codepoint within the array of inclusive-from code-points
      *       │  │  │
      *   int[ ][ ][ ] inclusiveFroms
@@ -60,7 +60,7 @@ class RangedSubsetOptimiser {
      * <p>In the code of this class the three-dimensional indexes will be referred to as:</p>
      * <pre>
      *       ┌─────── hashIndex           - an index to the hash-bucket
-     *       │  ┌──── hashBucketIndex       - an index to the key within the hash-bucket
+     *       │  ┌──── hashBucketIndex     - an index to the matching key within the hash-bucket
      *       │  │  ┌─ codePointRangeIndex - an index to the to-codepoint within the array of inclusive-to code-points
      *       │  │  │
      *   int[ ][ ][ ] inclusiveFroms
@@ -120,7 +120,7 @@ class RangedSubsetOptimiser {
         final char blockKeyTo = (char)((entryRange.codepointEnd >> 8) & 0xFFFF);
         for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
           final char inclusiveFrom = (char)(blockKey == blockKeyFrom ? (entryRange.codepoint & 0xFF) : 0x00);
-          final int inclusiveTo = (char)(blockKey == blockKeyTo ? (entryRange.codepointEnd & 0xFF) : 0xFF);
+          final char inclusiveTo = (char)(blockKey == blockKeyTo ? (entryRange.codepointEnd & 0xFF) : 0xFF);
           final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
           final char[] hashBucket = blockKeys[hashIndex];
           int hashBucketIndex = 0;
@@ -292,7 +292,7 @@ class RangedSubsetOptimiser {
           inclusiveTos[hashIndex][codePointRangesSize] = inclusiveTo;
           codePointRangesSizes[hashIndex]++;
           rangesSize++;
-          codePointsSize += inclusiveTo - inclusiveFrom + 1;
+          codePointsSize += (inclusiveTo - inclusiveFrom + 1);
         }
       }
       // Make copies of arrays to exact required sizes to minimize wasted space.
@@ -309,7 +309,7 @@ class RangedSubsetOptimiser {
     }
   }
 
-  public RangedSubsetOptimiser(final UnicodeSet unicodeSet) {
+  public SubsetOptimiser(final UnicodeSet unicodeSet) {
     blockKeySet = getBlockKeys(unicodeSet);
     minHashBuckets = Math.max(3, (int) Math.floor(blockKeySet.length * 0.7D));
     maxHashBuckets = Math.max(7, (int) Math.ceil(blockKeySet.length * 2.2D));

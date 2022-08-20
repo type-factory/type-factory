@@ -1,42 +1,39 @@
 package org.datatypeproject;
 
-import java.io.Serial;
 import java.util.Objects;
 
 /**
- * An immutable code-point range – a tuple of the inclusive-from and inclusive-to code-points.
+ * A code-point range – a mutable tuple of the inclusive-from and inclusive-to code-points.
  */
-public final class ImmutableCodePointRange implements CodePointRange {
-
-  @Serial
-  private static final long serialVersionUID = -7777682911722362584L;
+final class CodePointRangeImpl implements CodePointRange {
 
   /**
    * The inclusive-from code-point of the range.
    */
-  public final int inclusiveFrom;
+  int inclusiveFrom;
 
   /**
    * The inclusive-to code-point of the range.
    */
-  public final int inclusiveTo;
+  int inclusiveTo;
+
+  CodePointRangeImpl() {
+    this(0, 0);
+  }
 
   /**
-   * Create an immutable code-point range.
+   * Create a mutable code-point range.
    *
    * @param inclusiveFrom the inclusive-from code-point value of the range.
    * @param inclusiveTo   the inclusive-to code-point value of the range.
    */
-  public ImmutableCodePointRange(final int inclusiveFrom, final int inclusiveTo) {
+  CodePointRangeImpl(final int inclusiveFrom, final int inclusiveTo) {
     this.inclusiveFrom = inclusiveFrom;
     this.inclusiveTo = inclusiveTo;
   }
 
   /**
    * <p>Returns the inclusive-from code-point of the range.</p>
-   *
-   * <p>The {@link #inclusiveFrom} member variable can be accessed directly – it is immutable, {@code public final}. This getter-method
-   * has been provided for frameworks that expect this format for properties.</p>
    *
    * @return the inclusive-from code-point of the range.
    */
@@ -48,14 +45,16 @@ public final class ImmutableCodePointRange implements CodePointRange {
   /**
    * <p>Returns the inclusive-to code-point of the range.</p>
    *
-   * <p>The {@link #inclusiveTo} member variable can be accessed directly – it is immutable, {@code public final}. This getter-method
-   * has been provided for frameworks that expect this format for properties.</p>
-   *
    * @return the inclusive-to code-point of the range.
    */
   @Override
   public int getInclusiveTo() {
     return inclusiveTo;
+  }
+
+  @Override
+  public boolean contains(int codePoint) {
+    return inclusiveFrom <= codePoint && codePoint <= inclusiveTo;
   }
 
   /**
@@ -67,14 +66,17 @@ public final class ImmutableCodePointRange implements CodePointRange {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
+    if (o == this) {
       return true;
     }
-    if (!(o instanceof ImmutableCodePointRange)) {
+    if (o == null) {
       return false;
     }
-    final ImmutableCodePointRange that = (ImmutableCodePointRange) o;
-    return inclusiveFrom == that.inclusiveFrom && inclusiveTo == that.inclusiveTo;
+    if (this.getClass() != o.getClass()) {
+      return false;
+    }
+    final CodePointRangeImpl other = (CodePointRangeImpl) o;
+    return inclusiveFrom == other.inclusiveFrom && inclusiveTo == other.inclusiveTo;
   }
 
   @Override
@@ -115,6 +117,6 @@ public final class ImmutableCodePointRange implements CodePointRange {
 
   @Override
   public CodePointRange copy() {
-    return new ImmutableCodePointRange(inclusiveFrom, inclusiveTo);
+    return new CodePointRangeImpl(inclusiveFrom, inclusiveTo);
   }
 }

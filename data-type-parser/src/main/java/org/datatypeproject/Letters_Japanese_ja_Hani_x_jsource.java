@@ -3,9 +3,9 @@ package org.datatypeproject;
 import javax.annotation.processing.Generated;
 
 @Generated(
-    comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
-    value = "org.datatypeproject:data-type-language-code-generator")
-public class Letters_Japanese_ja_Hani_jsource {
+    comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
+    value = "org.datatypeproject:data-type-letters-code-generator")
+public class Letters_Japanese_ja_Hani_x_jsource {
 
   public static final Subset SUBSET = new HashedRangedSubsetImpl(
 

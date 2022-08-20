@@ -139,8 +139,8 @@ class Subset_Test {
         .hasSameSizeAs(subset.ranges())
         .hasSize(2)
         .containsExactly(
-            new ImmutableCodePointRange('A', 'C'),
-            new ImmutableCodePointRange('X', 'Z')
+            new CodePointRangeImpl('A', 'C'),
+            new CodePointRangeImpl('X', 'Z')
         );
   }
 }

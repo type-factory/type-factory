@@ -1,4 +1,4 @@
-package org.datatypeproject.generator.language;
+package org.datatypeproject.generator.letters;
 
 class CodePointRange {
 

@@ -35,8 +35,8 @@ class HashedRangedSubsetImpl_singleBlock {
     assertThat(actual.isNotEmpty()).isTrue();
     assertThat(actual.contains(value)).isTrue();
     assertThat(actual.getBlockKeySet()).hasSize(1);
-    assertThat(actual.getBlockKeySet()).containsOnly(0x00);
-    assertThat(actual.ranges()).containsOnly(new MutableCodePointRange(value, value));
+    assertThat(actual.getBlockKeySet()).containsOnly((char)0x00);
+    assertThat(actual.ranges()).containsOnly(new CodePointRangeImpl(value, value));
   }
 
   enum SingleByteTestSource {
@@ -81,7 +81,7 @@ class HashedRangedSubsetImpl_singleBlock {
     Iterable<CodePointRange> expectedCodePointRanges() {
       final List<CodePointRange> result = new ArrayList<>();
       for (char expectedRange : expectedRanges) {
-        result.add(new MutableCodePointRange(
+        result.add(new CodePointRangeImpl(
             RangedSubsetUtils.getInclusiveFrom(expectedRange),
             RangedSubsetUtils.getInclusiveTo(expectedRange)));
       }
@@ -106,7 +106,7 @@ class HashedRangedSubsetImpl_singleBlock {
     }
 
     assertThat(actual.getBlockKeySet()).hasSize(1);
-    assertThat(actual.getBlockKeySet()).containsOnly(0x00);
+    assertThat(actual.getBlockKeySet()).containsOnly((char)0x00);
     assertThat(actual.ranges()).containsAll(testSource.expectedCodePointRanges());
   }
 }
