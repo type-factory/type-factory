@@ -38,8 +38,8 @@
   <modules>
     <module>data-type-examples</module>
     <module>data-type-language-code-generator</module>
-    <module>data-type-unicode-code-generator</module>
-    <module>data-type-parser</module>
+    <module>data-type-language</module>
+    <module>data-type-core</module>
   </modules>
 
   <dependencyManagement>
@@ -47,7 +47,7 @@
 
       <dependency>
         <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-parser</artifactId>
+        <artifactId>data-type-core</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -65,7 +65,7 @@
 
       <dependency>
         <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-unicode-code-generator</artifactId>
+        <artifactId>data-type-language</artifactId>
         <version>${project.version}</version>
       </dependency>
 

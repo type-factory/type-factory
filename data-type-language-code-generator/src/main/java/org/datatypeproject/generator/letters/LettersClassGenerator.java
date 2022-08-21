@@ -44,11 +44,13 @@ public class LettersClassGenerator {
     final StringBuilder s = new StringBuilder();
 
     s.append("""
-        package org.datatypeproject;
+        package org.datatypeproject.language;
                 
         import java.util.HashMap;
         import java.util.Locale;
         import javax.annotation.processing.Generated;
+        import org.datatypeproject.Subset;
+        import org.datatypeproject.impl.Factory;
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
@@ -111,7 +113,7 @@ public class LettersClassGenerator {
           s.append(LINE_SEPARATOR).append("      ").append(letterClassName).append(".SUBSET);");
           break;
         default:
-          s.append(LINE_SEPARATOR).append("      new RangedSubsetImpl(");
+          s.append(LINE_SEPARATOR).append("      Factory.rangedSubset(");
           final Sizes singleByteSizes = appendCodepointArrayRanges(s, lettersData, 0x00, 0xFF, "char", "0x%02x_%02x");
           final Sizes doubleByteSizes = appendCodepointArrayRanges(s, lettersData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
           final Sizes tripleByteSizes = appendCodepointArrayRanges(s, lettersData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
@@ -146,22 +148,24 @@ public class LettersClassGenerator {
     final StringBuilder s = new StringBuilder();
 
     s.append(String.format("""
-        package org.datatypeproject;
+        package org.datatypeproject.language;
                 
         import javax.annotation.processing.Generated;
+        import org.datatypeproject.Subset;
+        import org.datatypeproject.impl.Factory;
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
             value = "org.datatypeproject:data-type-letters-code-generator")     
-        public class %s {
+        class %s {
                 
         """, lettersClassName));
 
     if (subsetOptimiser.containsHashBucketsWithMultipleKeys()) {
-      s.append("  public static final Subset SUBSET = new HashedRangedSubsetImpl(").append(LINE_SEPARATOR);
+      s.append("  static final Subset SUBSET = Factory.hashedRangedSubset(").append(LINE_SEPARATOR);
       appendHashedBlockRangedSubset(s, lettersData, subsetOptimiser);
     } else {
-      s.append("  public static final Subset SUBSET = new OptimalHashedRangedSubsetImpl(").append(LINE_SEPARATOR);
+      s.append("  static final Subset SUBSET = Factory.optimalHashedRangedSubset(").append(LINE_SEPARATOR);
       appendOptimalHashedBlockRangedSubset(s, lettersData, subsetOptimiser);
     }
     s.append(");");
@@ -328,8 +332,13 @@ public class LettersClassGenerator {
     final char[][] keys = hashedRangedSubsetData.getBlockKeys();
     final int[][][] inclusiveFroms = hashedRangedSubsetData.getInclusiveFroms();
     final int[][][] inclusiveTos = hashedRangedSubsetData.getInclusiveTos();
-    s.append(LINE_SEPARATOR).append("      // char [][] blockKeys");
-    s.append(LINE_SEPARATOR).append("      new char[][] {");
+    s.append(LINE_SEPARATOR).append("      // Hash-buckets with 0..n keys – null indicates an empty hash-bucket.");
+    s.append(LINE_SEPARATOR).append("      //");
+    s.append(LINE_SEPARATOR).append("      //       ┌──── hashIndex       - an index to the hash-bucket");
+    s.append(LINE_SEPARATOR).append("      //       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket");
+    s.append(LINE_SEPARATOR).append("      //       │  │");
+    s.append(LINE_SEPARATOR).append("      //  char[ ][ ] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new char[ ][ ] {");
     for (int i = 0; i < keys.length; ++i) {
       final char[] buckets = keys[i];
       if (i % 8 == 0) {
@@ -359,8 +368,13 @@ public class LettersClassGenerator {
     }
     s.setLength(s.length() - 2);
     s.append("  },");
-    s.append(LINE_SEPARATOR).append("      // char [][][] codePointRanges");
-    s.append(LINE_SEPARATOR).append("      new char[][][] {");
+    s.append(LINE_SEPARATOR);
+    s.append(LINE_SEPARATOR).append("      //       ┌─────── hashIndex           - an index to the hash-bucket");
+    s.append(LINE_SEPARATOR).append("      //       │  ┌──── hashBucketIndex     - an index to the key within the hash-bucket");
+    s.append(LINE_SEPARATOR).append("      //       │  │  ┌─ codePointRangeIndex - an index to the range within the array of ranges");
+    s.append(LINE_SEPARATOR).append("      //       │  │  │");
+    s.append(LINE_SEPARATOR).append("      //  char[ ][ ][ ] codePointRanges");
+    s.append(LINE_SEPARATOR).append("      new char[ ][ ][ ] {");
     for (int i = 0; i < keys.length; ++i) {
       final char[] keyBuckets = keys[i];
       final int[][] fromBuckets = inclusiveFroms[i];
@@ -412,8 +426,12 @@ public class LettersClassGenerator {
     final char[] keys = optimalHashedRangedSubsetData.getBlockKeys();
     final int[][] inclusiveFroms = optimalHashedRangedSubsetData.getInclusiveFroms();
     final int[][] inclusiveTos = optimalHashedRangedSubsetData.getInclusiveTos();
-    s.append(LINE_SEPARATOR).append("      // char [] blockKeys");
-    s.append(LINE_SEPARATOR).append("      new char[] {");
+    s.append(LINE_SEPARATOR).append("      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.");
+    s.append(LINE_SEPARATOR).append("      //");
+    s.append(LINE_SEPARATOR).append("      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key");
+    s.append(LINE_SEPARATOR).append("      //       │");
+    s.append(LINE_SEPARATOR).append("      //  char[ ] blockKeys");
+    s.append(LINE_SEPARATOR).append("      new char[ ] {");
     for (int i = 0; i < keys.length; ++i) {
       final int key = keys[i];
       if (i % 8 == 0) {
@@ -423,8 +441,12 @@ public class LettersClassGenerator {
     }
     s.setLength(s.length() - 2);
     s.append("  },");
-    s.append(LINE_SEPARATOR).append("      // char [][] codePointRanges");
-    s.append(LINE_SEPARATOR).append("      new char[][] {");
+    s.append(LINE_SEPARATOR);
+    s.append(LINE_SEPARATOR).append("      //       ┌──── hashIndex           - an index to the hash-bucket");
+    s.append(LINE_SEPARATOR).append("      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges");
+    s.append(LINE_SEPARATOR).append("      //       │  │");
+    s.append(LINE_SEPARATOR).append("      //  char[ ][ ] codePointRanges");
+    s.append(LINE_SEPARATOR).append("      new char[ ][ ] {");
     for (int i = 0; i < keys.length; ++i) {
       final int key = keys[i];
       final int[] froms = inclusiveFroms[i];
