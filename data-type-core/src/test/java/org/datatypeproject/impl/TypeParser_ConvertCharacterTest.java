@@ -20,7 +20,7 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
   void should_parse_preserving_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .minSize(4)
             .maxSize(44)
             .toUpperCase()

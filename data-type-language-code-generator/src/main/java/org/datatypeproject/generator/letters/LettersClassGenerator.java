@@ -53,8 +53,8 @@ public class LettersClassGenerator {
         import org.datatypeproject.impl.Factory;
                 
         @Generated(
-            comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
-            value = "org.datatypeproject:data-type-letters-code-generator")     
+            comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
+            value = "org.datatypeproject:data-type-language-code-generator")     
         public class Letters {
                 
           private static final Index index = new Index();
@@ -118,8 +118,12 @@ public class LettersClassGenerator {
           final Sizes doubleByteSizes = appendCodepointArrayRanges(s, lettersData, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
           final Sizes tripleByteSizes = appendCodepointArrayRanges(s, lettersData, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
           s.append(LINE_SEPARATOR).append("      ");
-          s.append(singleByteSizes.rangesSize + doubleByteSizes.rangesSize + tripleByteSizes.rangesSize).append(", ");
-          s.append(singleByteSizes.codePointsSize + doubleByteSizes.codePointsSize + tripleByteSizes.codePointsSize);
+          s.append(singleByteSizes.numberOfCodePointRanges
+              + doubleByteSizes.numberOfCodePointRanges
+              + tripleByteSizes.numberOfCodePointRanges).append(", ");
+          s.append(singleByteSizes.numberOfCodePointsInCodePointRanges
+              + doubleByteSizes.numberOfCodePointsInCodePointRanges
+              + tripleByteSizes.numberOfCodePointsInCodePointRanges);
           s.append("));");
           break;
       }
@@ -155,8 +159,8 @@ public class LettersClassGenerator {
         import org.datatypeproject.impl.Factory;
                 
         @Generated(
-            comments = "This file is generated from data in the LanguageData class in the data-type-letters-code-generator module.",
-            value = "org.datatypeproject:data-type-letters-code-generator")     
+            comments = "This file is generated from data in the LanguageData class in the data-type-language-code-generator module.",
+            value = "org.datatypeproject:data-type-language-code-generator")     
         class %s {
                 
         """, lettersClassName));
@@ -187,12 +191,12 @@ public class LettersClassGenerator {
 
   private static class Sizes {
 
-    public final int rangesSize;
-    public final int codePointsSize;
+    public final int numberOfCodePointRanges;
+    public final int numberOfCodePointsInCodePointRanges;
 
-    public Sizes(final int rangesSize, final int codePointsSize) {
-      this.rangesSize = rangesSize;
-      this.codePointsSize = codePointsSize;
+    public Sizes(final int numberOfCodePointRanges, final int numberOfCodePointsInCodePointRanges) {
+      this.numberOfCodePointRanges = numberOfCodePointRanges;
+      this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
     }
   }
 
@@ -216,8 +220,8 @@ public class LettersClassGenerator {
       case "long" -> new String(new char[32]).replace('\0', ' ');
       default -> "";
     };
-    int rangesSize = 0;
-    int codePointsSize = 0;
+    int numberOfCodePointRanges = 0;
+    int numberOfCodePointsInCodePointRanges = 0;
     for (EntryRange range : unicodeSet.ranges()) {
       final int from = range.codepoint;
       final int to = range.codepointEnd;
@@ -231,8 +235,8 @@ public class LettersClassGenerator {
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
-        rangesSize++;
-        codePointsSize += (to - from + 1);
+        numberOfCodePointRanges++;
+        numberOfCodePointsInCodePointRanges += (to - from + 1);
         if (lettersData == LETTERS_JAPANESE_JA_HANI) {
           for (int c = from; c <= min(to, from + 20); ++c) {
             s.append(' ').appendCodePoint(c);
@@ -252,7 +256,7 @@ public class LettersClassGenerator {
     if (arrayStarted) {
       s.append("      },");
     }
-    return new Sizes(rangesSize, codePointsSize);
+    return new Sizes(numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   private static void appendJavadoc(

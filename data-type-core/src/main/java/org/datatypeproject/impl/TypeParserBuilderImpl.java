@@ -8,12 +8,13 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.datatypeproject.Category;
 import org.datatypeproject.Subset;
+import org.datatypeproject.Type;
 import org.datatypeproject.TypeParser;
 import org.datatypeproject.TypeParser.TypeParserBuilder;
 
 class TypeParserBuilderImpl implements TypeParserBuilder {
 
-  private final Class<?> targetClass;
+  private Class<?> targetTypeClass;
   private String errorMessage;
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private NullHandling nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
@@ -32,8 +33,12 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
 
 
-  TypeParserBuilderImpl(final Class<?> targetClass) {
-    this.targetClass = targetClass;
+  TypeParserBuilderImpl() {
+  }
+
+  public TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass) {
+    this.targetTypeClass = targetTypeClass;
+    return this;
   }
 
   public TypeParserBuilder errorMessage(final String errorMessage) {
@@ -931,7 +936,7 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   @Override
   public TypeParserImpl build() {
     return new TypeParserImpl(
-        targetClass, errorMessage, targetCase,
+        targetTypeClass, errorMessage, targetCase,
         whiteSpace,
         nullHandling,
         targetCharacterNormalizationForm,

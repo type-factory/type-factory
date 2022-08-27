@@ -8,7 +8,7 @@ public final class IataAirportCode extends StringType {
   public static final IataAirportCode EMPTY_IATA_AIRPORT_CODE = new IataAirportCode("");
 
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(IataAirportCode.class)
+      TypeParser.builder()
           .errorMessage("must be a 3-character IATA airport value")
           .acceptLettersAtoZ()
           .fixedSize(3)

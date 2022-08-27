@@ -1,80 +1,173 @@
 package org.datatypeproject;
 
 import java.io.Serial;
-import java.util.ResourceBundle;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
+import org.datatypeproject.impl.MessageUtils;
 
 public class InvalidDataTypeValueException extends IllegalArgumentException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
+  private static final String[] EMPTY_PARSER_ERROR_MESSAGE_ARG_KEYS = new String[0];
+  private static final Serializable[] EMPTY_PARSER_ERROR_MESSAGE_ARG_VALUES = new Serializable[0];
 
-  private final ResourceBundle localizationResourceBundle;
-  private final String parserErrorMessage;
+  private final Class<?> targetTypeClass;
+  private final String errorMessageKey;
+  private final String parserErrorMessageKey;
+  private final String[] parserErrorMessageArgKeys;
+  private final Serializable[] parserErrorMessageArgValues;
   private final String invalidValue;
 
-  InvalidDataTypeValueException(
-      final String parserErrorMessage, 
-      final String message,
-      final int[] successfullyParsedCodePoints, 
-      final int successfullyParsedCount) {
-    super(message == null || message.isBlank() ? parserErrorMessage : message);
-    this.localizationResourceBundle = null;
-    this.parserErrorMessage = parserErrorMessage;
-    this.invalidValue = new String(successfullyParsedCodePoints, 0, successfullyParsedCount);
+  protected InvalidDataTypeValueException(
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey) {
+    this(null,
+        invalidValue,
+        targetTypeClass,
+        errorMessageKey,
+        parserErrorMessageKey,
+        EMPTY_PARSER_ERROR_MESSAGE_ARG_KEYS,
+        EMPTY_PARSER_ERROR_MESSAGE_ARG_VALUES);
   }
 
-  InvalidDataTypeValueException(
-      final String parserErrorMessage, 
-      final String message,
-      final int[] successfullyParsedCodePoints, 
-      final int successfullyParsedCount,
-      final CharSequence invalidValue) {
-    super(message == null || message.isBlank() ? parserErrorMessage : message);
-    this.localizationResourceBundle = null;
-    this.parserErrorMessage = parserErrorMessage;
+  protected InvalidDataTypeValueException(
+      final Throwable cause,
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey) {
+    this(cause,
+        invalidValue,
+        targetTypeClass,
+        errorMessageKey,
+        parserErrorMessageKey,
+        EMPTY_PARSER_ERROR_MESSAGE_ARG_KEYS,
+        EMPTY_PARSER_ERROR_MESSAGE_ARG_VALUES);
+  }
+
+  protected <V extends Serializable> InvalidDataTypeValueException(
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey,
+      final String parserErrorMessageArgKey1, final V parserErrorMessageArgValue1) {
+    this(null,
+        invalidValue,
+        targetTypeClass,
+        errorMessageKey,
+        parserErrorMessageKey,
+        new String[]{parserErrorMessageArgKey1},
+        new Serializable[]{parserErrorMessageArgValue1});
+  }
+
+  @SuppressWarnings("java:S107")
+  protected <V extends Serializable> InvalidDataTypeValueException(
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey,
+      final String parserErrorMessageArgKey1, final V parserErrorMessageArgValue1,
+      final String parserErrorMessageArgKey2, final V parserErrorMessageArgValue2) {
+    this(null,
+        invalidValue,
+        targetTypeClass,
+        errorMessageKey,
+        parserErrorMessageKey,
+        new String[]{parserErrorMessageArgKey1, parserErrorMessageArgKey2},
+        new Serializable[]{parserErrorMessageArgValue1, parserErrorMessageArgValue2});
+  }
+
+  @SuppressWarnings("java:S107")
+  protected <V extends Serializable> InvalidDataTypeValueException(
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey,
+      final String parserErrorMessageArgKey1, final V parserErrorMessageArgValue1,
+      final String parserErrorMessageArgKey2, final V parserErrorMessageArgValue2,
+      final String parserErrorMessageArgKey3, final V parserErrorMessageArgValue3) {
+    this(null,
+        invalidValue,
+        targetTypeClass,
+        errorMessageKey,
+        parserErrorMessageKey,
+        new String[]{parserErrorMessageArgKey1, parserErrorMessageArgKey2, parserErrorMessageArgKey3},
+        new Serializable[]{parserErrorMessageArgValue1, parserErrorMessageArgValue2, parserErrorMessageArgValue3});
+  }
+
+  private <V extends Serializable> InvalidDataTypeValueException(
+      final Throwable cause,
+      final CharSequence invalidValue,
+      final Class<?> targetTypeClass,
+      final String errorMessageKey,
+      final String parserErrorMessageKey,
+      final String[] parserErrorMessageArgKeys,
+      final V[] parserErrorMessageArgValues) {
+    super(MessageUtils.combineMessagesIntoSentences(
+            MessageUtils.getMessage(errorMessageKey),
+            MessageUtils.getMessage(parserErrorMessageKey, parserErrorMessageArgValues)),
+        cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
-  }
-
-  InvalidDataTypeValueException(
-      final String parserErrorMessage, 
-      final String message, 
-      final CharSequence invalidValue) {
-    super(message == null || message.isBlank() ? parserErrorMessage : message);
-    this.localizationResourceBundle = null;
-    this.parserErrorMessage = parserErrorMessage;
-    this.invalidValue = invalidValue == null ? null : invalidValue.toString();
-  }
-
-  InvalidDataTypeValueException(
-      final String parserErrorMessage, 
-      final String message, 
-      final CharSequence invalidValue, 
-      final Throwable cause) {
-    super(message == null || message.isBlank() ? parserErrorMessage : message, cause);
-    this.localizationResourceBundle = null;
-    this.parserErrorMessage = parserErrorMessage;
-    this.invalidValue = invalidValue == null ? null : invalidValue.toString();
-  }
-
-  public String getParserErrorMessage() {
-    return parserErrorMessage;
-  }
-
-  public String getInvalidValue() {
-    return invalidValue;
+    this.targetTypeClass = targetTypeClass;
+    this.errorMessageKey = errorMessageKey;
+    this.parserErrorMessageKey = parserErrorMessageKey;
+    this.parserErrorMessageArgKeys = parserErrorMessageArgKeys;
+    this.parserErrorMessageArgValues = parserErrorMessageArgValues;
   }
 
   @Override
   public String getLocalizedMessage() {
-    if (localizationResourceBundle == null) {
-      return getMessage();
+    return getLocalizedMessage(Locale.getDefault());
+  }
+
+  public String getLocalizedMessage(final Locale locale) {
+    return MessageUtils.combineMessagesIntoSentences(getDataTypeErrorMessage(locale), getParserErrorMessage(locale));
+  }
+
+  public Class<?> getTargetTypeClass() {
+    return targetTypeClass;
+  }
+
+  public String getErrorMessageKey() {
+    return errorMessageKey;
+  }
+
+  public String getDataTypeErrorMessage() {
+    return getDataTypeErrorMessage(Locale.getDefault());
+  }
+
+  public String getDataTypeErrorMessage(final Locale locale) {
+    return MessageUtils.getMessage(locale, errorMessageKey, parserErrorMessageArgValues);
+  }
+
+  public String getParserErrorMessageKey() {
+    return parserErrorMessageKey;
+  }
+
+  public String getParserErrorMessage() {
+    return getParserErrorMessage(Locale.getDefault());
+  }
+
+  public String getParserErrorMessage(final Locale locale) {
+    return MessageUtils.getMessage(locale, parserErrorMessageKey, parserErrorMessageArgValues);
+  }
+
+  public Map<String, Serializable> getErrorMessageProperties() {
+    final Map<String, Serializable> result = new HashMap<>();
+    for (int i = 0; i < parserErrorMessageArgKeys.length; ++i) {
+      result.put(parserErrorMessageArgKeys[i], parserErrorMessageArgValues[i]);
     }
-    try {
-      return localizationResourceBundle.getString(getMessage());
-    } catch (final Exception e) {
-      return getMessage();
-    }
+    return result;
+  }
+
+  public String getInvalidValue() {
+    return invalidValue;
   }
 
   public static InvalidDataTypeValueException forValueTooShort(
@@ -83,13 +176,12 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
       final CharSequence value,
       final int minLength) {
 
-    final StringBuilder parserErrorMessage = new StringBuilder();
-    parserErrorMessage.append("Invalid ")
-        .append(targetTypeClass.getSimpleName())
-        .append(" value - too short, min length must be '")
-        .append(minLength)
-        .append("'.");
-    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(
+        value,
+        targetTypeClass,
+        message,
+        ParserErrorCode.INVALID_VALUE_TOO_SHORT,
+        ParserErrorMessageArgKeys.MIN_LENGTH, minLength);
   }
 
   public static InvalidDataTypeValueException forValueTooLong(
@@ -98,33 +190,57 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
       final CharSequence value,
       final int maxLength) {
 
-    final StringBuilder parserErrorMessage = new StringBuilder();
-    parserErrorMessage.append("Invalid ")
-        .append(targetTypeClass.getSimpleName())
-        .append(" value - too long, max length must be '")
-        .append(maxLength)
-        .append("'.");
-    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(
+        value,
+        targetTypeClass,
+        message,
+        ParserErrorCode.INVALID_VALUE_TOO_LONG,
+        ParserErrorMessageArgKeys.MAX_LENGTH, maxLength);
   }
 
   public static InvalidDataTypeValueException forInvalidCodePoint(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int indexOfInvalidCharacter,
       final int invalidCodePoint) {
 
-    final StringBuilder parserErrorMessage = new StringBuilder();
-    parserErrorMessage.append("Invalid ").append(targetTypeClass.getSimpleName()).append(" value - invalid ");
     if (Character.isWhitespace(invalidCodePoint)) {
-      parserErrorMessage.append("white-space ");
-    } else if (Character.isISOControl(invalidCodePoint)) {
-      parserErrorMessage.append("control ");
+      return new InvalidDataTypeValueException(
+          value,
+          targetTypeClass,
+          message,
+          ParserErrorCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER,
+          ParserErrorMessageArgKeys.INVALID_CODE_POINT,
+          unicodeHexCode(invalidCodePoint));
     }
-    parserErrorMessage.append("character '");
-    appendCodePoint(parserErrorMessage, invalidCodePoint);
-    parserErrorMessage.append("'.");
-    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+
+    if (Character.isISOControl(invalidCodePoint)) {
+      return new InvalidDataTypeValueException(
+          value,
+          targetTypeClass,
+          message,
+          ParserErrorCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER,
+          ParserErrorMessageArgKeys.INVALID_CODE_POINT,
+          unicodeHexCode(invalidCodePoint));
+    }
+
+    if ('\'' == invalidCodePoint) {
+      return new InvalidDataTypeValueException(
+          value,
+          targetTypeClass,
+          message,
+          ParserErrorCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER,
+          ParserErrorMessageArgKeys.INVALID_CODE_POINT,
+          "''");
+    }
+
+    return new InvalidDataTypeValueException(
+        value,
+        targetTypeClass,
+        message,
+        ParserErrorCode.INVALID_VALUE_INVALID_CHARACTER,
+        ParserErrorMessageArgKeys.INVALID_CODE_POINT,
+        new String(new int[]{invalidCodePoint}, 0, 1));
   }
 
   public static InvalidDataTypeValueException forValueNotMatchRegex(
@@ -133,12 +249,13 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
       final CharSequence value,
       final Pattern regex) {
 
-    final StringBuilder parserErrorMessage = new StringBuilder();
-    parserErrorMessage.append("Invalid ")
-        .append(targetTypeClass.getSimpleName())
-        .append(" value - does not match pattern ")
-        .append(regex.toString());
-    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value);
+    return new InvalidDataTypeValueException(
+        value,
+        targetTypeClass,
+        message,
+        ParserErrorCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN,
+        ParserErrorMessageArgKeys.REGEX_PATTERN,
+        regex.toString());
   }
 
   public static InvalidDataTypeValueException forValueNotValidUsingCustomValidation(
@@ -147,42 +264,63 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
       final CharSequence value,
       final Exception cause) {
 
-    final StringBuilder parserErrorMessage = new StringBuilder();
-    parserErrorMessage.append("Invalid ")
-        .append(targetTypeClass.getSimpleName())
-        .append(" value - does not pass custom validation");
-    return new InvalidDataTypeValueException(parserErrorMessage.toString(), message, value, cause);
+    return new InvalidDataTypeValueException(
+        cause,
+        value,
+        targetTypeClass,
+        message,
+        ParserErrorCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION);
   }
 
-  private static StringBuilder appendCodePoint(final StringBuilder s, final int invalidCodePoint) {
-    if (Character.isWhitespace(invalidCodePoint) || Character.isISOControl(invalidCodePoint)) {
-      if (Character.isSupplementaryCodePoint(invalidCodePoint)) {
-        s.append(String.format("\\u%08x", invalidCodePoint));
-      } else {
-        s.append(String.format("\\u%04x", (short) invalidCodePoint));
-      }
-    } else {
-      s.appendCodePoint(invalidCodePoint);
-    }
-    return s;
+  private static String unicodeHexCode(final int codePoint) {
+    return Character.isSupplementaryCodePoint(codePoint)
+        ? String.format("U+%06x", codePoint)
+        : String.format("U+%04x", (short) codePoint);
   }
 
-  private static StringBuilder appendValueTruncatedIfNecessary(
-      final StringBuilder s, final CharSequence value, final int indexOfInvalidCharacter) {
 
-    if (value.length() <= 40) {
-      return s.append(value);
+  @Override
+  public String toString() {
+    final StringBuilder s = new StringBuilder();
+    s.append(this.getClass().getSimpleName())
+        .append("{")
+        .append("message='").append(getMessage()).append('\'')
+        .append(", dataTypeErrorCode='").append(errorMessageKey).append('\'')
+        .append(", parserErrorCode='").append(parserErrorMessageKey).append('\'');
+    if (targetTypeClass != null) {
+      s.append(", targetTypeClass='").append(targetTypeClass).append('\'');
     }
-
-    final int minIndex = indexOfInvalidCharacter <= 20 ? 0 : Math.max(3, indexOfInvalidCharacter - 17);
-    final int maxIndex = (minIndex + 40) > value.length() ? value.length() : value.length() - 3;
-    if (minIndex == 3) {
-      s.append("...");
+    for (int i = 0; i < parserErrorMessageArgKeys.length; ++i) {
+      s.append(", ").append(parserErrorMessageArgKeys[i]).append("='").append(parserErrorMessageArgValues[i]).append('\'');
     }
-    s.append(value, minIndex, maxIndex);
-    if (maxIndex < value.length()) {
-      s.append("...");
-    }
-    return s;
+    s.append("}");
+    return s.toString();
   }
+
+  public static class ParserErrorMessageArgKeys {
+
+    private ParserErrorMessageArgKeys() {
+    }
+
+    public static final String MIN_LENGTH = "minLength";
+    public static final String MAX_LENGTH = "maxLength";
+    public static final String INVALID_CODE_POINT = "invalidCodePoint";
+    public static final String REGEX_PATTERN = "regexPattern";
+  }
+
+  public static class ParserErrorCode {
+
+    private ParserErrorCode() {
+    }
+
+    public static final String INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN = "invalid_value_does_not_match_regex_pattern";
+    public static final String INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION = "invalid_value_does_not_pass_custom_validation";
+    public static final String INVALID_VALUE_INVALID_CHARACTER = "invalid_value_invalid_character";
+    public static final String INVALID_VALUE_INVALID_CONTROL_CHARACTER = "invalid_value_invalid_control_character";
+    public static final String INVALID_VALUE_INVALID_QUOTE_CHARACTER = "invalid_value_invalid_quote_character";
+    public static final String INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = "invalid_value_invalid_whitespace_character";
+    public static final String INVALID_VALUE_TOO_LONG = "invalid_value_too_long";
+    public static final String INVALID_VALUE_TOO_SHORT = "invalid_value_too_short";
+  }
+
 }

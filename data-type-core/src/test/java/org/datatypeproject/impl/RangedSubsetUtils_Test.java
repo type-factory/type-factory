@@ -5,8 +5,7 @@ import static org.datatypeproject.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_INT_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_LONG_ARRAY;
 
-import org.datatypeproject.impl.CodePointRangeImpl;
-import org.datatypeproject.impl.RangedSubsetUtils;
+import org.datatypeproject.Subset.CodePointRange;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -235,12 +234,12 @@ class RangedSubsetUtils_Test {
     assertThat(RangedSubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isNotNull()
         .containsExactly(
-            new CodePointRangeImpl(0x21, 0x22),
-            new CodePointRangeImpl(0x30, 0x44),
-            new CodePointRangeImpl(0x1122, 0x1133),
-            new CodePointRangeImpl(0xAA11, 0xBB00),
-            new CodePointRangeImpl(0x00445500, 0x00446600),
-            new CodePointRangeImpl(0x00BB1100, 0x00BB2200));
+            new CodePointRange(0x21, 0x22),
+            new CodePointRange(0x30, 0x44),
+            new CodePointRange(0x1122, 0x1133),
+            new CodePointRange(0xAA11, 0xBB00),
+            new CodePointRange(0x00445500, 0x00446600),
+            new CodePointRange(0x00BB1100, 0x00BB2200));
   }
 
   @ParameterizedTest

@@ -15,7 +15,7 @@ public record IataAirportCode(String value) implements RecordType {
   }
 
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(IataAirportCode.class)
+      TypeParser.builder()
           .errorMessage("must be a 3-character IATA airport value")
           .acceptLettersAtoZ()
           .fixedSize(3)

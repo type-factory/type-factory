@@ -9,7 +9,6 @@ import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.datatypeproject.CodePointRange;
 
 class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
@@ -45,24 +44,34 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
    */
   private final char[][] singleByteCodePointRangesByBlock;
 
-  private final int rangesSize;
+  private final int numberOfCodePointRanges;
 
-  private final int codePointsSize;
+  private final int numberOfCodePointsInCodePointRanges;
 
   OptimalHashedRangedSubsetImpl(
       final char[] blockKeys,
       final char[][] singleByteCodePointRangesByBlock,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this.blockKeys = blockKeys;
     this.singleByteCodePointRangesByBlock = singleByteCodePointRangesByBlock;
-    this.rangesSize = rangesSize;
-    this.codePointsSize = codePointsSize;
+    this.numberOfCodePointRanges = numberOfCodePointRanges;
+    this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
   }
 
   @Override
   public boolean isEmpty() {
-    return rangesSize == 0 && codePointsSize == 0;
+    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+  }
+
+  @Override
+  public int numberOfCodePointRanges() {
+    return numberOfCodePointRanges;
+  }
+
+  @Override
+  public int numberOfCodePointsInCodePointRanges() {
+    return numberOfCodePointsInCodePointRanges;
   }
 
   @Override
@@ -126,10 +135,9 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   private class CodePointRangeIterator implements Iterator<CodePointRange> {
 
-    private final CodePointRangeImpl result = new CodePointRangeImpl();
+    private final CodePointRange result = new CodePointRange(0,0);
     private final char[] blockKeySet;
     private int blockKeySetIndex;
-
     private int blockKey;
     private int codePointBlock;
     private int hashIndex;

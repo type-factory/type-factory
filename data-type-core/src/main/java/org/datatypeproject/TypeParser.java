@@ -8,8 +8,8 @@ import org.datatypeproject.impl.Factory;
 
 public interface TypeParser {
 
-  static TypeParserBuilder builder(final Class<?> targetClass) {
-    return Factory.typeParserBuilder(targetClass);
+  static TypeParserBuilder builder() {
+    return Factory.typeParserBuilder();
   }
 
   <T extends StringType> T parseToStringType(CharSequence value, Function<String, T> constructorOrFactoryMethod);
@@ -29,6 +29,8 @@ public interface TypeParser {
   Long parseToLong(CharSequence value);
 
   interface TypeParserBuilder {
+
+    TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
 
     TypeParserBuilder errorMessage(final String errorMessage);
 

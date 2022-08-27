@@ -9,7 +9,6 @@ import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.datatypeproject.CodePointRange;
 
 class HashedRangedSubsetImpl implements HashedRangedSubset {
 
@@ -42,34 +41,44 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
    *        │  ┌──── hashBucketIndex     - an index to the key within the hash-bucket
    *        │  │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
    *        │  │  │
-   *   char[ ][ ][ ] singleByteCodePointRangesByBlock
+   *   char[ ][ ][ ] codePointRangesByBlock
    * </pre>
    */
-  private final char[][][] singleByteCodePointRangesByBlock;
+  private final char[][][] codePointRangesByBlock;
 
-  private final int rangesSize;
+  private final int numberOfCodePointRanges;
 
-  private final int codePointsSize;
+  private final int numberOfCodePointsInCodePointRanges;
 
   HashedRangedSubsetImpl(
       final char[][] blockKeys,
-      final char[][][] singleByteCodePointRangesByBlock,
-      final int rangesSize,
-      final int codePointsSize) {
+      final char[][][] codePointRangesByBlock,
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this.blockKeys = blockKeys;
-    this.singleByteCodePointRangesByBlock = singleByteCodePointRangesByBlock;
-    this.rangesSize = rangesSize;
-    this.codePointsSize = codePointsSize;
+    this.codePointRangesByBlock = codePointRangesByBlock;
+    this.numberOfCodePointRanges = numberOfCodePointRanges;
+    this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
   }
 
   @Override
   public boolean isEmpty() {
-    return blockKeys.length == 0;
+    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+  }
+
+  @Override
+  public int numberOfCodePointRanges() {
+    return numberOfCodePointRanges;
+  }
+
+  @Override
+  public int numberOfCodePointsInCodePointRanges() {
+    return numberOfCodePointsInCodePointRanges;
   }
 
   @Override
   public boolean contains(final int codePoint) {
-    final char blockKey = (char)((codePoint >> 8) & 0xFFFF);
+    final char blockKey = (char) ((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final char[] availableBlockKeys = blockKeys[hashIndex];
     if (availableBlockKeys == null || availableBlockKeys.length == 0) {
@@ -82,7 +91,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     if (hashBucketIndex == availableBlockKeys.length) {
       return false;
     }
-    final char[] singleByteCodePointRanges = singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex];
+    final char[] singleByteCodePointRanges = codePointRangesByBlock[hashIndex][hashBucketIndex];
     return RangedSubsetUtils.contains(
         codePoint & BYTE_MASK,
         singleByteCodePointRanges,
@@ -94,7 +103,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   public char[] getBlockKeySet() {
     if (blockKeySet == null) {
       int tempBlockKeySetSize = 0;
-      char [] tempBlockKeySet = new char[256];
+      char[] tempBlockKeySet = new char[256];
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
         if (blockKeys[hashIndex] != null) {
           for (int hashBucketIndex = 0; hashBucketIndex < blockKeys[hashIndex].length; ++hashBucketIndex) {
@@ -105,9 +114,10 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
           }
         }
       }
-      Arrays.sort(tempBlockKeySet);
-      blockKeySet = tempBlockKeySet;
+      blockKeySet = Arrays.copyOf(tempBlockKeySet, tempBlockKeySetSize);
+      Arrays.sort(blockKeySet);
     }
+    // return a copy so as not to jeopardise the state of our internal array.
     return Arrays.copyOf(blockKeySet, blockKeySet.length);
   }
 
@@ -117,8 +127,8 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public char[][][] getSingleByteCodePointRangesByBlock() {
-    return singleByteCodePointRangesByBlock;
+  public char[][][] getCodePointRangesByBlock() {
+    return codePointRangesByBlock;
   }
 
   @Override
@@ -130,45 +140,56 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator();
+      return new CodePointRangeIterator(getBlockKeySet());
     }
   }
 
   private class CodePointRangeIterator implements Iterator<CodePointRange> {
 
-    private int keySetIndex;
+    private final CodePointRange result = new CodePointRange(0, 0);
+    private final char[] blockKeySet;
+    private int blockKeySetIndex;
+    private int blockKey;
+    private int codePointBlock;
     private int hashIndex;
     private int hashBucketIndex;
     private int codePointRangeIndex;
-    private CodePointRangeImpl result = new CodePointRangeImpl();
+
+    public CodePointRangeIterator(final char[] blockKeySet) {
+      this.blockKeySet = blockKeySet;
+      this.blockKeySetIndex = 0;
+      this.blockKey = this.blockKeySet[blockKeySetIndex];
+      this.codePointBlock = blockKey << 8;
+      this.hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
+      this.hashBucketIndex = 0;
+      this.codePointRangeIndex = 0;
+    }
 
     @Override
     public boolean hasNext() {
-      if (keySetIndex == blockKeySet.length) {
-        return false;
-      }
-      final int blockKey = blockKeySet[keySetIndex];
-      hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
-      final char[] availableBlockKeys = blockKeys[hashIndex];
-      while (hashBucketIndex < availableBlockKeys.length && blockKey != availableBlockKeys[hashBucketIndex]) {
+      if (codePointRangeIndex == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
         ++hashBucketIndex;
+        if (hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
+          blockKeySetIndex++;
+          if (blockKeySetIndex == blockKeySet.length) {
+            return false;
+          }
+          blockKey = this.blockKeySet[blockKeySetIndex];
+          codePointBlock = blockKey << 8;
+          hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
+          hashBucketIndex = 0;
+        }
+        codePointRangeIndex = 0;
       }
-      return hashBucketIndex != availableBlockKeys.length
-          && codePointRangeIndex < singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex].length;
+      return true;
     }
 
     @Override
     public CodePointRange next() {
-      if (hasNext() && codePointRangeIndex < singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex].length) {
-        result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
-        result.inclusiveTo = getInclusiveTo(singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
+      if (hasNext()) {
+        result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
+        result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
         codePointRangeIndex++;
-        if (codePointRangeIndex == singleByteCodePointRangesByBlock[hashIndex][hashBucketIndex].length) {
-          keySetIndex++;
-          hashIndex = 0;
-          hashBucketIndex = 0;
-          codePointRangeIndex = 0;
-        }
       } else {
         throw new NoSuchElementException();
       }

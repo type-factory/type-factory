@@ -1,6 +1,8 @@
 package org.datatypeproject;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 import org.datatypeproject.impl.Factory;
 
 /**
@@ -127,6 +129,23 @@ public interface Subset {
         .build();
   }
 
+
+  /**
+   * Returns the number of code-point ranges in this subset.
+   * @return the number of code-point ranges in this subset.
+   */
+  int numberOfCodePointRanges();
+
+  /**
+   * <p>Returns the number of code-points that are contained in all the code-point ranges.</p>
+   *
+   * <p><b>Note</b>, depending on the implementation of the Subset, there may be extra code-points contained in
+   * the subset that are not necessarily contained within the set of code-point-ranges.</p>
+   *
+   * @return the number of code-points that are contained in all the code-point ranges.
+   */
+  int numberOfCodePointsInCodePointRanges();
+
   interface SubsetBuilder {
 
     SubsetBuilder includeChar(final char ch);
@@ -166,5 +185,103 @@ public interface Subset {
     SubsetBuilder excludeSubsets(final Collection<Subset> subsets);
 
     Subset build();
+  }
+
+  /**
+   * <p>A mutable tuple for use by the {@link Subset#ranges()} method which returns an {@code Iterable<CodePointRange>}
+   * which provides the code-point range via its public {@link #inclusiveFrom} and {@link #inclusiveTo} member variables.</p>
+   *
+   * <p><b>Note:</b> a single {@link CodePointRange} instance is reused with each iteration of the {@code Iterable<CodePointRange>}.
+   * Use {@link CodePointRange#copy()} if you need to keep separate instance references to each of the code-point ranges.</p>
+   */
+  final class CodePointRange implements Comparable<CodePointRange>, Serializable {
+
+    /**
+     * The inclusive start code-point of the code-point range.
+     */
+    public int inclusiveFrom;
+
+    /**
+     * The inclusive end code-point of the code-point range.
+     */
+    public int inclusiveTo;
+
+    public CodePointRange(final char inclusiveFrom, final char inclusiveTo) {
+      this((int)inclusiveFrom, (int) inclusiveTo);
+    }
+
+    public CodePointRange(final int inclusiveFrom, final int inclusiveTo) {
+      this.inclusiveFrom = inclusiveFrom;
+      this.inclusiveTo = inclusiveTo;
+    }
+
+    public CodePointRange copy() {
+      return new CodePointRange(inclusiveFrom, inclusiveTo);
+    }
+
+    /**
+     * Returns {@code true} if this code-point range inclusively contains the specified {@code codePoint}.
+     * @param codePoint the code-point that you wish to confirm is inclusively within the code-point range.
+     * @return {@code true} if this code-point range inclusively contains the specified {@code codePoint}.
+     */
+    public boolean contains(final int codePoint) {
+      return inclusiveFrom <= codePoint && codePoint <= inclusiveTo;
+    }
+
+    /**
+     * A {@code CodePointRange} instances are equal if and only if both their inclusive-from and inclusive-to code-points are equal.
+     *
+     * @param o the other {@code CodePointRange} instance to compare this instance to.
+     * @return {@code true} if this {@code CodePointRange} instance and the other instance {@code o} have both their inclusive-from and inclusive-to
+     * code-points equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o == null) {
+        return false;
+      }
+      if (this.getClass() != o.getClass()) {
+        return false;
+      }
+      final CodePointRange other = (CodePointRange) o;
+      return inclusiveFrom == other.inclusiveFrom && inclusiveTo == other.inclusiveTo;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(inclusiveFrom, inclusiveTo);
+    }
+
+    /**
+     * Null-safe comparison of this {@code CodePointRange} instance to another first comparing the {@code inclusiveFrom} value and then comparing the
+     * {@code inclusiveTo} value.
+     *
+     * @param o the other {@code CodePointRange} instance to compare to. May be {@code null}.
+     * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object when first
+     * comparing the {@code inclusiveFrom} value and then comparing the {@code inclusiveTo} value. Returns {@code 1} if the other object is
+     * {@code null}.
+     */
+    public int compareTo(final CodePointRange o) {
+      if (o == null) {
+        return 1;
+      }
+      int result = inclusiveFrom - o.inclusiveFrom;
+      if (result != 0) {
+        return result;
+      }
+      return inclusiveTo - o.inclusiveTo;
+    }
+
+    /**
+     * Returns the code-point range as a hexadecimal range in the format: {@code 0x00000000..0x00000000}
+     *
+     * @return the code-point range as a hexadecimal range in the format: {@code 0x00000000..0x00000000}
+     */
+    public String toString() {
+      return String.format("0x%08x..0x%08x", inclusiveFrom, inclusiveTo);
+    }
   }
 }
