@@ -17,7 +17,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
   void should_parse_converting_all_dashes_to_hyphen(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptAllDashes()
             .convertAllDashesToHyphen()
             .acceptCharRange('a', 'z')
@@ -36,7 +36,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
   void should_parse_converting_all_dashes_to_underscore(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptAllDashes()
             .convertAllDashesTo('_')
             .acceptCharRange('a', 'z')
@@ -55,7 +55,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
   void should_parse_converting_all_dashes_to_char_sequence(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptAllDashes()
             .convertAllDashesTo("===")
             .acceptCharRange('a', 'z')

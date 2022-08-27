@@ -18,7 +18,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
   void should_parse_preserving_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .preserveCase()
@@ -37,7 +37,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
   void should_parse_to_lower_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toLowerCase()
@@ -56,7 +56,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
   void should_parse_to_upper_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toUpperCase()
@@ -75,7 +75,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
   void should_parse_to_title_case(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
             .toTitleCase()

@@ -8,7 +8,7 @@ public final class CountryCode extends StringType {
   public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
 
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(CountryCode.class)
+      TypeParser.builder()
           .errorMessage("must be a 2-character ISO 3166-1 country value")
           .acceptLettersAtoZ()
           .fixedSize(2)

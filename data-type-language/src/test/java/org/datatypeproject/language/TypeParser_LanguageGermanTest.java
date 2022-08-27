@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
-      TypeParser.builder(SomeType.class)
+      TypeParser.builder()
           .errorMessage("Must be made up of German letters only.")
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.GERMAN_de)
@@ -36,7 +36,7 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
   void should_throw_exception_with_non_german_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessage("Must be made up of German letters only.");
+        .withMessageMatching("Must be made up of German letters only. Invalid value - invalid character '[^']+'.");
   }
 
 }

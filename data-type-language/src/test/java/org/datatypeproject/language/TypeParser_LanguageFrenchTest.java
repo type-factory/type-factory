@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
-  static final TypeParser TYPE_PARSER = TypeParser.builder(SomeType.class)
+  static final TypeParser TYPE_PARSER = TypeParser.builder()
       .errorMessage("Must be made up of French letters only.")
       .toCharacterNormalizationFormNFC()
       .acceptSubset(Letters.FRENCH_fr)
@@ -37,7 +37,7 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
   void should_throw_exception_with_non_french_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessage("Must be made up of French letters only.");
+        .withMessageMatching("Must be made up of French letters only. Invalid value - invalid character '[^']+'.");
   }
 
 }

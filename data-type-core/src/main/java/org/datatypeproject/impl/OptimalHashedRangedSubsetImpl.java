@@ -9,7 +9,6 @@ import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.datatypeproject.CodePointRange;
 
 class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
@@ -40,29 +39,39 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
    *        ┌──── hashIndex           - an index to the hash-bucket
    *        │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
    *        │  │
-   *   char[ ][ ] singleByteCodePointRangesByBlock
+   *   char[ ][ ] codePointRangesByBlock
    * </pre>
    */
-  private final char[][] singleByteCodePointRangesByBlock;
+  private final char[][] codePointRangesByBlock;
 
-  private final int rangesSize;
+  private final int numberOfCodePointRanges;
 
-  private final int codePointsSize;
+  private final int numberOfCodePointsInCodePointRanges;
 
   OptimalHashedRangedSubsetImpl(
       final char[] blockKeys,
-      final char[][] singleByteCodePointRangesByBlock,
-      final int rangesSize,
-      final int codePointsSize) {
+      final char[][] codePointRangesByBlock,
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this.blockKeys = blockKeys;
-    this.singleByteCodePointRangesByBlock = singleByteCodePointRangesByBlock;
-    this.rangesSize = rangesSize;
-    this.codePointsSize = codePointsSize;
+    this.codePointRangesByBlock = codePointRangesByBlock;
+    this.numberOfCodePointRanges = numberOfCodePointRanges;
+    this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
   }
 
   @Override
   public boolean isEmpty() {
-    return rangesSize == 0 && codePointsSize == 0;
+    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+  }
+
+  @Override
+  public int numberOfCodePointRanges() {
+    return numberOfCodePointRanges;
+  }
+
+  @Override
+  public int numberOfCodePointsInCodePointRanges() {
+    return numberOfCodePointsInCodePointRanges;
   }
 
   @Override
@@ -73,7 +82,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
     if (availableBlockKey == 0xFFFF || blockKey != availableBlockKey) {
       return false;
     }
-    final char[] singleByteCodePointRanges = singleByteCodePointRangesByBlock[hashIndex];
+    final char[] singleByteCodePointRanges = codePointRangesByBlock[hashIndex];
     return RangedSubsetUtils.contains(
         codePoint & BYTE_MASK,
         singleByteCodePointRanges,
@@ -107,8 +116,8 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   }
 
   @Override
-  public char[][] getSingleByteCodePointRangesByBlock() {
-    return singleByteCodePointRangesByBlock;
+  public char[][] getCodePointRangesByBlock() {
+    return codePointRangesByBlock;
   }
 
   @Override
@@ -126,10 +135,9 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   private class CodePointRangeIterator implements Iterator<CodePointRange> {
 
-    private final CodePointRangeImpl result = new CodePointRangeImpl();
+    private final CodePointRange result = new CodePointRange(0,0);
     private final char[] blockKeySet;
     private int blockKeySetIndex;
-
     private int blockKey;
     private int codePointBlock;
     private int hashIndex;
@@ -146,7 +154,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
     @Override
     public boolean hasNext() {
-      if (codePointRangeIndex == singleByteCodePointRangesByBlock[hashIndex].length) {
+      if (codePointRangeIndex == codePointRangesByBlock[hashIndex].length) {
         blockKeySetIndex++;
         if (blockKeySetIndex == blockKeySet.length) {
           return false;
@@ -162,8 +170,8 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
     @Override
     public CodePointRange next() {
       if (hasNext()) {
-        result.inclusiveFrom = codePointBlock | getInclusiveFrom(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
-        result.inclusiveTo = codePointBlock | getInclusiveTo(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
+        result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][codePointRangeIndex]);
+        result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][codePointRangeIndex]);
         codePointRangeIndex++;
       } else {
         throw new NoSuchElementException();

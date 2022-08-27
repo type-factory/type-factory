@@ -17,7 +17,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
   void should_parse_and_remove_all_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .removeAllWhitespace()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -34,7 +34,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
   void should_parse_and_remove_all_accepted_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .removeAllWhitespace()
             .acceptChars(' ', '\t')
             .acceptCharRange('a', 'z')
@@ -52,7 +52,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
   void should_parse_to_normalized_whitespace(final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .normalizeWhitespace()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -74,7 +74,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
       final char convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .normalizeAndConvertWhitespaceTo(convertTo)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -94,7 +94,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
       final String convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .normalizeAndConvertWhitespaceTo(convertTo)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -111,7 +111,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
   void should_parse_to_preserved_whitespace(final String value) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .preserveWhitespace()
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -133,7 +133,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
       final char convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .preserveAndConvertWhitespaceTo(convertTo)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -153,7 +153,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
       final String convertTo, final String value, final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .preserveAndConvertWhitespaceTo(convertTo)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')

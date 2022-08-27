@@ -1,33 +1,34 @@
 package org.datatypeproject.impl;
 
 import org.datatypeproject.Category;
+import org.datatypeproject.SubsetWithCategories;
 
-class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl {
+class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl implements SubsetWithCategories {
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
   private final long unicodeCategoryBitFlags;
 
-  private final int categoriesSize;
+  private final int numberOfUnicodeCategories;
 
   RangedSubsetWithCategoriesImpl(
       final long unicodeCategoryBitFlags,
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
       final long[] tripleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize,
-      final int categoriesSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges,
+      final int numberOfUnicodeCategories) {
     super(singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
     this.unicodeCategoryBitFlags = unicodeCategoryBitFlags;
-    this.categoriesSize = categoriesSize;
+    this.numberOfUnicodeCategories = numberOfUnicodeCategories;
   }
 
   @Override
   public boolean isEmpty() {
-    return categoriesSize == 0 && super.isEmpty();
+    return numberOfUnicodeCategories == 0 && super.isEmpty();
   }
 
   @Override
@@ -35,5 +36,15 @@ class RangedSubsetWithCategoriesImpl extends RangedSubsetImpl {
     return super.contains(codePoint)
         || (unicodeCategoryBitFlags > 0L
         && (unicodeCategoryBitFlags & (0x1L << Character.getType(codePoint))) > 0L);
+  }
+
+  @Override
+  public long unicodeCategoryBitFlags() {
+    return unicodeCategoryBitFlags;
+  }
+
+  @Override
+  public int numberOfUnicodeCategories() {
+    return numberOfUnicodeCategories;
   }
 }

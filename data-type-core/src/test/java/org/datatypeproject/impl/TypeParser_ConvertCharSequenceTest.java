@@ -22,7 +22,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
       final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .normalizeWhitespace()
             .convertChar(convertFrom, convertTo)
             .acceptLettersAtoZ()
@@ -53,7 +53,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
       final String expected) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .normalizeWhitespace()
             .convertChar(convertFrom1, convertTo1)
             .convertChar(convertFrom2, convertTo2)

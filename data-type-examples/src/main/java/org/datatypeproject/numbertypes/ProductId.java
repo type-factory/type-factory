@@ -6,7 +6,7 @@ import org.datatypeproject.TypeParser;
 public final class ProductId extends LongType {
 
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(ProductId.class)
+      TypeParser.builder()
           .errorMessage("must be a 16-digit number")
           .removeAllWhitespace()
           .acceptDigits0to9()

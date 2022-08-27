@@ -68,7 +68,7 @@ class SubsetOptimiser {
      */
     private final int[][][] inclusiveTos;
 
-    private int rangesSize = 0;
+    private int numberOfCodePointRanges = 0;
     private int codePointsSize = 0;
 
     public HashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
@@ -90,7 +90,7 @@ class SubsetOptimiser {
     }
 
     public int getRangesSize() {
-      return rangesSize;
+      return numberOfCodePointRanges;
     }
 
     public int getCodePointsSize() {
@@ -153,7 +153,7 @@ class SubsetOptimiser {
           inclusiveFroms[hashIndex][hashBucketIndex][codePointRangesSize] = inclusiveFrom;
           inclusiveTos[hashIndex][hashBucketIndex][codePointRangesSize] = inclusiveTo;
           codePointRangesSizes[hashIndex][hashBucketIndex]++;
-          rangesSize++;
+          numberOfCodePointRanges++;
           codePointsSize += inclusiveTo - inclusiveFrom + 1;
         }
       }
@@ -216,7 +216,7 @@ class SubsetOptimiser {
      */
     private final int[][] inclusiveTos;
 
-    private int rangesSize = 0;
+    private int numberOfCodePointRanges = 0;
     private int codePointsSize = 0;
 
     public OptimalHashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
@@ -239,7 +239,7 @@ class SubsetOptimiser {
     }
 
     public int getRangesSize() {
-      return rangesSize;
+      return numberOfCodePointRanges;
     }
 
     public int getCodePointsSize() {
@@ -291,7 +291,7 @@ class SubsetOptimiser {
           inclusiveFroms[hashIndex][codePointRangesSize] = inclusiveFrom;
           inclusiveTos[hashIndex][codePointRangesSize] = inclusiveTo;
           codePointRangesSizes[hashIndex]++;
-          rangesSize++;
+          numberOfCodePointRanges++;
           codePointsSize += (inclusiveTo - inclusiveFrom + 1);
         }
       }

@@ -8,7 +8,7 @@ public final class CurrencyCode extends StringType {
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");
 
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(CurrencyCode.class)
+      TypeParser.builder()
           .errorMessage("must be a 3-character ISO 4217 currency code")
           .acceptCharRange('a', 'z')
           .acceptCharRange('A', 'Z')

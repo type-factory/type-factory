@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
-      TypeParser.builder(SomeType.class)
+      TypeParser.builder()
           .errorMessage("Must be made up of Hindi letters only.")
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.HINDI_hi)
@@ -40,7 +40,7 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
   void should_throw_exception_with_non_hindi_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessage("Must be made up of Hindi letters only.");
+        .withMessageMatching("Must be made up of Hindi letters only. Invalid value - invalid character '[^']+'.");
   }
 
 }

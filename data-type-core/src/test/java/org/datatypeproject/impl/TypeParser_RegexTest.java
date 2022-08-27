@@ -23,7 +23,7 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
       final Pattern regex, final String value, final String expected) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Must conform to format.")
             .acceptLettersAtoZ()
             .acceptDigits0to9()
@@ -38,16 +38,16 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "[a-z]{3}-[0-9]{3} | ABC-ABC         | Invalid SomeType value - does not match pattern [a-z]{3}-[0-9]{3} ",
-      "[a-z]{3}-[0-9]{3} | XYZ_789         | Invalid SomeType value - does not match pattern [a-z]{3}-[0-9]{3} ",
-      "\\w+(?:\\.\\w+)*  | Example-Com     | Invalid SomeType value - does not match pattern \\w+(?:\\.\\w+)*  ",
-      "\\w+(?:\\.\\w+)*  | www-example.com | Invalid SomeType value - does not match pattern \\w+(?:\\.\\w+)*  ",
+      "[a-z]{3}-[0-9]{3} | ABC-ABC         | Invalid value - does not match pattern [a-z]{3}-[0-9]{3} ",
+      "[a-z]{3}-[0-9]{3} | XYZ_789         | Invalid value - does not match pattern [a-z]{3}-[0-9]{3} ",
+      "\\w+(?:\\.\\w+)*  | Example-Com     | Invalid value - does not match pattern \\w+(?:\\.\\w+)*  ",
+      "\\w+(?:\\.\\w+)*  | www-example.com | Invalid value - does not match pattern \\w+(?:\\.\\w+)*  ",
   }, delimiter = '|')
   void parserWithRegexShouldThrowExceptionWhileParsing(
       final Pattern regex, final String value, final String expectedExceptionMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Must conform to format.")
             .acceptLettersAtoZ()
             .acceptDigits0to9()
@@ -58,7 +58,7 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
 
     assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Must conform to format.")
+        .hasMessage("Must conform to format. Invalid value - does not match pattern " + regex.toString())
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
   }
 }
