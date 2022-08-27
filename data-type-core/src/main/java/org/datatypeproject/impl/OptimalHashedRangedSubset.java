@@ -8,5 +8,5 @@ interface OptimalHashedRangedSubset extends Subset {
 
   char[] getBlockKeys();
 
-  char[][] getSingleByteCodePointRangesByBlock();
+  char[][] getCodePointRangesByBlock();
 }

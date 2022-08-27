@@ -11,15 +11,22 @@ import org.datatypeproject.impl.Factory;
 public interface Subset {
 
   /**
-   * <p>An iterable of code-point ranges in this subset.</p>
+   * <p>Creates a {@link SubsetBuilder} to create {@link Subset} instances.</p>
    *
-   * <p><b>Note:</b> The iterable {@link CodePointRange} instance is reused with each iteration.
-   * Use {@link CodePointRange#copy()} if you need to keep references to each of the code-point ranges.</p>
-   *
-   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each iteration.
-   * @see CodePointRange#copy()
+   * @return A {@link SubsetBuilder} to create {@link Subset} instances.
    */
-  Iterable<CodePointRange> ranges();
+  static SubsetBuilder builder() {
+    return Factory.subsetBuilder();
+  }
+
+  /**
+   * <p>Creates a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}.</p>
+   *
+   * @return a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}..
+   */
+  default SubsetBuilder toBuilder() {
+    return builder().includeSubset(this);
+  }
 
   /**
    * Returns {@code true} if this subset contains no code-point ranges, that is, it is empty. Returns {@code false otherwise}.
@@ -80,22 +87,31 @@ public interface Subset {
   }
 
   /**
-   * <p>Creates a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}.</p>
+   * <p>An iterable of code-point ranges in this subset.</p>
    *
-   * @return a {@link SubsetBuilder} initialised with the set of code-points within this {@link Subset}..
+   * <p><b>Note:</b> The iterable {@link CodePointRange} instance is reused with each iteration.
+   * Use {@link CodePointRange#copy()} if you need to keep references to each of the code-point ranges.</p>
+   *
+   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each iteration.
+   * @see CodePointRange#copy()
    */
-  default SubsetBuilder toBuilder() {
-    return builder().includeSubset(this);
-  }
+  Iterable<CodePointRange> ranges();
 
   /**
-   * <p>Creates a {@link SubsetBuilder} to create {@link Subset} instances.</p>
-   *
-   * @return A {@link SubsetBuilder} to create {@link Subset} instances.
+   * Returns the number of code-point ranges in this subset.
+   * @return the number of code-point ranges in this subset.
    */
-  static SubsetBuilder builder() {
-    return Factory.subsetBuilder();
-  }
+  int numberOfCodePointRanges();
+
+  /**
+   * <p>Returns the number of code-points that are contained in all the code-point ranges.</p>
+   *
+   * <p><b>Note</b>, depending on the implementation of the Subset, there may be extra code-points contained in
+   * the subset that are not necessarily contained within the set of code-point-ranges.</p>
+   *
+   * @return the number of code-points that are contained in all the code-point ranges.
+   */
+  int numberOfCodePointsInCodePointRanges();
 
   /**
    * <p>Creates a new <em>immutable</em> subset of code-point ranges from the combined code-point ranges of all the provided subsets.
@@ -128,23 +144,6 @@ public interface Subset {
         .includeSubsets(subsets)
         .build();
   }
-
-
-  /**
-   * Returns the number of code-point ranges in this subset.
-   * @return the number of code-point ranges in this subset.
-   */
-  int numberOfCodePointRanges();
-
-  /**
-   * <p>Returns the number of code-points that are contained in all the code-point ranges.</p>
-   *
-   * <p><b>Note</b>, depending on the implementation of the Subset, there may be extra code-points contained in
-   * the subset that are not necessarily contained within the set of code-point-ranges.</p>
-   *
-   * @return the number of code-points that are contained in all the code-point ranges.
-   */
-  int numberOfCodePointsInCodePointRanges();
 
   interface SubsetBuilder {
 

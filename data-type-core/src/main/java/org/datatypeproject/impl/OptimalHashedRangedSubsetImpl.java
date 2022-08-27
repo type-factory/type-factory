@@ -39,10 +39,10 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
    *        ┌──── hashIndex           - an index to the hash-bucket
    *        │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
    *        │  │
-   *   char[ ][ ] singleByteCodePointRangesByBlock
+   *   char[ ][ ] codePointRangesByBlock
    * </pre>
    */
-  private final char[][] singleByteCodePointRangesByBlock;
+  private final char[][] codePointRangesByBlock;
 
   private final int numberOfCodePointRanges;
 
@@ -50,11 +50,11 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   OptimalHashedRangedSubsetImpl(
       final char[] blockKeys,
-      final char[][] singleByteCodePointRangesByBlock,
+      final char[][] codePointRangesByBlock,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
     this.blockKeys = blockKeys;
-    this.singleByteCodePointRangesByBlock = singleByteCodePointRangesByBlock;
+    this.codePointRangesByBlock = codePointRangesByBlock;
     this.numberOfCodePointRanges = numberOfCodePointRanges;
     this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
   }
@@ -82,7 +82,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
     if (availableBlockKey == 0xFFFF || blockKey != availableBlockKey) {
       return false;
     }
-    final char[] singleByteCodePointRanges = singleByteCodePointRangesByBlock[hashIndex];
+    final char[] singleByteCodePointRanges = codePointRangesByBlock[hashIndex];
     return RangedSubsetUtils.contains(
         codePoint & BYTE_MASK,
         singleByteCodePointRanges,
@@ -116,8 +116,8 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   }
 
   @Override
-  public char[][] getSingleByteCodePointRangesByBlock() {
-    return singleByteCodePointRangesByBlock;
+  public char[][] getCodePointRangesByBlock() {
+    return codePointRangesByBlock;
   }
 
   @Override
@@ -154,7 +154,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
     @Override
     public boolean hasNext() {
-      if (codePointRangeIndex == singleByteCodePointRangesByBlock[hashIndex].length) {
+      if (codePointRangeIndex == codePointRangesByBlock[hashIndex].length) {
         blockKeySetIndex++;
         if (blockKeySetIndex == blockKeySet.length) {
           return false;
@@ -170,8 +170,8 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
     @Override
     public CodePointRange next() {
       if (hasNext()) {
-        result.inclusiveFrom = codePointBlock | getInclusiveFrom(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
-        result.inclusiveTo = codePointBlock | getInclusiveTo(singleByteCodePointRangesByBlock[hashIndex][codePointRangeIndex]);
+        result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][codePointRangeIndex]);
+        result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][codePointRangeIndex]);
         codePointRangeIndex++;
       } else {
         throw new NoSuchElementException();

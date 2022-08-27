@@ -9,9 +9,4 @@ interface HashedRangedSubset extends Subset {
   char[][] getBlockKeys();
 
   char[][][] getCodePointRangesByBlock();
-
-  @Override
-  default boolean isEmpty() {
-    return getBlockKeys() == null || getBlockKeys().length == 0;
-  }
 }
