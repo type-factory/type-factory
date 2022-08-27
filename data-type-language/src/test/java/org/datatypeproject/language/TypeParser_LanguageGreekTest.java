@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
-      TypeParser.builder(SomeType.class)
+      TypeParser.builder()
           .errorMessage("Must be made up of Greek letters only.")
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.GREEK_el)
@@ -36,7 +36,7 @@ class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
   void should_throw_exception_with_non_greek_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessage("Must be made up of Greek letters only.");
+        .withMessageMatching("Must be made up of Greek letters only. Invalid value - invalid character '[^']+'.");
   }
 
 }

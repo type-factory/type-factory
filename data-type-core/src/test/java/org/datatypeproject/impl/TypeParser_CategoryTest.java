@@ -19,7 +19,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
   void should_parse_accepting_only_uppercase_letters(final String value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
@@ -28,23 +28,23 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat    | Invalid SomeType value - invalid character 'a'.",
-      "Deer   | Invalid SomeType value - invalid character 'e'.",
-      "Τίγρη  | Invalid SomeType value - invalid character 'ί'.", // Greek
-      "Жирафа | Invalid SomeType value - invalid character 'и'.", // Russian
+      "Cat    | Invalid value - invalid character 'a'.",
+      "Deer   | Invalid value - invalid character 'e'.",
+      "Τίγρη  | Invalid value - invalid character 'ί'.", // Greek
+      "Жирафа | Invalid value - invalid character 'и'.", // Russian
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_lowercase_letters(
       final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Some type must be uppercase alpha characters.")
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Some type must be uppercase alpha characters.")
+        .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
@@ -59,7 +59,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
       final String value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
@@ -68,23 +68,23 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat|Invalid SomeType value - invalid character 'C'.",
-      "Deer|Invalid SomeType value - invalid character 'D'.",
-      "Τίγρη|Invalid SomeType value - invalid character 'Τ'.", // Greek
-      "Жирафа|Invalid SomeType value - invalid character 'Ж'.", // Russian
+      "Cat|Invalid value - invalid character 'C'.",
+      "Deer|Invalid value - invalid character 'D'.",
+      "Τίγρη|Invalid value - invalid character 'Τ'.", // Greek
+      "Жирафа|Invalid value - invalid character 'Ж'.", // Russian
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_uppercase_letters(
       final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Some type must be uppercase alpha characters.")
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Some type must be uppercase alpha characters.")
+        .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
@@ -99,7 +99,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
       final String value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .acceptUnicodeCategory(Category.LETTER)
             .build();
 
@@ -108,16 +108,16 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat\uD83D\uDC08|Invalid SomeType value - invalid character '\uD83D\uDC08'.", // 🐈 cat emoji
-      "Deer\uD83E\uDD8C|Invalid SomeType value - invalid character '\uD83E\uDD8C'.", // 🦌 deer emoji
-      "Τίγρη\uD83D\uDC05|Invalid SomeType value - invalid character '\uD83D\uDC05'.", // Greek with 🐅 tiger emoji
-      "Жирафа\uD83E\uDD92|Invalid SomeType value - invalid character '\uD83E\uDD92'.", // Russian with 🦒 giraffe emoji
+      "Cat\uD83D\uDC08|Invalid value - invalid character '\uD83D\uDC08'.", // 🐈 cat emoji
+      "Deer\uD83E\uDD8C|Invalid value - invalid character '\uD83E\uDD8C'.", // 🦌 deer emoji
+      "Τίγρη\uD83D\uDC05|Invalid value - invalid character '\uD83D\uDC05'.", // Greek with 🐅 tiger emoji
+      "Жирафа\uD83E\uDD92|Invalid value - invalid character '\uD83E\uDD92'.", // Russian with 🦒 giraffe emoji
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_letters(
       final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Some type must be uppercase alpha characters.")
             .acceptUnicodeCategory(Category.LETTER)
             .build();
@@ -126,7 +126,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Some type must be uppercase alpha characters.")
+        .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 

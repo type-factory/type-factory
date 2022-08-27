@@ -48,7 +48,7 @@ class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
   void should_parse_and_normalise_to_NFC(final WordsWithDiacriticModifiers value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .toCharacterNormalizationFormNFC()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.MODIFIER_SYMBOL)
@@ -67,7 +67,7 @@ class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
   void should_parse_and_normalise_to_NFD(final WordsWithDiacriticModifiers value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .toCharacterNormalizationFormNFD()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.NON_SPACING_MARK)
@@ -85,7 +85,7 @@ class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
   void should_parse_and_normalise_to_NFKC(final WordsWithDiacriticModifiers value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .toCharacterNormalizationFormNFKC()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.MODIFIER_SYMBOL)
@@ -104,7 +104,7 @@ class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
   void should_parse_and_normalise_to_NFKD(final WordsWithDiacriticModifiers value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .toCharacterNormalizationFormNFKD()
             .acceptAllUnicodeLetters()
             .acceptUnicodeCategory(Category.NON_SPACING_MARK)

@@ -10,7 +10,6 @@ import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.datatypeproject.CodePointRange;
 
 class RangedSubsetImpl implements RangedSubset {
 
@@ -18,78 +17,88 @@ class RangedSubsetImpl implements RangedSubset {
   private final int[] doubleByteCodePointRanges;
   private final long[] tripleByteCodePointRanges;
 
-  private final int rangesSize;
+  private final int numberOfCodePointRanges;
 
-  private final int codePointsSize;
+  private final int numberOfCodePointsInCodePointRanges;
 
 
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(singleByteCodePointRanges, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final int[] doubleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final long[] tripleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(singleByteCodePointRanges, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
       final long[] tripleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(singleByteCodePointRanges, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final int[] doubleByteCodePointRanges,
       final long[] tripleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this(EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        rangesSize, codePointsSize);
+        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
   }
 
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
       final long[] tripleByteCodePointRanges,
-      final int rangesSize,
-      final int codePointsSize) {
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
     this.singleByteCodePointRanges = defaultIfNullOrEmpty(singleByteCodePointRanges, EMPTY_CHAR_ARRAY);
     this.doubleByteCodePointRanges = defaultIfNullOrEmpty(doubleByteCodePointRanges, EMPTY_INT_ARRAY);
     this.tripleByteCodePointRanges = defaultIfNullOrEmpty(tripleByteCodePointRanges, EMPTY_LONG_ARRAY);
-    this.rangesSize = rangesSize;
-    this.codePointsSize = codePointsSize;
+    this.numberOfCodePointRanges = numberOfCodePointRanges;
+    this.numberOfCodePointsInCodePointRanges = numberOfCodePointsInCodePointRanges;
   }
 
   @Override
   public boolean isEmpty() {
-    return rangesSize == 0 && codePointsSize == 0;
+    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+  }
+
+  @Override
+  public int numberOfCodePointRanges() {
+    return numberOfCodePointRanges;
+  }
+
+  @Override
+  public int numberOfCodePointsInCodePointRanges() {
+    return numberOfCodePointsInCodePointRanges;
   }
 
   /**
@@ -178,7 +187,7 @@ class RangedSubsetImpl implements RangedSubset {
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;
     private int tripleByteIndex = 0;
-    private CodePointRangeImpl result = new CodePointRangeImpl();
+    private CodePointRange result = new CodePointRange(0,0);
 
     @Override
     public boolean hasNext() {

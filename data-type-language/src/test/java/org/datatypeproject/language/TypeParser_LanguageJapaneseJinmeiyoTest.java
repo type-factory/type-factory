@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 class TypeParser_LanguageJapaneseJinmeiyoTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
-      TypeParser.builder(SomeType.class)
+      TypeParser.builder()
           .errorMessage("Must be made up of Japanese Jinmeiyō letters only.")
           .preserveCharacterNormalizationForm()
           .acceptSubset(Letters.JAPANESE_ja_Hani_x_jinmeiyo)

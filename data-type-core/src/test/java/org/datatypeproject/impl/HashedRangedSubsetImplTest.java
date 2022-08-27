@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-public class OptimalHashedRangedSubsetImplTest {
+public class HashedRangedSubsetImplTest {
 
   @Test
   void empty_returnsTrue() {
 
-    final OptimalHashedRangedSubset actual = new OptimalHashedRangedSubsetImpl(
-        new char[0],
+    final HashedRangedSubset actual = new HashedRangedSubsetImpl(
         new char[0][],
+        new char[0][][],
         0,
         0);
 
@@ -28,7 +28,7 @@ public class OptimalHashedRangedSubsetImplTest {
   @EnumSource(TestSource.class)
   void empty_returnsFalse(final TestSource testSource) {
 
-    final OptimalHashedRangedSubset actual = new OptimalHashedRangedSubsetImpl(
+    final HashedRangedSubset actual = new HashedRangedSubsetImpl(
         testSource.blockKeys,
         testSource.codePointRanges,
         testSource.numberOfCodePointRanges,
@@ -42,7 +42,7 @@ public class OptimalHashedRangedSubsetImplTest {
   @EnumSource(TestSource.class)
   void contains_returnsAsExpected(final TestSource testSource) {
 
-    final OptimalHashedRangedSubset actual = new OptimalHashedRangedSubsetImpl(
+    final HashedRangedSubset actual = new HashedRangedSubsetImpl(
         testSource.blockKeys,
         testSource.codePointRanges,
         testSource.numberOfCodePointRanges,
@@ -66,7 +66,7 @@ public class OptimalHashedRangedSubsetImplTest {
   @EnumSource(TestSource.class)
   void getBlockKeySet_containsExpectedBlockKeys(final TestSource testSource) {
 
-    final OptimalHashedRangedSubset actual = new OptimalHashedRangedSubsetImpl(
+    final HashedRangedSubset actual = new HashedRangedSubsetImpl(
         testSource.blockKeys,
         testSource.codePointRanges,
         testSource.numberOfCodePointRanges,
@@ -80,7 +80,7 @@ public class OptimalHashedRangedSubsetImplTest {
   @EnumSource(TestSource.class)
   void ranges_containsExpectedCodepoints(final TestSource testSource) {
 
-    final OptimalHashedRangedSubset actual = new OptimalHashedRangedSubsetImpl(
+    final HashedRangedSubset actual = new HashedRangedSubsetImpl(
         testSource.blockKeys,
         testSource.codePointRanges,
         testSource.numberOfCodePointRanges,
@@ -92,14 +92,16 @@ public class OptimalHashedRangedSubsetImplTest {
 
   enum TestSource {
     MULTIPLE_BLOCKS(
-        new char[]{ // blockKeys
-            0x0000, 0xFFFF, 0x0002, 0xFFFF, 0x0004},
-        new char[][]{ // codePointRanges
-            {0x35_36, 0x38_38},
+        new char[][]{ // blockKeys
+            {0x0000}, null, {0x0002}, null, {0x0004}},
+        new char[][][]{ // codePointRanges
+            {{0x35_36, 0x38_38}},
             null,
-            {0x42_42},
+            {{0x42_42}},
             null,
-            {0x51_53, 0x55_55, 0x57_59}}, 6, 11,
+            {{0x51_53, 0x55_55, 0x57_59}}}, 
+        6, 
+        11,
         new int[]{ // expectedCodePointRanges
             0x0035_0036, 0x0038_0038, 0x0242_0242, 0x0451_0453, 0x0455_0455, 0x0457_0459},
         new char[]{ // expectedContainsCharacters
@@ -108,8 +110,8 @@ public class OptimalHashedRangedSubsetImplTest {
             '\u0034', '\u0037', '\u0037', '\u0039', '\u0155', '\u0241', '\u0243', '\u0366', '\u0450', '\u0454', '\u0456', '\u0460'}),
     ;
 
-    final char[] blockKeys;
-    final char[][] codePointRanges;
+    final char[][] blockKeys;
+    final char[][][] codePointRanges;
     final int numberOfCodePointRanges;
     final int numberOfCodePointsInCodePointRanges;
 
@@ -118,8 +120,8 @@ public class OptimalHashedRangedSubsetImplTest {
     final char[] expectedDoesNotContainCharacters;
 
     TestSource(
-        final char[] blockKeys,
-        final char[][] codePointRanges,
+        final char[][] blockKeys,
+        final char[][][] codePointRanges,
         final int numberOfCodePointRanges,
         final int numberOfCodePointsInCodePointRanges,
         final int[] expectedCodePointRanges,

@@ -19,7 +19,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
   void should_parse_to_fixed_size(final String value) throws ParseException {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -30,13 +30,13 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Ox|Invalid SomeType value - too short, min length must be '4'.",
-      "Cat|Invalid SomeType value - too short, min length must be '4'.",
+      "Ox|Invalid value - too short, minimum length is 4.",
+      "Cat|Invalid value - too short, minimum length is 4.",
   }, delimiter = '|')
   void should_throw_exception_when_too_small(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Some type must be 4 alpha characters.")
             .fixedSize(4)
             .acceptCharRange('a', 'z')
@@ -45,20 +45,20 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Some type must be 4 alpha characters.")
+        .hasMessage("Some type must be 4 alpha characters. Invalid value - too short, minimum length is 4.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Tiger|Invalid SomeType value - too long, max length must be '4'.",
-      "Donkey|Invalid SomeType value - too long, max length must be '4'.",
-      "Mammoth|Invalid SomeType value - too long, max length must be '4'.",
+      "Tiger|Invalid value - too long, maximum length is 4.",
+      "Donkey|Invalid value - too long, maximum length is 4.",
+      "Mammoth|Invalid value - too long, maximum length is 4.",
   }, delimiter = '|')
   void should_throw_exception_when_too_large(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Some type must be 4 alpha characters.")
             .fixedSize(4)
             .acceptCharRange('a', 'z')
@@ -67,7 +67,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidDataTypeValueException.class)
-        .hasMessage("Some type must be 4 alpha characters.")
+        .hasMessage("Some type must be 4 alpha characters. Invalid value - too long, maximum length is 4.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 

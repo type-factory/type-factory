@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
-      TypeParser.builder(SomeType.class)
+      TypeParser.builder()
           .errorMessage("Must be made up of Azeri Latin letters only.")
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.AZERBAIJANI_az_Latn)
@@ -36,7 +36,7 @@ class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
   void should_throw_exception_with_non_azeri_latin_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessage("Must be made up of Azeri Latin letters only.");
+        .withMessageMatching("Must be made up of Azeri Latin letters only. Invalid value - invalid character '[^']+'.");
   }
 
 }

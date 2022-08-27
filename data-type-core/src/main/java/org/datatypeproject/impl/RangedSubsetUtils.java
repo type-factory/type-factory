@@ -6,7 +6,7 @@ import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.datatypeproject.CodePointRange;
+import org.datatypeproject.Subset.CodePointRange;
 
 class RangedSubsetUtils {
 
@@ -199,17 +199,17 @@ class RangedSubsetUtils {
     final ArrayList<CodePointRange> result = new ArrayList<>();
     if (singleByteCodePointRanges != null) {
       for (char range : singleByteCodePointRanges) {
-        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (doubleByteCodePointRanges != null) {
       for (int range : doubleByteCodePointRanges) {
-        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     if (tripleByteCodePointRanges != null) {
       for (long range : tripleByteCodePointRanges) {
-        result.add(new CodePointRangeImpl(getInclusiveFrom(range), getInclusiveTo(range)));
+        result.add(new CodePointRange(getInclusiveFrom(range), getInclusiveTo(range)));
       }
     }
     return result;
@@ -435,16 +435,16 @@ class RangedSubsetUtils {
    * @param categoryFlags
    * @return the number categories that have been specified using category bit flags.
    */
-  static int categoriesSizeFromCategoriesFlags(final long categoryFlags) {
-    int categoriesSize = 0;
+  static int numberOfUnicodeCategoriesFromCategoriesFlags(final long categoryFlags) {
+    int numberOfUnicodeCategories = 0;
     // Count how many categories have been specified.
     long flags = categoryFlags;
     for (int i = 0; i < 64; ++i) {
       if ((flags & 0x01) == 0x01) {
-        ++categoriesSize;
+        ++numberOfUnicodeCategories;
       }
       flags = flags >> 1;
     }
-    return categoriesSize;
+    return numberOfUnicodeCategories;
   }
 }

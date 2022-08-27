@@ -296,7 +296,7 @@ public enum Category {
   final int[] characterCategories;
   final String abbreviation;
   final String alias;
-  final long bitMask;
+  public final long bitMask;
 
   static final int MAX_CHARACTER_CATEGORY_VALUE = determineMaxCharacterValue();
 
@@ -340,9 +340,5 @@ public enum Category {
 
   public int[] getCharacterCategories() {
     return Arrays.copyOf(characterCategories, characterCategories.length);
-  }
-
-  public long getBitMask() {
-    return bitMask;
   }
 }

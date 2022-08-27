@@ -27,18 +27,4 @@ interface RangedSubset extends Subset {
 
   long[] getTripleByteCodePointRanges();
 
-  default boolean isEmpty() {
-    return (getSingleByteCodePointRanges() == null || getSingleByteCodePointRanges().length == 0)
-        && (getDoubleByteCodePointRanges() == null || getDoubleByteCodePointRanges().length == 0)
-        && (getTripleByteCodePointRanges() == null || getTripleByteCodePointRanges().length == 0);
-  }
-
-  @Override
-  default boolean contains(final int codePoint) {
-    return RangedSubsetUtils.contains(
-        codePoint,
-        getSingleByteCodePointRanges(),
-        getDoubleByteCodePointRanges(),
-        getTripleByteCodePointRanges());
-  }
 }

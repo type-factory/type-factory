@@ -5,11 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.datatypeproject.CodePointRange;
+import org.datatypeproject.Subset.CodePointRange;
 import org.datatypeproject.Subset;
-import org.datatypeproject.impl.CodePointRangeImpl;
-import org.datatypeproject.impl.RangedSubsetBuilder;
-import org.datatypeproject.impl.RangedSubsetBuilderImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -37,6 +34,16 @@ class Subset_Test {
       public boolean contains(int codePoint) {
         return false;
       }
+
+      @Override
+      public int numberOfCodePointRanges() {
+        return 0;
+      }
+
+      @Override
+      public int numberOfCodePointsInCodePointRanges() {
+        return 0;
+      }
     };
     assertThat(subset.isEmpty()).isEqualTo(isEmptyValue);
     assertThat(subset.isNotEmpty()).isEqualTo(!isEmptyValue);
@@ -63,6 +70,16 @@ class Subset_Test {
       public boolean contains(int codePoint) {
         return containsValue;
       }
+
+      @Override
+      public int numberOfCodePointRanges() {
+        return 0;
+      }
+
+      @Override
+      public int numberOfCodePointsInCodePointRanges() {
+        return 0;
+      }
     };
     assertThat(subset.contains('A')).isEqualTo(containsValue);
     assertThat(subset.contains('9')).isEqualTo(containsValue);
@@ -88,6 +105,16 @@ class Subset_Test {
       @Override
       public boolean contains(int codePoint) {
         return containsValue;
+      }
+
+      @Override
+      public int numberOfCodePointRanges() {
+        return 0;
+      }
+
+      @Override
+      public int numberOfCodePointsInCodePointRanges() {
+        return 0;
       }
     };
     assertThat(subset.doesNotContain('A')).isEqualTo(!containsValue);
@@ -121,6 +148,16 @@ class Subset_Test {
       public boolean contains(int codePoint) {
         return false;
       }
+
+      @Override
+      public int numberOfCodePointRanges() {
+        return 0;
+      }
+
+      @Override
+      public int numberOfCodePointsInCodePointRanges() {
+        return 0;
+      }
     };
 
     final Subset actual = subset.toBuilder().build();
@@ -144,8 +181,8 @@ class Subset_Test {
         .hasSameSizeAs(subset.ranges())
         .hasSize(2)
         .containsExactly(
-            new CodePointRangeImpl('A', 'C'),
-            new CodePointRangeImpl('X', 'Z')
+            new CodePointRange('A', 'C'),
+            new CodePointRange('X', 'Z')
         );
   }
 }

@@ -17,7 +17,7 @@ class TypeParser_LanguageArmenianTest extends AbstractTypeParserTest {
   void should_parse_accepting_only_armenian_letters(final String value) {
 
     final TypeParser typeParser =
-        TypeParser.builder(SomeType.class)
+        TypeParser.builder()
             .errorMessage("Must be made up of Armenian letters only.")
             .toCharacterNormalizationFormNFC()
             .acceptSubset(Letters.ARMENIAN_hy)

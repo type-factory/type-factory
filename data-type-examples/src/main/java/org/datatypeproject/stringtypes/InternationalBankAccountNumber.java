@@ -12,7 +12,7 @@ public class InternationalBankAccountNumber extends StringType {
 
   private static final Pattern VALID_IBAN_PATTERN = Pattern.compile("[A-Z]{2}[0-9]{2}[0-9A-Z]{1,30}");
   private static final TypeParser TYPE_PARSER =
-      TypeParser.builder(InternationalBankAccountNumber.class)
+      TypeParser.builder()
           .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
           .acceptLettersAtoZ()
           .acceptDigits0to9()
