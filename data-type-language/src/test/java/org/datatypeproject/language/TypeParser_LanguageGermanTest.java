@@ -1,8 +1,7 @@
 package org.datatypeproject.language;
 
 import org.assertj.core.api.Assertions;
-import org.datatypeproject.InvalidDataTypeValueException;
-import org.datatypeproject.language.Letters;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -34,7 +33,7 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
       "die Weiße Τaube", // German 'Dove' with Greek 'Τ' taf
   })
   void should_throw_exception_with_non_german_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessageMatching("Must be made up of German letters only. Invalid value - invalid character '[^']+'.");
   }

@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.datatypeproject.Category;
 import org.datatypeproject.Subset;
-import org.datatypeproject.Type;
+import org.datatypeproject.Subset.SubsetBuilder;
 import org.datatypeproject.TypeParser;
 import org.datatypeproject.TypeParser.TypeParserBuilder;
 
@@ -27,7 +27,7 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   private Pattern regex = null;
 
   private Function<String, Boolean> validationFunction = null;
-  private final RangedSubsetBuilder rangedSubsetBuilder = RangedSubset.builder();
+  private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
 
   private final List<TypeParserBuilder> logicalOr = new ArrayList<>();

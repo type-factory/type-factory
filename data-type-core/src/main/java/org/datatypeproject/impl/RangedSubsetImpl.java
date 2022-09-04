@@ -3,9 +3,9 @@ package org.datatypeproject.impl;
 import static org.datatypeproject.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_INT_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_LONG_ARRAY;
-import static org.datatypeproject.impl.RangedSubsetUtils.defaultIfNullOrEmpty;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveFrom;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
+import static org.datatypeproject.impl.SubsetUtils.defaultIfNullOrEmpty;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveFrom;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveTo;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -142,7 +142,7 @@ class RangedSubsetImpl implements RangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
-    return RangedSubsetUtils.contains(
+    return SubsetUtils.contains(
         codePoint,
         singleByteCodePointRanges,
         doubleByteCodePointRanges,

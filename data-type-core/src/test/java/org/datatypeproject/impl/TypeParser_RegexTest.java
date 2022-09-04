@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.regex.Pattern;
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -57,7 +57,7 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
             .build();
 
     assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Must conform to format. Invalid value - does not match pattern " + regex.toString())
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
   }

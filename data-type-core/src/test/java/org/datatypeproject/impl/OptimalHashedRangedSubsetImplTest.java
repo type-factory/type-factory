@@ -138,8 +138,8 @@ public class OptimalHashedRangedSubsetImplTest {
       final List<CodePointRange> result = new ArrayList<>();
       for (int expectedRange : expectedCodePointRanges) {
         result.add(new CodePointRange(
-            RangedSubsetUtils.getInclusiveFrom(expectedRange),
-            RangedSubsetUtils.getInclusiveTo(expectedRange)));
+            SubsetUtils.getInclusiveFrom(expectedRange),
+            SubsetUtils.getInclusiveTo(expectedRange)));
       }
       return result;
     }
@@ -148,8 +148,8 @@ public class OptimalHashedRangedSubsetImplTest {
       final List<CodePointRange> result = new ArrayList<>();
       for (int expectedRange : expectedDoesNotContainCharacters) {
         result.add(new CodePointRange(
-            RangedSubsetUtils.getInclusiveFrom(expectedRange),
-            RangedSubsetUtils.getInclusiveTo(expectedRange)));
+            SubsetUtils.getInclusiveFrom(expectedRange),
+            SubsetUtils.getInclusiveTo(expectedRange)));
       }
       return result;
     }

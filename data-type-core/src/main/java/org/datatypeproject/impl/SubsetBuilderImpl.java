@@ -3,32 +3,30 @@ package org.datatypeproject.impl;
 import static org.datatypeproject.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_INT_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_LONG_ARRAY;
-import static org.datatypeproject.impl.RangedSubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags;
-import static org.datatypeproject.impl.RangedSubsetUtils.compactDoubleByteCodePointRanges;
-import static org.datatypeproject.impl.RangedSubsetUtils.compactSingleByteCodePointRanges;
-import static org.datatypeproject.impl.RangedSubsetUtils.compactTripleByteCodePointRanges;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveFrom;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
-import static org.datatypeproject.impl.RangedSubsetUtils.rangeToChar;
-import static org.datatypeproject.impl.RangedSubsetUtils.rangeToInt;
-import static org.datatypeproject.impl.RangedSubsetUtils.rangeToLong;
-import static org.datatypeproject.impl.RangedSubsetUtils.removeDoubleByteElement;
-import static org.datatypeproject.impl.RangedSubsetUtils.removeSingleByteElement;
-import static org.datatypeproject.impl.RangedSubsetUtils.removeTripleByteElement;
+import static org.datatypeproject.impl.SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags;
+import static org.datatypeproject.impl.SubsetUtils.compactDoubleByteCodePointRanges;
+import static org.datatypeproject.impl.SubsetUtils.compactSingleByteCodePointRanges;
+import static org.datatypeproject.impl.SubsetUtils.compactTripleByteCodePointRanges;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveFrom;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveTo;
+import static org.datatypeproject.impl.SubsetUtils.rangeToChar;
+import static org.datatypeproject.impl.SubsetUtils.rangeToInt;
+import static org.datatypeproject.impl.SubsetUtils.rangeToLong;
+import static org.datatypeproject.impl.SubsetUtils.removeDoubleByteElement;
+import static org.datatypeproject.impl.SubsetUtils.removeSingleByteElement;
+import static org.datatypeproject.impl.SubsetUtils.removeTripleByteElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.datatypeproject.Category;
 import org.datatypeproject.Subset;
 import org.datatypeproject.Subset.CodePointRange;
 import org.datatypeproject.Subset.SubsetBuilder;
 import org.datatypeproject.SubsetWithCategories;
 
-class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
+class SubsetBuilderImpl implements SubsetBuilder {
 
   /**
    * Code-points to include in the set
@@ -50,12 +48,14 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
    */
   protected long excludeUnicodeCategoryBitFlags;
 
-  public RangedSubsetBuilderImpl includeUnicodeCategory(final Category category) {
+  @Override
+  public SubsetBuilderImpl includeUnicodeCategory(final Category category) {
     includeUnicodeCategoryBitFlags |= category.bitMask;
     return this;
   }
 
-  public RangedSubsetBuilderImpl includeUnicodeCategories(final Category... categories) {
+  @Override
+  public SubsetBuilderImpl includeUnicodeCategories(final Category... categories) {
     if (categories != null) {
       for (Category category : categories) {
         includeUnicodeCategory(category);
@@ -64,12 +64,14 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeUnicodeCategory(final Category category) {
+  @Override
+  public SubsetBuilderImpl excludeUnicodeCategory(final Category category) {
     excludeUnicodeCategoryBitFlags |= category.bitMask;
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeUnicodeCategory(final Category... categories) {
+  @Override
+  public SubsetBuilderImpl excludeUnicodeCategory(final Category... categories) {
     if (categories != null) {
       for (Category category : categories) {
         excludeUnicodeCategory(category);
@@ -79,43 +81,43 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeChar(final char ch) {
+  public SubsetBuilderImpl includeChar(final char ch) {
     includes.addChar(ch);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeChars(final char... chars) {
+  public SubsetBuilderImpl includeChars(final char... chars) {
     includes.addChars(chars);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCharRange(final char inclusiveFrom, final char inclusiveTo) {
+  public SubsetBuilderImpl includeCharRange(final char inclusiveFrom, final char inclusiveTo) {
     includes.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePoint(final int codePoint) {
+  public SubsetBuilderImpl includeCodePoint(final int codePoint) {
     includes.addCodePoint(codePoint);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePoints(final int... codePoints) {
+  public SubsetBuilderImpl includeCodePoints(final int... codePoints) {
     includes.addCodePoints(codePoints);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeCodePointRange(int inclusiveFrom, int inclusiveTo) {
+  public SubsetBuilderImpl includeCodePointRange(int inclusiveFrom, int inclusiveTo) {
     includes.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeSubset(final Subset subset) {
+  public SubsetBuilderImpl includeSubset(final Subset subset) {
     includes.addSubset(subset);
     if (subset instanceof SubsetWithCategories subsetWithCategories) {
       includeUnicodeCategoryBitFlags |= subsetWithCategories.unicodeCategoryBitFlags();
@@ -124,7 +126,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeSubsets(final Subset... subsets) {
+  public SubsetBuilderImpl includeSubsets(final Subset... subsets) {
     if (subsets != null) {
       for (Subset subset : subsets) {
         includeSubset(subset);
@@ -134,7 +136,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   }
 
   @Override
-  public RangedSubsetBuilderImpl includeSubsets(final Collection<Subset> subsets) {
+  public SubsetBuilderImpl includeSubsets(final Collection<Subset> subsets) {
     if (subsets != null) {
       for (Subset subset : subsets) {
         includeSubset(subset);
@@ -143,55 +145,55 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     return this;
   }
 
-  public RangedSubsetBuilderImpl includeSubset(final RangedSubset subset) {
+  public SubsetBuilderImpl includeSubset(final RangedSubset subset) {
     includes.addSubset(subset);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeChar(final char ch) {
+  public SubsetBuilderImpl excludeChar(final char ch) {
     excludes.addChar(ch);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeChars(final char... chars) {
+  public SubsetBuilderImpl excludeChars(final char... chars) {
     excludes.addChars(chars);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCharRange(final char inclusiveFrom, final char inclusiveTo) {
+  public SubsetBuilderImpl excludeCharRange(final char inclusiveFrom, final char inclusiveTo) {
     excludes.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePoint(final int codePoint) {
+  public SubsetBuilderImpl excludeCodePoint(final int codePoint) {
     excludes.addCodePoint(codePoint);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePoints(final int... codePoints) {
+  public SubsetBuilderImpl excludeCodePoints(final int... codePoints) {
     excludes.addCodePoints(codePoints);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeCodePointRange(int inclusiveFrom, int inclusiveTo) {
+  public SubsetBuilderImpl excludeCodePointRange(int inclusiveFrom, int inclusiveTo) {
     excludes.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeSubset(final Subset subsets) {
+  public SubsetBuilderImpl excludeSubset(final Subset subsets) {
     excludes.addSubset(subsets);
     return this;
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeSubsets(final Subset... subsets) {
+  public SubsetBuilderImpl excludeSubsets(final Subset... subsets) {
     if (subsets != null) {
       for (Subset subset : subsets) {
         excludeSubset(subset);
@@ -201,7 +203,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
   }
 
   @Override
-  public RangedSubsetBuilderImpl excludeSubsets(final Collection<Subset> subsets) {
+  public SubsetBuilderImpl excludeSubsets(final Collection<Subset> subsets) {
     if (subsets != null) {
       for (Subset subset : subsets) {
         excludeSubset(subset);
@@ -210,7 +212,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     return this;
   }
 
-  public RangedSubsetBuilderImpl excludeSubset(final RangedSubset subset) {
+  public SubsetBuilderImpl excludeSubset(final RangedSubset subset) {
     excludes.addSubset(subset);
     return this;
   }
@@ -257,7 +259,7 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
     }
 
     if (isCandidateForHashedRangeSubset()) {
-      final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(includes.ranges());
+      final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(result.ranges());
       return subsetOptimiser.getOptimisedSubset();
     } else {
       return result;
@@ -670,58 +672,5 @@ class RangedSubsetBuilderImpl implements RangedSubsetBuilder {
             getInclusiveTo(tripleByteCodePointRanges[i]) - getInclusiveFrom(tripleByteCodePointRanges[i]) + 1;
       }
     }
-
-    public Iterable<CodePointRange> ranges() {
-      return new CodePointRangeIterable();
-    }
-
-    private class CodePointRangeIterable implements Iterable<CodePointRange> {
-
-      @Override
-      public Iterator<CodePointRange> iterator() {
-        return new CodePointRangeIterator();
-      }
-    }
-
-    private class CodePointRangeIterator implements Iterator<CodePointRange> {
-
-      private int singleByteIndex = 0;
-      private int doubleByteIndex = 0;
-      private int tripleByteIndex = 0;
-      private CodePointRange result = new CodePointRange(0, 0);
-
-      @Override
-      public boolean hasNext() {
-        return singleByteIndex < singleByteCodePointRanges.length
-            || doubleByteIndex < doubleByteCodePointRanges.length
-            || tripleByteIndex < tripleByteCodePointRanges.length;
-      }
-
-      @Override
-      public CodePointRange next() {
-        if (singleByteIndex < singleByteCodePointRanges.length) {
-          result.inclusiveFrom = getInclusiveFrom(singleByteCodePointRanges[singleByteIndex]);
-          result.inclusiveTo = getInclusiveTo(singleByteCodePointRanges[singleByteIndex]);
-          singleByteIndex++;
-        } else if (doubleByteIndex < doubleByteCodePointRanges.length) {
-          result.inclusiveFrom = getInclusiveFrom(doubleByteCodePointRanges[doubleByteIndex]);
-          result.inclusiveTo = getInclusiveTo(doubleByteCodePointRanges[doubleByteIndex]);
-          doubleByteIndex++;
-        } else if (tripleByteIndex < tripleByteCodePointRanges.length) {
-          result.inclusiveFrom = getInclusiveFrom(tripleByteCodePointRanges[tripleByteIndex]);
-          result.inclusiveTo = getInclusiveTo(tripleByteCodePointRanges[tripleByteIndex]);
-          tripleByteIndex++;
-        } else {
-          throw new NoSuchElementException();
-        }
-        return result;
-      }
-
-      @Override
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-    }
-
   }
 }

@@ -29,7 +29,7 @@ public class Factory {
   }
 
   public static SubsetBuilder subsetBuilder() {
-    return new RangedSubsetBuilderImpl();
+    return new SubsetBuilderImpl();
   }
 
   public static TypeParserBuilder typeParserBuilder() {
