@@ -311,15 +311,10 @@ class Letters_Japanese_ja_Hani_x_joyo {
           0x7f_7f, 0x93_93, 0x97_97, 0xa6_a6, 0xba_bb, 0xc4_c4, 0xd2_d2, 0xd9_d9},
         { // 0x009f__ codePoint ranges
           0x13_13, 0x3b_3b, 0x62_62},
-        null,
-        null,
-        null,
+          null, null, null,
         { // 0x020b__ codePoint ranges
           0x9f_9f},
-        null,
-        null,
-        null,
-        null,
+          null, null, null, null,
         { // 0x004e__ codePoint ranges
           0x00_01, 0x03_03, 0x07_0b, 0x0d_0e, 0x14_14, 0x16_16, 0x18_19, 0x21_21, 
           0x26_26, 0x2d_2d, 0x32_32, 0x38_39, 0x3b_3c, 0x45_45, 0x4f_4f, 0x57_57, 

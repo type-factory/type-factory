@@ -1,7 +1,5 @@
 package org.datatypeproject.stringtypes;
 
-import static java.lang.Character.getNumericValue;
-
 import java.util.regex.Pattern;
 import org.datatypeproject.StringType;
 import org.datatypeproject.TypeParser;
@@ -40,7 +38,7 @@ public class InternationalBankAccountNumber extends StringType {
     final int valueLength = value.length();
     long total = 0;
     for (int i = 0; i < valueLength; ++i) {
-      int numericValue = getNumericValue(value.charAt((i + 4) % valueLength));
+      final int numericValue = Character.getNumericValue(value.charAt((i + 4) % valueLength));
       if (numericValue < 0 || numericValue > MAX_ALPHANUMERIC_VALUE) {
         return Boolean.FALSE;
       }

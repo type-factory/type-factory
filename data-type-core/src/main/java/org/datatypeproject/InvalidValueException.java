@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import org.datatypeproject.impl.MessageUtils;
 
-public class InvalidDataTypeValueException extends IllegalArgumentException {
+public class InvalidValueException extends IllegalArgumentException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
@@ -22,7 +22,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
   private final Serializable[] parserErrorMessageArgValues;
   private final String invalidValue;
 
-  protected InvalidDataTypeValueException(
+  protected InvalidValueException(
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
       final String errorMessageKey,
@@ -36,7 +36,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         EMPTY_PARSER_ERROR_MESSAGE_ARG_VALUES);
   }
 
-  protected InvalidDataTypeValueException(
+  protected InvalidValueException(
       final Throwable cause,
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
@@ -51,7 +51,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         EMPTY_PARSER_ERROR_MESSAGE_ARG_VALUES);
   }
 
-  protected <V extends Serializable> InvalidDataTypeValueException(
+  protected <V extends Serializable> InvalidValueException(
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
       final String errorMessageKey,
@@ -67,7 +67,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
   }
 
   @SuppressWarnings("java:S107")
-  protected <V extends Serializable> InvalidDataTypeValueException(
+  protected <V extends Serializable> InvalidValueException(
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
       final String errorMessageKey,
@@ -84,7 +84,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
   }
 
   @SuppressWarnings("java:S107")
-  protected <V extends Serializable> InvalidDataTypeValueException(
+  protected <V extends Serializable> InvalidValueException(
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
       final String errorMessageKey,
@@ -101,7 +101,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         new Serializable[]{parserErrorMessageArgValue1, parserErrorMessageArgValue2, parserErrorMessageArgValue3});
   }
 
-  private <V extends Serializable> InvalidDataTypeValueException(
+  private <V extends Serializable> InvalidValueException(
       final Throwable cause,
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
@@ -170,13 +170,13 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
     return invalidValue;
   }
 
-  public static InvalidDataTypeValueException forValueTooShort(
+  public static InvalidValueException forValueTooShort(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int minLength) {
 
-    return new InvalidDataTypeValueException(
+    return new InvalidValueException(
         value,
         targetTypeClass,
         message,
@@ -184,13 +184,13 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         ParserErrorMessageArgKeys.MIN_LENGTH, minLength);
   }
 
-  public static InvalidDataTypeValueException forValueTooLong(
+  public static InvalidValueException forValueTooLong(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int maxLength) {
 
-    return new InvalidDataTypeValueException(
+    return new InvalidValueException(
         value,
         targetTypeClass,
         message,
@@ -198,14 +198,14 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         ParserErrorMessageArgKeys.MAX_LENGTH, maxLength);
   }
 
-  public static InvalidDataTypeValueException forInvalidCodePoint(
+  public static InvalidValueException forInvalidCodePoint(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int invalidCodePoint) {
 
     if (Character.isWhitespace(invalidCodePoint)) {
-      return new InvalidDataTypeValueException(
+      return new InvalidValueException(
           value,
           targetTypeClass,
           message,
@@ -215,7 +215,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
     }
 
     if (Character.isISOControl(invalidCodePoint)) {
-      return new InvalidDataTypeValueException(
+      return new InvalidValueException(
           value,
           targetTypeClass,
           message,
@@ -225,7 +225,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
     }
 
     if ('\'' == invalidCodePoint) {
-      return new InvalidDataTypeValueException(
+      return new InvalidValueException(
           value,
           targetTypeClass,
           message,
@@ -234,7 +234,7 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
           "''");
     }
 
-    return new InvalidDataTypeValueException(
+    return new InvalidValueException(
         value,
         targetTypeClass,
         message,
@@ -243,13 +243,13 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         new String(new int[]{invalidCodePoint}, 0, 1));
   }
 
-  public static InvalidDataTypeValueException forValueNotMatchRegex(
+  public static InvalidValueException forValueNotMatchRegex(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final Pattern regex) {
 
-    return new InvalidDataTypeValueException(
+    return new InvalidValueException(
         value,
         targetTypeClass,
         message,
@@ -258,13 +258,13 @@ public class InvalidDataTypeValueException extends IllegalArgumentException {
         regex.toString());
   }
 
-  public static InvalidDataTypeValueException forValueNotValidUsingCustomValidation(
+  public static InvalidValueException forValueNotValidUsingCustomValidation(
       final String message,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final Exception cause) {
 
-    return new InvalidDataTypeValueException(
+    return new InvalidValueException(
         cause,
         value,
         targetTypeClass,

@@ -181,7 +181,7 @@ public class UnicodeGroupData {
             (o instanceof JAXBElement && Repertoire.class.isAssignableFrom(((JAXBElement<?>) o).getDeclaredType())))
         .map(o -> o instanceof Repertoire ? o : ((JAXBElement<?>) o).getValue())
         .map(Repertoire.class::cast)
-        .collect(Collectors.toList());
+        .toList();
     if (repertoires.isEmpty()) {
       throw new UnicodeException(Error.THERE_ARE_NO_REPERTOIRE_ELEMENTS_IN_THE_FILE, unicodeAllGroupedXmlFileName);
     }
@@ -197,7 +197,7 @@ public class UnicodeGroupData {
             (o instanceof JAXBElement && Group.class.isAssignableFrom(((JAXBElement<?>) o).getDeclaredType())))
         .map(o -> o instanceof Group ? o : ((JAXBElement<?>) o).getValue())
         .map(Group.class::cast)
-        .collect(Collectors.toList());
+        .toList();
     if (groups.isEmpty()) {
       throw new UnicodeException(Error.THERE_ARE_NO_GROUP_ELEMENTS_IN_THE_FILE, unicodeAllGroupedXmlFileName);
     }
@@ -211,7 +211,7 @@ public class UnicodeGroupData {
             .map(JAXBElement::getValue)
             .map(CodePoint.class::cast)
             .map(c -> new UnicodeCodePoint(g, c)))
-        .collect(Collectors.toList());
+        .toList();
     if (unicodeCodePoints.isEmpty()) {
       throw new UnicodeException(Error.THERE_ARE_NO_GROUP_ELEMENTS_IN_THE_FILE, unicodeAllGroupedXmlFileName);
     }
@@ -224,7 +224,7 @@ public class UnicodeGroupData {
             (o instanceof JAXBElement && Blocks.class.isAssignableFrom(((JAXBElement<?>) o).getDeclaredType())))
         .map(o -> o instanceof Blocks ? o : ((JAXBElement<?>) o).getValue())
         .map(Blocks.class::cast)
-        .collect(Collectors.toList());
+        .toList();
 
     if (blocksElements.isEmpty()) {
       throw new UnicodeException(Error.THERE_ARE_NO_BLOCKS_ELEMENTS_IN_THE_FILE, unicodeAllGroupedXmlFileName);

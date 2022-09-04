@@ -1,11 +1,10 @@
 package org.datatypeproject.impl;
 
 import java.text.MessageFormat;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
-import org.datatypeproject.InvalidDataTypeValueException.ParserErrorCode;
+import org.datatypeproject.InvalidValueException.ParserErrorCode;
 
 public class MessageUtils {
 

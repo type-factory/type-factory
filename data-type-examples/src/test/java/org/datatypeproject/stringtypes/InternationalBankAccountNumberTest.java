@@ -3,7 +3,7 @@ package org.datatypeproject.stringtypes;
 import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -44,7 +44,7 @@ class InternationalBankAccountNumberTest {
   }, delimiter = '|')
   void shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> InternationalBankAccountNumber.of(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("must be a valid 5..34 character International Bank Account Number (IBAN). " + expectedExceptionMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
 

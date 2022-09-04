@@ -1,7 +1,7 @@
 package org.datatypeproject.impl;
 
 import org.assertj.core.api.Assertions;
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -24,7 +24,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessageMatching("Some type must be alpha characters. Invalid value - invalid (white-space |control )?character ('[^']{1,2}'|U\\+[0-9A-F]{4,6}).")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -44,7 +44,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessageMatching("Some type must be alpha characters. Invalid value - invalid (white-space |control )?character ('[^']{1,2}'|U\\+[0-9A-F]{4,6}).")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }

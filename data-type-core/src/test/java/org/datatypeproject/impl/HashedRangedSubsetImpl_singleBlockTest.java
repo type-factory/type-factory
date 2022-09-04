@@ -27,7 +27,7 @@
 //  })
 //  void includeChar_singleByteTest(final char value) {
 //
-//    final Subset actual = new RangedSubsetBuilderImpl()
+//    final Subset actual = new SubsetBuilderImpl()
 //        .includeChar(value)
 //        .build(SubsetTypePreference.HASHED_RANGED);
 //
@@ -87,8 +87,8 @@
 //      final List<CodePointRange> result = new ArrayList<>();
 //      for (char expectedRange : expectedRanges) {
 //        result.add(new CodePointRange(
-//            RangedSubsetUtils.getInclusiveFrom(expectedRange),
-//            RangedSubsetUtils.getInclusiveTo(expectedRange)));
+//            SubsetUtils.getInclusiveFrom(expectedRange),
+//            SubsetUtils.getInclusiveTo(expectedRange)));
 //      }
 //      return result;
 //    }

@@ -2,7 +2,7 @@ package org.datatypeproject.impl;
 
 import org.assertj.core.api.Assertions;
 import org.datatypeproject.Category;
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -43,7 +43,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -83,7 +83,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -125,7 +125,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
     Assertions.setMaxStackTraceElementsDisplayed(16);
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Some type must be uppercase alpha characters. " + expectedParserErrorMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
