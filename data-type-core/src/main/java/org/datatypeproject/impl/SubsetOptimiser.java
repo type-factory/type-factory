@@ -12,8 +12,6 @@ class SubsetOptimiser {
    * code-point ranges in order from lowest to highest.</p>
    */
   private final BlockKeyStats blockKeyStats;
-  private final int minHashBuckets;
-  private final int maxHashBuckets;
   private final HashMapStats[] hashMapStats;
   private final HashMapStats optimalHashMapStats;
   private final int optimalNumberOfHashBuckets;
@@ -21,11 +19,11 @@ class SubsetOptimiser {
   private final Subset optimisedSubset;
 
   public SubsetOptimiser(final Iterable<CodePointRange> ranges) {
-    blockKeyStats = getBlockKeysStats(ranges);
-    minHashBuckets = Math.max(3, (int) Math.floor(blockKeyStats.blockKeys.length * 0.7D));
-    maxHashBuckets = Math.max(7, (int) Math.ceil(blockKeyStats.blockKeys.length * 2.5D));
-    hashMapStats = calculatePossibleHashMapStats(blockKeyStats.blockKeys, minHashBuckets, maxHashBuckets);
+    blockKeyStats = BlockKeyStats.of(ranges);
+    hashMapStats = HashMapStats.of(blockKeyStats);
+    System.out.println("\nHashMapStats:\n=============\n" + this.toString());
     optimalHashMapStats = hashMapStats[0];
+
     optimalNumberOfHashBuckets = optimalHashMapStats.getNumberOfHashBuckets();
 
     if (optimalHashMapStats.containsHashBucketsWithMultipleKeys()) {
@@ -35,7 +33,7 @@ class SubsetOptimiser {
           hashedRangedSubsetData.blockKeys,
           hashedRangedSubsetData.codePointRangesByBlock,
           hashedRangedSubsetData.numberOfCodePointRanges,
-          hashedRangedSubsetData.codePointsSize);
+          hashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
     } else {
       final OptimalHashedRangedSubsetData optimalHashedRangedSubsetData = new OptimalHashedRangedSubsetData(optimalNumberOfHashBuckets);
       optimalHashedRangedSubsetData.optimiseHashMap(ranges, optimalHashMapStats);
@@ -43,7 +41,7 @@ class SubsetOptimiser {
           optimalHashedRangedSubsetData.blockKeys,
           optimalHashedRangedSubsetData.codePointRangesByBlock,
           optimalHashedRangedSubsetData.numberOfCodePointRanges,
-          optimalHashedRangedSubsetData.codePointsSize);
+          optimalHashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
     }
   }
 
@@ -60,87 +58,112 @@ class SubsetOptimiser {
     return blockKeyStats.blockKeys;
   }
 
-  /**
-   * A tuple to be returned by {@link #calculatePossibleHashMapStats} containing the full set of block-keys and also how many code-point ranges there
-   * are for each block key.
-   */
-
-  /**
-   * Returns a {@link #calculatePossibleHashMapStats} tuple containing the full set of block-keys and also how many code-point ranges there are for
-   * each block key.
-   *
-   * @param ranges the code-point ranges that we want stats from.
-   * @return a {@link #calculatePossibleHashMapStats} tuple containing the full set of block-keys and also how many code-point ranges there are for
-   * each block key.
-   */
-  private static BlockKeyStats getBlockKeysStats(final Iterable<CodePointRange> ranges) {
-    char[] blockKeys = new char[255];
-    int[] codePointRangesSize = new int[255];
-    int i = -1;
-    for (CodePointRange codePointRange : ranges) {
-      final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
-      final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
-      for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
-        if (i < 0 || blockKey != blockKeys[i]) {
-          ++i;
-          if (i == blockKeys.length) {
-            blockKeys = Arrays.copyOf(blockKeys, blockKeys.length + 255);
-            codePointRangesSize = Arrays.copyOf(codePointRangesSize, codePointRangesSize.length + 255);
-          }
-          blockKeys[i] = blockKey;
-          codePointRangesSize[i]++;
-        } else if (blockKey != blockKeyTo) {
-          codePointRangesSize[i]++;
-        }
-      }
-    }
-    ++i;
-    return new BlockKeyStats(
-        Arrays.copyOf(blockKeys, i),
-        Arrays.copyOf(codePointRangesSize, i));
-  }
-
-  private static HashMapStats[] calculatePossibleHashMapStats(final char[] blockKeys, final int minHashBuckets, final int maxHashBuckets) {
-    final HashMapStats[] result = new HashMapStats[maxHashBuckets - minHashBuckets + 1];
-    for (int i = 0, j = minHashBuckets; i < result.length; ++i, ++j) {
-      result[i] = new HashMapStats(j, blockKeys);
-    }
-    Arrays.sort(result, HashMapStats.HASH_MAP_STATS_COMPARATOR);
-    return result;
-  }
 
 
   @Override
   public String toString() {
     final StringBuilder s = new StringBuilder();
-    s.append("\nweight  buckets  0-keys  1-key  2-keys  3+keys");
+    s.append("\n|=========|========|=======|========|=========|========|==========|=======|=============|");
+    s.append("\n|         |    hash buckets containing...     |        |     memory required (bytes)    |");
+    s.append("\n|  # hash |-----------------------------------|  sort  |--------------------------------|");
+    s.append("\n| buckets | 0 keys | 1 key | 2 keys | 3+ keys | weight | obj refs |  data | total bytes |");
+    s.append("\n|=========|========|=======|========|=========|========|==========|=======|=============|");
     for (HashMapStats stats : hashMapStats) {
-      s.append(String.format("%n%5d  %7d   %6d  %5d  %6d  %6d",
-          stats.getWeight(),
+      s.append(String.format("%n| %7d | %6d | %5d | %6d | %7d | %6d | %8d | %5d | %11d |",
           stats.getNumberOfHashBuckets(),
           stats.getCountOfHashBucketsWith0Keys(),
           stats.getCountOfHashBucketsWith1Key(),
           stats.getCountOfHashBucketsWith2Keys(),
-          stats.getCountOfHashBucketsWith3OrMoreKeys()));
+          stats.getCountOfHashBucketsWith3OrMoreKeys(),
+          stats.getWeight(),
+          stats.getByteSizeOfArrayReferences(),
+          stats.getByteSizeOfBlockKeyData() + stats.getByteSizeOfCodePointRangeData(),
+          stats.getTotalBytes()));
     }
+    s.append("\n|=========|========|=======|========|=========|========|==========|=======|=============|");
     return s.toString();
   }
 
-  private static class BlockKeyStats {
+  protected static class BlockKeyStats {
 
     final char[] blockKeys;
     final int[] codePointRangesSize;
 
-    public BlockKeyStats(final char[] blockKeys, final int[] codePointRangesSize) {
+    final int byteSizeOfBlockKeyData;
+
+    final int byteSizeOfCodePointRangeData;
+
+    final int hashcode;
+
+    protected BlockKeyStats(
+        final char[] blockKeys,
+        final int[] codePointRangesSize,
+        final int byteSizeOfBlockKeyData,
+        final int byteSizeOfCodePointRangeData,
+        final int hashcode) {
       this.blockKeys = blockKeys;
       this.codePointRangesSize = codePointRangesSize;
+      this.byteSizeOfBlockKeyData = byteSizeOfBlockKeyData;
+      this.byteSizeOfCodePointRangeData = byteSizeOfCodePointRangeData;
+      this.hashcode = hashcode;
     }
+
+
+    /**
+     * Returns {@link BlockKeyStats} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as some
+     * memory stats describing the bytes that will be used to hold the block key data and the code point ranges data.
+     *
+     * @param ranges the code-point ranges that we want stats from.
+     * @return a {@link BlockKeyStats} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory usage
+     * stats. each block key.
+     */
+    protected static BlockKeyStats of(final Iterable<CodePointRange> ranges) {
+      int hashcode = 0;
+      int byteSizeOfBlockKeyData = 0;
+      int byteSizeOfCodePointRangeData = 0;
+      char[] blockKeys = new char[255];
+      int[] codePointRangesSize = new int[255];
+      int i = -1;
+      for (CodePointRange codePointRange : ranges) {
+        hashcode = 31 * hashcode + codePointRange.inclusiveFrom;
+        hashcode = 31 * hashcode + codePointRange.inclusiveTo;
+        final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
+        final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          if (i < 0 || blockKey != blockKeys[i]) {
+            ++i;
+            if (i == blockKeys.length) {
+              blockKeys = Arrays.copyOf(blockKeys, blockKeys.length + 255);
+              codePointRangesSize = Arrays.copyOf(codePointRangesSize, codePointRangesSize.length + 255);
+            }
+            blockKeys[i] = blockKey;
+            codePointRangesSize[i]++;
+            byteSizeOfBlockKeyData += 2;       // 2 byte block key
+            byteSizeOfCodePointRangeData += 2; // 2 byte code point range
+          } else if (blockKey != blockKeyTo) {
+            codePointRangesSize[i]++;
+            byteSizeOfCodePointRangeData += 2; // 2 byte code point range
+          }
+        }
+      }
+      ++i;
+      return new BlockKeyStats(
+          Arrays.copyOf(blockKeys, i),
+          Arrays.copyOf(codePointRangesSize, i),
+          byteSizeOfBlockKeyData,
+          byteSizeOfCodePointRangeData,
+          hashcode);
+    }
+
   }
 
   private static class HashMapStats {
 
     static final Comparator<HashMapStats> HASH_MAP_STATS_COMPARATOR =
-        Comparator.comparing(HashMapStats::getWeight);
+//        Comparator.comparing(HashMapStats::getWeight);
+        Comparator.comparing(HashMapStats::getTotalBytes);
+
+    private final BlockKeyStats blockKeyStats;
 
     private final int numberOfHashBuckets;
     private final int[] hashBucketCounts;
@@ -148,22 +171,67 @@ class SubsetOptimiser {
     private int countOfHashBucketsWith1Key = 0;
     private int countOfHashBucketsWith2Keys = 0;
     private int countOfHashBucketsWith3OrMoreKeys = 0;
+    private int byteSizeOfArrayReferences = 0;
+
 
     private HashMapStats(
         final int numberOfHashBuckets,
-        final char[] blockKeys) {
+        final BlockKeyStats blockKeyStats) {
       this.numberOfHashBuckets = numberOfHashBuckets;
+      this.blockKeyStats = blockKeyStats;
       this.hashBucketCounts = new int[numberOfHashBuckets];
       this.countOfHashBucketsWith0Keys = numberOfHashBuckets;
-      for (int blockKey : blockKeys) {
+      for (int blockKey : blockKeyStats.blockKeys) {
         addKey(blockKey);
+      }
+      byteSizeOfArrayReferences = 2 * 8; // 2 * 8 byte array object references for blockKeys and codePointRanges arrays.
+      if (containsHashBucketsWithMultipleKeys()) {
+        byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for blockKeys
+        byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for codePointRanges
+        for (int i = 0; i < hashBucketCounts.length; ++i) {
+          byteSizeOfArrayReferences +=
+              hashBucketCounts[i] * 8; // number of codePointRange arrays * 8 byte array object references for codePointRanges
+        }
+      } else {
+        byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for codePointRanges
       }
     }
 
+    /**
+     * A tuple to be returned by {@link #of} containing the full set of block-keys and also how many code-point ranges there
+     * are for each block key.
+     */
+    private static HashMapStats[] of(final BlockKeyStats blockKeyStats) {
+      final int numberOfBlockKeys = blockKeyStats.blockKeys.length;
+      final int minHashBuckets = Math.max(3, (int) Math.floor(numberOfBlockKeys * 0.7D));
+      final int maxHashBuckets = Math.max(7, (int) Math.ceil(numberOfBlockKeys * 2.6D));
+      HashMapStats[] result = new HashMapStats[maxHashBuckets - minHashBuckets + 1];
+      boolean foundOptimalHashMap = false;
+      int resultIndex = 0;
+      // Try and find an optimal number of hash buckets with every hash bucket containing at most one key.
+      for (int j = numberOfBlockKeys; j < maxHashBuckets; ++j, ++resultIndex) {
+        result[resultIndex] = new HashMapStats(j, blockKeyStats);
+        if (!result[resultIndex].containsHashBucketsWithMultipleKeys()) {
+          result = Arrays.copyOf(result, resultIndex + 1);
+          foundOptimalHashMap = true;
+          break;
+        }
+      }
+      if (!foundOptimalHashMap) {
+        // If no optimal hash map available then continue gathering stats on hash map with smaller number of buckets.
+        for (int j = minHashBuckets; j < numberOfBlockKeys; ++j, ++resultIndex) {
+          result[resultIndex] = new HashMapStats(j, blockKeyStats);
+        }
+      }
+      Arrays.sort(result, HashMapStats.HASH_MAP_STATS_COMPARATOR);
+      return result;
+    }
+
+
     private void addKey(final int key) {
-      int index = (key & 0x7FFFFFFF) % hashBucketCounts.length;
-      hashBucketCounts[index]++;
-      switch (hashBucketCounts[index]) {
+      int hashIndex = (key & 0x7FFFFFFF) % hashBucketCounts.length;
+      hashBucketCounts[hashIndex]++;
+      switch (hashBucketCounts[hashIndex]) {
         case 1:
           countOfHashBucketsWith1Key++;
           countOfHashBucketsWith0Keys--;
@@ -184,12 +252,12 @@ class SubsetOptimiser {
 
     private long getWeight() {
       return
-          (containsHashBucketsWithMultipleKeys() ? numberOfHashBuckets * 16L : 0L)
-              // x 16 conditional penalty for too many slots         // x 16  penalty for too many slots
-              + countOfHashBucketsWith0Keys * 4L          // x 4   penalty for wasting space
-              + countOfHashBucketsWith1Key                // x 1   as-is
-              + countOfHashBucketsWith2Keys * 128L         // x 256 performance penalty for iterating over multiple keys
-              + countOfHashBucketsWith3OrMoreKeys * 512L; // x 512 performance penalty for iterating over multiple keys
+          (containsHashBucketsWithMultipleKeys() ? 4L : 1L) // 4 x   performance penalty for having hash buckets with multiple keys
+              * (numberOfHashBuckets * 4L                   // x 4   space penalty for too many hash buckets
+              + countOfHashBucketsWith0Keys * 16L           // x 16  space penalty for having hash buckets with no keys
+              + countOfHashBucketsWith1Key                  // x 1   as-is
+              + countOfHashBucketsWith2Keys * 128L          // x 128 performance penalty for iterating over multiple keys
+              + countOfHashBucketsWith3OrMoreKeys * 512L);  // x 512 performance penalty for iterating over multiple keys
     }
 
     private boolean containsHashBucketsWithMultipleKeys() {
@@ -219,6 +287,26 @@ class SubsetOptimiser {
 
     public int getCountOfHashBucketsWith3OrMoreKeys() {
       return countOfHashBucketsWith3OrMoreKeys;
+    }
+
+    public int getByteSizeOfBlockKeyData() {
+      return blockKeyStats.byteSizeOfBlockKeyData;
+    }
+
+    public int getByteSizeOfCodePointRangeData() {
+      return blockKeyStats.byteSizeOfCodePointRangeData;
+    }
+
+    public int getByteSizeOfArrayReferences() {
+      return byteSizeOfArrayReferences;
+    }
+
+    public int getTotalBytes() {
+      return byteSizeOfArrayReferences + blockKeyStats.byteSizeOfBlockKeyData + blockKeyStats.byteSizeOfCodePointRangeData;
+    }
+
+    public int getHashCode() {
+      return blockKeyStats.hashcode;
     }
   }
 
@@ -253,31 +341,23 @@ class SubsetOptimiser {
     private final char[][][] codePointRangesByBlock;
 
     private int numberOfCodePointRanges = 0;
-    private int codePointsSize = 0;
+    private int numberOfCodePointsInCodePointRanges = 0;
 
     public HashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
       blockKeys = new char[optimalNumberOfHashBuckets][];
       codePointRangesByBlock = new char[optimalNumberOfHashBuckets][][];
-      Arrays.hashCode(new char[0]);
-      new char[0].hashCode();
     }
 
     public char[][] getBlockKeys() {
       return blockKeys;
     }
 
-    public int getRangesSize() {
-      return numberOfCodePointRanges;
-    }
-
-    public int getCodePointsSize() {
-      return codePointsSize;
-    }
-
     public void optimiseHashMap(final Iterable<CodePointRange> ranges, final HashMapStats optimalHashMapStats) {
+
       final int[] hashBucketCounts = optimalHashMapStats.getHashBucketCounts();
       final int[] hashBucketSizes = new int[hashBucketCounts.length];
       final int[][] codePointRangesSizes = new int[hashBucketCounts.length][];
+
       // Create the 1st-dimension arrays to the exact optimal size of hash-buckets.
       for (int hashIndex = 0; hashIndex < hashBucketCounts.length; ++hashIndex) {
         if (hashBucketCounts[hashIndex] == 0) {
@@ -317,12 +397,13 @@ class SubsetOptimiser {
           }
           final int codePointRangesSize = codePointRangesSizes[hashIndex][hashBucketIndex];
           blockKeys[hashIndex][hashBucketIndex] = blockKey;
-          codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangesSize] = RangedSubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
+          codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangesSize] = SubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
           codePointRangesSizes[hashIndex][hashBucketIndex]++;
           numberOfCodePointRanges++;
-          codePointsSize += inclusiveTo - inclusiveFrom + 1;
+          numberOfCodePointsInCodePointRanges += inclusiveTo - inclusiveFrom + 1;
         }
       }
+
       // Make copies of arrays to exact required sizes to minimize wasted space.
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
         if (blockKeys[hashIndex] != null) {
@@ -367,7 +448,7 @@ class SubsetOptimiser {
     private final char[][] codePointRangesByBlock;
 
     private int numberOfCodePointRanges = 0;
-    private int codePointsSize = 0;
+    private int numberOfCodePointsInCodePointRanges = 0;
 
     public OptimalHashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
       blockKeys = new char[optimalNumberOfHashBuckets];
@@ -388,7 +469,7 @@ class SubsetOptimiser {
     }
 
     public int getCodePointsSize() {
-      return codePointsSize;
+      return numberOfCodePointsInCodePointRanges;
     }
 
     private void optimiseHashMap(final Iterable<CodePointRange> ranges, final HashMapStats optimalHashMapStats) {
@@ -423,10 +504,10 @@ class SubsetOptimiser {
           }
           final int codePointRangesSize = codePointRangesSizes[hashIndex];
           blockKeys[hashIndex] = blockKey;
-          codePointRangesByBlock[hashIndex][codePointRangesSize] = RangedSubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
+          codePointRangesByBlock[hashIndex][codePointRangesSize] = SubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
           codePointRangesSizes[hashIndex]++;
           numberOfCodePointRanges++;
-          codePointsSize += (inclusiveTo - inclusiveFrom + 1);
+          numberOfCodePointsInCodePointRanges += (inclusiveTo - inclusiveFrom + 1);
         }
       }
       // Make copies of arrays to exact required sizes to minimize wasted space.

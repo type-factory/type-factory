@@ -10,17 +10,6 @@ import org.datatypeproject.Subset;
  */
 interface RangedSubset extends Subset {
 
-  /**
-   * Creates a {@link RangedSubsetBuilder} to create {@link RangedSubset} instances. This method shadows/hides the {@link Subset#builder()} method.
-   *
-   * <p>Package-scoped because we should only be invoking this as an implementation detail.</p>
-   *
-   * @return A {@link RangedSubsetBuilder} to create {@link RangedSubset} instances.
-   */
-  static RangedSubsetBuilder builder() {
-    return new RangedSubsetBuilderImpl();
-  }
-
   char[] getSingleByteCodePointRanges();
 
   int[] getDoubleByteCodePointRanges();

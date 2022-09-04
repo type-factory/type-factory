@@ -1,8 +1,7 @@
 package org.datatypeproject.language;
 
 import org.assertj.core.api.Assertions;
-import org.datatypeproject.InvalidDataTypeValueException;
-import org.datatypeproject.language.Letters;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -38,7 +37,7 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
       "कबू\uD805\uDE1Dर", // Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead 'त' (ta) from the Devanagari script
   })
   void should_throw_exception_with_non_hindi_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidDataTypeValueException.class)
+    Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
         .withMessageMatching("Must be made up of Hindi letters only. Invalid value - invalid character '[^']+'.");
   }

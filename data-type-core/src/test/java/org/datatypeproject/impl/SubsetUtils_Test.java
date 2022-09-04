@@ -15,7 +15,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class RangedSubsetUtils_Test {
+class SubsetUtils_Test {
 
   @ParameterizedTest
   @CsvSource(value = {
@@ -28,7 +28,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveFrom_extractsUpper8BitsFrom16BitCharValue(
       @ConvertWith(SingleByteRangeConverter.class) final char range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveFrom(range);
+    final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -43,7 +43,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveTo_extractsLower8BitsFrom16BitCharValue(
       @ConvertWith(SingleByteRangeConverter.class) final char range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveTo(range);
+    final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -58,7 +58,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveFrom_extractsUpper16BitsFrom32BitCharValue(
       @ConvertWith(DoubleByteRangeConverter.class) final int range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveFrom(range);
+    final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -73,7 +73,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveTo_extractsLower16BitsFrom32BitCharValue(
       @ConvertWith(DoubleByteRangeConverter.class) final int range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveTo(range);
+    final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -88,7 +88,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveFrom_extractsUpper32BitsFrom64BitCharValue(
       @ConvertWith(TripleByteRangeConverter.class) final long range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveFrom(range);
+    final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -103,7 +103,7 @@ class RangedSubsetUtils_Test {
   void getInclusiveTo_extractsLower32BitsFrom64BitCharValue(
       @ConvertWith(TripleByteRangeConverter.class) final long range, final int expected) {
 
-    final int actual = RangedSubsetUtils.getInclusiveTo(range);
+    final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -119,7 +119,7 @@ class RangedSubsetUtils_Test {
       final int inclusiveFrom, final int inclusiveTo,
       @ConvertWith(SingleByteRangeConverter.class) final char expected) {
 
-    final char actual = RangedSubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
+    final char actual = SubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -135,7 +135,7 @@ class RangedSubsetUtils_Test {
       final int inclusiveFrom, final int inclusiveTo,
       @ConvertWith(DoubleByteRangeConverter.class) final int expected) {
 
-    final int actual = RangedSubsetUtils.rangeToInt(inclusiveFrom, inclusiveTo);
+    final int actual = SubsetUtils.rangeToInt(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -151,7 +151,7 @@ class RangedSubsetUtils_Test {
       final int inclusiveFrom, final int inclusiveTo,
       @ConvertWith(TripleByteRangeConverter.class) final long expected) {
 
-    final long actual = RangedSubsetUtils.rangeToLong(inclusiveFrom, inclusiveTo);
+    final long actual = SubsetUtils.rangeToLong(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -162,16 +162,16 @@ class RangedSubsetUtils_Test {
     final char [] emptyArray = new char[0];
     final char [] sampleArray = new char [] {'A', 'B'};
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_CHAR_ARRAY)).isSameAs(EMPTY_CHAR_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_CHAR_ARRAY)).isSameAs(EMPTY_CHAR_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_CHAR_ARRAY)).isSameAs(EMPTY_CHAR_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_CHAR_ARRAY)).isSameAs(EMPTY_CHAR_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_CHAR_ARRAY)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_CHAR_ARRAY)).isSameAs(sampleArray);
   }
 
   @Test
@@ -181,16 +181,16 @@ class RangedSubsetUtils_Test {
     final int [] emptyArray = new int[0];
     final int [] sampleArray = new int [] {'A', 'B'};
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_INT_ARRAY)).isSameAs(EMPTY_INT_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_INT_ARRAY)).isSameAs(EMPTY_INT_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_INT_ARRAY)).isSameAs(EMPTY_INT_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_INT_ARRAY)).isSameAs(EMPTY_INT_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_INT_ARRAY)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_INT_ARRAY)).isSameAs(sampleArray);
   }
 
   @Test
@@ -200,28 +200,28 @@ class RangedSubsetUtils_Test {
     final long [] emptyArray = new long[0];
     final long [] sampleArray = new long [] {'A', 'B'};
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_LONG_ARRAY)).isSameAs(EMPTY_LONG_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_LONG_ARRAY)).isSameAs(EMPTY_LONG_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_LONG_ARRAY)).isSameAs(EMPTY_LONG_ARRAY);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, null)).isNull();
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, EMPTY_LONG_ARRAY)).isSameAs(EMPTY_LONG_ARRAY);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(emptyArray, sampleArray)).isSameAs(sampleArray);
 
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
-    assertThat(RangedSubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_LONG_ARRAY)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, null)).isSameAs(sampleArray);
+    assertThat(SubsetUtils.defaultIfNullOrEmpty(sampleArray, EMPTY_LONG_ARRAY)).isSameAs(sampleArray);
   }
 
   @Test
   void aggregateCodePointRangeData_handlesNullArguments() {
-    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(null, null, null))
+    assertThat(SubsetUtils.aggregateCodePointRangeData(null, null, null))
         .isNotNull()
         .isEmpty();
   }
 
   @Test
   void aggregateCodePointRangeData_handlesEmptyArguments() {
-    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
+    assertThat(SubsetUtils.aggregateCodePointRangeData(EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
         .isNotNull()
         .isEmpty();
   }
@@ -231,7 +231,7 @@ class RangedSubsetUtils_Test {
     final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
     final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
     final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
-    assertThat(RangedSubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
+    assertThat(SubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isNotNull()
         .containsExactly(
             new CodePointRange(0x21, 0x22),
@@ -251,7 +251,7 @@ class RangedSubsetUtils_Test {
       0x00112233,
   })
   void contains_returnFalseForNullInputRanges(final int codePoint) {
-    assertThat(RangedSubsetUtils.contains(codePoint, null, null, null))
+    assertThat(SubsetUtils.contains(codePoint, null, null, null))
         .isFalse();
   }
 
@@ -264,7 +264,7 @@ class RangedSubsetUtils_Test {
       0x00112233,
   })
   void contains_returnFalseForEmptyInputRanges(final int codePoint) {
-    assertThat(RangedSubsetUtils.contains(codePoint, EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
+    assertThat(SubsetUtils.contains(codePoint, EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY))
         .isFalse();
   }
 
@@ -293,7 +293,7 @@ class RangedSubsetUtils_Test {
     final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
     final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
 
-    assertThat(RangedSubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
+    assertThat(SubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isTrue();
   }
 
@@ -318,7 +318,7 @@ class RangedSubsetUtils_Test {
     final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
     final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
 
-    assertThat(RangedSubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
+    assertThat(SubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isFalse();
   }
 

@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import org.datatypeproject.Subset.CodePointRange;
 import org.datatypeproject.Subset;
+import org.datatypeproject.Subset.SubsetBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -122,12 +123,12 @@ class Subset_Test {
   }
 
   @Test
-  void builder_returnsRangedSubsetBuilder() {
+  void builder_returnsSubsetBuilder() {
     final Subset.SubsetBuilder actual = Subset.builder();
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetBuilder.class)
-        .isExactlyInstanceOf(RangedSubsetBuilderImpl.class);
+        .isInstanceOf(SubsetBuilder.class)
+        .isExactlyInstanceOf(SubsetBuilderImpl.class);
   }
 
   @Test

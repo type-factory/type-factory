@@ -3,9 +3,6 @@ package org.datatypeproject.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.datatypeproject.Subset;
-import org.datatypeproject.impl.RangedSubset;
-import org.datatypeproject.impl.RangedSubsetImpl;
-import org.datatypeproject.impl.RangedSubsetUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +24,7 @@ class RangedSubsetImpl_singleByteTest {
   })
   void includeChar_singleByteTest(final char value) {
 
-    final Subset actual = RangedSubset.builder()
+    final Subset actual = Subset.builder()
         .includeChar(value)
         .build();
 
@@ -37,7 +34,7 @@ class RangedSubsetImpl_singleByteTest {
     assertThat(actual.contains(value)).isTrue();
 
     final RangedSubset rangedSubset = (RangedSubset)actual;
-    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(RangedSubsetUtils.rangeToChar(value, value));
+    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(SubsetUtils.rangeToChar(value, value));
     assertThat(rangedSubset.getDoubleByteCodePointRanges()).isEmpty();
     assertThat(rangedSubset.getTripleByteCodePointRanges()).isEmpty();
   }
@@ -69,7 +66,7 @@ class RangedSubsetImpl_singleByteTest {
   @EnumSource(SingleByteTestSource.class)
   void includeChars_singleByteTest(final SingleByteTestSource testSource) {
 
-    final Subset actual = RangedSubset.builder()
+    final Subset actual = Subset.builder()
         .includeChars(testSource.chars)
         .build();
 

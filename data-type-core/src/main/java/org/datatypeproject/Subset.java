@@ -2,7 +2,6 @@ package org.datatypeproject;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Objects;
 import org.datatypeproject.impl.Factory;
 
 /**
@@ -92,13 +91,15 @@ public interface Subset {
    * <p><b>Note:</b> The iterable {@link CodePointRange} instance is reused with each iteration.
    * Use {@link CodePointRange#copy()} if you need to keep references to each of the code-point ranges.</p>
    *
-   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each iteration.
+   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each
+   * iteration.
    * @see CodePointRange#copy()
    */
   Iterable<CodePointRange> ranges();
 
   /**
    * Returns the number of code-point ranges in this subset.
+   *
    * @return the number of code-point ranges in this subset.
    */
   int numberOfCodePointRanges();
@@ -165,6 +166,10 @@ public interface Subset {
 
     SubsetBuilder includeSubsets(final Collection<Subset> subsets);
 
+    SubsetBuilder includeUnicodeCategory(final Category category);
+
+    SubsetBuilder includeUnicodeCategories(final Category... categories);
+
     SubsetBuilder excludeChar(final char ch);
 
     SubsetBuilder excludeChars(final char... chars);
@@ -182,6 +187,10 @@ public interface Subset {
     SubsetBuilder excludeSubsets(final Subset... subset);
 
     SubsetBuilder excludeSubsets(final Collection<Subset> subsets);
+
+    SubsetBuilder excludeUnicodeCategory(final Category category);
+
+    SubsetBuilder excludeUnicodeCategory(final Category... categories);
 
     Subset build();
   }
@@ -206,7 +215,7 @@ public interface Subset {
     public int inclusiveTo;
 
     public CodePointRange(final char inclusiveFrom, final char inclusiveTo) {
-      this((int)inclusiveFrom, (int) inclusiveTo);
+      this((int) inclusiveFrom, (int) inclusiveTo);
     }
 
     public CodePointRange(final int inclusiveFrom, final int inclusiveTo) {
@@ -220,6 +229,7 @@ public interface Subset {
 
     /**
      * Returns {@code true} if this code-point range inclusively contains the specified {@code codePoint}.
+     *
      * @param codePoint the code-point that you wish to confirm is inclusively within the code-point range.
      * @return {@code true} if this code-point range inclusively contains the specified {@code codePoint}.
      */
@@ -251,7 +261,7 @@ public interface Subset {
 
     @Override
     public int hashCode() {
-      return Objects.hash(inclusiveFrom, inclusiveTo);
+      return inclusiveFrom * 31 + inclusiveTo;
     }
 
     /**

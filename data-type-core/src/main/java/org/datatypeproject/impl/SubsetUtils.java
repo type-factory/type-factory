@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import org.datatypeproject.Subset.CodePointRange;
 
-class RangedSubsetUtils {
+final class SubsetUtils {
 
-  private RangedSubsetUtils() {
+  private SubsetUtils() {
   }
 
   /**

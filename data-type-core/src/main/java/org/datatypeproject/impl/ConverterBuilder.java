@@ -1,8 +1,8 @@
 package org.datatypeproject.impl;
 
 import static org.datatypeproject.impl.Constants.EMPTY_INT_ARRAY;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveFrom;
-import static org.datatypeproject.impl.RangedSubsetUtils.getInclusiveTo;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveFrom;
+import static org.datatypeproject.impl.SubsetUtils.getInclusiveTo;
 
 import org.datatypeproject.Category;
 import org.datatypeproject.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;

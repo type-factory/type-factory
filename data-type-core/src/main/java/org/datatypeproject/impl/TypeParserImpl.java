@@ -11,12 +11,11 @@ import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.regex.Pattern;
 import org.datatypeproject.IntegerType;
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.LongType;
 import org.datatypeproject.ShortType;
 import org.datatypeproject.StringType;
 import org.datatypeproject.Subset;
-import org.datatypeproject.Type;
 import org.datatypeproject.TypeParser;
 import org.datatypeproject.impl.Converter.ConverterResults;
 
@@ -160,7 +159,7 @@ class TypeParserImpl implements TypeParser {
         if (++i < length) {
           codePoint = Character.toCodePoint(ch, value.charAt(i));
         } else {
-          throw InvalidDataTypeValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+          throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
         }
       } else {
         codePoint = ch;
@@ -169,7 +168,7 @@ class TypeParserImpl implements TypeParser {
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
-            throw InvalidDataTypeValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+            throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
           case PRESERVE_WHITESPACE:
             // do nothing
             break;
@@ -194,7 +193,7 @@ class TypeParserImpl implements TypeParser {
       }
 
       if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {
-        throw InvalidDataTypeValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, codePoint);
+        throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, codePoint);
       }
 
       if (converter != null &&
@@ -209,7 +208,7 @@ class TypeParserImpl implements TypeParser {
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
         if (k >= maxNumberOfCodePoints) {
-          throw InvalidDataTypeValueException.forValueTooLong(errorMessage, targetTypeClass, value, maxNumberOfCodePoints);
+          throw InvalidValueException.forValueTooLong(errorMessage, targetTypeClass, value, maxNumberOfCodePoints);
         }
         if (k == result.length) {
           result = Arrays.copyOf(result, result.length + Math.max(16, toCodePoints.length));
@@ -225,7 +224,7 @@ class TypeParserImpl implements TypeParser {
       ++i;
     }
     if (k < minNumberOfCodePoints) {
-      throw InvalidDataTypeValueException.forValueTooShort(errorMessage, targetTypeClass, value, minNumberOfCodePoints);
+      throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, value, minNumberOfCodePoints);
     }
 
     final String parsedValue = new String(result, 0, k);
@@ -242,7 +241,7 @@ class TypeParserImpl implements TypeParser {
       return;
     }
     if (!regex.matcher(parsedValue).matches()) {
-      throw InvalidDataTypeValueException.forValueNotMatchRegex(errorMessage, targetTypeClass, originalValue, regex);
+      throw InvalidValueException.forValueNotMatchRegex(errorMessage, targetTypeClass, originalValue, regex);
     }
   }
 
@@ -253,10 +252,10 @@ class TypeParserImpl implements TypeParser {
     try {
       final boolean isValid = validationFunction.apply(parsedValue);
       if (!isValid) {
-        throw InvalidDataTypeValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, null);
+        throw InvalidValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, null);
       }
     } catch (final Exception e) {
-      throw InvalidDataTypeValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, e);
+      throw InvalidValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, e);
     }
   }
 

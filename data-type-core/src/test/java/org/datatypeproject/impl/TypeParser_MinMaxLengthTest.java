@@ -2,7 +2,7 @@ package org.datatypeproject.impl;
 
 import java.text.ParseException;
 import org.assertj.core.api.Assertions;
-import org.datatypeproject.InvalidDataTypeValueException;
+import org.datatypeproject.InvalidValueException;
 import org.datatypeproject.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,7 +44,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Some type must be 4 alpha characters. Invalid value - too short, minimum length is 4.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
@@ -66,7 +66,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
             .build();
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
-        .isInstanceOf(InvalidDataTypeValueException.class)
+        .isInstanceOf(InvalidValueException.class)
         .hasMessage("Some type must be 4 alpha characters. Invalid value - too long, maximum length is 4.")
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
