@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * Provides typesafe versions of the Unicode character categories defined in the {@link Character Character} class for use with the
- * {@link TypeParser.TypeParserBuilder}. Once built the {@link TypeParser} will use a bit-mask for improved performance.
+ * {@link TypeParser.TypeParserBuilder}. The {@link TypeParser} will use a category bit-flags for improved performance.
  *
  * @see Character#COMBINING_SPACING_MARK
  * @see Character#CONNECTOR_PUNCTUATION
@@ -151,7 +151,6 @@ public enum Category {
    */
   DASH_PUNCTUATION(Character.DASH_PUNCTUATION, "Pd", "Dash_Punctuation"),
 
-  // TODO In latest Unicode standard – support when available in JDK
   /**
    * Ps, Open_Punctuation – an opening punctuation mark (of a pair).
    *
@@ -190,9 +189,11 @@ public enum Category {
   /**
    * P, Punctuation – Pc | Pd | Ps | Pe | Pi | Pf | Po.
    */
-  PUNCTUATION("P", "Punctuation", CONNECTOR_PUNCTUATION, DASH_PUNCTUATION,
+  PUNCTUATION("P", "Punctuation",
+      CONNECTOR_PUNCTUATION, DASH_PUNCTUATION,
       START_PUNCTUATION, END_PUNCTUATION,
-      INITIAL_QUOTE_PUNCTUATION, FINAL_QUOTE_PUNCTUATION, OTHER_PUNCTUATION),
+      INITIAL_QUOTE_PUNCTUATION, FINAL_QUOTE_PUNCTUATION,
+      OTHER_PUNCTUATION),
 
   /**
    * Sm, Math_Symbol – a symbol of mathematical use.
@@ -297,18 +298,6 @@ public enum Category {
   final String abbreviation;
   final String alias;
   public final long bitMask;
-
-  static final int MAX_CHARACTER_CATEGORY_VALUE = determineMaxCharacterValue();
-
-  static int determineMaxCharacterValue() {
-    int max = -1;
-    for (Category category : values()) {
-      for (int characterCategory : category.characterCategories) {
-        max = Math.max(max, characterCategory);
-      }
-    }
-    return max;
-  }
 
   Category(final int characterCategory, final String abbreviation, final String alias) {
     this.characterCategories = new int[]{characterCategory};

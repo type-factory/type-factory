@@ -26,7 +26,7 @@ import org.datatypeproject.Subset;
 import org.datatypeproject.Subset.CodePointRange;
 import org.datatypeproject.Subset.SubsetBuilder;
 import org.datatypeproject.SubsetWithCategories;
-import org.datatypeproject.impl.SubsetBuilderImpl.CommonHashedStats.HashedSubsetOption;
+import org.datatypeproject.impl.SubsetBuilderImpl.SubsetOptimiser.HashedSubsetOption;
 
 class SubsetBuilderImpl implements SubsetBuilder {
 
@@ -256,13 +256,13 @@ class SubsetBuilderImpl implements SubsetBuilder {
           includes.numberOfCodePointsInCodePointRanges);
     }
 
-    final CommonHashedStats commonHashedStats = new CommonHashedStats(rangedSubset);
+    final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(rangedSubset);
 
-    System.out.println("\n\nSubset Stats\n\n" + commonHashedStats.toString() + "\n\n");
+    System.out.println("\n\nSubset Stats\n\n" + subsetOptimiser.toString() + "\n\n");
 
-    switch (commonHashedStats.getPreferredSubsetType()) {
+    switch (subsetOptimiser.getPreferredSubsetType()) {
       case HASHED: {
-        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) commonHashedStats.optimalHashedSubsetOption;
+        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
         final HashedRangedSubsetData hashedRangedSubsetData = new HashedRangedSubsetData(optimalHashedSubsetOption.getNumberOfHashBuckets());
         hashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
         return new HashedRangedSubsetImpl(
@@ -272,7 +272,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
             hashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
       }
       case OPTIMALLY_HASHED: {
-        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) commonHashedStats.optimalHashedSubsetOption;
+        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
         final OptimalHashedRangedSubsetData optimalHashedRangedSubsetData = new OptimalHashedRangedSubsetData(
             optimalHashedSubsetOption.getNumberOfHashBuckets());
         optimalHashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
@@ -309,63 +309,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
           && tripleByteCodePointRanges.length == 0;
     }
 
-    int singleByteCodePointRangesSize() {
-      return singleByteCodePointRanges.length;
-    }
-
-    int doubleByteCodePointRangesSize() {
-      return doubleByteCodePointRanges.length;
-    }
-
-    int tripleByteCodePointRangesSize() {
-      return tripleByteCodePointRanges.length;
-    }
-
-    int doubleByteCodePointRangesCountOfBlocks() {
-      if (doubleByteCodePointRanges.length == 0) {
-        return 0;
-      }
-      int result = 1;
-      int previousBlockKey = getInclusiveFrom(doubleByteCodePointRanges[0]) >> 8;
-      int currentBlockKey;
-      for (int i = 0; i < doubleByteCodePointRanges.length; ++i) {
-        if (previousBlockKey != (currentBlockKey = (getInclusiveFrom(doubleByteCodePointRanges[i]) >> 8))) {
-          previousBlockKey = currentBlockKey;
-          ++result;
-        }
-        if (previousBlockKey != (currentBlockKey = (getInclusiveTo(doubleByteCodePointRanges[i]) >> 8))) {
-          previousBlockKey = currentBlockKey;
-          ++result;
-        }
-      }
-      return result;
-    }
-
-    int tripleByteCodePointRangesCountOfBlocks() {
-      if (tripleByteCodePointRanges.length == 0) {
-        return 0;
-      }
-      int result = 1;
-      int previous = getInclusiveFrom(tripleByteCodePointRanges[0]) >> 8;
-      int current;
-      for (int i = 0; i < tripleByteCodePointRanges.length; ++i) {
-        if (previous != (current = (getInclusiveFrom(tripleByteCodePointRanges[i]) >> 8))) {
-          previous = current;
-          ++result;
-        }
-        if (previous != (current = (getInclusiveTo(tripleByteCodePointRanges[i]) >> 8))) {
-          previous = current;
-          ++result;
-        }
-      }
-      return result;
-    }
-
-
-    boolean isNotEmpty() {
-      return !isEmpty();
-    }
-
     char[] copyOfSingleByteCodePointRanges() {
       return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRangesSize);
     }
@@ -376,19 +319,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
 
     long[] copyOfTripleByteCodePointRanges() {
       return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRangesSize);
-    }
-
-    SubsetBuilder copyToBuilder(final SubsetBuilder builder) {
-      for (char range : singleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      for (int range : doubleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      for (long range : tripleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      return builder;
     }
 
     void addChar(final char ch) {
@@ -685,7 +615,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
     }
   }
 
-  static final class CommonHashedStats {
+  static final class SubsetOptimiser {
 
     enum PreferredSubsetType {
       RANGED("Ranged"),
@@ -717,7 +647,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
 
     SubsetOption optimalHashedSubsetOption;
 
-    CommonHashedStats(final RangedSubset rangedSubset) {
+    SubsetOptimiser(final RangedSubset rangedSubset) {
       calculateCommonHashedStats(rangedSubset);
       if (isCandidateForHashedRangeSubset()) {
         calculateHashedSubsetOptions(rangedSubset);
@@ -732,11 +662,11 @@ class SubsetBuilderImpl implements SubsetBuilder {
     }
 
     /**
-     * Returns {@link CommonHashedStats} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as
+     * Returns {@link SubsetOptimiser} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as
      * some memory stats describing the bytes that will be used to hold the block key data and the code point ranges data.
      *
      * @param rangedSubset the ranged-subset that we want stats from.
-     * @return a {@link CommonHashedStats} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory
+     * @return a {@link SubsetOptimiser} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory
      * usage stats. each block key.
      */
     void calculateCommonHashedStats(final RangedSubset rangedSubset) {
@@ -819,6 +749,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
       s.append("\n|             |  # hash |-----------------------------------|--------------------------------|");
       s.append("\n| subset type | buckets | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |");
       s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      int countOfHashedOptions = 0;
       for (SubsetOption subsetOption : subsetOptions) {
         if (subsetOption instanceof RangedSubsetOption rangedSubsetOption) {
           s.append(String.format("%n| %11s |         |        |       |        |         | %8d | %5d | %11d |",
@@ -828,16 +759,19 @@ class SubsetBuilderImpl implements SubsetBuilder {
               rangedSubsetOption.getTotalBytes()));
         }
         if (subsetOption instanceof HashedSubsetOption hashedSubsetOption) {
-          s.append(String.format("%n| %11s | %7d | %6d | %5d | %6d | %7d | %8d | %5d | %11d |",
-              hashedSubsetOption.getSubsetType().toString(),
-              hashedSubsetOption.getNumberOfHashBuckets(),
-              hashedSubsetOption.getCountOfHashBucketsWith0Keys(),
-              hashedSubsetOption.getCountOfHashBucketsWith1Key(),
-              hashedSubsetOption.getCountOfHashBucketsWith2Keys(),
-              hashedSubsetOption.getCountOfHashBucketsWith3OrMoreKeys(),
-              hashedSubsetOption.getByteSizeOfArrayReferences(),
-              hashedSubsetOption.getByteSizeOfBlockKeyData() + hashedSubsetOption.getByteSizeOfCodePointRangeData(),
-              hashedSubsetOption.getTotalBytes()));
+          countOfHashedOptions++;
+          if (countOfHashedOptions < 40 || hashedSubsetOption.getSubsetType() == PreferredSubsetType.OPTIMALLY_HASHED) {
+            s.append(String.format("%n| %11s | %7d | %6d | %5d | %6d | %7d | %8d | %5d | %11d |",
+                hashedSubsetOption.getSubsetType().toString(),
+                hashedSubsetOption.getNumberOfHashBuckets(),
+                hashedSubsetOption.getCountOfHashBucketsWith0Keys(),
+                hashedSubsetOption.getCountOfHashBucketsWith1Key(),
+                hashedSubsetOption.getCountOfHashBucketsWith2Keys(),
+                hashedSubsetOption.getCountOfHashBucketsWith3OrMoreKeys(),
+                hashedSubsetOption.getByteSizeOfArrayReferences(),
+                hashedSubsetOption.getByteSizeOfBlockKeyData() + hashedSubsetOption.getByteSizeOfCodePointRangeData(),
+                hashedSubsetOption.getTotalBytes()));
+          }
         }
       }
       s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
@@ -952,16 +886,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
             // do nothing – already subtracted from countOfHashBucketsWith2Keys when it got to 3
             break;
         }
-      }
-
-      private long getWeight() {
-        return
-            (containsHashBucketsWithMultipleKeys() ? 4L : 1L) // 4 x   performance penalty for having hash buckets with multiple keys
-                * (numberOfHashBuckets * 4L                   // x 4   space penalty for too many hash buckets
-                + countOfHashBucketsWith0Keys * 16L           // x 16  space penalty for having hash buckets with no keys
-                + countOfHashBucketsWith1Key                  // x 1   as-is
-                + countOfHashBucketsWith2Keys * 128L          // x 128 performance penalty for iterating over multiple keys
-                + countOfHashBucketsWith3OrMoreKeys * 512L);  // x 512 performance penalty for iterating over multiple keys
       }
 
       public PreferredSubsetType getSubsetType() {
