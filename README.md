@@ -2,7 +2,10 @@
 
 Easily create custom data types. Remove cruft and boilerplate from your code.
 
-![intro-video.gif](docs/intro-video.gif)
+<picture>
+  <source srcset="docs/intro-video-dark.gif" media="(prefers-color-scheme: dark)"/>
+  <img src="docs/intro-video-light.gif" alt="intro video"/>
+</picture>
 
 ### An example
 You would like a custom data-type for currency codes that extends the Java `CharSequence` interface so that it can be used with many third party libraries.
