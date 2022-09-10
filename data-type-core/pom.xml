@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.datatypeproject</groupId>
     <artifactId>data-type-project</artifactId>
-    <version>develop</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.datatypeproject</groupId>
