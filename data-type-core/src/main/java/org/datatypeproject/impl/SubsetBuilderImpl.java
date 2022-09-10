@@ -3,12 +3,12 @@ package org.datatypeproject.impl;
 import static org.datatypeproject.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_INT_ARRAY;
 import static org.datatypeproject.impl.Constants.EMPTY_LONG_ARRAY;
-import static org.datatypeproject.impl.SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags;
 import static org.datatypeproject.impl.SubsetUtils.compactDoubleByteCodePointRanges;
 import static org.datatypeproject.impl.SubsetUtils.compactSingleByteCodePointRanges;
 import static org.datatypeproject.impl.SubsetUtils.compactTripleByteCodePointRanges;
 import static org.datatypeproject.impl.SubsetUtils.getInclusiveFrom;
 import static org.datatypeproject.impl.SubsetUtils.getInclusiveTo;
+import static org.datatypeproject.impl.SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags;
 import static org.datatypeproject.impl.SubsetUtils.rangeToChar;
 import static org.datatypeproject.impl.SubsetUtils.rangeToInt;
 import static org.datatypeproject.impl.SubsetUtils.rangeToLong;
@@ -19,12 +19,14 @@ import static org.datatypeproject.impl.SubsetUtils.removeTripleByteElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import org.datatypeproject.Category;
 import org.datatypeproject.Subset;
 import org.datatypeproject.Subset.CodePointRange;
 import org.datatypeproject.Subset.SubsetBuilder;
 import org.datatypeproject.SubsetWithCategories;
+import org.datatypeproject.impl.SubsetBuilderImpl.SubsetOptimiser.HashedSubsetOption;
 
 class SubsetBuilderImpl implements SubsetBuilder {
 
@@ -221,10 +223,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
     return includeUnicodeCategoryBitFlags > 0;
   }
 
-  private boolean containsExcludes() {
-    return excludes.isNotEmpty() || excludeUnicodeCategoryBitFlags > 0;
-  }
-
   private void compactCategories() {
     // remove excluded categories
     includeUnicodeCategoryBitFlags &= ~excludeUnicodeCategoryBitFlags;
@@ -238,10 +236,10 @@ class SubsetBuilderImpl implements SubsetBuilder {
     includes.compact();
     compactCategories();
 
-    Subset result;
+    RangedSubset rangedSubset;
 
     if (containsUnicodeCategories()) {
-      result = new RangedSubsetWithCategoriesImpl(
+      rangedSubset = new RangedSubsetWithCategoriesImpl(
           includeUnicodeCategoryBitFlags,
           includes.copyOfSingleByteCodePointRanges(),
           includes.copyOfDoubleByteCodePointRanges(),
@@ -250,7 +248,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
           includes.numberOfCodePointsInCodePointRanges,
           numberOfUnicodeCategoriesFromCategoriesFlags(includeUnicodeCategoryBitFlags));
     } else {
-      result = new RangedSubsetImpl(
+      rangedSubset = new RangedSubsetImpl(
           includes.copyOfSingleByteCodePointRanges(),
           includes.copyOfDoubleByteCodePointRanges(),
           includes.copyOfTripleByteCodePointRanges(),
@@ -258,33 +256,40 @@ class SubsetBuilderImpl implements SubsetBuilder {
           includes.numberOfCodePointsInCodePointRanges);
     }
 
-    if (isCandidateForHashedRangeSubset()) {
-      final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(result.ranges());
-      return subsetOptimiser.getOptimisedSubset();
-    } else {
-      return result;
+    final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(rangedSubset);
+
+    System.out.println("\n\nSubset Stats\n\n" + subsetOptimiser.toString() + "\n\n");
+
+    switch (subsetOptimiser.getPreferredSubsetType()) {
+      case HASHED: {
+        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
+        final HashedRangedSubsetData hashedRangedSubsetData = new HashedRangedSubsetData(optimalHashedSubsetOption.getNumberOfHashBuckets());
+        hashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
+        return new HashedRangedSubsetImpl(
+            hashedRangedSubsetData.blockKeys,
+            hashedRangedSubsetData.codePointRangesByBlock,
+            hashedRangedSubsetData.numberOfCodePointRanges,
+            hashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
+      }
+      case OPTIMALLY_HASHED: {
+        final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
+        final OptimalHashedRangedSubsetData optimalHashedRangedSubsetData = new OptimalHashedRangedSubsetData(
+            optimalHashedSubsetOption.getNumberOfHashBuckets());
+        optimalHashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
+        return new OptimalHashedRangedSubsetImpl(
+            optimalHashedRangedSubsetData.blockKeys,
+            optimalHashedRangedSubsetData.codePointRangesByBlock,
+            optimalHashedRangedSubsetData.numberOfCodePointRanges,
+            optimalHashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
+      }
+      case RANGED:
+      default:
+        return rangedSubset;
     }
   }
 
-  private boolean isCandidateForHashedRangeSubset() {
-    final int rangesCount = includes.doubleByteCodePointRangesSize()
-        + includes.tripleByteCodePointRangesSize();
 
-    if (rangesCount < 128) { // TODO Revisit 'magic' threshold
-      return false;
-    }
-
-    final int blocksCount = includes.doubleByteCodePointRangesCountOfBlocks()
-        + includes.tripleByteCodePointRangesCountOfBlocks();
-
-    if (blocksCount < 3) { // TODO Revisit 'magic' threshold
-      return false;
-    }
-
-    return true;
-  }
-
-  static class Ranges {
+  static final class Ranges {
 
     private char[] singleByteCodePointRanges = EMPTY_CHAR_ARRAY;
     private int[] doubleByteCodePointRanges = EMPTY_INT_ARRAY;
@@ -304,63 +309,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
           && tripleByteCodePointRanges.length == 0;
     }
 
-    int singleByteCodePointRangesSize() {
-      return singleByteCodePointRanges.length;
-    }
-
-    int doubleByteCodePointRangesSize() {
-      return doubleByteCodePointRanges.length;
-    }
-
-    int tripleByteCodePointRangesSize() {
-      return tripleByteCodePointRanges.length;
-    }
-
-    int doubleByteCodePointRangesCountOfBlocks() {
-      if (doubleByteCodePointRanges.length == 0) {
-        return 0;
-      }
-      int result = 1;
-      int previousBlockKey = getInclusiveFrom(doubleByteCodePointRanges[0]) >> 8;
-      int currentBlockKey;
-      for (int i = 0; i < doubleByteCodePointRanges.length; ++i) {
-        if (previousBlockKey != (currentBlockKey = (getInclusiveFrom(doubleByteCodePointRanges[i]) >> 8))) {
-          previousBlockKey = currentBlockKey;
-          ++result;
-        }
-        if (previousBlockKey != (currentBlockKey = (getInclusiveTo(doubleByteCodePointRanges[i]) >> 8))) {
-          previousBlockKey = currentBlockKey;
-          ++result;
-        }
-      }
-      return result;
-    }
-
-    int tripleByteCodePointRangesCountOfBlocks() {
-      if (tripleByteCodePointRanges.length == 0) {
-        return 0;
-      }
-      int result = 1;
-      int previous = getInclusiveFrom(tripleByteCodePointRanges[0]) >> 8;
-      int current;
-      for (int i = 0; i < tripleByteCodePointRanges.length; ++i) {
-        if (previous != (current = (getInclusiveFrom(tripleByteCodePointRanges[i]) >> 8))) {
-          previous = current;
-          ++result;
-        }
-        if (previous != (current = (getInclusiveTo(tripleByteCodePointRanges[i]) >> 8))) {
-          previous = current;
-          ++result;
-        }
-      }
-      return result;
-    }
-
-
-    boolean isNotEmpty() {
-      return !isEmpty();
-    }
-
     char[] copyOfSingleByteCodePointRanges() {
       return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRangesSize);
     }
@@ -371,19 +319,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
 
     long[] copyOfTripleByteCodePointRanges() {
       return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRangesSize);
-    }
-
-    SubsetBuilder copyToBuilder(final SubsetBuilder builder) {
-      for (char range : singleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      for (int range : doubleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      for (long range : tripleByteCodePointRanges) {
-        builder.includeCodePointRange(getInclusiveFrom(range), getInclusiveTo(range));
-      }
-      return builder;
     }
 
     void addChar(final char ch) {
@@ -485,51 +420,57 @@ class SubsetBuilderImpl implements SubsetBuilder {
         removeInclusiveTo = temp;
       }
 
-      for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
-        final char range = singleByteCodePointRanges[i];
-        final int inclusiveFrom = getInclusiveFrom(range);
-        final int inclusiveTo = getInclusiveTo(range);
-        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-          singleByteCodePointRangesSize = removeSingleByteElement(singleByteCodePointRanges, singleByteCodePointRangesSize, i);
-        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-          singleByteCodePointRanges[i] = rangeToChar(inclusiveFrom, removeInclusiveFrom - 1);
-          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveTo >= inclusiveFrom) {
-          singleByteCodePointRanges[i] = rangeToChar(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveFrom <= inclusiveTo) {
-          singleByteCodePointRanges[i] = rangeToChar(inclusiveTo, removeInclusiveFrom - 1);
+      if (removeInclusiveFrom < 0x100) {
+        for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
+          final char range = singleByteCodePointRanges[i];
+          final int inclusiveFrom = getInclusiveFrom(range);
+          final int inclusiveTo = getInclusiveTo(range);
+          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+            singleByteCodePointRangesSize = removeSingleByteElement(singleByteCodePointRanges, singleByteCodePointRangesSize, i);
+          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+            singleByteCodePointRanges[i] = rangeToChar(inclusiveFrom, removeInclusiveFrom - 1);
+            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveTo >= inclusiveFrom) {
+            singleByteCodePointRanges[i] = rangeToChar(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveFrom <= inclusiveTo) {
+            singleByteCodePointRanges[i] = rangeToChar(inclusiveTo, removeInclusiveFrom - 1);
+          }
         }
       }
 
-      for (int i = doubleByteCodePointRanges.length - 1; i >= 0; --i) {
-        final int range = doubleByteCodePointRanges[i];
-        final int inclusiveFrom = getInclusiveFrom(range);
-        final int inclusiveTo = getInclusiveTo(range);
-        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-          doubleByteCodePointRangesSize = removeDoubleByteElement(doubleByteCodePointRanges, doubleByteCodePointRangesSize, i);
-        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-          doubleByteCodePointRanges[i] = rangeToInt(inclusiveFrom, removeInclusiveFrom - 1);
-          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveTo >= inclusiveFrom) {
-          doubleByteCodePointRanges[i] = rangeToInt(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveFrom <= inclusiveTo) {
-          doubleByteCodePointRanges[i] = rangeToInt(inclusiveTo, removeInclusiveFrom - 1);
+      if (removeInclusiveFrom > 0xff || removeInclusiveTo < 0x10000) {
+        for (int i = doubleByteCodePointRanges.length - 1; i >= 0; --i) {
+          final int range = doubleByteCodePointRanges[i];
+          final int inclusiveFrom = getInclusiveFrom(range);
+          final int inclusiveTo = getInclusiveTo(range);
+          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+            doubleByteCodePointRangesSize = removeDoubleByteElement(doubleByteCodePointRanges, doubleByteCodePointRangesSize, i);
+          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+            doubleByteCodePointRanges[i] = rangeToInt(inclusiveFrom, removeInclusiveFrom - 1);
+            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveTo >= inclusiveFrom) {
+            doubleByteCodePointRanges[i] = rangeToInt(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveFrom <= inclusiveTo) {
+            doubleByteCodePointRanges[i] = rangeToInt(inclusiveTo, removeInclusiveFrom - 1);
+          }
         }
       }
 
-      for (int i = tripleByteCodePointRanges.length - 1; i >= 0; --i) {
-        final long range = tripleByteCodePointRanges[i];
-        final int inclusiveFrom = getInclusiveFrom(range);
-        final int inclusiveTo = getInclusiveTo(range);
-        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-          tripleByteCodePointRangesSize = removeTripleByteElement(tripleByteCodePointRanges, tripleByteCodePointRangesSize, i);
-        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-          tripleByteCodePointRanges[i] = rangeToLong(inclusiveFrom, removeInclusiveFrom - 1);
-          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveTo >= inclusiveFrom) {
-          tripleByteCodePointRanges[i] = rangeToLong(removeInclusiveTo + 1, inclusiveTo);
-        } else if (removeInclusiveFrom <= inclusiveTo) {
-          tripleByteCodePointRanges[i] = rangeToLong(inclusiveTo, removeInclusiveFrom - 1);
+      if (removeInclusiveTo > 0xffff) {
+        for (int i = tripleByteCodePointRanges.length - 1; i >= 0; --i) {
+          final long range = tripleByteCodePointRanges[i];
+          final int inclusiveFrom = getInclusiveFrom(range);
+          final int inclusiveTo = getInclusiveTo(range);
+          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+            tripleByteCodePointRangesSize = removeTripleByteElement(tripleByteCodePointRanges, tripleByteCodePointRangesSize, i);
+          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+            tripleByteCodePointRanges[i] = rangeToLong(inclusiveFrom, removeInclusiveFrom - 1);
+            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveTo >= inclusiveFrom) {
+            tripleByteCodePointRanges[i] = rangeToLong(removeInclusiveTo + 1, inclusiveTo);
+          } else if (removeInclusiveFrom <= inclusiveTo) {
+            tripleByteCodePointRanges[i] = rangeToLong(inclusiveTo, removeInclusiveFrom - 1);
+          }
         }
       }
     }
@@ -670,6 +611,549 @@ class SubsetBuilderImpl implements SubsetBuilder {
       for (int i = 0; i < tripleByteCodePointRangesSize; ++i) {
         numberOfCodePointsInCodePointRanges =
             getInclusiveTo(tripleByteCodePointRanges[i]) - getInclusiveFrom(tripleByteCodePointRanges[i]) + 1;
+      }
+    }
+  }
+
+  static final class SubsetOptimiser {
+
+    enum PreferredSubsetType {
+      RANGED("Ranged"),
+      HASHED("Hashed"),
+      OPTIMALLY_HASHED("Opt. Hashed");
+      final String description;
+
+      PreferredSubsetType(final String description) {
+        this.description = description;
+      }
+
+      @Override
+      public String toString() {
+        return description;
+      }
+    }
+
+    int numberOfCodePointRanges;
+    char[] blockKeys;
+    int[] codePointRangesSize;
+
+    int byteSizeOfBlockKeyData;
+
+    int byteSizeOfCodePointRangeData;
+
+    int hashcode;
+
+    SubsetOption[] subsetOptions;
+
+    SubsetOption optimalHashedSubsetOption;
+
+    SubsetOptimiser(final RangedSubset rangedSubset) {
+      calculateCommonHashedStats(rangedSubset);
+      if (isCandidateForHashedRangeSubset()) {
+        calculateHashedSubsetOptions(rangedSubset);
+      } else {
+        subsetOptions = new SubsetOption[]{new RangedSubsetOption(rangedSubset)};
+      }
+      optimalHashedSubsetOption = subsetOptions[0];
+    }
+
+    PreferredSubsetType getPreferredSubsetType() {
+      return optimalHashedSubsetOption.getSubsetType();
+    }
+
+    /**
+     * Returns {@link SubsetOptimiser} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as
+     * some memory stats describing the bytes that will be used to hold the block key data and the code point ranges data.
+     *
+     * @param rangedSubset the ranged-subset that we want stats from.
+     * @return a {@link SubsetOptimiser} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory
+     * usage stats. each block key.
+     */
+    void calculateCommonHashedStats(final RangedSubset rangedSubset) {
+      hashcode = 0;
+      numberOfCodePointRanges = 0;
+      byteSizeOfBlockKeyData = 0;
+      byteSizeOfCodePointRangeData = 0;
+      blockKeys = new char[255];
+      codePointRangesSize = new int[255];
+      int i = -1;
+      for (CodePointRange codePointRange : rangedSubset.ranges()) {
+        numberOfCodePointRanges++;
+        hashcode = 31 * hashcode + codePointRange.inclusiveFrom;
+        hashcode = 31 * hashcode + codePointRange.inclusiveTo;
+        final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
+        final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          if (i < 0 || blockKey != blockKeys[i]) {
+            ++i;
+            if (i == blockKeys.length) {
+              blockKeys = Arrays.copyOf(blockKeys, blockKeys.length + 255);
+              codePointRangesSize = Arrays.copyOf(codePointRangesSize, codePointRangesSize.length + 255);
+            }
+            blockKeys[i] = blockKey;
+            codePointRangesSize[i]++;
+            byteSizeOfBlockKeyData += 2;       // 2 byte block key
+            byteSizeOfCodePointRangeData += 2; // 2 byte code point range
+          } else if (blockKey != blockKeyTo) {
+            codePointRangesSize[i]++;
+            byteSizeOfCodePointRangeData += 2; // 2 byte code point range
+          }
+        }
+      }
+      ++i;
+      blockKeys = Arrays.copyOf(blockKeys, i);
+      codePointRangesSize = Arrays.copyOf(codePointRangesSize, i);
+    }
+
+    /**
+     * Calculates a selection of possible hashed subset options.
+     */
+    void calculateHashedSubsetOptions(final RangedSubset rangedSubset) {
+      final int numberOfBlockKeys = blockKeys.length;
+      final int minHashBuckets = Math.max(3, (int) Math.floor(numberOfBlockKeys * 0.7D));
+      final int maxHashBuckets = Math.max(7, (int) Math.ceil(numberOfBlockKeys * 2.6D));
+      subsetOptions = new SubsetOption[maxHashBuckets - minHashBuckets + 1 + 1];
+      // Add the ranged subset option as the first option.
+      subsetOptions[0] = new RangedSubsetOption(rangedSubset);
+      boolean foundOptimalHashMap = false;
+      int subsetOptionsIndex = 1;
+      // Try and find an optimal number of hash buckets with every hash bucket containing at most one key.
+      for (int j = numberOfBlockKeys; j < maxHashBuckets; ++j, ++subsetOptionsIndex) {
+        final HashedSubsetOption hashedSubsetOption = new HashedSubsetOption(j);
+        subsetOptions[subsetOptionsIndex] = hashedSubsetOption;
+        if (hashedSubsetOption.containsHashBucketsWithAtMostOneKey()) {
+          subsetOptions = Arrays.copyOf(subsetOptions, subsetOptionsIndex + 1);
+          foundOptimalHashMap = true;
+          break;
+        }
+      }
+      if (!foundOptimalHashMap) {
+        // If no optimal hash map available then continue gathering stats on hash map with smaller number of buckets.
+        for (int j = minHashBuckets; j < numberOfBlockKeys; ++j, ++subsetOptionsIndex) {
+          subsetOptions[subsetOptionsIndex] = new HashedSubsetOption(j);
+        }
+      }
+      // Sort so that the optimal subset option is the first element
+      Arrays.sort(subsetOptions, SubsetOption.HASH_MAP_STATS_COMPARATOR);
+    }
+
+    boolean isCandidateForHashedRangeSubset() {
+      return blockKeys.length > 2 && numberOfCodePointRanges > 32; // TODO Revisit 'magic' thresholds
+    }
+
+    @Override
+    public String toString() {
+      final StringBuilder s = new StringBuilder();
+      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      s.append("\n|             |         |    hash buckets containing...     |     memory required (bytes)    |");
+      s.append("\n|             |  # hash |-----------------------------------|--------------------------------|");
+      s.append("\n| subset type | buckets | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |");
+      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      int countOfHashedOptions = 0;
+      for (SubsetOption subsetOption : subsetOptions) {
+        if (subsetOption instanceof RangedSubsetOption rangedSubsetOption) {
+          s.append(String.format("%n| %11s |         |        |       |        |         | %8d | %5d | %11d |",
+              rangedSubsetOption.getSubsetType().toString(),
+              rangedSubsetOption.getByteSizeOfArrayReferences(),
+              rangedSubsetOption.getByteSizeOfCodePointRangeData(),
+              rangedSubsetOption.getTotalBytes()));
+        }
+        if (subsetOption instanceof HashedSubsetOption hashedSubsetOption) {
+          countOfHashedOptions++;
+          if (countOfHashedOptions < 40 || hashedSubsetOption.getSubsetType() == PreferredSubsetType.OPTIMALLY_HASHED) {
+            s.append(String.format("%n| %11s | %7d | %6d | %5d | %6d | %7d | %8d | %5d | %11d |",
+                hashedSubsetOption.getSubsetType().toString(),
+                hashedSubsetOption.getNumberOfHashBuckets(),
+                hashedSubsetOption.getCountOfHashBucketsWith0Keys(),
+                hashedSubsetOption.getCountOfHashBucketsWith1Key(),
+                hashedSubsetOption.getCountOfHashBucketsWith2Keys(),
+                hashedSubsetOption.getCountOfHashBucketsWith3OrMoreKeys(),
+                hashedSubsetOption.getByteSizeOfArrayReferences(),
+                hashedSubsetOption.getByteSizeOfBlockKeyData() + hashedSubsetOption.getByteSizeOfCodePointRangeData(),
+                hashedSubsetOption.getTotalBytes()));
+          }
+        }
+      }
+      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      if (subsetOptions.length > 20) {
+        s.append("\n| subset type |  # hash | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |");
+        s.append("\n|             | buckets |-----------------------------------|--------------------------------|");
+        s.append("\n|             |         |    hash buckets containing...     |     memory required (bytes)    |");
+        s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      }
+      return s.toString();
+    }
+
+    interface SubsetOption {
+
+      Comparator<SubsetOption> HASH_MAP_STATS_COMPARATOR =
+          Comparator.comparing(SubsetOption::getTotalBytes);
+
+      int getTotalBytes();
+
+      PreferredSubsetType getSubsetType();
+    }
+
+    class RangedSubsetOption implements SubsetOption {
+
+      private int byteSizeOfArrayReferences = 0;
+
+      private int byteSizeOfCodePointRangeData = 0;
+
+      RangedSubsetOption(final RangedSubset rangedSubset) {
+        int length = rangedSubset.getSingleByteCodePointRanges().length;
+        if (length > 0) {
+          this.byteSizeOfArrayReferences += 8; // 8 byte array object reference
+          this.byteSizeOfCodePointRangeData += length * 2; // 2-byte code-point range
+        }
+        length = rangedSubset.getDoubleByteCodePointRanges().length;
+        if (length > 0) {
+          this.byteSizeOfArrayReferences += 8; // 8 byte array object reference
+          this.byteSizeOfCodePointRangeData += length * 4; // 4-byte code-point range
+        }
+        length = rangedSubset.getTripleByteCodePointRanges().length;
+        if (length > 0) {
+          this.byteSizeOfArrayReferences += 8; // 8 byte array object reference
+          this.byteSizeOfCodePointRangeData += length * 8; // 8-byte code-point range
+        }
+      }
+
+      public int getTotalBytes() {
+        return byteSizeOfArrayReferences + byteSizeOfCodePointRangeData;
+      }
+
+      public PreferredSubsetType getSubsetType() {
+        return PreferredSubsetType.RANGED;
+      }
+
+      public int getByteSizeOfArrayReferences() {
+        return byteSizeOfArrayReferences;
+      }
+
+      public int getByteSizeOfCodePointRangeData() {
+        return byteSizeOfCodePointRangeData;
+      }
+    }
+
+    class HashedSubsetOption implements SubsetOption {
+
+      private final int numberOfHashBuckets;
+      private final int[] hashBucketCounts;
+      private int countOfHashBucketsWith0Keys;
+      private int countOfHashBucketsWith1Key = 0;
+      private int countOfHashBucketsWith2Keys = 0;
+      private int countOfHashBucketsWith3OrMoreKeys = 0;
+      private int byteSizeOfArrayReferences = 0;
+
+      private HashedSubsetOption(
+          final int numberOfHashBuckets) {
+        this.numberOfHashBuckets = numberOfHashBuckets;
+        this.hashBucketCounts = new int[numberOfHashBuckets];
+        this.countOfHashBucketsWith0Keys = numberOfHashBuckets;
+        for (int blockKey : blockKeys) {
+          addKey(blockKey);
+        }
+        byteSizeOfArrayReferences = 2 * 8; // 2 * 8 byte array object references for blockKeys and codePointRanges arrays.
+        if (containsHashBucketsWithMultipleKeys()) {
+          byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for blockKeys
+          byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for codePointRanges
+          for (int i = 0; i < hashBucketCounts.length; ++i) {
+            byteSizeOfArrayReferences +=
+                hashBucketCounts[i] * 8; // number of codePointRange arrays * 8 byte array object references for codePointRanges
+          }
+        } else {
+          byteSizeOfArrayReferences += numberOfHashBuckets * 8;   // number of hash-bucket * 8 byte array object references for codePointRanges
+        }
+      }
+
+      private void addKey(final int key) {
+        int hashIndex = (key & 0x7FFFFFFF) % hashBucketCounts.length;
+        hashBucketCounts[hashIndex]++;
+        switch (hashBucketCounts[hashIndex]) {
+          case 1:
+            countOfHashBucketsWith1Key++;
+            countOfHashBucketsWith0Keys--;
+            break;
+          case 2:
+            countOfHashBucketsWith2Keys++;
+            countOfHashBucketsWith1Key--;
+            break;
+          case 3:
+            countOfHashBucketsWith3OrMoreKeys++;
+            countOfHashBucketsWith2Keys--;
+            break;
+          default:
+            // do nothing – already subtracted from countOfHashBucketsWith2Keys when it got to 3
+            break;
+        }
+      }
+
+      public PreferredSubsetType getSubsetType() {
+        return containsHashBucketsWithMultipleKeys() ? PreferredSubsetType.HASHED : PreferredSubsetType.OPTIMALLY_HASHED;
+      }
+
+      private boolean containsHashBucketsWithMultipleKeys() {
+        return countOfHashBucketsWith2Keys > 0
+            || countOfHashBucketsWith3OrMoreKeys > 0;
+      }
+
+      private boolean containsHashBucketsWithAtMostOneKey() {
+        return !containsHashBucketsWithMultipleKeys();
+      }
+
+      private int getNumberOfHashBuckets() {
+        return numberOfHashBuckets;
+      }
+
+      private int[] getHashBucketCounts() {
+        return hashBucketCounts;
+      }
+
+      private int getCountOfHashBucketsWith0Keys() {
+        return countOfHashBucketsWith0Keys;
+      }
+
+      private int getCountOfHashBucketsWith1Key() {
+        return countOfHashBucketsWith1Key;
+      }
+
+      private int getCountOfHashBucketsWith2Keys() {
+        return countOfHashBucketsWith2Keys;
+      }
+
+      public int getCountOfHashBucketsWith3OrMoreKeys() {
+        return countOfHashBucketsWith3OrMoreKeys;
+      }
+
+      public int getByteSizeOfBlockKeyData() {
+        return byteSizeOfBlockKeyData;
+      }
+
+      public int getByteSizeOfCodePointRangeData() {
+        return byteSizeOfCodePointRangeData;
+      }
+
+      public int getByteSizeOfArrayReferences() {
+        return byteSizeOfArrayReferences;
+      }
+
+      public int getTotalBytes() {
+        return byteSizeOfArrayReferences + byteSizeOfBlockKeyData + byteSizeOfCodePointRangeData;
+      }
+
+      public int getHashCode() {
+        return hashcode;
+      }
+    }
+  }
+
+  static final class HashedRangedSubsetData {
+
+    /**
+     * <p>The hashed block-keys. A block-key is the two most significant bytes of a three-byte code-point.</p>
+     *
+     * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
+     * <pre>
+     *        ┌──── hashIndex       - an index to the hash-bucket
+     *        │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
+     *        │  │
+     *   char[ ][ ] blockKeys
+     * </pre>
+     */
+    private final char[][] blockKeys;
+
+    /**
+     * <p>The hashed single-byte code-point ranges. The ranges are actually the least significant bytes of the
+     * inclusive-from and inclusive-to code-points combined into a two-byte char.</p>
+     *
+     * <p>In the code of this class the three-dimensional indexes will be referred to as:</p>
+     * <pre>
+     *        ┌─────── hashIndex           - an index to the hash-bucket
+     *        │  ┌──── hashBucketIndex     - an index to the key within the hash-bucket
+     *        │  │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+     *        │  │  │
+     *   char[ ][ ][ ] codePointRangesByBlock
+     * </pre>
+     */
+    private final char[][][] codePointRangesByBlock;
+
+    private int numberOfCodePointRanges = 0;
+    private int numberOfCodePointsInCodePointRanges = 0;
+
+    public HashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
+      blockKeys = new char[optimalNumberOfHashBuckets][];
+      codePointRangesByBlock = new char[optimalNumberOfHashBuckets][][];
+    }
+
+    public char[][] getBlockKeys() {
+      return blockKeys;
+    }
+
+    public void optimiseHashMap(final Iterable<CodePointRange> ranges, final HashedSubsetOption optimalHashedSubsetOption) {
+
+      final int[] hashBucketCounts = optimalHashedSubsetOption.getHashBucketCounts();
+      final int[] hashBucketSizes = new int[hashBucketCounts.length];
+      final int[][] codePointRangesSizes = new int[hashBucketCounts.length][];
+
+      // Create the 1st-dimension arrays to the exact optimal size of hash-buckets.
+      for (int hashIndex = 0; hashIndex < hashBucketCounts.length; ++hashIndex) {
+        if (hashBucketCounts[hashIndex] == 0) {
+          blockKeys[hashIndex] = null;
+          codePointRangesByBlock[hashIndex] = null;
+        } else {
+          blockKeys[hashIndex] = new char[hashBucketCounts[hashIndex]];
+          codePointRangesByBlock[hashIndex] = new char[hashBucketCounts[hashIndex]][];
+          codePointRangesSizes[hashIndex] = new int[hashBucketCounts[hashIndex]];
+        }
+      }
+      // Add all unicode code-point ranges to the hash-map of blocked code-point ranges.
+      for (CodePointRange codePointRange : ranges) {
+        final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
+        final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          final char inclusiveFrom = (char) (blockKey == blockKeyFrom ? (codePointRange.inclusiveFrom & 0xFF) : 0x00);
+          final char inclusiveTo = (char) (blockKey == blockKeyTo ? (codePointRange.inclusiveTo & 0xFF) : 0xFF);
+          final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
+          final char[] hashBucket = blockKeys[hashIndex];
+          int hashBucketIndex = 0;
+          while (hashBucketIndex < hashBucketSizes[hashIndex]
+              && hashBucketIndex < hashBucket.length
+              && hashBucket[hashBucketIndex] != blockKey) {
+            ++hashBucketIndex;
+          }
+          if (hashBucketIndex == hashBucketSizes[hashIndex]) {
+            hashBucketSizes[hashIndex]++;
+          }
+          if (codePointRangesByBlock[hashIndex][hashBucketIndex] == null) {
+            codePointRangesByBlock[hashIndex][hashBucketIndex] = new char[32];
+          }
+          if (codePointRangesSizes[hashIndex][hashBucketIndex] == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
+            codePointRangesByBlock[hashIndex][hashBucketIndex] = Arrays.copyOf(
+                codePointRangesByBlock[hashIndex][hashBucketIndex],
+                codePointRangesByBlock[hashIndex][hashBucketIndex].length + 32);
+          }
+          final int codePointRangesSize = codePointRangesSizes[hashIndex][hashBucketIndex];
+          blockKeys[hashIndex][hashBucketIndex] = blockKey;
+          codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangesSize] = rangeToChar(inclusiveFrom, inclusiveTo);
+          codePointRangesSizes[hashIndex][hashBucketIndex]++;
+          numberOfCodePointRanges++;
+          numberOfCodePointsInCodePointRanges += inclusiveTo - inclusiveFrom + 1;
+        }
+      }
+
+      // Make copies of arrays to exact required sizes to minimize wasted space.
+      for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
+        if (blockKeys[hashIndex] != null) {
+          blockKeys[hashIndex] = Arrays.copyOf(blockKeys[hashIndex], hashBucketSizes[hashIndex]);
+          codePointRangesByBlock[hashIndex] = Arrays.copyOf(codePointRangesByBlock[hashIndex], hashBucketSizes[hashIndex]);
+          for (int hashBucketIndex = 0; hashBucketIndex < codePointRangesByBlock[hashIndex].length; ++hashBucketIndex) {
+            codePointRangesByBlock[hashIndex][hashBucketIndex] = Arrays.copyOf(
+                codePointRangesByBlock[hashIndex][hashBucketIndex],
+                codePointRangesSizes[hashIndex][hashBucketIndex]);
+          }
+        }
+      }
+    }
+  }
+
+  static final class OptimalHashedRangedSubsetData {
+
+    /**
+     * <p>The hashed block-keys. A block-key is the two most significant bytes of a three-byte code-point.</p>
+     *
+     * <p>In the code of this class the two-dimensional indexes will be referred to as:</p>
+     * <pre>
+     *        ┌─ hashIndex - an index to the hash-bucket
+     *        │
+     *   char[ ] blockKeys
+     * </pre>
+     */
+    private final char[] blockKeys;
+
+    /**
+     * <p>The hashed single-byte code-point ranges. The ranges are actually the least significant bytes of the
+     * inclusive-from and inclusive-to code-points combined into a two-byte char.</p>
+     *
+     * <p>In the code of this class the three-dimensional indexes will be referred to as:</p>
+     * <pre>
+     *        ┌─────── hashIndex        - an index to the hash-bucket
+     *        │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+     *        │  │
+     *   char[ ][ ] codePointRangesByBlock
+     * </pre>
+     */
+    private final char[][] codePointRangesByBlock;
+
+    private int numberOfCodePointRanges = 0;
+    private int numberOfCodePointsInCodePointRanges = 0;
+
+    public OptimalHashedRangedSubsetData(final int optimalNumberOfHashBuckets) {
+      blockKeys = new char[optimalNumberOfHashBuckets];
+      codePointRangesByBlock = new char[optimalNumberOfHashBuckets][];
+    }
+
+
+    public char[] getBlockKeys() {
+      return blockKeys;
+    }
+
+    public char[][] getCodePointRangesByBlock() {
+      return codePointRangesByBlock;
+    }
+
+    public int getRangesSize() {
+      return numberOfCodePointRanges;
+    }
+
+    public int getCodePointsSize() {
+      return numberOfCodePointsInCodePointRanges;
+    }
+
+    private void optimiseHashMap(final Iterable<CodePointRange> ranges, final HashedSubsetOption optimalHashedSubsetOption) {
+      final int[] hashBucketCounts = optimalHashedSubsetOption.getHashBucketCounts();
+      final int[] codePointRangesSizes = new int[hashBucketCounts.length];
+
+      // Create the 1st-dimension arrays to the exact optimal size of hash-buckets.
+      for (int hashIndex = 0; hashIndex < hashBucketCounts.length; ++hashIndex) {
+        if (hashBucketCounts[hashIndex] == 0) {
+          blockKeys[hashIndex] = 0xFFFF;
+          codePointRangesByBlock[hashIndex] = null;
+        } else {
+          blockKeys[hashIndex] = 0;
+          codePointRangesByBlock[hashIndex] = new char[1];
+        }
+      }
+      // Add all unicode code-point ranges to the hash-map of blocked code-point ranges.
+      for (CodePointRange codePointRange : ranges) {
+        final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
+        final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
+        for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {
+          final int inclusiveFrom = (char) (blockKey == blockKeyFrom ? (codePointRange.inclusiveFrom & 0xFF) : 0x00);
+          final int inclusiveTo = (char) (blockKey == blockKeyTo ? (codePointRange.inclusiveTo & 0xFF) : 0xFF);
+          final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
+          if (codePointRangesByBlock[hashIndex] == null) {
+            codePointRangesByBlock[hashIndex] = new char[32];
+          }
+          if (codePointRangesSizes[hashIndex] == codePointRangesByBlock[hashIndex].length) {
+            codePointRangesByBlock[hashIndex] = Arrays.copyOf(
+                codePointRangesByBlock[hashIndex],
+                codePointRangesByBlock[hashIndex].length + 32);
+          }
+          final int codePointRangesSize = codePointRangesSizes[hashIndex];
+          blockKeys[hashIndex] = blockKey;
+          codePointRangesByBlock[hashIndex][codePointRangesSize] = rangeToChar(inclusiveFrom, inclusiveTo);
+          codePointRangesSizes[hashIndex]++;
+          numberOfCodePointRanges++;
+          numberOfCodePointsInCodePointRanges += (inclusiveTo - inclusiveFrom + 1);
+        }
+      }
+      // Make copies of arrays to exact required sizes to minimize wasted space.
+      for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
+        if (blockKeys[hashIndex] != 0xFFFF) {
+          codePointRangesByBlock[hashIndex] = Arrays.copyOf(
+              codePointRangesByBlock[hashIndex],
+              codePointRangesSizes[hashIndex]);
+        }
       }
     }
   }
