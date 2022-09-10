@@ -1,33 +1,38 @@
-## The Data Type Project
+## Type Factory
 
-The aim of this Java library is to help you as a software developer say what you mean and mean what you say. Along the way, we like to help you remove a lot of cruft and boilerplate from your code.
+Easily create custom data types. Remove cruft and boilerplate from your code.
 
-The data type project aims to make constructing custom reusable data-types trivial.
+<picture>
+  <source srcset="docs/intro-video-dark.gif" media="(prefers-color-scheme: dark)"/>
+  <img src="docs/intro-video-light.gif" alt="intro video"/>
+</picture>
 
-### An example
-Imagine that you need a custom data-type for currency codes and that you'd like it to extend the Java `CharSequence` interface so that it can continue to be used with many third party libraries.
+### An example – currency code
+
+This example creates a custom type for currency codes that must conform ISO 4217 rules for a currency code. 
+
+The `CurrencyCode` implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
 
 ```java
-public final class CurrencyCode extends StringType {     ①
+public final class CurrencyCode extends StringType {   ①
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  ②
 
-  private static final TypeParser TYPE_PARSER =   ③
-      TypeParser.builder()
-          .errorMessage("must be a 3-character ISO 4217 currency code")    ④
-          .acceptCharRange('a', 'z')    ⑤
-          .acceptCharRange('A', 'Z')
-          .fixedSize(3)  ⑥
-          .removeAllWhitespace()     ⑦
-          .preserveNullAndEmpty()    ⑧
-          .toUpperCase()    ⑨
-          .build();
+  private static final TypeParser TYPE_PARSER = TypeParser.builder()  ③
+      .errorMessage("must be a 3-character ISO 4217 currency code")   ④
+      .acceptCharRange('a', 'z')  ⑤
+      .acceptCharRange('A', 'Z')
+      .fixedSize(3)          ⑥
+      .removeAllWhitespace() ⑦
+      .convertNullToEmpty()  ⑧
+      .toUpperCase()         ⑨
+      .build();
 
-  private CurrencyCode(final String value) { ⑩
+  private CurrencyCode(final String value) {  ⑩
     super(value);
   }
 
-  public static CurrencyCode of(final CharSequence value) {    ⑪
+  public static CurrencyCode of(final CharSequence value) {  ⑪
     return TYPE_PARSER.parseToStringType(value, CurrencyCode::new); 
   }
 }
@@ -46,11 +51,87 @@ public final class CurrencyCode extends StringType {     ①
 
 ⑦ We will tolerate and remove any whitespace that is present in the value while parsing it. For other types, you could also choose to forbid, normalise, preserve, or convert whitespace characters.
 
-⑧ We would like the type-parser to preserve whether incoming values were null versus empty. If you prefer, you could also choose to convert null-to-empty or empty-to-null.
+⑧ We would like the type-parser to convert null values to empty. If you prefer, you could also choose to convert preserve-null-and-empty or empty-to-null.
 
 ⑨ The parser will convert successfully parsed values to uppercase.
 
 ⑩ In this example, we specify a private constructor because we'd like all instantiation to occur via the factory method defined in step ⑪. You can, of course, choose to use a constructor instead a factory method.
 
 ⑪ We will provide a static factory method, `of(value)`, to instantiate a `CurrencyCode` using the value provided. Note that because we chose to preserve null and empty (see ⑧), the factory method will return `null` instead of an instantiated object for incoming null values. If we had chosen to configure the parser to convert null-to-empty, then the factory method would always give you an instantiated currency-code whose value may be an empty string.
+
+### Another example – international bank account number (IBAN)
+
+This example creates a custom type for international bank account numbers that defined a type parser  that also uses:
+
+* A regular expression to ensure correct format.
+* A custom validator to check IBAN check digits using a modulo-97 algorithm.
+
+The `InternationalBankAccountNumber` also implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
+
+Below I will only highlight the features not already introduced in the previous example.
+
+```java
+public class InternationalBankAccountNumber extends StringType {
+
+  public static final InternationalBankAccountNumber EMPTY_IBAN = 
+      new InternationalBankAccountNumber("");
+
+  private static final Pattern VALID_IBAN_PATTERN = 
+      Pattern.compile("[A-Z]{2}[0-9]{2}[0-9A-Z]{1,30}");  ①
+
+  private static final TypeParser TYPE_PARSER = TypeParser.builder()
+          .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
+          .acceptLettersAtoZ()  ②
+          .acceptDigits0to9()   ③
+          .minSize(5)
+          .maxSize(34)
+          .removeAllWhitespace()
+          .toUpperCase()
+          .matchesRegex(VALID_IBAN_PATTERN)  ④
+          .customValidator(InternationalBankAccountNumber::isValidIBAN)  ⑤
+          .build();
+
+  private InternationalBankAccountNumber(final String value) {
+    super(value);
+  }
+
+  public static InternationalBankAccountNumber of(final CharSequence value) {
+    return TYPE_PARSER.parseToStringType(value, InternationalBankAccountNumber::new);
+  }
+
+  private static final long MAX = 999999999;   ⑥
+  private static final long MODULUS = 97;
+  private static final int MAX_ALPHANUMERIC_VALUE = 35;
+
+  private static Boolean isValidIBAN(final String value) {  ⑦
+    final int valueLength = value.length();
+    long total = 0;
+    for (int i = 0; i < valueLength; ++i) {
+      final int numericValue = Character.getNumericValue(value.charAt((i + 4) % valueLength));
+      if (numericValue < 0 || numericValue > MAX_ALPHANUMERIC_VALUE) {
+        return Boolean.FALSE;
+      }
+      total = (numericValue > 9 ? total * 100 : total * 10) + numericValue;
+      if (total > MAX) {
+        total = total % MODULUS;
+      }
+    }
+    return (total % MODULUS) == 1;
+  }
+}
+```
+① A regular expression to ensure the international bank account number (IBAN) is correctly formatted.
+
+② Convenience method to accept all [a-zA-Z] characters.
+
+③ Convenience method to accept all [0-9] characters.
+
+④ Ensure that all values conform to the regular expression we created at step ①.
+
+⑤ Ensure that all values conform to the custom validation method implemented in step ⑦.
+
+⑥ Some constants required by the custom validation method implemented in step ⑦.
+
+⑦ The custom validation method that ensure the IBAN check digits are correct as per the modulo-97 rules for an IBAN.
+
 
