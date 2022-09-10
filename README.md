@@ -1,33 +1,35 @@
 ## The Data Type Project
 
-The aim of this Java library is to help you as a software developer say what you mean and mean what you say. Along the way, we like to help you remove a lot of cruft and boilerplate from your code.
+Easily create custom data types. Remove cruft and boilerplate from your code.
 
-The data type project aims to make constructing custom reusable data-types trivial.
+<video width="900" height="300" loop>
+  <source src="docs/intro-video.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
 ### An example
-Imagine that you need a custom data-type for currency codes and that you'd like it to extend the Java `CharSequence` interface so that it can continue to be used with many third party libraries.
+You would like a custom data-type for currency codes that extends the Java `CharSequence` interface so that it can be used with many third party libraries.
 
 ```java
-public final class CurrencyCode extends StringType {     ①
+public final class CurrencyCode extends StringType {   ①
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  ②
 
-  private static final TypeParser TYPE_PARSER =   ③
-      TypeParser.builder()
-          .errorMessage("must be a 3-character ISO 4217 currency code")    ④
-          .acceptCharRange('a', 'z')    ⑤
-          .acceptCharRange('A', 'Z')
-          .fixedSize(3)  ⑥
-          .removeAllWhitespace()     ⑦
-          .preserveNullAndEmpty()    ⑧
-          .toUpperCase()    ⑨
-          .build();
+  private static final TypeParser TYPE_PARSER = TypeParser.builder()  ③
+      .errorMessage("must be a 3-character ISO 4217 currency code")   ④
+      .acceptCharRange('a', 'z')  ⑤
+      .acceptCharRange('A', 'Z')
+      .fixedSize(3)          ⑥
+      .removeAllWhitespace() ⑦
+      .convertNullToEmpty()  ⑧
+      .toUpperCase()         ⑨
+      .build();
 
-  private CurrencyCode(final String value) { ⑩
+  private CurrencyCode(final String value) {  ⑩
     super(value);
   }
 
-  public static CurrencyCode of(final CharSequence value) {    ⑪
+  public static CurrencyCode of(final CharSequence value) {  ⑪
     return TYPE_PARSER.parseToStringType(value, CurrencyCode::new); 
   }
 }
@@ -46,7 +48,7 @@ public final class CurrencyCode extends StringType {     ①
 
 ⑦ We will tolerate and remove any whitespace that is present in the value while parsing it. For other types, you could also choose to forbid, normalise, preserve, or convert whitespace characters.
 
-⑧ We would like the type-parser to preserve whether incoming values were null versus empty. If you prefer, you could also choose to convert null-to-empty or empty-to-null.
+⑧ We would like the type-parser to convert null values to empty. If you prefer, you could also choose to convert preserve-null-and-empty or empty-to-null.
 
 ⑨ The parser will convert successfully parsed values to uppercase.
 

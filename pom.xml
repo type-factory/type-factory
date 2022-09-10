@@ -3,8 +3,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.datatypeproject</groupId>
-  <artifactId>data-type-project</artifactId>
+  <groupId>org.typefactory</groupId>
+  <artifactId>type-factory</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -36,36 +36,36 @@
   </properties>
 
   <modules>
-    <module>data-type-examples</module>
-    <module>data-type-language-code-generator</module>
-    <module>data-type-language</module>
-    <module>data-type-core</module>
+    <module>type-factory-examples</module>
+    <module>type-factory-language-code-generator</module>
+    <module>type-factory-language</module>
+    <module>type-factory-core</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
 
       <dependency>
-        <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-core</artifactId>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-core</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-examples</artifactId>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-examples</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-language-code-generator</artifactId>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-language-code-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.datatypeproject</groupId>
-        <artifactId>data-type-language</artifactId>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-language</artifactId>
         <version>${project.version}</version>
       </dependency>
 
