@@ -122,9 +122,9 @@ public class InternationalBankAccountNumber extends StringType {
 ```
 ① A regular expression to ensure the international bank account number (IBAN) is correctly formatted.
 
-② Convenience method accept all [a-zA-Z] characters.
+② Convenience method to accept all [a-zA-Z] characters.
 
-③ Convenience method accept all [0-9] characters.
+③ Convenience method to accept all [0-9] characters.
 
 ④ Ensure that all values conform to the regular expression we created at step ①.
 
