@@ -2,10 +2,9 @@
 
 Easily create custom data types. Remove cruft and boilerplate from your code.
 
-<video width="900" height="300" loop>
-  <source src="docs/intro-video.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+![intro-video.webm](https://user-images.githubusercontent.com/8422620/189468753-d608246f-7553-4056-85ff-c656aebd3f45.webm)
+
+![intro-video.webm](./docs/intro-video.webm)
 
 ### An example
 You would like a custom data-type for currency codes that extends the Java `CharSequence` interface so that it can be used with many third party libraries.
