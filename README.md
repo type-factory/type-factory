@@ -8,7 +8,10 @@ Easily create custom data types. Remove cruft and boilerplate from your code.
 </picture>
 
 ### An example – currency code
-You would like a custom data-type for currency codes that extends the Java `CharSequence` interface so that it can be used with many third party libraries.
+
+This example creates a custom type for currency codes that must conform ISO 4217 rules for a currency code. 
+
+The `CurrencyCode` implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
 
 ```java
 public final class CurrencyCode extends StringType {   ①
@@ -58,10 +61,14 @@ public final class CurrencyCode extends StringType {   ①
 
 ### Another example – international bank account number (IBAN)
 
-This example creates a type parser that also uses:
+This example creates a custom type for international bank account numbers that defined a type parser  that also uses:
 
-* a regular expression to ensure correct format
-* a custom validator to check the value using a modulo 97 check digits
+* A regular expression to ensure correct format.
+* A custom validator to check IBAN check digits using a modulo-97 algorithm.
+
+The `InternationalBankAccountNumber` also implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
+
+Below I will only highlight the features not already introduced in the previous example.
 
 ```java
 public class InternationalBankAccountNumber extends StringType {
