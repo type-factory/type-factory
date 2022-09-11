@@ -1,5 +1,7 @@
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.EMPTY_STRING;
+
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import java.util.regex.Pattern;
 import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
-import org.typefactory.TypeParser;
 import org.typefactory.TypeParser.TypeParserBuilder;
 
 class TypeParserBuilderImpl implements TypeParserBuilder {
@@ -205,6 +206,57 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final CharSequence toCharSequence) {
     converterBuilder.addCodePointConversion(fromCodePoint, toCharSequence);
     acceptCodePoint(fromCodePoint);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllChars(final char ch) {
+    converterBuilder.addCharConversion(ch, EMPTY_STRING);
+    acceptChar(ch);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllChars(final char... chars) {
+    if (chars != null) {
+      for (int i = 0; i < chars.length; ++i) {
+        removeAllChars(chars[i]);
+      }
+    }
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllCharSequences(final CharSequence charSequence) {
+    converterBuilder.addCharConversion(charSequence, EMPTY_STRING);
+    acceptCodePointsInCharSequence(charSequence);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllCharSequences(final CharSequence... charSequences) {
+    if (charSequences != null) {
+      for (int i = 0; i < charSequences.length; ++i) {
+        removeAllCharSequences(charSequences[i]);
+      }
+    }
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllCodePoints(final int codePoint) {
+    converterBuilder.addCodePointConversion(codePoint, EMPTY_STRING);
+    acceptCodePoint(codePoint);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllCodePoints(final int... codePoints) {
+    if (codePoints != null) {
+      for (int i = 0; i < codePoints.length; ++i) {
+        removeAllCodePoints(codePoints[i]);
+      }
+    }
     return this;
   }
 

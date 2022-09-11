@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
-public class InternationalBankAccountNumber extends StringType {
+public final class InternationalBankAccountNumber extends StringType {
 
   public static final InternationalBankAccountNumber EMPTY_IBAN = new InternationalBankAccountNumber("");
 

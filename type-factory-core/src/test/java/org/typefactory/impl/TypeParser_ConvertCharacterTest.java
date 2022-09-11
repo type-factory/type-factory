@@ -1,10 +1,9 @@
 package org.typefactory.impl;
 
-import java.text.ParseException;
 import org.assertj.core.api.Assertions;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.TypeParser;
 
 class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
 
@@ -17,7 +16,7 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
       "OIZS ABCD|0125-ABCD",
       "0123-4567-89AB-CDEF-GHIJ-KLMN-OPQR-STUV-WXYZ|0123-4561-89AB-CDEF-GH1J-K1MN-0PQR-5TUV-WXY2",
   }, delimiter = '|')
-  void should_parse_preserving_case(final String value, final String expected) throws ParseException {
+  void typeParser_shouldConvertCharacters(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()

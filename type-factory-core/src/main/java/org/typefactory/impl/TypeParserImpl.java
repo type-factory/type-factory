@@ -168,7 +168,9 @@ class TypeParserImpl implements TypeParser {
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
-            throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+            if (!converter.isCodePointConversionRequired(codePoint, k, converterResults)) {
+              throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+            }
           case PRESERVE_WHITESPACE:
             // do nothing
             break;
@@ -221,13 +223,23 @@ class TypeParserImpl implements TypeParser {
               case TO_TITLE_CASE -> k == 1 ? Character.toTitleCase(codePoint) : Character.toLowerCase(codePoint);
             });
       }
+      if (k > 0 && Character.isWhitespace(result[k-1])) {
+        codePointWasWhitespace = true;
+      }
       ++i;
     }
     if (k < minNumberOfCodePoints) {
       throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, value, minNumberOfCodePoints);
     }
 
-    final String parsedValue = new String(result, 0, k);
+    final String parsedValue;
+    if (whiteSpace == WhiteSpace.NORMALIZE_WHITESPACE) {
+      final int resultEndIndex = endIndexIgnoringTrailingWhitespace(result, k);
+      final int resultStartIndex = startIndexIgnoringLeadingWhitespace(result, resultEndIndex);
+      parsedValue = new String(result, resultStartIndex, resultEndIndex - resultStartIndex);
+    } else {
+      parsedValue = new String(result, 0, k);
+    }
 
     validateThatParsedValueConformToTheRegex(parsedValue, value);
 
@@ -302,6 +314,42 @@ class TypeParserImpl implements TypeParser {
     }
     int startIndex = 0;
     while (startIndex < endIndex && isWhitespace(value.charAt(startIndex))) {
+      ++startIndex;
+    }
+    return startIndex;
+  }
+
+  /**
+   * Return the end-index of the last char-character ignoring trailing whitespace
+   *
+   * @param codePoints the code-point array that may have trailing whitespace
+   * @return the end-index of the last char-character ignoring trailing whitespace
+   */
+  private static int endIndexIgnoringTrailingWhitespace(final int [] codePoints, int endIndex) {
+    if (codePoints == null) {
+      return 0;
+    }
+    endIndex--;
+    // Find end index of char-sequence ignoring trailing whitespace.
+    while (endIndex >= 0 && isWhitespace(codePoints[endIndex])) {
+      --endIndex;
+    }
+    return ++endIndex;
+  }
+
+  /**
+   * Return the index of first character that is not whitespace
+   *
+   * @param codePoints the code-point array that may have trailing whitespace
+   * @param endIndex the index at which to stop progressing through the char-sequence
+   * @return the index of first character that is not whitespace
+   */
+  private static int startIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {
+    if (codePoints == null || endIndex == 0) {
+      return 0;
+    }
+    int startIndex = 0;
+    while (startIndex < endIndex && isWhitespace(codePoints[startIndex])) {
       ++startIndex;
     }
     return startIndex;

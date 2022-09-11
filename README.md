@@ -71,7 +71,7 @@ The `InternationalBankAccountNumber` also implements the Java `CharSequence` int
 Below I will only highlight the features not already introduced in the previous example.
 
 ```java
-public class InternationalBankAccountNumber extends StringType {
+public final class InternationalBankAccountNumber extends StringType {
 
   public static final InternationalBankAccountNumber EMPTY_IBAN = 
       new InternationalBankAccountNumber("");
