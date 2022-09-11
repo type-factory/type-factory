@@ -131,9 +131,9 @@ public final class InternationalBankAccountNumber extends StringType {
 
 ⑤ Ensure that all values conform to the regular expression we created at step ①.
 
-⑥ Ensure that all values conform to the custom validation method implemented in step ⑦.
+⑥ Ensure that all values conform to the custom validation method implemented in step ⑧.
 
-⑦ Some constants required by the custom validation method implemented in step ⑦.
+⑦ Some constants required by the custom validation method implemented in step ⑧.
 
 ⑧ The custom validation method that ensure the IBAN check digits are correct as per the modulo-97 rules for an IBAN.
 
