@@ -5,6 +5,8 @@ class Constants {
   private Constants() {
   }
 
+  static final String EMPTY_STRING = "";
+
   static final int BYTE_MASK = 0xFF;
 
   static final char[] EMPTY_CHAR_ARRAY = new char[0];

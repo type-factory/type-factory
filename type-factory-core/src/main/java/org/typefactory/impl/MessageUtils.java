@@ -1,5 +1,7 @@
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.EMPTY_STRING;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -31,6 +33,9 @@ public class MessageUtils {
   }
 
   public static String getMessage(final Locale locale, final String messageKey, final Object[] messageArgs) {
+    if (messageKey == null) {
+      return EMPTY_STRING;
+    }
     final ResourceBundle resourceBundle = ResourceBundle
         .getBundle("org.typefactory.Messages",
             locale,
