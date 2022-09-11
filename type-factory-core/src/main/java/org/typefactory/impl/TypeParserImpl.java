@@ -129,37 +129,38 @@ class TypeParserImpl implements TypeParser {
       return null;
     }
 
-    final CharSequence value = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
+    final CharSequence source = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
         ? originalValue
         : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
 
-    final int length = value.length();
-    final int endIndex = endIndexIgnoringTrailingWhitespace(value);
-    final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
-    int[] result = converter == null ? new int[length] : new int[length + converter.getMaxConvertedLength() * 2];
-    if ((endIndex - startIndex) == 0) {
+    final int length = source.length();
+//    final int endIndex = endIndexIgnoringTrailingWhitespace(value);
+//    final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
+    if (length == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
         case CONVERT_EMPTY_TO_NULL -> null;
       };
     }
-    int i = startIndex; // index of source
-    int k = 0;          // index of target / result
+    int[] target = converter == null ? new int[length] : new int[Math.min(maxNumberOfCodePoints, length * 2)];
+    boolean codePointWasWhitespace = true;
+    boolean codePointIsRepeatedWhitespaceRequiringNormalisation = false;
+    int sourceIndex = 0;
+    int targetIndex = 0;
     char ch;
     int codePoint;
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
-    boolean codePointWasWhitespace = false;
 
     ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
-    while (i < length) {
-      ch = value.charAt(i);
+    while (sourceIndex < length) {
+      ch = source.charAt(sourceIndex);
       if (Character.isSurrogate(ch)) {
-        if (++i < length) {
-          codePoint = Character.toCodePoint(ch, value.charAt(i));
+        if (++sourceIndex < length) {
+          codePoint = Character.toCodePoint(ch, source.charAt(sourceIndex));
         } else {
-          throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+          throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
         }
       } else {
         codePoint = ch;
@@ -168,8 +169,8 @@ class TypeParserImpl implements TypeParser {
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
-            if (!converter.isCodePointConversionRequired(codePoint, k, converterResults)) {
-              throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, ch);
+            if (!converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+              throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
             }
           case PRESERVE_WHITESPACE:
             // do nothing
@@ -180,13 +181,14 @@ class TypeParserImpl implements TypeParser {
           case NORMALIZE_WHITESPACE:
           case NORMALIZE_AND_CONVERT_WHITESPACE:
             if (codePointWasWhitespace) { // if previous code-point was whitespace
-              ++i;
-              continue;
+              codePointIsRepeatedWhitespaceRequiringNormalisation = true;
+//              ++sourceIndex;
+//              continue;
             }
             codePoint = ' ';
             break;
           case REMOVE_WHITESPACE:
-            ++i;
+            ++sourceIndex;
             continue;
         }
         codePointWasWhitespace = true;
@@ -195,55 +197,61 @@ class TypeParserImpl implements TypeParser {
       }
 
       if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {
-        throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, value, codePoint);
+        throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, codePoint);
       }
 
       if (converter != null &&
-          converter.isCodePointConversionRequired(codePoint, k, converterResults)) {
-        k = converterResults.getConvertFromIndex();
+          converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+        targetIndex = converterResults.getConvertFromIndex();
         toCodePoints = converterResults.getConvertToCodePointSequence();
+        if (toCodePoints.length == 0 && (targetIndex > 0 && Character.isWhitespace(target[targetIndex - 1]))) {
+          codePointWasWhitespace = true;
+        }
       } else {
         reusableSingleCodePointArray[0] = codePoint;
         toCodePoints = reusableSingleCodePointArray;
       }
 
+      if (codePointIsRepeatedWhitespaceRequiringNormalisation) {
+        codePointIsRepeatedWhitespaceRequiringNormalisation = false;
+        ++sourceIndex;
+        continue;
+      }
+
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
-        if (k >= maxNumberOfCodePoints) {
-          throw InvalidValueException.forValueTooLong(errorMessage, targetTypeClass, value, maxNumberOfCodePoints);
+        if (targetIndex >= maxNumberOfCodePoints) {
+          throw InvalidValueException.forValueTooLong(errorMessage, targetTypeClass, source, maxNumberOfCodePoints);
         }
-        if (k == result.length) {
-          result = Arrays.copyOf(result, result.length + Math.max(16, toCodePoints.length));
+        if (targetIndex == target.length) {
+          target = Arrays.copyOf(target, target.length + Math.max(16, toCodePoints.length));
         }
-        result = appendCodePoint(result, k++,
+        target = appendCodePoint(target, targetIndex++,
             switch (targetCase) {
               case PRESERVE_CASE -> codePoint;
               case TO_LOWER_CASE -> Character.toLowerCase(codePoint);
               case TO_UPPER_CASE -> Character.toUpperCase(codePoint);
-              case TO_TITLE_CASE -> k == 1 ? Character.toTitleCase(codePoint) : Character.toLowerCase(codePoint);
+              case TO_TITLE_CASE -> targetIndex == 1 ? Character.toTitleCase(codePoint) : Character.toLowerCase(codePoint);
             });
       }
-      if (k > 0 && Character.isWhitespace(result[k-1])) {
-        codePointWasWhitespace = true;
-      }
-      ++i;
+      ++sourceIndex;
     }
-    if (k < minNumberOfCodePoints) {
-      throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, value, minNumberOfCodePoints);
+    if (targetIndex < minNumberOfCodePoints) {
+      throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, source, minNumberOfCodePoints);
     }
 
     final String parsedValue;
     if (whiteSpace == WhiteSpace.NORMALIZE_WHITESPACE) {
-      final int resultEndIndex = endIndexIgnoringTrailingWhitespace(result, k);
-      final int resultStartIndex = startIndexIgnoringLeadingWhitespace(result, resultEndIndex);
-      parsedValue = new String(result, resultStartIndex, resultEndIndex - resultStartIndex);
+      final int targetEndIndex = endIndexIgnoringTrailingWhitespace(target, targetIndex);
+      final int targetStartIndex = startIndexIgnoringLeadingWhitespace(target, targetEndIndex);
+      parsedValue = new String(target, targetStartIndex, targetEndIndex - targetStartIndex);
     } else {
-      parsedValue = new String(result, 0, k);
+      parsedValue = new String(target, 0, targetIndex);
     }
 
-    validateThatParsedValueConformToTheRegex(parsedValue, value);
+    validateThatParsedValueConformToTheRegex(parsedValue, source);
 
-    validationUsingCustomValidationFunction(parsedValue, value);
+    validationUsingCustomValidationFunction(parsedValue, source);
 
     return parsedValue;
   }
