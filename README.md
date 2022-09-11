@@ -86,9 +86,10 @@ public final class InternationalBankAccountNumber extends StringType {
           .minSize(5)
           .maxSize(34)
           .removeAllWhitespace()
+          .removeAllChars('.', '-', '–', '—')   ④ 
           .toUpperCase()
-          .matchesRegex(VALID_IBAN_PATTERN)  ④
-          .customValidator(InternationalBankAccountNumber::isValidIBAN)  ⑤
+          .matchesRegex(VALID_IBAN_PATTERN)  ⑤
+          .customValidator(InternationalBankAccountNumber::isValidIBAN)  ⑥
           .build();
 
   private InternationalBankAccountNumber(final String value) {
@@ -99,11 +100,11 @@ public final class InternationalBankAccountNumber extends StringType {
     return TYPE_PARSER.parseToStringType(value, InternationalBankAccountNumber::new);
   }
 
-  private static final long MAX = 999999999;   ⑥
+  private static final long MAX = 999999999;   ⑦
   private static final long MODULUS = 97;
   private static final int MAX_ALPHANUMERIC_VALUE = 35;
 
-  private static Boolean isValidIBAN(final String value) {  ⑦
+  private static Boolean isValidIBAN(final String value) {  ⑧
     final int valueLength = value.length();
     long total = 0;
     for (int i = 0; i < valueLength; ++i) {
@@ -126,12 +127,14 @@ public final class InternationalBankAccountNumber extends StringType {
 
 ③ Convenience method to accept all [0-9] characters.
 
-④ Ensure that all values conform to the regular expression we created at step ①.
+④ Remove all periods (dots), hyphens, en-dashes and em-dashes from the value.
 
-⑤ Ensure that all values conform to the custom validation method implemented in step ⑦.
+⑤ Ensure that all values conform to the regular expression we created at step ①.
 
-⑥ Some constants required by the custom validation method implemented in step ⑦.
+⑥ Ensure that all values conform to the custom validation method implemented in step ⑧.
 
-⑦ The custom validation method that ensure the IBAN check digits are correct as per the modulo-97 rules for an IBAN.
+⑦ Some constants required by the custom validation method implemented in step ⑧.
+
+⑧ The custom validation method that ensure the IBAN check digits are correct as per the modulo-97 rules for an IBAN.
 
 
