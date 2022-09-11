@@ -192,7 +192,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
   private static class TreeNode {
 
     public TreeNode() {
-      this(EMPTY_INT_ARRAY);
+      this(null);
     }
 
     public TreeNode(final int[] toSequence) {
@@ -200,7 +200,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
       this.nodesByCodePoint = new PrimitiveHashMapOfIntKeyToObjectValue<>();
     }
 
-    private int[] toSequence = EMPTY_INT_ARRAY;
+    private int[] toSequence;
     private final PrimitiveHashMapOfIntKeyToObjectValue<TreeNode> nodesByCodePoint;
 
     void put(final int codePoint, final TreeNode treeNode) {
@@ -216,7 +216,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
     }
 
     boolean hasToSequence() {
-      return toSequence != null && toSequence.length > 0;
+      return toSequence != null;
     }
 
     boolean isLeafNode() {
@@ -285,8 +285,9 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
         TreeNode treeNode = currentTreeNode.get(codePoint);
         if (treeNode != null) {
           if (treeNode.hasToSequence()) {
-            s.append(" ⟶ ");
+            s.append(" ⟶ \"");
             s.append(new String(treeNode.toSequence, 0, treeNode.toSequence.length));
+            s.append('"');
             if (i == codePoints.length - 1) {
               s.append(LINE_SEPARATOR);
             }
@@ -321,6 +322,7 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
   public static void main(String... args) {
     final RootTreeNode rootNode = new RootTreeNode();
+    rootNode.add("abc".codePoints().toArray(), "".codePoints().toArray());
     rootNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
     rootNode.add("abef".codePoints().toArray(), "tuv".codePoints().toArray());
     rootNode.add("full stop".codePoints().toArray(), "period".codePoints().toArray());

@@ -19,7 +19,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
   void should_parse_preserving_case(
       final String input,
       final String convertFrom, final String convertTo,
-      final String expected) throws ParseException {
+      final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -50,7 +50,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
       final String convertFrom1, final String convertTo1,
       final String convertFrom2, final String convertTo2,
       final String convertFrom3, final String convertTo3,
-      final String expected) throws ParseException {
+      final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()

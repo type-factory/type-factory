@@ -415,6 +415,18 @@ public interface TypeParser {
      */
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
+    TypeParserBuilder removeAllChars(char ch);
+
+    TypeParserBuilder removeAllChars(char... chars);
+
+    TypeParserBuilder removeAllCharSequences(CharSequence charSequence);
+
+    TypeParserBuilder removeAllCharSequences(CharSequence... charSequences);
+
+    TypeParserBuilder removeAllCodePoints(int codePoint);
+
+    TypeParserBuilder removeAllCodePoints(int... codePoints);
+
     TypeParserBuilder acceptSubset(Subset subset);
 
     TypeParserBuilder acceptSubsets(Subset... subsets);
