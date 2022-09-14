@@ -35,7 +35,9 @@ They can already be used in Java regular expressions prefixing their ISO code or
 "Νικόλαος".matches("\\p{IsGreek}+"); // returns true
 ```
 
-Unfortunately, scripts also contain many characters that a native speaker would *not*
+### Caution! 
+
+Scripts also contain many characters that a native speaker would *not*
 recognise to be an accepted way, when used, to form words in their native language in for official use.
 They are characters/code-points that would *not* be valid for use when 
 entering the fields on a form if you were applying for a driver's license or a bank account.
@@ -65,7 +67,9 @@ They can already be used in Java regular expressions prefixing their block name 
 "Νικόλαος".matches("\\p{InGreekAndCoptic}+"); // returns true
 ```
 
-Unfortunately, blocks also contain many characters that a native speaker would *not*
+### Caution!
+
+Blocks also contain many characters that a native speaker would *not*
 recognise to be an accepted way, when used, to form words in their native language in for official use. 
 They are characters/code-points that would *not* be valid for use when
 entering the fields on a form if you were applying for a driver's license or a bank account.
@@ -99,7 +103,9 @@ They can already be used in Java regular expressions prefixing using their categ
 "Νικόλαος".matches("\\p{L}+"); // returns true
 ```
 
-Unfortunately, categories also contain many characters that a native speaker would *not*
+### Caution!
+
+Categories also contain many characters that a native speaker would *not*
 recognise to be an accepted way, when used, to form words in their native language in for official use.
 They are characters/code-points that would *not* be valid for use when
 entering the fields on a form if you were applying for a driver's license or a bank account.

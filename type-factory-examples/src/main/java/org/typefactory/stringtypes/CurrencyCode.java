@@ -9,7 +9,7 @@ public final class CurrencyCode extends StringType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 3-character ISO 4217 currency code")
+          .errorMessage("must be a 3-character ISO 4217 alpha currency code")
           .acceptCharRange('a', 'z')
           .acceptCharRange('A', 'Z')
           .fixedSize(3)

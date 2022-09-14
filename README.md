@@ -1,25 +1,26 @@
-## Type Factory
+Type Factory
+============
 
-Easily create custom data types. Remove cruft and boilerplate from your code.
+Easily create custom data types and remove cruft and boilerplate from your code.
 
 <picture>
   <source srcset="docs/intro-video-dark.gif" media="(prefers-color-scheme: dark)"/>
-  <img src="docs/intro-video-light.gif" alt="intro video"/>
+  <img src="docs/intro-video-light.gif" alt="intro video" style="border: 1px solid #AAAAAA;"/>
 </picture>
 
-### An example – currency code
+Example 1 – currency code
+-------------------------
 
-This example creates a custom type for currency codes that must conform ISO 4217 rules for a currency code. 
-
-The `CurrencyCode` implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
+This example creates a custom type for currency codes that must conform to the ISO 4217 alpha 
+  format for a currency code. 
 
 ```java
 public final class CurrencyCode extends StringType {   ①
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  ②
 
-  private static final TypeParser TYPE_PARSER = TypeParser.builder()  ③
-      .errorMessage("must be a 3-character ISO 4217 currency code")   ④
+  private static final TypeParser TYPE_PARSER = TypeParser.builder()       ③
+      .errorMessage("must be a 3-character ISO 4217 alpha currency code")  ④
       .acceptCharRange('a', 'z')  ⑤
       .acceptCharRange('A', 'Z')
       .fixedSize(3)          ⑥
@@ -37,38 +38,55 @@ public final class CurrencyCode extends StringType {   ①
   }
 }
 ```
-① We define our currency code class to be “final”, and it will also be immutable. By extending `StringType` it will also implement `CharSequence`, `Comparable` and `Serializable`, and receive default implementations of all their required methods, as well as receive appropriate implementations of the `equals`, `hashCode` and `toString` methods.
+① Our currency code class is declared to be “final” and it will also be immutable.
+  By extending `StringType` it will also implement `CharSequence`, `Comparable`
+  and `Serializable`, and receive default implementations of all their required
+  methods, as well as receive appropriate implementations of the `equals`,
+  `hashCode` and `toString` methods.
 
-② We think it is useful to have an “empty” constant which can be re-used throughout your code when needed. Of course, this line is optional.
+② We've created and “empty” constant which can be re-used throughout our code
+  where needed. Of course, this constant is optional.
 
-③ We create a static, immutable, threadsafe, type-parser using a builder. This type-parser will do the heavy lifting of parsing and/or cleaning a value so that a valid `CurrencyCode` can be created.
+③ We create a static, immutable, threadsafe, type-parser using a builder.
+  This type-parser will do the heavy lifting of parsing and/or cleaning a
+  value so that a valid `CurrencyCode` can be created.
 
-④ We provide a message that will be used to create an `InvalidTypeValueException` when the value being parsed doesn't meet the required criteria for a currency-code.
+④ We provide a message that will be used to create an `InvalidValueException`
+  when the value being parsed doesn't meet the required criteria for a
+  currency-code.
 
 ⑤ We specify the characters that are acceptable for a currency-code.
 
-⑥ We specify that the parsed value for a currency-code must be exactly 3 characters. For other types you can specify min and max sizes.
+⑥ We specify that the parsed value for a currency-code must be exactly 3
+  characters. For other types you can specify min and max sizes.
 
-⑦ We will tolerate and remove any whitespace that is present in the value while parsing it. For other types, you could also choose to forbid, normalise, preserve, or convert whitespace characters.
+⑦ We will remove any whitespace that is present in incoming values while parsing
+  it. For other types, you could also choose to _normalise_ or _preserve_
+  whitespace characters, or _convert_ them to some other character.
 
-⑧ We would like the type-parser to convert null values to empty. If you prefer, you could also choose to convert preserve-null-and-empty or empty-to-null.
+⑧ We would like the type-parser to convert null values to empty. If you
+  prefer, you could also choose to preserve-null-and-empty or convert
+  empty-to-null.
 
-⑨ The parser will convert successfully parsed values to uppercase.
+⑨ The parser will convert any lowercase letters to uppercase.
 
-⑩ In this example, we specify a private constructor because we'd like all instantiation to occur via the factory method defined in step ⑪. You can, of course, choose to use a constructor instead a factory method.
+⑩ In this example, we specify a private constructor because we'd like all
+  instantiation to occur via the factory method defined in step ⑪. You can,
+  of course, choose to use a constructor instead a factory method.
 
-⑪ We will provide a static factory method, `of(value)`, to instantiate a `CurrencyCode` using the value provided. Note that because we chose to preserve null and empty (see ⑧), the factory method will return `null` instead of an instantiated object for incoming null values. If we had chosen to configure the parser to convert null-to-empty, then the factory method would always give you an instantiated currency-code whose value may be an empty string.
+⑪ We will provide a static factory method, `of(value)`, to instantiate 
+  a `CurrencyCode` using the value provided.
 
-### Another example – international bank account number (IBAN)
 
-This example creates a custom type for international bank account numbers that defined a type parser  that also uses:
+Example 2 – international bank account number (IBAN)
+----------------------------------------------------
+
+This example creates a custom type for international bank account numbers that also employs:
 
 * A regular expression to ensure correct format.
 * A custom validator to check IBAN check digits using a modulo-97 algorithm.
 
-The `InternationalBankAccountNumber` also implements the Java `CharSequence` interface (via `StringType`) so that it can be used with many third party libraries.
-
-Below I will only highlight the features not already introduced in the previous example.
+Below we've only highlighted the features not already introduced in the previous example.
 
 ```java
 public final class InternationalBankAccountNumber extends StringType {
@@ -86,9 +104,9 @@ public final class InternationalBankAccountNumber extends StringType {
           .minSize(5)
           .maxSize(34)
           .removeAllWhitespace()
-          .removeAllChars('.', '-', '–', '—')   ④ 
+          .removeAllChars('.', '-', '–', '—')  ④  // period, hyphen, en-dash and em-dash
           .toUpperCase()
-          .matchesRegex(VALID_IBAN_PATTERN)  ⑤
+          .matchesRegex(VALID_IBAN_PATTERN)    ⑤
           .customValidator(InternationalBankAccountNumber::isValidIBAN)  ⑥
           .build();
 
@@ -121,7 +139,8 @@ public final class InternationalBankAccountNumber extends StringType {
   }
 }
 ```
-① A regular expression to ensure the international bank account number (IBAN) is correctly formatted.
+① A regular expression to ensure the international bank account number (IBAN) is 
+  correctly formatted.
 
 ② Convenience method to accept all [a-zA-Z] characters.
 
@@ -131,10 +150,12 @@ public final class InternationalBankAccountNumber extends StringType {
 
 ⑤ Ensure that all values conform to the regular expression we created at step ①.
 
-⑥ Ensure that all values conform to the custom validation method implemented in step ⑧.
+⑥ Ensure that all values conform to the custom validation method implemented 
+  in step ⑧.
 
 ⑦ Some constants required by the custom validation method implemented in step ⑧.
 
-⑧ The custom validation method that ensure the IBAN check digits are correct as per the modulo-97 rules for an IBAN.
+⑧ The custom validation method that ensure the IBAN check digits are correct 
+  as per the modulo-97 rules for an IBAN.
 
 
