@@ -22,8 +22,10 @@ class CharSequenceTypeTest {
       " \t    ",
       " \t \n "})
   void isBlank_returnsTrueWhenUnderlyingValueIsBlankString(final String value) {
-    final var actual = new ConcreteCharSequenceType(value);
-    assertThat(actual.isBlank()).isTrue();
+    final var actual1 = new ConcreteCharSequenceType(value);
+    final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value));
+    assertThat(actual1.isBlank()).isTrue();
+    assertThat(actual2.isBlank()).isTrue();
   }
 
   @ParameterizedTest
@@ -36,8 +38,10 @@ class CharSequenceTypeTest {
       "       \uD83D\uDE00 ", // 😀
   })
   void isBlank_returnsFalseWhenUnderlyingValueIsNonBlankString(final String value) {
-    final var actual = new ConcreteCharSequenceType(value);
-    assertThat(actual.isBlank()).isFalse();
+    final var actual1 = new ConcreteCharSequenceType(value);
+    final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value));
+    assertThat(actual1.isBlank()).isFalse();
+    assertThat(actual2.isBlank()).isFalse();
   }
 
   @ParameterizedTest
@@ -204,8 +208,8 @@ class CharSequenceTypeTest {
       " abc | abc ",
   }, delimiter = '|')
   void compareTo_returnsZeroForCustomCharSequenceValues(final String value1, final String value2) {
-    final var actual1 = new ConcreteCharSequenceType(new CustomCharSequence(value1));
-    final var actual2 = new ConcreteCharSequenceType(new CustomCharSequence(value2));
+    final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
+    final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
     assertThat(actual1.compareTo(actual2)).isZero();
   }
 
@@ -218,8 +222,8 @@ class CharSequenceTypeTest {
       " abcd | abc ",
   }, delimiter = '|')
   void compareTo_returnsPositiveForCustomCharSequenceValues(final String value1, final String value2) {
-    final var actual1 = new ConcreteCharSequenceType(new CustomCharSequence(value1));
-    final var actual2 = new ConcreteCharSequenceType(new CustomCharSequence(value2));
+    final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
+    final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
     assertThat(actual1.compareTo(actual2)).isPositive();
   }
 
@@ -234,11 +238,11 @@ class CharSequenceTypeTest {
   void compareTo_returnsPositiveForForDifferingInternalTypes(final String value1, final String value2) {
     {
       final var actual1 = new ConcreteCharSequenceType(value1); // string internal type
-      final var actual2 = new ConcreteCharSequenceType(new CustomCharSequence(value2)); // custom internal type
+      final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2)); // custom internal type
       assertThat(actual1.compareTo(actual2)).isPositive();
     }
     {
-      final var actual1 = new ConcreteCharSequenceType(new CustomCharSequence(value1)); // custom internal type
+      final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1)); // custom internal type
       final var actual2 = new ConcreteCharSequenceType(value2); // string internal type
       assertThat(actual1.compareTo(actual2)).isPositive();
     }
@@ -253,8 +257,8 @@ class CharSequenceTypeTest {
       " abc | abcd ",
   }, delimiter = '|')
   void compareTo_returnsNegativeForCustomCharSequenceValues(final String value1, final String value2) {
-    final var actual1 = new ConcreteCharSequenceType(new CustomCharSequence(value1));
-    final var actual2 = new ConcreteCharSequenceType(new CustomCharSequence(value2));
+    final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
+    final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
     assertThat(actual1.compareTo(actual2)).isNegative();
   }
 
@@ -269,11 +273,11 @@ class CharSequenceTypeTest {
   void compareTo_returnsNegativeForDifferingInternalTypes(final String value1, final String value2) {
     {
       final var actual1 = new ConcreteCharSequenceType(value1); // string internal type
-      final var actual2 = new ConcreteCharSequenceType(new CustomCharSequence(value2)); // custom internal type
+      final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2)); // custom internal type
       assertThat(actual1.compareTo(actual2)).isNegative();
     }
     {
-      final var actual1 = new ConcreteCharSequenceType(new CustomCharSequence(value1)); // custom internal type
+      final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1)); // custom internal type
       final var actual2 = new ConcreteCharSequenceType(value2); // string internal type
       assertThat(actual1.compareTo(actual2)).isNegative();
     }
@@ -303,6 +307,10 @@ class CharSequenceTypeTest {
 
     CustomCharSequence(final String value) {
       this(value.toCharArray());
+    }
+    
+    static CustomCharSequence of(final String value) {
+      return value == null ? null : new CustomCharSequence(value);
     }
 
     @Override

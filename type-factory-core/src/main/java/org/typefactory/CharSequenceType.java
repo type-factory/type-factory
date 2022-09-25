@@ -3,18 +3,21 @@ package org.typefactory;
 public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<CharSequence, T>, Comparable<T>, CharSequence {
 
   default boolean isBlank() {
-    if (isNull() || value().isEmpty()) {
+    if (isNull()) {
       return true;
     }
     final CharSequence value = value();
+    if (value.isEmpty() || (value instanceof String valueString && valueString.isBlank())) {
+      return true;
+    }
     final int length = value.length();
     int i = 0;
     while (i < length) {
-      final char ch = value().charAt(i++);
-      if ((Character.isSurrogate(ch)
-          && ++i < length
-          && !Character.isWhitespace(Character.toCodePoint(ch, value.charAt(i))))
-          || !Character.isWhitespace(ch)) {
+      int codePoint = value().charAt(i++);
+      if (Character.isSurrogate((char)codePoint) && i < length) {
+        codePoint = Character.toCodePoint((char) codePoint, value.charAt(i++));
+      }
+      if (!Character.isWhitespace(codePoint)) {
         return false;
       }
     }
@@ -76,10 +79,10 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
         return result;
       }
     }
-    if (i1 < l1 ) {
+    if (i1 < l1) {
       return 1;
     }
-    if (i2 < l2 ) {
+    if (i2 < l2) {
       return -1;
     }
     return 0;
