@@ -19,6 +19,11 @@ public abstract class StringType implements CharSequenceType<StringType> {
     return value;
   }
 
+  /**
+   * Returns the internal value as returned by {@link #value()} or empty string {@code ""} when internal value is {@code null}.
+   *
+   * @return the internal value as returned by {@link #value()} or empty string {@code ""} when internal value is {@code null}.
+   */
   @Override
   public String toString() {
     return isNull() ? "" : value;

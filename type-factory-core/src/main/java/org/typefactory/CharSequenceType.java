@@ -1,12 +1,27 @@
 package org.typefactory;
 
-import java.util.Comparator;
-import java.util.Objects;
-
-public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<String, T>, Comparable<T>, CharSequence {
+public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<CharSequence, T>, Comparable<T>, CharSequence {
 
   default boolean isBlank() {
-    return isNull() || value().isBlank();
+    if (isNull()) {
+      return true;
+    }
+    final CharSequence value = value();
+    if (value.isEmpty() || (value instanceof String valueString && valueString.isBlank())) {
+      return true;
+    }
+    final int length = value.length();
+    int i = 0;
+    while (i < length) {
+      int codePoint = value().charAt(i++);
+      if (Character.isSurrogate((char)codePoint) && i < length) {
+        codePoint = Character.toCodePoint((char) codePoint, value.charAt(i++));
+      }
+      if (!Character.isWhitespace(codePoint)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
@@ -16,7 +31,7 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<St
 
   @Override
   default char charAt(int index) {
-    if (isNull()) {
+    if (isEmpty()) {
       throw new StringIndexOutOfBoundsException("String index out of range: " + index);
     }
     return value().charAt(index);
@@ -24,7 +39,7 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<St
 
   @Override
   default CharSequence subSequence(int start, int end) {
-    if (isNull()) {
+    if (isEmpty()) {
       throw new StringIndexOutOfBoundsException(
           "begin " + start + ", end " + end + ", length " + length());
     }
@@ -33,19 +48,43 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<St
 
   @Override
   default int compareTo(T o) {
-    return Objects.compare(value(), (o == null ? null : o.value()), Comparator.nullsFirst(Comparator.naturalOrder()));
-  }
-
-  /**
-   * <p>A null-safe method to return the value of this type as a string.</p>
-   *
-   * <p>A {@code null} will be returned for a null value.</p>
-   *
-   * @param type the data-type value that want as a string value.
-   * @param <T> the data-type class type.
-   * @return the data-type value as a string or {@code null} if the specified {@code type} argument was null;
-   */
-  static <T extends CharSequenceType<T>> String toString(T type) {
-    return type == null ? null : type.value();
+    if (o == null) {
+      if (isNull()) {
+        return 0;
+      }
+      return 1;
+    }
+    final CharSequence v1 = value();
+    final CharSequence v2 = o.value();
+    if (v1 == null) {
+      if (v2 == null) {
+        return 0;
+      }
+      return -1;
+    }
+    if (v2 == null) {
+      return 1;
+    }
+    if (v1 instanceof String vs1 && v2 instanceof String vs2) {
+      return vs1.compareTo(vs2);
+    }
+    final int l1 = v1.length();
+    final int l2 = v2.length();
+    int result = 0;
+    int i1 = 0;
+    int i2 = 0;
+    while (i1 < l1 && i2 < l2) {
+      result = v1.charAt(i1++) - v2.charAt(i2++);
+      if (result != 0) {
+        return result;
+      }
+    }
+    if (i1 < l1) {
+      return 1;
+    }
+    if (i2 < l2) {
+      return -1;
+    }
+    return 0;
   }
 }

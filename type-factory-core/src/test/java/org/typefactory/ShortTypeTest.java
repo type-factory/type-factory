@@ -1,20 +1,20 @@
-package org.typefactory.impl;
+package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.typefactory.IntegerType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class NumberType_IntegerTypeTest {
+class ShortTypeTest {
 
   @Test
   void constructor_acceptsNull() {
-    final IntegerType actual = new SomeIntegerType(null);
-    final IntegerType actualOther = new SomeIntegerType(null);
-    final IntegerType nullOther = null;
+    final ShortType actual = new ConcreteShortType(null);
+    final ShortType actualOther = new ConcreteShortType(null);
+    final ShortType differentOther = new AnotherShortType(null);
+    final ShortType nullOther = null;
 
     assertThat(actual.isNull()).isTrue();
 
@@ -26,6 +26,7 @@ class NumberType_IntegerTypeTest {
         .isEqualTo(actualOther)
         .isEqualByComparingTo(actual)
         .isEqualByComparingTo(actualOther)
+        .isNotEqualTo(differentOther)
         .isNotEqualTo(nullOther);
 
     assertThatExceptionOfType(NullPointerException.class).isThrownBy(actual::byteValue);
@@ -37,19 +38,20 @@ class NumberType_IntegerTypeTest {
   }
 
   @ParameterizedTest
-  @ValueSource(ints = {
+  @ValueSource(shorts = {
       0,
       1,
       -1,
-      Integer.MIN_VALUE + 1,
-      Integer.MIN_VALUE,
-      Integer.MAX_VALUE - 1,
-      Integer.MAX_VALUE,
+      Short.MIN_VALUE + 1,
+      Short.MIN_VALUE,
+      Short.MAX_VALUE - 1,
+      Short.MAX_VALUE,
   })
-  void constructor_acceptsValues(final Integer value) {
-    final IntegerType actual = new SomeIntegerType(value);
-    final IntegerType actualOther = new SomeIntegerType(value);
-    final IntegerType nullOther = null;
+  void constructor_acceptsValues(final Short value) {
+    final ShortType actual = new ConcreteShortType(value);
+    final ShortType actualOther = new ConcreteShortType(value);
+    final ShortType differentOther = new AnotherShortType(value);
+    final ShortType nullOther = null;
 
     assertThat(actual.isNull()).isFalse();
 
@@ -61,20 +63,22 @@ class NumberType_IntegerTypeTest {
         .isEqualTo(actualOther)
         .isEqualByComparingTo(actual)
         .isEqualByComparingTo(actualOther)
+        .isNotEqualTo(differentOther)
         .isNotEqualTo(nullOther);
-
-    assertThat(actual.byteValue()).isEqualTo(value.byteValue());
-    assertThat(actual.shortValue()).isEqualTo(value.shortValue());
-    assertThat(actual.intValue()).isEqualTo(value.intValue());
-    assertThat(actual.longValue()).isEqualTo(value.longValue());
-    assertThat(actual.floatValue()).isEqualTo(value.floatValue());
-    assertThat(actual.doubleValue()).isEqualTo(value.doubleValue());
   }
 
-  private static final class SomeIntegerType extends IntegerType {
+  static final class ConcreteShortType extends ShortType {
 
-    public SomeIntegerType(Integer value) {
+    ConcreteShortType(Short value) {
       super(value);
     }
   }
+
+  static final class AnotherShortType extends ShortType {
+
+    AnotherShortType(Short value) {
+      super(value);
+    }
+  }
+
 }

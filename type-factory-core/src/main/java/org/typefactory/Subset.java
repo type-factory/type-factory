@@ -1,5 +1,8 @@
 package org.typefactory;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.io.Serializable;
 import java.util.Collection;
 import org.typefactory.impl.Factory;
@@ -219,8 +222,8 @@ public interface Subset {
     }
 
     public CodePointRange(final int inclusiveFrom, final int inclusiveTo) {
-      this.inclusiveFrom = inclusiveFrom;
-      this.inclusiveTo = inclusiveTo;
+      this.inclusiveFrom = min(inclusiveFrom, inclusiveTo);
+      this.inclusiveTo = max(inclusiveFrom, inclusiveTo);
     }
 
     public CodePointRange copy() {
@@ -235,6 +238,20 @@ public interface Subset {
      */
     public boolean contains(final int codePoint) {
       return inclusiveFrom <= codePoint && codePoint <= inclusiveTo;
+    }
+
+    /**
+     * Returns {@code true} if the specified {@code codePoint} is outside the code-point range.
+     * This is a convenience method and returns:
+     * <pre>
+     *   !contains(int)
+     * </pre>
+     *
+     * @param codePoint the code-point that you wish to confirm is outside the code-point range.
+     * @return {@code true} if the specified {@code codePoint} is outside the code-point range.
+     */
+    public boolean doesNotContain(final int codePoint) {
+      return !contains(codePoint);
     }
 
     /**
@@ -290,7 +307,7 @@ public interface Subset {
      * @return the code-point range as a hexadecimal range in the format: {@code 0x00000000..0x00000000}
      */
     public String toString() {
-      return String.format("0x%08x..0x%08x", inclusiveFrom, inclusiveTo);
+      return String.format("%c..%c (0x%08x..0x%08x)", inclusiveFrom, inclusiveTo, inclusiveFrom, inclusiveTo);
     }
   }
 }

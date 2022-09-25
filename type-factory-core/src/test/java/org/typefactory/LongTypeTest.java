@@ -1,20 +1,20 @@
-package org.typefactory.impl;
+package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.typefactory.ShortType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class NumberType_ShortTypeTest {
+class LongTypeTest {
 
   @Test
   void constructor_acceptsNull() {
-    final ShortType actual = new SomeShortType(null);
-    final ShortType actualOther = new SomeShortType(null);
-    final ShortType nullOther = null;
+    final LongType actual = new ConcreteLongType(null);
+    final LongType actualOther = new ConcreteLongType(null);
+    final LongType differentOther = new AnotherLongType(null);
+    final LongType nullOther = null;
 
     assertThat(actual.isNull()).isTrue();
 
@@ -26,6 +26,7 @@ class NumberType_ShortTypeTest {
         .isEqualTo(actualOther)
         .isEqualByComparingTo(actual)
         .isEqualByComparingTo(actualOther)
+        .isNotEqualTo(differentOther)
         .isNotEqualTo(nullOther);
 
     assertThatExceptionOfType(NullPointerException.class).isThrownBy(actual::byteValue);
@@ -37,19 +38,20 @@ class NumberType_ShortTypeTest {
   }
 
   @ParameterizedTest
-  @ValueSource(shorts = {
+  @ValueSource(longs = {
       0,
       1,
       -1,
-      Short.MIN_VALUE + 1,
-      Short.MIN_VALUE,
-      Short.MAX_VALUE - 1,
-      Short.MAX_VALUE,
+      Long.MIN_VALUE + 1,
+      Long.MIN_VALUE,
+      Long.MAX_VALUE - 1,
+      Long.MAX_VALUE,
   })
-  void constructor_acceptsValues(final Short value) {
-    final ShortType actual = new SomeShortType(value);
-    final ShortType actualOther = new SomeShortType(value);
-    final ShortType nullOther = null;
+  void constructor_acceptsValues(final Long value) {
+    final LongType actual = new ConcreteLongType(value);
+    final LongType actualOther = new ConcreteLongType(value);
+    final LongType differentOther = new AnotherLongType(value);
+    final LongType nullOther = null;
 
     assertThat(actual.isNull()).isFalse();
 
@@ -61,13 +63,29 @@ class NumberType_ShortTypeTest {
         .isEqualTo(actualOther)
         .isEqualByComparingTo(actual)
         .isEqualByComparingTo(actualOther)
+        .isNotEqualTo(differentOther)
         .isNotEqualTo(nullOther);
+
+    assertThat(actual.byteValue()).isEqualTo(value.byteValue());
+    assertThat(actual.shortValue()).isEqualTo(value.shortValue());
+    assertThat(actual.intValue()).isEqualTo(value.intValue());
+    assertThat(actual.longValue()).isEqualTo(value.longValue());
+    assertThat(actual.floatValue()).isEqualTo(value.floatValue());
+    assertThat(actual.doubleValue()).isEqualTo(value.doubleValue());
   }
 
-  private static final class SomeShortType extends ShortType {
+  static final class ConcreteLongType extends LongType {
 
-    public SomeShortType(Short value) {
+    ConcreteLongType(Long value) {
       super(value);
     }
   }
+
+  static final class AnotherLongType extends LongType {
+
+    AnotherLongType(Long value) {
+      super(value);
+    }
+  }
+
 }

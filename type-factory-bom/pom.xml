@@ -3,27 +3,27 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.typefactory</groupId>
-    <artifactId>type-factory</artifactId>
-    <version>${revision}</version>
-  </parent>
-
   <groupId>org.typefactory</groupId>
   <artifactId>type-factory-bom</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
+  <properties>
+    <type-factory-core-version>${project.version}</type-factory-core-version>
+    <type-factory-language-version>${project.version}</type-factory-language-version>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-core</artifactId>
-        <version>${revision}</version>
+        <version>${type-factory-core-version}</version>
       </dependency>
       <dependency>
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-language</artifactId>
-        <version>${revision}</version>
+        <version>${type-factory-language-version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -33,10 +33,30 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.2.7</version>
         <configuration>
-          <skip>true</skip>
+          <flattenMode>bom</flattenMode>
         </configuration>
+        <executions>
+          <!-- enable flattening -->
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <!-- ensure proper cleanup -->
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
+
 </project>

@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public interface Type<V, T extends Type<V, T>> extends Serializable {
 
+  /**
+   * Returns the internal value as set in the constructor. Will return {@code null} when internal value is {@code null}.
+   *
+   * @return the internal value as set in the constructor. Will return {@code null} when internal value is {@code null}.
+   */
   V value();
 
   static <T extends Type> boolean isNull(final T type) {

@@ -10,7 +10,6 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.typefactory</groupId>
   <artifactId>type-factory-core</artifactId>
   <packaging>jar</packaging>
 
