@@ -309,21 +309,18 @@ public enum Category {
   Category(final String abbreviation, final String alias, final Category... categories) {
     this.abbreviation = abbreviation;
     this.alias = alias;
+    final int categoryCount = Arrays.stream(categories)
+        .mapToInt(category -> category.characterCategories.length)
+        .sum();
+    this.characterCategories = new int[categoryCount];
     long tempBitMask = 0;
-    int[] tempCharacterCategories = new int[categories.length];
     int i = 0;
     for (Category category : categories) {
       tempBitMask |= category.bitMask;
       for (int characterCategory : category.characterCategories) {
-        if (i == tempCharacterCategories.length) {
-          tempCharacterCategories = Arrays.copyOf(tempCharacterCategories, tempCharacterCategories.length + 8);
-        }
-        tempCharacterCategories[i++] = characterCategory;
+        this.characterCategories[i++] = characterCategory;
       }
     }
-    this.characterCategories = i < tempCharacterCategories.length
-        ? Arrays.copyOf(tempCharacterCategories, --i)
-        : tempCharacterCategories;
     this.bitMask = tempBitMask;
   }
 
