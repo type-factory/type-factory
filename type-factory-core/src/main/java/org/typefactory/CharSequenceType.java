@@ -2,19 +2,28 @@ package org.typefactory;
 
 public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<CharSequence, T>, Comparable<T>, CharSequence {
 
+  /**
+   * <p>Returns {@code true} if the CharSequenceType value is {@link CharSequenceType#isEmpty() empty} or
+   * contains only {@link Character#isWhitespace(int) white-space} code points. Otherwise returns {@code false}.</p>
+   *
+   * @return {@code true} if the CharSequenceType value is {@link CharSequenceType#isEmpty() empty} or contains only
+   * {@link Character#isWhitespace(int) white-space} code points. Otherwise returns {@code false}.
+   * @see CharSequenceType#isEmpty()
+   * @see Character#isWhitespace(int)
+   */
   default boolean isBlank() {
     if (isNull()) {
       return true;
     }
     final CharSequence value = value();
-    if (value.isEmpty() || (value instanceof String valueString && valueString.isBlank())) {
+    if (value.isEmpty() || (value instanceof String stringValue && stringValue.isBlank())) {
       return true;
     }
     final int length = value.length();
     int i = 0;
     while (i < length) {
       int codePoint = value().charAt(i++);
-      if (Character.isSurrogate((char)codePoint) && i < length) {
+      if (Character.isSurrogate((char) codePoint) && i < length) {
         codePoint = Character.toCodePoint((char) codePoint, value.charAt(i++));
       }
       if (!Character.isWhitespace(codePoint)) {
@@ -22,6 +31,22 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
       }
     }
     return true;
+  }
+
+  static <T extends CharSequenceType<T>> boolean isEmpty(final T value) {
+    return value == null || value.isEmpty();
+  }
+
+  static <T extends CharSequenceType<T>> T defaultIfEmpty(final T value, final T defaultValue) {
+    return isEmpty(value) ? defaultValue : value;
+  }
+
+  static <T extends CharSequenceType<T>> boolean isBlank(final T value) {
+    return value == null || value.isBlank();
+  }
+
+  static <T extends CharSequenceType<T>> T defaultIfBlank(final T value, final T defaultValue) {
+    return isBlank(value) ? defaultValue : value;
   }
 
   @Override
@@ -86,5 +111,55 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
       return -1;
     }
     return 0;
+  }
+
+  default boolean equalsIgnoreCase(final T o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || this.getClass() != o.getClass()) {
+      return false;
+    }
+    final CharSequence v1 = value();
+    final CharSequence v2 = o.value();
+    if (v1 == null) {
+      if (v2 == null) {
+        return true;
+      }
+      return false;
+    }
+    if (v2 == null) {
+      return false;
+    }
+    if (v1 instanceof String vs1 && v2 instanceof String vs2) {
+      return vs1.equalsIgnoreCase(vs2);
+    }
+    final int l1 = v1.length();
+    final int l2 = v2.length();
+    if (l1 != l2) {
+      return false;
+    }
+    int i1 = 0;
+    int i2 = 0;
+    while (i1 < l1 && i2 < l2) {
+      final char c1 = v1.charAt(i1++);
+      final char c2 = v1.charAt(i2++);
+      final char u1 = Character.toUpperCase(c1);
+      final char u2 = Character.toUpperCase(c2);
+      if (u1 != u2 && Character.toLowerCase(u1) != Character.toLowerCase(u2)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static <T extends CharSequenceType<T>> boolean equalsIgnoreCase(final T value1, final T value2) {
+    if (value1 == value2) {
+      return true;
+    }
+    if (value1 == null || value2 == null) {
+      return false;
+    }
+    return value1.equalsIgnoreCase(value2);
   }
 }

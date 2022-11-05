@@ -100,11 +100,13 @@ class StringTypeTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      " ''  | ' '  ", // empty versus space
-      " ' ' | '  ' ", // space versus two-spaces
-      " a   | b    ",
-      " bb  | cc   ",
-  }, delimiter = '|')
+      " null  | empty ", // null versus empty
+      " null  | ' '   ", // null versus space
+      " empty | ' '   ", // empty versus space
+      " ' '   | '  '  ", // space versus two-spaces
+      " a     | b     ",
+      " bb    | cc    ",
+  }, delimiter = '|', nullValues = "null", emptyValue = "empty")
   void equals_returnsFalseWhenSameTypeWithDifferentValue(final String value1, final String value2) {
     final var actual1 = new ConcreteStringType(value1);
     final var actual2 = new ConcreteStringType(value2);
@@ -114,10 +116,12 @@ class StringTypeTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      " ''  | ' '  ", // empty versus space
-      " ' ' | '  ' ", // space versus two-spaces
-      " a   | b    ",
-      " bb  | cc   ",
+      " null  | empty ", // null versus empty
+      " null  | ' '   ", // null versus space
+      " empty | ' '   ", // empty versus space
+      " ' '   | '  '  ", // space versus two-spaces
+      " a     | b     ",
+      " bb    | cc    ",
   }, delimiter = '|')
   void equals_returnsFalseWhenDifferentTypeWithDifferentValue(final String value1, final String value2) {
     final var actual1 = new ConcreteStringType(value1);
