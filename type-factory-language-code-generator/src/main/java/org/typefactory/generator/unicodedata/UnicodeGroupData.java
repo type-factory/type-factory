@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.unicode.ns._2003.ucd._1.Block;
 import org.unicode.ns._2003.ucd._1.Blocks;
 import org.unicode.ns._2003.ucd._1.CodePoint;
@@ -78,52 +78,52 @@ public class UnicodeGroupData {
     this.tSourceSubset = tSourceSubsetBuilder.compact().freeze();
   }
 
-  private void handleJSource(UnicodeSet UnicodeSet, UnicodeCodePoint c) {
+  private void handleJSource(UnicodeSet unicodeSet, UnicodeCodePoint c) {
     if (c.hasJSource()) {
       if (c.hasCodePoint()) {
-        UnicodeSet.add(c.getCodePoint());
+        unicodeSet.add(c.getCodePoint());
       } else if (c.hasCodePointRange()) {
-        UnicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
+        unicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
       }
     }
   }
 
-  private void handleKSource(UnicodeSet UnicodeSet, UnicodeCodePoint c) {
+  private void handleKSource(UnicodeSet unicodeSet, UnicodeCodePoint c) {
     if (c.hasKSource()) {
       if (c.hasCodePoint()) {
-        UnicodeSet.add(c.getCodePoint());
+        unicodeSet.add(c.getCodePoint());
       } else if (c.hasCodePointRange()) {
-        UnicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
+        unicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
       }
     }
   }
 
-  private void handleGSource(UnicodeSet UnicodeSet, UnicodeCodePoint c) {
+  private void handleGSource(UnicodeSet unicodeSet, UnicodeCodePoint c) {
     if (c.hasGSource()) {
       if (c.hasCodePoint()) {
-        UnicodeSet.add(c.getCodePoint());
+        unicodeSet.add(c.getCodePoint());
       } else if (c.hasCodePointRange()) {
-        UnicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
+        unicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
       }
     }
   }
 
-  private void handleTSource(UnicodeSet UnicodeSet, UnicodeCodePoint c) {
+  private void handleTSource(UnicodeSet unicodeSet, UnicodeCodePoint c) {
     if (c.hasGSource()) {
       if (c.hasCodePoint()) {
-        UnicodeSet.add(c.getCodePoint());
+        unicodeSet.add(c.getCodePoint());
       } else if (c.hasCodePointRange()) {
-        UnicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
+        unicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
       }
     }
   }
 
-  private void handleWhitespace(UnicodeSet UnicodeSet, UnicodeCodePoint c) {
+  private void handleWhitespace(UnicodeSet unicodeSet, UnicodeCodePoint c) {
     if (c.isWhitespace()) {
       if (c.hasCodePoint()) {
-        UnicodeSet.add(c.getCodePoint());
+        unicodeSet.add(c.getCodePoint());
       } else if (c.hasCodePointRange()) {
-        UnicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
+        unicodeSet.add(c.getFirstCodePoint(), c.getLastCodePoint());
       }
     }
   }
