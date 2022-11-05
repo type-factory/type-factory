@@ -54,22 +54,6 @@
       <artifactId>activation</artifactId>
       <version>1.1.1</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.sun.xml.bind</groupId>-->
-<!--      <artifactId>jaxb-core</artifactId>-->
-<!--      <version>2.3.0</version>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>com.sun.xml.bind</groupId>-->
-<!--      <artifactId>jaxb-impl</artifactId>-->
-<!--      <version>2.3.0</version>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.jvnet.jaxb2_commons</groupId>-->
-<!--      <artifactId>jaxb2-basics-runtime</artifactId>-->
-<!--      <version>0.12.0</version>-->
-<!--    </dependency>-->
-
 
     <dependency>
       <!-- Required by exec plugin below -->
@@ -101,11 +85,8 @@
                 <mkdir dir="${project.build.directory}/generated-sources"/>
                 <mkdir dir="${project.build.directory}/generated-schema"/>
                 <copy
-                  file="${basedir}/src/main/unicode/bindings.xjb"
+                  file="${project.basedir}/src/main/unicode/bindings.xjb"
                   tofile="${project.build.directory}/generated-schema/bindings.xjb"/>
-<!--                <copy-->
-<!--                  file="${basedir}/src/main/java/org/typefactory/generator/Unicode.java"-->
-<!--                  tofile="${project.build.directory}/classes/Unicode_Template.java"/>-->
               </target>
             </configuration>
           </execution>
@@ -139,47 +120,6 @@
         </configuration>
       </plugin>
 
-<!--      <plugin>-->
-<!--        <groupId>org.codehaus.mojo</groupId>-->
-<!--        <artifactId>exec-maven-plugin</artifactId>-->
-<!--        <version>3.1.0</version>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>convert-unicode-relax-ng-schema-to-xsd-schema</id>-->
-<!--            <phase>generate-sources</phase>-->
-<!--            <goals>-->
-<!--              <goal>exec</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--        <configuration>-->
-<!--          <includeProjectDependencies>false</includeProjectDependencies>-->
-<!--          <includePluginDependencies>true</includePluginDependencies>-->
-<!--          <keepAlive>true</keepAlive>-->
-<!--          <executableDependency>-->
-<!--            <groupId>org.relaxng</groupId>-->
-<!--            <artifactId>trang</artifactId>-->
-<!--          </executableDependency>-->
-<!--          <mainClass>com.thaiopensource.relaxng.translate.Driver</mainClass>-->
-<!--&lt;!&ndash;          <executable>java</executable>&ndash;&gt;-->
-<!--          <arguments>-->
-<!--&lt;!&ndash;            <argument>-classpath</argument>&ndash;&gt;-->
-<!--&lt;!&ndash;            <classpath>&ndash;&gt;-->
-<!--&lt;!&ndash;              <dependency>org.relaxng:trang</dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;            </classpath>&ndash;&gt;-->
-<!--&lt;!&ndash;            <argument>com.thaiopensource.relaxng.translate.Driver</argument>&ndash;&gt;-->
-<!--            <argument>${basedir}/src/main/unicode/tr42-28.rnc</argument>-->
-<!--            <argument>${project.build.directory}/generated-schema/tr42-28.xsd</argument>-->
-<!--          </arguments>-->
-<!--        </configuration>-->
-<!--        <dependencies>-->
-<!--          <dependency>-->
-<!--            <groupId>org.relaxng</groupId>-->
-<!--            <artifactId>trang</artifactId>-->
-<!--            <version>20181222</version>-->
-<!--          </dependency>-->
-<!--        </dependencies>-->
-<!--      </plugin>-->
 
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
@@ -205,54 +145,10 @@
               <bindingDirectory>${project.build.directory}/generated-schema/</bindingDirectory>
               <schemaDirectory>${project.build.directory}/generated-schema/</schemaDirectory>
               <generateDirectory>${project.build.directory}/generated-sources/</generateDirectory>
-              <!--
-              <extension>false</extension>
-              <args>
-                <arg>-Xannotate</arg>
-                <arg>-XautoNameResolution</arg>
-                <arg>-no-header</arg>
-                <arg>-XtoString</arg>
-                <arg>-Xequals</arg>
-                <arg>-XhashCode</arg>
-                <arg>-Xinheritance</arg>
-              </args>
-              <plugins>
-                <plugin>
-                  <groupId>org.jvnet.jaxb2_commons</groupId>
-                  <artifactId>jaxb2-basics</artifactId>
-                  <version>0.12.0</version>
-                </plugin>
-                <plugin>
-                  <groupId>org.jvnet.jaxb2_commons</groupId>
-                  <artifactId>jaxb2-basics-annotate</artifactId>
-                  <version>1.1.0</version>
-                </plugin>
-              </plugins>
-              -->
             </configuration>
           </execution>
         </executions>
       </plugin>
-
-<!--      <plugin>-->
-<!--        <groupId>org.codehaus.mojo</groupId>-->
-<!--        <artifactId>build-helper-maven-plugin</artifactId>-->
-<!--        <version>3.2.0</version>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>add-source</id>-->
-<!--            <phase>generate-sources</phase>-->
-<!--            <goals>-->
-<!--              <goal>add-source</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <sources>-->
-<!--                <source>../type-factory-parser/src/main/java</source>-->
-<!--              </sources>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
 
     </plugins>
 
