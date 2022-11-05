@@ -18,7 +18,7 @@
 
     <junit-jupiter.version>5.9.0</junit-jupiter.version>
     <assertj-core.version>3.23.1</assertj-core.version>
-    <icu4j.version>71.1</icu4j.version>
+    <icu4j.version>72.1</icu4j.version>
 
 
     <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
