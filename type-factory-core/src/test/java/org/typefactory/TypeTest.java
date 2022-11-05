@@ -2,7 +2,10 @@ package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.Serial;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class TypeTest {
 
@@ -19,16 +22,67 @@ class TypeTest {
   }
 
   @Test
-  void staticIsNull_returnsTrue(){
+  void static_isNull_returnsTrue(){
     assertThat(Type.isNull(null)).isTrue();
     assertThat(Type.isNull(new ConcreteType(null))).isTrue();
   }
 
   @Test
-  void staticIsNull_returnsFalse(){
+  void static_isNull_returnsFalse(){
     assertThat(Type.isNull(new ConcreteType("some-value"))).isFalse();
   }
 
+  @ParameterizedTest
+  @CsvSource(value = {
+      "null  | null  | true  ",
+      "empty | empty | true  ",
+      "' '   | ' '   | true  ",
+      "a     | a     | true  ",
+      "abc   | abc   | true  ",
+      "null  | empty | false ",
+      "null  | ' '   | false ",
+      "null  | a     | false ",
+      "null  | abc   | false ",
+      "empty | null  | false ",
+      "empty | ' '   | false ",
+      "empty | a     | false ",
+      "empty | abc   | false ",
+      "' '   | null  | false ",
+      "' '   | empty | false ",
+      "' '   | a     | false ",
+      "' '   | abc   | false ",
+      "a     | null  | false ",
+      "a     | empty | false ",
+      "a     | ' '   | false ",
+      "a     | abc   | false ",
+      "abc   | null  | false ",
+      "abc   | empty | false ",
+      "abc   | ' '   | false ",
+      "abc   | a     | false ",
+  }, delimiter = '|', nullValues = "null", emptyValue = "empty")
+  void static_equals_returnsAsExpectedForStringType(final String value1, final String value2, final boolean expected) {
+
+    final StringType actual1 = new ConcreteStringType(value1);
+    final StringType actual2 = new ConcreteStringType(value2);
+    final StringType actual3 = new AnotherStringType(value2);
+
+    // Should return as expected is same type
+    assertThat(Type.equals(actual1,actual2)).isEqualTo(expected);
+
+    // Should always return true if same instance
+    assertThat(Type.equals(actual1,actual1)).isTrue();
+    assertThat(Type.equals(actual2,actual2)).isTrue();
+
+    // Should always return true if both instances are null
+    assertThat(Type.equals(null,null)).isTrue();
+
+    // Should always return false if one value is null
+    assertThat(Type.equals(actual1,null)).isFalse();
+    assertThat(Type.equals(null,actual2)).isFalse();
+
+    // Should always return false if different types
+    assertThat(Type.equals(actual1,actual3)).isFalse();
+  }
 
   static class ConcreteType implements Type<String, ConcreteType> {
 
@@ -43,4 +97,25 @@ class TypeTest {
       return value;
     }
   }
+
+  static class ConcreteStringType extends StringType {
+
+    @Serial
+    private static final long serialVersionUID = -3396697346851690904L;
+
+    protected ConcreteStringType(final String value) {
+      super(value);
+    }
+  }
+
+  static class AnotherStringType extends StringType {
+
+    @Serial
+    private static final long serialVersionUID = -3746497687089278183L;
+
+    public AnotherStringType(final String value) {
+      super(value);
+    }
+  }
+
 }

@@ -1,7 +1,6 @@
 package org.typefactory;
 
 import java.io.Serial;
-import java.util.Objects;
 
 public abstract class StringType implements CharSequenceType<StringType> {
 
@@ -37,7 +36,8 @@ public abstract class StringType implements CharSequenceType<StringType> {
     if (o == null || this.getClass() != o.getClass()) {
       return false;
     }
-    return Objects.equals(value, ((StringType) o).value);
+    final StringType s = (StringType) o;
+    return value == s.value || (value != null && value.equals(s.value));
   }
 
   @Override
