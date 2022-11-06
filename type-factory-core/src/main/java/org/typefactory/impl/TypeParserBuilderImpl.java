@@ -6,7 +6,7 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
 import org.typefactory.Subset;
@@ -27,7 +27,7 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
 
   private Pattern regex = null;
 
-  private Function<String, Boolean> validationFunction = null;
+  private Predicate<String> validationFunction = null;
   private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
 
@@ -173,6 +173,28 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
     rangedSubsetBuilder.includeCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
+
+  /**
+   * <p>Private method that will call {@link #acceptCodePoints(int...)} with all the code-points in the specified {@code charSequence}.</p>
+   *
+   * <p>It is a convenience method for:</p>
+   * <pre>{@code
+   *   acceptCodePoints(charSequence.codePoints().toArray())
+   * }</pre>
+   *
+   * <p>This is a private method because I am not convinced there is an adequate use-case for a developer calling this when configuring a builder.
+   * I think it would generally be better to be explicit about what you will accept by calling the existing public methods.</p>
+   *
+   * @param charSequence the character sequence containing the code-points you wish to accept.
+   * @return this {@code TypeParserBuilder}.
+   */
+  private TypeParserBuilder acceptCodePointsInCharSequence(CharSequence charSequence) {
+    if (charSequence == null) {
+      return this;
+    }
+    return acceptCodePoints(charSequence.codePoints().toArray());
+  }
+
 
   @Override
   public TypeParserBuilder convertChar(final char fromChar, final char toChar) {
@@ -408,7 +430,7 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   }
 
   @Override
-  public TypeParserBuilder customValidator(final Function<String, Boolean> validationFunction) {
+  public TypeParserBuilder customValidator(final Predicate<String> validationFunction) {
     this.validationFunction = validationFunction;
     return this;
   }

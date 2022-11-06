@@ -278,7 +278,7 @@ public interface Subset {
 
     @Override
     public int hashCode() {
-      return inclusiveFrom * 31 + inclusiveTo;
+      return inclusiveFrom * 109 + inclusiveTo;
     }
 
     /**

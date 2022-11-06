@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
@@ -32,7 +33,7 @@ class TypeParserImpl implements TypeParser {
 
   private final Pattern regex;
 
-  private final Function<String, Boolean> validationFunction;
+  private final Predicate<String> validationFunction;
   private final Subset acceptedCodePoints;
   private final Converter converter;
 
@@ -46,7 +47,7 @@ class TypeParserImpl implements TypeParser {
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
       final Pattern regex,
-      final Function<String, Boolean> validationFunction,
+      final Predicate<String> validationFunction,
       final Subset acceptedCodePoints,
       final Converter converter) {
     this.targetTypeClass = targetTypeClass;
@@ -64,7 +65,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) {
+  public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) throws InvalidValueException {
     return (nullHandling == PRESERVE_NULL_AND_EMPTY && value == null)
         || (nullHandling == CONVERT_EMPTY_TO_NULL && (value == null || value.isEmpty()))
         ? null
@@ -72,7 +73,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) {
+  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
     final Short parsedValue = parseToShort(value);
     return parsedValue == null
         ? null
@@ -80,7 +81,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) {
+  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
     final Integer parsedValue = parseToInteger(value);
     return parsedValue == null
         ? null
@@ -88,7 +89,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) {
+  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
     final Long parsedValue = parseToLong(value);
     return parsedValue == null
         ? null
@@ -96,7 +97,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public Short parseToShort(final CharSequence originalValue) {
+  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
     final String parsedValue = parseToString(originalValue);
     if (parsedValue == null || parsedValue.isBlank()) {
       return null;
@@ -105,7 +106,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public Integer parseToInteger(final CharSequence originalValue) {
+  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
     final String parsedValue = parseToString(originalValue);
     if (parsedValue == null || parsedValue.isBlank()) {
       return null;
@@ -114,7 +115,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public Long parseToLong(final CharSequence originalValue) {
+  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
     final String parsedValue = parseToString(originalValue);
     if (parsedValue == null || parsedValue.isBlank()) {
       return null;
@@ -123,7 +124,7 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public String parseToString(final CharSequence originalValue) {
+  public String parseToString(final CharSequence originalValue) throws InvalidValueException {
     if ((nullHandling == PRESERVE_NULL_AND_EMPTY && originalValue == null)
         || (nullHandling == CONVERT_EMPTY_TO_NULL && (originalValue == null || originalValue.isEmpty()))) {
       return null;
@@ -134,8 +135,6 @@ class TypeParserImpl implements TypeParser {
         : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
 
     final int length = source.length();
-//    final int endIndex = endIndexIgnoringTrailingWhitespace(value);
-//    final int startIndex = startIndexIgnoringLeadingWhitespace(value, endIndex);
     if (length == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
@@ -270,7 +269,7 @@ class TypeParserImpl implements TypeParser {
       return;
     }
     try {
-      final boolean isValid = validationFunction.apply(parsedValue);
+      final boolean isValid = validationFunction.test(parsedValue);
       if (!isValid) {
         throw InvalidValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, null);
       }
