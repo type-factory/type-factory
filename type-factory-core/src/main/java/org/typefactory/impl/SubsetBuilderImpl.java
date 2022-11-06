@@ -679,8 +679,8 @@ class SubsetBuilderImpl implements SubsetBuilder {
       int i = -1;
       for (CodePointRange codePointRange : rangedSubset.ranges()) {
         numberOfCodePointRanges++;
-        hashcode = 31 * hashcode + codePointRange.inclusiveFrom;
-        hashcode = 31 * hashcode + codePointRange.inclusiveTo;
+        hashcode = 109 * hashcode + codePointRange.inclusiveFrom;
+        hashcode = 109 * hashcode + codePointRange.inclusiveTo;
         final char blockKeyFrom = (char) ((codePointRange.inclusiveFrom >> 8) & 0xFFFF);
         final char blockKeyTo = (char) ((codePointRange.inclusiveTo >> 8) & 0xFFFF);
         for (char blockKey = blockKeyFrom; blockKey <= blockKeyTo; ++blockKey) {

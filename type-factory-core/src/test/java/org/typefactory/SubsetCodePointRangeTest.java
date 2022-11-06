@@ -161,7 +161,7 @@ class SubsetCodePointRangeTest {
     final var range2 = new CodePointRange(from, to);
     assertThatObject(range1).hasSameHashCodeAs(range2);
     assertThatObject(range2).hasSameHashCodeAs(range1);
-    assertThatObject(range1.hashCode()).isEqualTo(from * 31 + to);
+    assertThatObject(range1.hashCode()).isEqualTo(from * 109 + to);
   }
 
   @Test
