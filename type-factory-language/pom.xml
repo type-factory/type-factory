@@ -61,7 +61,8 @@
           <includeProjectDependencies>false</includeProjectDependencies>
           <mainClass>org.typefactory.generator.Main</mainClass>
           <arguments>
-            <argument>${basedir}/src/main/java/org/typefactory/language</argument>
+            <argument>${project.parent.basedir}/src/license/license-header.java.txt</argument>
+            <argument>${project.basedir}/src/main/java/org/typefactory/language</argument>
           </arguments>
         </configuration>
         <dependencies>
