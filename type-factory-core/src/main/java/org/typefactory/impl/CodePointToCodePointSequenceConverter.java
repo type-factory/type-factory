@@ -71,8 +71,8 @@ class CodePointToCodePointSequenceConverter implements Converter {
   }
 
   public boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
-    if (converterResults instanceof ConverterResultsImpl) {
-      return isCodePointConversionRequired(currentCodePoint, currentIndex, (ConverterResultsImpl)converterResults);
+    if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
+      return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }
     throw new IllegalArgumentException("Invalid argument - 'converterResults' must be of type " + ConverterResultsImpl.class.getName());
   }

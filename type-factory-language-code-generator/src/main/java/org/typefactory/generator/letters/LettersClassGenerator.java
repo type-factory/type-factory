@@ -68,7 +68,7 @@ public class LettersClassGenerator {
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the type-factory-language-code-generator module.",
-            value = "org.typefactory:type-factory-language-code-generator")     
+            value = "org.typefactory:type-factory-language-code-generator") 
         public class Letters {
                 
           private static final Index index = new Index();
@@ -99,10 +99,9 @@ public class LettersClassGenerator {
       final String localeCountry = locale.getCountry();
       final String localeVariant = locale.getVariant();
       final String localeScript = locale.getScript();
-      final String localeLanguageTag = locale.toLanguageTag().replaceAll("[\s_-]+", "_");
-      final String displayLanguage = locale.getDisplayLanguage().replaceAll("[\s_-]+", "_");
+      final String localeLanguageTag = tokenize(locale.toLanguageTag());
+      final String displayLanguage = tokenize(locale.getDisplayLanguage());
       final String enumName = String.format("%s_%s", displayLanguage.toUpperCase(), localeLanguageTag);
-      final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
 
       s.append(LINE_SEPARATOR);
       appendJavadoc(s, lettersData, enumName);
@@ -120,9 +119,7 @@ public class LettersClassGenerator {
       }
 
       switch (lettersData) {
-        case LETTERS_JAPANESE_JA_JINMEIYO:
-        case LETTERS_JAPANESE_JA_JOYO:
-        case LETTERS_JAPANESE_JA_JSOURCE:
+        case LETTERS_JAPANESE_JA_JINMEIYO, LETTERS_JAPANESE_JA_JOYO, LETTERS_JAPANESE_JA_JSOURCE:
           final String letterClassName = generateLettersClassForSingleLanguage(lettersData);
           s.append(LINE_SEPARATOR).append("      ").append(letterClassName).append(".SUBSET);");
           break;
@@ -156,10 +153,14 @@ public class LettersClassGenerator {
     }
   }
 
+  private static String tokenize(final String locale) {
+    return locale.replaceAll("[\\s_-]+", "_");
+  }
+
   private String generateLettersClassForSingleLanguage(final LettersData lettersData) {
     final ULocale locale = lettersData.getLocale();
-    final String localeLanguageTag = locale.toLanguageTag().replaceAll("[\s_-]+", "_");
-    final String displayLanguage = locale.getDisplayLanguage().replaceAll("[\s_-]+", "_");
+    final String localeLanguageTag = tokenize(locale.toLanguageTag());
+    final String displayLanguage = tokenize(locale.getDisplayLanguage());
     final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
     System.out.println("\n\nCreating subset for " + lettersClassName);
     final SubsetWrapper subsetWrapper = SubsetWrapper.optimisedSubset(lettersData.getUnicodeSet());
@@ -308,15 +309,13 @@ public class LettersClassGenerator {
       return;
     }
     switch (lettersData) {
-      case LETTERS_JAPANESE_JA_HANI:
-      case LETTERS_JAPANESE_JA_JINMEIYO:
-      case LETTERS_JAPANESE_JA_JSOURCE:
+      case LETTERS_JAPANESE_JA_HANI, LETTERS_JAPANESE_JA_JINMEIYO, LETTERS_JAPANESE_JA_JSOURCE -> {
         s.append(LINE_SEPARATOR).append("   * <p>There are too many unicode code-points (characters) in this set to display here. See separate ");
         s.append(LINE_SEPARATOR).append("   *    <a href='./doc-files/").append(enumName).append(".txt'>").append(enumName)
             .append(" documentation file</a>");
         s.append(LINE_SEPARATOR).append("   *    for a complete list of the unicode code-points in this set.</p>");
-        break;
-      default:
+      }
+      default -> {
         s.append(LINE_SEPARATOR).append("   * <pre>");
         for (EntryRange range : unicodeSet.ranges()) {
           final int from = range.codepoint;
@@ -339,7 +338,7 @@ public class LettersClassGenerator {
           }
         }
         s.append(LINE_SEPARATOR).append("   * </pre>");
-        break;
+      }
     }
   }
 
@@ -367,19 +366,15 @@ public class LettersClassGenerator {
         temp.append(" null           ");
       } else {
         switch (buckets.length) {
-          case 1:
-            temp.append(String.format("{0x%04x}        ", (int) buckets[0]));
-            break;
-          case 2:
-            temp.append(String.format("{0x%04x, 0x%04x}", (int) buckets[0], (int) buckets[1]));
-            break;
-          default:
+          case 1 -> temp.append(String.format("{0x%04x}        ", (int) buckets[0]));
+          case 2 -> temp.append(String.format("{0x%04x, 0x%04x}", (int) buckets[0], (int) buckets[1]));
+          default -> {
             temp.append("{");
-            for (int j = 0; j < buckets.length; ++j) {
-              temp.append(String.format("0x%04x, ", (int) buckets[j]));
+            for (char bucket : buckets) {
+              temp.append(String.format("0x%04x, ", (int) bucket));
             }
             temp.append("}");
-            break;
+          }
         }
       }
       s.append(String.format("%-16s, ", temp));
