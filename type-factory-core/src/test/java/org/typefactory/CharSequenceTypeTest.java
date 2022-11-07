@@ -16,6 +16,7 @@
 package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatComparable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
@@ -133,13 +134,13 @@ class CharSequenceTypeTest {
   void compareTo_returnsZeroWhenBothContainNullValues() {
     final var actual1 = new ConcreteCharSequenceType(null);
     final var actual2 = new ConcreteCharSequenceType(null);
-    assertThat(actual1.compareTo(actual2)).isZero();
+    assertThatComparable(actual1).isEqualByComparingTo(actual2);
   }
 
   @Test
   void compareTo_returnsZeroWhenOtherObjectIsNullAndThisContainsNull() {
     final var actual1 = new ConcreteCharSequenceType(null);
-    assertThat(actual1.compareTo(null)).isZero();
+    assertThatComparable(actual1).isEqualByComparingTo(null);
   }
 
   @ParameterizedTest
@@ -177,7 +178,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsNegativeOneWhenOtherObjectHasValueAndThisContainsNull(final String value) {
     final var actual1 = new ConcreteCharSequenceType(null);
     final var actual2 = new ConcreteCharSequenceType(value);
-    assertThat(actual1.compareTo(actual2)).isNegative();
+    assertThatComparable(actual1).isLessThan(actual2);
   }
 
   @ParameterizedTest
@@ -189,7 +190,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsZero(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
     final var actual2 = new ConcreteCharSequenceType(value2);
-    assertThat(actual1.compareTo(actual2)).isZero();
+    assertThatComparable(actual1).isEqualByComparingTo(actual2);
   }
 
   @ParameterizedTest
@@ -201,7 +202,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsPositive(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
     final var actual2 = new ConcreteCharSequenceType(value2);
-    assertThat(actual1.compareTo(actual2)).isPositive();
+    assertThatComparable(actual1).isGreaterThan(actual2);
   }
 
   @ParameterizedTest
@@ -213,7 +214,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsNegative(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
     final var actual2 = new ConcreteCharSequenceType(value2);
-    assertThat(actual1.compareTo(actual2)).isNegative();
+    assertThatComparable(actual1).isLessThan(actual2);
   }
 
   @ParameterizedTest
@@ -225,7 +226,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsZeroForCustomCharSequenceValues(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
     final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
-    assertThat(actual1.compareTo(actual2)).isZero();
+    assertThatComparable(actual1).isEqualByComparingTo(actual2);
   }
 
   @ParameterizedTest
@@ -239,7 +240,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsPositiveForCustomCharSequenceValues(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
     final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
-    assertThat(actual1.compareTo(actual2)).isPositive();
+    assertThatComparable(actual1).isGreaterThan(actual2);
   }
 
   @ParameterizedTest
@@ -254,12 +255,12 @@ class CharSequenceTypeTest {
     {
       final var actual1 = new ConcreteCharSequenceType(value1); // string internal type
       final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2)); // custom internal type
-      assertThat(actual1.compareTo(actual2)).isPositive();
+      assertThatComparable(actual1).isGreaterThan(actual2);
     }
     {
       final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1)); // custom internal type
       final var actual2 = new ConcreteCharSequenceType(value2); // string internal type
-      assertThat(actual1.compareTo(actual2)).isPositive();
+      assertThatComparable(actual1).isGreaterThan(actual2);
     }
   }
 
@@ -274,7 +275,7 @@ class CharSequenceTypeTest {
   void compareTo_returnsNegativeForCustomCharSequenceValues(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
     final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2));
-    assertThat(actual1.compareTo(actual2)).isNegative();
+    assertThatComparable(actual1).isLessThan(actual2);
   }
 
   @ParameterizedTest
@@ -289,12 +290,12 @@ class CharSequenceTypeTest {
     {
       final var actual1 = new ConcreteCharSequenceType(value1); // string internal type
       final var actual2 = new ConcreteCharSequenceType(CustomCharSequence.of(value2)); // custom internal type
-      assertThat(actual1.compareTo(actual2)).isNegative();
+      assertThatComparable(actual1).isLessThan(actual2);
     }
     {
       final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1)); // custom internal type
       final var actual2 = new ConcreteCharSequenceType(value2); // string internal type
-      assertThat(actual1.compareTo(actual2)).isNegative();
+      assertThatComparable(actual1).isLessThan(actual2);
     }
   }
 

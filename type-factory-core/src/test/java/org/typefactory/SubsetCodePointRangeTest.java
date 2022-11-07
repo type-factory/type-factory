@@ -16,6 +16,7 @@
 package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatComparable;
 import static org.assertj.core.api.Assertions.assertThatObject;
 
 import org.junit.jupiter.api.Test;
@@ -197,8 +198,8 @@ class SubsetCodePointRangeTest {
       final char from2, final char to2) {
     final var range1 = new CodePointRange(from1, to1);
     final var range2 = new CodePointRange(from2, to2);
-    assertThat(range1.compareTo(range2)).isPositive();
-    assertThat(range2.compareTo(range1)).isNegative();
+    assertThatComparable(range1).isGreaterThan(range2);
+    assertThatComparable(range2).isLessThan(range1);
   }
 
   @ParameterizedTest

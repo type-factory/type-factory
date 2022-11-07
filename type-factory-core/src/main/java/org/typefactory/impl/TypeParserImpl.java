@@ -52,6 +52,7 @@ class TypeParserImpl implements TypeParser {
   private final Subset acceptedCodePoints;
   private final Converter converter;
 
+  @SuppressWarnings("java:S107") // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
   TypeParserImpl(
       final Class<?> targetTypeClass,
       final String errorMessage,
@@ -138,6 +139,9 @@ class TypeParserImpl implements TypeParser {
     return Long.valueOf(parsedValue);
   }
 
+
+  // Suppress SonarQube "Cognitive Complexity of methods should not be too high" – this is the main parse method and I think it reads well.
+  @SuppressWarnings("java:S3776")
   @Override
   public String parseToString(final CharSequence originalValue) throws InvalidValueException {
     if ((nullHandling == PRESERVE_NULL_AND_EMPTY && originalValue == null)
@@ -183,7 +187,7 @@ class TypeParserImpl implements TypeParser {
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
-            if (!converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+            if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
               throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
             }
             break;
@@ -202,6 +206,9 @@ class TypeParserImpl implements TypeParser {
           case REMOVE_WHITESPACE:
             ++sourceIndex;
             continue;
+          default:
+            // do nothing
+            break;
         }
         codePointWasWhitespace = true;
       } else {
