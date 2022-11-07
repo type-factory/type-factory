@@ -1,0 +1,5 @@
+Type Factory
+Copyright 2021-2022 Evan Toliopoulos
+
+This product includes software developed by:
+Evan Toliopoulos
