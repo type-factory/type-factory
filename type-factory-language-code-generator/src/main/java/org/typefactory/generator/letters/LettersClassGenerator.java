@@ -1,3 +1,18 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.generator.letters;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -26,19 +41,23 @@ public class LettersClassGenerator {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
+  private final String licenseHeader;
   private final File outputDirectory;
-  private final UnicodeGroupData unicodeGroupData;
 
-  public LettersClassGenerator(final File outputDirectory, final UnicodeGroupData unicodeGroupData) {
+  public LettersClassGenerator(
+      final String licenseHeader,
+      final File outputDirectory,
+      final UnicodeGroupData unicodeGroupData) {
+    this.licenseHeader = licenseHeader;
     this.outputDirectory = outputDirectory;
-    this.unicodeGroupData = unicodeGroupData;
   }
 
   public void generateLanguageClass() {
 
     final StringBuilder s = new StringBuilder();
 
-    s.append("""
+    s.append(licenseHeader)
+        .append("""
         package org.typefactory.language;
                 
         import java.util.HashMap;
@@ -147,7 +166,8 @@ public class LettersClassGenerator {
 
     final StringBuilder s = new StringBuilder();
 
-    s.append(String.format("""
+    s.append(licenseHeader)
+        .append(String.format("""
         package org.typefactory.language;
                 
         import javax.annotation.processing.Generated;

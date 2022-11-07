@@ -1,6 +1,25 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.generator;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -14,22 +33,26 @@ public class Main {
 
   public static void main(final String[] args) {
 
-    final Handler consoleHandler = new ConsoleHandler();
-    consoleHandler.setLevel(Level.ALL);
-    Logger.getGlobal().addHandler(consoleHandler);
-    Logger.getGlobal().setLevel(Level.ALL);
-//    Logger.getLogger("").addHandler(consoleHandler);
-    Logger.getLogger(Main.class.getPackageName()).setLevel(Level.FINEST);
-
-    if (args.length != 1) {
+    if (args.length != 2) {
       System.err.println("""
           You must specify the following command line parameters:
-          - Output directory to generate the Language class.
+          - The path the license header file.
+          - Output directory to generate the Letters class.
           """);
       System.exit(1);
     }
 
-    final File outputDirectory = new File(args[0]);
+    final String licenseHeader = getLicenseHeader(args[0]);
+    final File outputDirectory = new File(args[1]);
+
+
+    final Handler consoleHandler = new ConsoleHandler();
+    consoleHandler.setLevel(Level.ALL);
+    Logger.getGlobal().addHandler(consoleHandler);
+    Logger.getGlobal().setLevel(Level.ALL);
+    Logger.getLogger(Main.class.getPackageName()).setLevel(Level.FINEST);
+
+
 
     if (!outputDirectory.exists() || !outputDirectory.isDirectory()) {
       System.err.println("""
@@ -39,11 +62,21 @@ public class Main {
     }
 
     final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
-    final LettersClassGenerator lettersClassGenerator = new LettersClassGenerator(outputDirectory, unicodeGroupData);
+    final LettersClassGenerator lettersClassGenerator =
+        new LettersClassGenerator(licenseHeader, outputDirectory, unicodeGroupData);
 
     lettersClassGenerator.generateLanguageClass();
-//
-//    lettersClassGenerator.organizeIntoBlockRanged(
-//        lettersClassGenerator.createJapaneseJSourceSet());
+  }
+
+  private static String getLicenseHeader(final String licenseFilePath) {
+    try {
+      return Files.readString(Paths.get(licenseFilePath), StandardCharsets.UTF_8).trim() + "\n";
+    } catch (final IOException e) {
+      System.err.println("""
+          The license header file must exist.
+          """);
+      System.exit(1);
+    }
+    return null;
   }
 }

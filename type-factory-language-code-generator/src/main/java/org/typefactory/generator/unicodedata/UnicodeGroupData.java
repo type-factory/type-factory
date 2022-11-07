@@ -1,3 +1,18 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.generator.unicodedata;
 
 import com.ibm.icu.text.UnicodeSet;
@@ -42,10 +57,10 @@ public class UnicodeGroupData {
 
     final List<Block> blocks = getBlocks();
     final BlocksByTheirAbbreviation tempBlocksByTheirAbbreviation = new BlocksByTheirAbbreviation();
-    final MapOfUnicodeSets<String> blockUnicodeSets = new MapOfUnicodeSets<>();
-    final MapOfUnicodeSets<String> scriptUnicodeSets = new MapOfUnicodeSets<>();
-    final MapOfUnicodeSets<UnicodeCategory> categoryUnicodeSets = new MapOfUnicodeSets<>();
-    final UnicodeSet whitespaceUnicodeSet = new UnicodeSet();
+    final MapOfUnicodeSets<String> tempBlockUnicodeSets = new MapOfUnicodeSets<>();
+    final MapOfUnicodeSets<String> tempScriptUnicodeSets = new MapOfUnicodeSets<>();
+    final MapOfUnicodeSets<UnicodeCategory> tempCategoryUnicodeSets = new MapOfUnicodeSets<>();
+    final UnicodeSet tempWhitespaceUnicodeSet = new UnicodeSet();
     final UnicodeSet jSourceSubsetBuilder = new UnicodeSet();
     final UnicodeSet kSourceSubsetBuilder = new UnicodeSet();
     final UnicodeSet gSourceSubsetBuilder = new UnicodeSet();
@@ -53,10 +68,10 @@ public class UnicodeGroupData {
     for (UnicodeCodePoint c : getUnicodeCodePoints()) {
       if (c.getCodePoint() != null) {
         tempBlocksByTheirAbbreviation.add(c, blocks);
-        blockUnicodeSets.putUnicodeCodePoint(c.getBlock(), c);
-        scriptUnicodeSets.putUnicodeCodePoint(c.getScript(), c);
-        categoryUnicodeSets.putUnicodeCodePoint(UnicodeCategory.of(c.getGeneralCategory()), c);
-        handleWhitespace(whitespaceUnicodeSet, c);
+        tempBlockUnicodeSets.putUnicodeCodePoint(c.getBlock(), c);
+        tempScriptUnicodeSets.putUnicodeCodePoint(c.getScript(), c);
+        tempCategoryUnicodeSets.putUnicodeCodePoint(UnicodeCategory.of(c.getGeneralCategory()), c);
+        handleWhitespace(tempWhitespaceUnicodeSet, c);
         handleJSource(jSourceSubsetBuilder, c);
         handleKSource(kSourceSubsetBuilder, c);
         handleGSource(gSourceSubsetBuilder, c);
@@ -65,13 +80,13 @@ public class UnicodeGroupData {
     }
     this.blocksByTheirAbbreviation = tempBlocksByTheirAbbreviation.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, TreeMap::new));
-    this.blockUnicodeSets = blockUnicodeSets.entrySet().stream()
+    this.blockUnicodeSets = tempBlockUnicodeSets.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().compact().freeze(), (a, b) -> a, TreeMap::new));
-    this.scriptUnicodeSets = scriptUnicodeSets.entrySet().stream()
+    this.scriptUnicodeSets = tempScriptUnicodeSets.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().compact().freeze(), (a, b) -> a, TreeMap::new));
-    this.categoryUnicodeSets = categoryUnicodeSets.entrySet().stream()
+    this.categoryUnicodeSets = tempCategoryUnicodeSets.entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().compact().freeze(), (a, b) -> a, TreeMap::new));
-    this.whitespaceUnicodeSet = whitespaceUnicodeSet.compact().freeze();
+    this.whitespaceUnicodeSet = tempWhitespaceUnicodeSet.compact().freeze();
     this.jSourceSubset = jSourceSubsetBuilder.compact().freeze();
     this.kSourceSubset = kSourceSubsetBuilder.compact().freeze();
     this.gSourceSubset = gSourceSubsetBuilder.compact().freeze();

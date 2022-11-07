@@ -1,3 +1,18 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.impl;
 
 import static java.lang.Character.isWhitespace;
@@ -171,18 +186,16 @@ class TypeParserImpl implements TypeParser {
             if (!converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
               throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
             }
+            break;
           case PRESERVE_WHITESPACE:
             // do nothing
             break;
           case PRESERVE_AND_CONVERT_WHITESPACE:
             codePoint = ' ';
             break;
-          case NORMALIZE_WHITESPACE:
-          case NORMALIZE_AND_CONVERT_WHITESPACE:
+          case NORMALIZE_WHITESPACE, NORMALIZE_AND_CONVERT_WHITESPACE:
             if (codePointWasWhitespace) { // if previous code-point was whitespace
               codePointIsRepeatedWhitespaceRequiringNormalisation = true;
-//              ++sourceIndex;
-//              continue;
             }
             codePoint = ' ';
             break;
@@ -288,42 +301,6 @@ class TypeParserImpl implements TypeParser {
     }
     result[index] = codePoint;
     return result;
-  }
-
-  /**
-   * Return the end-index of the last char-character ignoring trailing whitespace
-   *
-   * @param value the char sequence to scan for first relevant character
-   * @return the end-index of the last char-character ignoring trailing whitespace
-   */
-  private static int endIndexIgnoringTrailingWhitespace(final CharSequence value) {
-    if (value == null) {
-      return 0;
-    }
-    int endIndex = value.length() - 1;
-    // Find end index of char-sequence ignoring trailing whitespace.
-    while (endIndex >= 0 && isWhitespace(value.charAt(endIndex))) {
-      --endIndex;
-    }
-    return ++endIndex;
-  }
-
-  /**
-   * Return the index of first character that is not whitespace
-   *
-   * @param value    the char sequence to scan for first relevant character
-   * @param endIndex the index at which to stop progressing through the char-sequence
-   * @return the index of first character that is not whitespace
-   */
-  private static int startIndexIgnoringLeadingWhitespace(final CharSequence value, final int endIndex) {
-    if (value == null || endIndex == 0) {
-      return 0;
-    }
-    int startIndex = 0;
-    while (startIndex < endIndex && isWhitespace(value.charAt(startIndex))) {
-      ++startIndex;
-    }
-    return startIndex;
   }
 
   /**
