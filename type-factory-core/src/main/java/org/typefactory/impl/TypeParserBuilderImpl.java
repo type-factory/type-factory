@@ -226,7 +226,7 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   }
 
   @Override
-  public TypeParserBuilder convertChar(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
+  public TypeParserBuilder convertCharSequence(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
     converterBuilder.addCharConversion(fromCharSequence, toCharSequence);
     acceptCodePointsInCharSequence(fromCharSequence);
     return this;
