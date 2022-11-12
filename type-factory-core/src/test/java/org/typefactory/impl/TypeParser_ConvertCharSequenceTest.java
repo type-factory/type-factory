@@ -17,7 +17,6 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.text.ParseException;
 import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -39,7 +38,7 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder()
             .normalizeWhitespace()
-            .convertChar(convertFrom, convertTo)
+            .convertCharSequence(convertFrom, convertTo)
             .acceptLettersAtoZ()
             .build();
 
@@ -70,9 +69,9 @@ class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
     final TypeParser typeParser =
         TypeParser.builder()
             .normalizeWhitespace()
-            .convertChar(convertFrom1, convertTo1)
-            .convertChar(convertFrom2, convertTo2)
-            .convertChar(convertFrom3, convertTo3)
+            .convertCharSequence(convertFrom1, convertTo1)
+            .convertCharSequence(convertFrom2, convertTo2)
+            .convertCharSequence(convertFrom3, convertTo3)
             .acceptLettersAtoZ()
             .acceptChar('-')
             .build();
