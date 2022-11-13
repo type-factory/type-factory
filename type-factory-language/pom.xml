@@ -88,6 +88,7 @@
           <dependency>
             <groupId>org.typefactory</groupId>
             <artifactId>type-factory-language-code-generator</artifactId>
+            <version>${project.parent.version}</version>
           </dependency>
           <dependency>
             <groupId>com.ibm.icu</groupId>
