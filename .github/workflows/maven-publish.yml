@@ -1,0 +1,45 @@
+# This workflow will build a package using Maven and then publish it to to the Maven Central Repository when a release is created
+# For more information see: 
+# - https://docs.github.com/en/actions/publishing-packages/publishing-java-packages-with-maven
+# - https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Publish to Maven Central Repository
+
+on:
+  release:
+    types: [created]
+    
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkou-code
+        name: Checkout code
+        uses: actions/checkout@v3
+      - id: setup-java-and-maven-settings  
+        name: Set up Java and Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          # The following creates a a <server> block in the Maven settings.xml
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_PASSWORD
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+      - id: publish-to-central
+        name: Publish to Maven Central Repository
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+        run: |
+          mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -Dgpg.keyname=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
+          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
+          clean deploy
