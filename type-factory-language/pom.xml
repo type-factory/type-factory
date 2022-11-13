@@ -30,7 +30,6 @@
 
   <properties>
     <maven.deploy.skip>false</maven.deploy.skip>
-    <type-factory-language-code-generator.version>${project.parent.version}</type-factory-language-code-generator.version>
   </properties>
 
   <dependencies>
