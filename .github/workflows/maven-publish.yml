@@ -13,7 +13,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - id: checkou-code
+      - id: checkout-code
         name: Checkout code
         uses: actions/checkout@v3
       - id: setup-java-and-maven-settings  
@@ -22,11 +22,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # The following creates a a <server> block in the Maven settings.xml
+          # The following creates a <server> block in the Maven settings.xml
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-      - id: install-secret-key
+      - id: install-gpg-secret-key
         name: Install gpg secret key
         run: |
           cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
@@ -36,10 +36,10 @@ jobs:
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        run: |
-          mvn \
-          --no-transfer-progress \
-          --batch-mode \
+        run: >
+          mvn
+          --no-transfer-progress
+          --batch-mode
           -Dgpg.keyname=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
-          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
+          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
           clean deploy
