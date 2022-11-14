@@ -8,7 +8,15 @@ name: Publish to Maven Central Repository
 on:
   release:
     types: [created]
-    
+
+inputs:
+  RELEASE_VERSION_NUMBER_OVERRIDE:
+    description: 'Optional override release version number'
+    required: false
+  NEXT_VERSION_NUMBER_OVERRIDE:
+    description: 'Optional override next version number'
+    required: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -26,9 +34,9 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-      - id: build-package-with-maven
-        name: Build with Maven
-        run: mvn --batch-mode --file pom.xml clean package
+      - id: build-and-verify-with-maven
+        name: Build and verify with Maven
+        run: mvn --batch-mode --file pom.xml clean verify
       - id: install-gpg-secret-key
         name: Install gpg secret key
         run: |
@@ -39,10 +47,16 @@ jobs:
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        run: >
-          mvn
-          --no-transfer-progress
-          --batch-mode
-          -Dgpg.keyname=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
-          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-          deploy
+        run: |
+          CURRENT_VERSION="$(mvn --batch-mode --quiet help:evaluate -Dexpression=project.version -DforceStdout)"
+          NEW_VERSION="${CURRENT_VERSION%-SNAPSHOT}"
+          if [ "${RELEASE_VERSION_NUMBER_OVERRIDE}" -z ] ; then
+            NEW_VERSION="${RELEASE_VERSION_NUMBER_OVERRIDE%-SNAPSHOT}"
+          fi &&
+          mvn --batch-mode --quiet versions:set -DnewVersion="${NEW_VERSION}" &&
+          mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -Dgpg.keyname=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }} \
+          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
+          deploy:deploy
