@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CURRENT_VERSION="$(mvn help:evaluate --batch-mode --quiet -Dexpression=project.version -DforceStdout)" &&
+export CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
 export RELEASE_VERSION="${CURRENT_VERSION%-SNAPSHOT}" &&
 export CURRENT_PATCH_VERSION="${RELEASE_VERSION##*.}" &&
 export NEXT_SNAPSHOT_VERSION="${RELEASE_VERSION%.*}.$((CURRENT_PATCH_VERSION + 1))-SNAPSHOT" &&
@@ -18,7 +18,7 @@ echo "RELEASE_VERSION=${RELEASE_VERSION}" &&
 echo "NEXT_SNAPSHOT_VERSION=${NEXT_SNAPSHOT_VERSION}" &&
 
 echo "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
-mvn versions:set --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true &&
+mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
 
 echo "Building, packaging and verifying with Maven" &&
 mvn clean verify &&
@@ -30,13 +30,13 @@ echo "Adding Git tag v${RELEASE_VERSION}" &&
 git tag "v${RELEASE_VERSION}" &&
 
 echo "Deploying the application" &&
-mvn install:install &&
+mvn -Dmaven.test.skip=true install &&
 
 echo "Pushing to GitHub" &&
 git push origin --follow-tags &&
 
 echo "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
-mvn versions:set --batch-mode --quiet -DnewVersion="${NEXT_SNAPSHOT_VERSION}" -DprocessAllModules=true &&
+mvn --batch-mode --quiet -DnewVersion="${NEXT_SNAPSHOT_VERSION}" -DprocessAllModules=true versions:set &&
 
 echo "Committing to local branch" &&
 git commit --all --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
