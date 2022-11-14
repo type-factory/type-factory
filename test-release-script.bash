@@ -1,32 +1,45 @@
 #!/bin/bash
 
-mvn clean verify &&
+export CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
+export RELEASE_VERSION="${CURRENT_VERSION%-SNAPSHOT}" &&
+export CURRENT_PATCH_VERSION="${RELEASE_VERSION##*.}" &&
+export NEXT_SNAPSHOT_VERSION="${RELEASE_VERSION%.*}.$((CURRENT_PATCH_VERSION + 1))-SNAPSHOT" &&
 
-CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
-RELEASE_VERSION="${CURRENT_VERSION%-SNAPSHOT}" &&
-CURRENT_PATCH_VERSION="${RELEASE_VERSION##*.}" &&
-NEXT_SNAPSHOT_VERSION="${RELEASE_VERSION%.*}.$((CURRENT_PATCH_VERSION + 1))-SNAPSHOT" &&
-
-if [ -z "${RELEASE_VERSION_NUMBER_OVERRIDE}" ] ; then
-  RELEASE_VERSION="${RELEASE_VERSION_NUMBER_OVERRIDE%-SNAPSHOT}"
+if [[ "${RELEASE_VERSION_NUMBER_OVERRIDE}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ; then
+  export RELEASE_VERSION="${RELEASE_VERSION_NUMBER_OVERRIDE}"
 fi &&
 
-if [ -z "${NEXT_VERSION_NUMBER_OVERRIDE}" ] ; then
-  NEXT_SNAPSHOT_VERSION="${NEXT_VERSION_NUMBER_OVERRIDE%-SNAPSHOT}-SNAPSHOT"
+if [[ "${NEXT_VERSION_NUMBER_OVERRIDE}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]] ; then
+  export NEXT_SNAPSHOT_VERSION="${NEXT_VERSION_NUMBER_OVERRIDE%-SNAPSHOT}-SNAPSHOT"
 fi &&
 
+echo "CURRENT_VERSION=${CURRENT_VERSION}" &&
+echo "RELEASE_VERSION=${RELEASE_VERSION}" &&
+echo "NEXT_SNAPSHOT_VERSION=${NEXT_SNAPSHOT_VERSION}" &&
+
+echo "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
 mvn --batch-mode --quiet versions:set -DnewVersion="${RELEASE_VERSION}" &&
 
+echo "Building, packaging and verifying with Maven" &&
+mvn clean verify &&
+
+echo "Committing to local branch" &&
 git commit --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
 
+echo "Adding Git tag v${RELEASE_VERSION}" &&
 git tag "v${RELEASE_VERSION}" &&
 
-mvn install:install &&
+echo "Deploying the application" &&
+mvn install &&
 
+echo "Pushing to GitHub" &&
 git push origin --follow-tags &&
 
+echo "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
 mvn --batch-mode --quiet versions:set -DnewVersion="${NEXT_SNAPSHOT_VERSION}" &&
 
-git commit --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – previous version was ${CURRENT_VERSION}" &&
+echo "Committing to local branch" &&
+git commit --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
 
+echo "Pushing to GitHub" &&
 git push origin
