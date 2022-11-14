@@ -30,7 +30,6 @@
 
   <properties>
     <maven.deploy.skip>false</maven.deploy.skip>
-    <type-factory-language-code-generator.version>${project.parent.version}</type-factory-language-code-generator.version>
   </properties>
 
   <dependencies>
@@ -89,7 +88,7 @@
           <dependency>
             <groupId>org.typefactory</groupId>
             <artifactId>type-factory-language-code-generator</artifactId>
-            <version>${type-factory-language-code-generator.version}</version>
+            <version>${project.parent.version}</version>
           </dependency>
           <dependency>
             <groupId>com.ibm.icu</groupId>

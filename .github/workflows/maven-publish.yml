@@ -8,7 +8,15 @@ name: Publish to Maven Central Repository
 on:
   release:
     types: [created]
-    
+
+inputs:
+  RELEASE_VERSION_NUMBER_OVERRIDE:
+    description: 'Optional override release version number'
+    required: false
+  NEXT_VERSION_NUMBER_OVERRIDE:
+    description: 'Optional override next version number'
+    required: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -26,9 +34,9 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-      - id: build-package-with-maven
-        name: Build with Maven
-        run: mvn --batch-mode --file pom.xml clean package
+      - id: build-and-verify-with-maven
+        name: Build and verify with Maven
+        run: mvn --batch-mode --file pom.xml clean verify
       - id: install-gpg-secret-key
         name: Install gpg secret key
         run: |
@@ -39,10 +47,48 @@ jobs:
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        run: >
-          mvn
-          --no-transfer-progress
-          --batch-mode
-          -Dgpg.keyname=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
-          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-          deploy
+        shell: bash
+        run: |
+          CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
+          RELEASE_VERSION="${CURRENT_VERSION%-SNAPSHOT}" &&
+          CURRENT_PATCH_VERSION="${RELEASE_VERSION##*.}" &&
+          NEXT_SNAPSHOT_VERSION="${RELEASE_VERSION%.*}.$((CURRENT_PATCH_VERSION + 1))-SNAPSHOT" &&
+          if [[ "${INPUT_RELEASE_VERSION_NUMBER_OVERRIDE}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ; then
+            RELEASE_VERSION="${INPUT_RELEASE_VERSION_NUMBER_OVERRIDE}"
+          fi &&
+          if [[ "${INPUT_NEXT_VERSION_NUMBER_OVERRIDE}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]] ; then
+            NEXT_SNAPSHOT_VERSION="${INPUT_NEXT_VERSION_NUMBER_OVERRIDE%-SNAPSHOT}-SNAPSHOT"
+          fi &&
+          RELEASE_TAG="v${RELEASE_VERSION}" &&
+          echo &&
+          echo "CURRENT_VERSION=${CURRENT_VERSION}" &&
+          echo "RELEASE_VERSION=${RELEASE_VERSION}" &&
+          echo "RELEASE_TAG=${RELEASE_TAG}" &&
+          echo "NEXT_SNAPSHOT_VERSION=${NEXT_SNAPSHOT_VERSION}" &&
+          echo &&
+          echo "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
+          mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
+          echo &&
+          echo "Building, packaging and verifying with Maven" &&
+          mvn --batch-mode --quiet clean verify &&
+          echo &&
+          echo "Committing to local branch" &&
+          git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
+          echo &&
+          echo "Adding Git tag ${RELEASE_TAG}" &&
+          git tag "${RELEASE_TAG}" &&
+          echo &&
+          echo "Deploying the application" &&
+          mvn --batch-mode --quiet -Dmaven.test.skip=true deploy &&
+          echo &&
+          echo "Pushing to GitHub – ${RELEASE_VERSION}" &&
+          git push origin && git push origin "${RELEASE_TAG}" &&
+          echo &&
+          echo "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
+          mvn --batch-mode --quiet -DnewVersion="${NEXT_SNAPSHOT_VERSION}" -DprocessAllModules=true versions:set &&
+          echo &&
+          echo "Committing to local branch" &&
+          git commit --all --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
+          echo &&
+          echo "Pushing to GitHub – ${NEXT_SNAPSHOT_VERSION}" &&
+          git push origin
