@@ -273,7 +273,8 @@ class SubsetBuilderImpl implements SubsetBuilder {
 
     final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(rangedSubset);
 
-    System.out.println("\n\nSubset Stats\n\n" + subsetOptimiser.toString() + "\n\n");
+    // TODO get the stats into the generated language classes
+    // System.out.println("\n\nSubset Stats\n\n" + subsetOptimiser.toString() + "\n\n");
 
     switch (subsetOptimiser.getPreferredSubsetType()) {
       case HASHED: {

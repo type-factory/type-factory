@@ -19,13 +19,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.logging.Logger;
 import org.typefactory.Category;
+import org.typefactory.LogUtils;
 import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 
 class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
+
+  private static final Logger logger = LogUtils.getLogger(TypeParser_UnicodeNormalizationTest.class);
 
   enum WordsWithDiacriticModifiers {
     GREEK_CAFFEINE("καφεΐνη", 'κ', 'α', 'φ', 'ε', 'ι', '̈', '́', 'ν', 'η'),
@@ -49,8 +53,9 @@ class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
       valueNFKC = Normalizer.normalize(value, Form.NFKC);
       valueNFKD = Normalizer.normalize(value, Form.NFKD);
 
-      valueNFD.chars().forEach(i -> System.out.print("'" + (char) i + "',"));
-      System.out.println();
+      final StringBuilder message = new StringBuilder();
+      valueNFD.chars().forEach(i -> message.append("'").append((char) i).append("',"));
+      logger.fine(message.toString());
 
       assert valueNFD.equals(String.valueOf(decomposedChars));
       assert valueNFKD.equals(String.valueOf(decomposedChars));

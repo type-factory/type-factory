@@ -162,7 +162,7 @@ public class LettersClassGenerator {
     final String localeLanguageTag = tokenize(locale.toLanguageTag());
     final String displayLanguage = tokenize(locale.getDisplayLanguage());
     final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
-    System.out.println("\n\nCreating subset for " + lettersClassName);
+    logger.info(() -> "Creating subset for {}" + lettersClassName);
     final SubsetWrapper subsetWrapper = SubsetWrapper.optimisedSubset(lettersData.getUnicodeSet());
 
     final StringBuilder s = new StringBuilder();

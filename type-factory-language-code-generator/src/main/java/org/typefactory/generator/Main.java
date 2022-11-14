@@ -20,21 +20,18 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.typefactory.generator.letters.LettersClassGenerator;
 import org.typefactory.generator.unicodedata.UnicodeGroupData;
 
 public class Main {
 
-  private static final Logger logger = Logger.getLogger(Main.class.getName());
+  private static final Logger logger = LogUtils.getLogger(Main.class);
 
   public static void main(final String[] args) {
 
     if (args.length != 2) {
-      System.err.println("""
+      logger.severe("""
           You must specify the following command line parameters:
           - The path the license header file.
           - Output directory to generate the Letters class.
@@ -45,17 +42,8 @@ public class Main {
     final String licenseHeader = getLicenseHeader(args[0]);
     final File outputDirectory = new File(args[1]);
 
-
-    final Handler consoleHandler = new ConsoleHandler();
-    consoleHandler.setLevel(Level.ALL);
-    Logger.getGlobal().addHandler(consoleHandler);
-    Logger.getGlobal().setLevel(Level.ALL);
-    Logger.getLogger(Main.class.getPackageName()).setLevel(Level.FINEST);
-
-
-
     if (!outputDirectory.exists() || !outputDirectory.isDirectory()) {
-      System.err.println("""
+      logger.severe("""
           The output directory to generate the Language class in must exist.
           """);
       System.exit(1);
@@ -72,7 +60,7 @@ public class Main {
     try {
       return Files.readString(Paths.get(licenseFilePath), StandardCharsets.UTF_8).trim() + "\n";
     } catch (final IOException e) {
-      System.err.println("""
+      logger.severe("""
           The license header file must exist.
           """);
       System.exit(1);

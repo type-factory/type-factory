@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import org.typefactory.generator.LogUtils;
 import org.unicode.ns._2003.ucd._1.Block;
 import org.unicode.ns._2003.ucd._1.Blocks;
 import org.unicode.ns._2003.ucd._1.CodePoint;
@@ -36,6 +38,8 @@ import org.unicode.ns._2003.ucd._1.Repertoire;
 import org.unicode.ns._2003.ucd._1.Ucd;
 
 public class UnicodeGroupData {
+
+  private static final Logger logger = LogUtils.getLogger(UnicodeGroupData.class);
 
   public static final UnicodeGroupData INSTANCE = new UnicodeGroupData();
   private final String unicodeAllGroupedXmlFileName;
@@ -180,7 +184,7 @@ public class UnicodeGroupData {
   }
 
   private Ucd loadUnicodeContentFromXml() {
-    System.out.println("trying to load " + unicodeAllGroupedXmlFileName);
+    logger.info(() -> "trying to load " + unicodeAllGroupedXmlFileName);
     try (final InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(unicodeAllGroupedXmlFileName)) {
       final JAXBContext jaxbContext = JAXBContext.newInstance(Ucd.class);
       final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
