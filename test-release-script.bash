@@ -24,7 +24,7 @@ echo "Building, packaging and verifying with Maven" &&
 mvn clean verify &&
 
 echo "Committing to local branch" &&
-git commit --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
+git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
 
 echo "Adding Git tag v${RELEASE_VERSION}" &&
 git tag "v${RELEASE_VERSION}" &&
@@ -39,7 +39,7 @@ echo "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release 
 mvn versions:set --batch-mode --quiet -DnewVersion="${NEXT_SNAPSHOT_VERSION}" -DprocessAllModules=true &&
 
 echo "Committing to local branch" &&
-git commit --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
+git commit --all --message "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
 
 echo "Pushing to GitHub" &&
 git push origin
