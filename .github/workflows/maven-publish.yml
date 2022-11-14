@@ -5,17 +5,19 @@
 
 name: Publish to Maven Central Repository
 
-on:
-  release:
-    types: [created]
+#on:
+#  release:
+#    types: [created]
 
-inputs:
-  RELEASE_VERSION_NUMBER_OVERRIDE:
-    description: 'Optional override release version number'
-    required: false
-  NEXT_VERSION_NUMBER_OVERRIDE:
-    description: 'Optional override next version number'
-    required: false
+on:
+  workflow_dispatch:
+    inputs:
+      RELEASE_VERSION_NUMBER_OVERRIDE:
+        description: 'Optional override release version number (leave empty for default)'
+        required: false
+      NEXT_VERSION_NUMBER_OVERRIDE:
+        description: 'Optional override next version number (leave empty for default)'
+        required: false
 
 jobs:
   publish:
