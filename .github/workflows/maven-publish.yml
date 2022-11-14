@@ -39,8 +39,8 @@ jobs:
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
         run: mvn --batch-mode --file pom.xml clean verify
-      - id: install-gpg-secret-key
-        name: Install gpg secret key
+      - id: configure-gpg-secret-key
+        name: Configure gpg secret key
         run: |
           cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
@@ -75,6 +75,8 @@ jobs:
           mvn --batch-mode --quiet clean verify &&
           echo &&
           echo "Committing to local branch" &&
+          git config user.email "evantoli+github-release-action@typefactory.org"
+          git config user.name "Evan Toliopoulos"
           git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
           echo "Adding Git tag ${RELEASE_TAG}" &&

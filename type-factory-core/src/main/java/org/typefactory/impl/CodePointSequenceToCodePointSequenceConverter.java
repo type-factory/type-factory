@@ -21,10 +21,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.logging.Logger;
 import org.typefactory.TypeParser;
 
 class CodePointSequenceToCodePointSequenceConverter implements Converter {
-
   private final RootTreeNode rootTreeNode;
 
   /**
@@ -326,17 +326,5 @@ class CodePointSequenceToCodePointSequenceConverter implements Converter {
       }
       return s.toString();
     }
-  }
-
-  public static void main(String... args) {
-    final RootTreeNode rootNode = new RootTreeNode();
-    rootNode.add("abc".codePoints().toArray(), "".codePoints().toArray());
-    rootNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
-    rootNode.add("abef".codePoints().toArray(), "tuv".codePoints().toArray());
-    rootNode.add("full stop".codePoints().toArray(), "period".codePoints().toArray());
-    rootNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
-    rootNode.add("l".codePoints().toArray(), "n".codePoints().toArray());
-    System.out.println("N-Ary tree size = " + rootNode.size());
-    System.out.println("N-Ary tree" + LINE_SEPARATOR + rootNode.toString());
   }
 }
