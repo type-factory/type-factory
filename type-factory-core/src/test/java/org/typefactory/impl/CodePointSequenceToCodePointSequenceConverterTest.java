@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.typefactory.impl.Constants.LINE_SEPARATOR;
 
 import java.util.logging.Logger;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.typefactory.LogUtils;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
@@ -15,7 +14,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   private static Logger logger = LogUtils.getLogger(CodePointSequenceToCodePointSequenceConverter.class);
 
   @Test
-  void visuallyCheckNAryTree() {
+  void nAryTreeIsFormedCorrectly() {
     final RootTreeNode rootNode = new RootTreeNode();
     rootNode.add("abc".codePoints().toArray(), "".codePoints().toArray());
     rootNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
@@ -27,7 +26,11 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     logger.fine(() -> "N-Ary tree size = " + rootNode.size());
     logger.fine(() -> "N-Ary tree" + LINE_SEPARATOR + rootNode);
 
-    assertThat(rootNode.size()).isEqualTo(3); // 'a', 'f' and 'l'
+    assertThat(rootNode.isEmpty()).isFalse();
+    assertThat(rootNode.codePoints()).contains('a', 'f', 'l');
+    assertThat(rootNode.size()).isEqualTo(6); // 6 separate sequences
+
+    //TODO add more assertions
   }
 
 }
