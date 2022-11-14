@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -37,11 +38,21 @@ public class LogUtils {
     return logManager;
   }
 
-  private static LogManager logManager = getLogManager();
-
-  public static LogManager logManager() {
-    return logManager;
+  private static Logger getTypeFactoryLogger() {
+    final Logger logger = Logger.getLogger("org.typefactory");
+    Level logLevel;
+    try {
+      logLevel = Level.parse(System.getProperty("logging.level.org.typefactory", "FINEST"));
+    } catch (Exception ignored) {
+      logLevel = Level.FINEST;
+    }
+    logManager.getLogger("org.typefactory").setLevel(logLevel);
+    return logger;
   }
+
+  private static final LogManager logManager = getLogManager();
+
+  private static final Logger typeFactoryLogger = getTypeFactoryLogger();
 
   public static <T> Logger getLogger(Class<T> clazz) {
     return Logger.getLogger(clazz.getName());

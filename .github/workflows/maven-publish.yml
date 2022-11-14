@@ -38,7 +38,7 @@ jobs:
           server-password: OSSRH_PASSWORD
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
-        run: mvn --batch-mode --file pom.xml clean verify
+        run: mvn --batch-mode --quiet --file pom.xml clean verify
       - id: configure-gpg-secret-key
         name: Configure gpg secret key
         run: |
@@ -71,9 +71,6 @@ jobs:
           echo "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
           echo &&
-          echo "Building, packaging and verifying with Maven" &&
-          mvn --batch-mode --quiet clean verify &&
-          echo &&
           echo "Committing to local branch" &&
           git config user.email "evantoli+github-release-action@typefactory.org"
           git config user.name "Evan Toliopoulos"
@@ -83,7 +80,7 @@ jobs:
           git tag "${RELEASE_TAG}" &&
           echo &&
           echo "Deploying the application" &&
-          mvn --batch-mode --quiet -Dmaven.test.skip=true deploy &&
+          mvn --batch-mode --quiet -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
           echo &&
           echo "Pushing to GitHub – ${RELEASE_VERSION}" &&
           git push origin && git push origin "${RELEASE_TAG}" &&
