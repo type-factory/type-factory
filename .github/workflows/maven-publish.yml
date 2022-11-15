@@ -38,7 +38,7 @@ jobs:
           server-password: OSSRH_PASSWORD
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
-        run: mvn --batch-mode --quiet --file pom.xml clean verify
+        run: mvn --batch-mode --quiet -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
       - id: configure-gpg-secret-key
         name: Configure gpg secret key
         run: |
@@ -76,7 +76,7 @@ jobs:
           git config user.name "Evan Toliopoulos"
           git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
-          echo "Adding Git tag ${RELEASE_TAG}" &&
+          echo "Creating Git tag ${RELEASE_TAG}" &&
           git tag "${RELEASE_TAG}" &&
           echo &&
           echo "Deploying the application" &&
