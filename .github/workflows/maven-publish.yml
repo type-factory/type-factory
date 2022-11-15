@@ -17,9 +17,9 @@ on:
 
 jobs:
   publish:
+    # Check that this is being executed on 'main' or a 'release-N.x.x' branch
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-')
     runs-on: ubuntu-latest
-    # Check that this is being executed on a 'release-n.n.n' branch
-    if: startsWith(github.ref, 'refs/heads/release-')
     steps:
       - id: checkout-code
         name: Checkout code
