@@ -1,12 +1,12 @@
 # Help - https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # Default owners for everything in the repo. A later match will take precedence.
-*                     @type-factory/evantoli
+*                     @evantoli
 
 # Protect certain files
-.github/CODEOWNERS    @type-factory/evantoli
-.github/*             @type-factory/evantoli
-CODE_OF_CONDUCT.md    @type-factory/evantoli
-LICENSE.md            @type-factory/evantoli
-NOTICE.txt            @type-factory/evantoli
-README.md             @type-factory/evantoli
+.github/CODEOWNERS    @evantoli
+.github/*             @evantoli
+CODE_OF_CONDUCT.md    @evantoli
+LICENSE.md            @evantoli
+NOTICE.txt            @evantoli
+README.md             @evantoli
