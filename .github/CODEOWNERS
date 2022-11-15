@@ -1,0 +1,12 @@
+# Help - https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo. A later match will take precedence.
+*                     @evantoli
+
+# Protect certain files
+.github/CODEOWNERS    @evantoli
+.github/*             @evantoli
+CODE_OF_CONDUCT.md    @evantoli
+LICENSE.md            @evantoli
+NOTICE.txt            @evantoli
+README.md             @evantoli
