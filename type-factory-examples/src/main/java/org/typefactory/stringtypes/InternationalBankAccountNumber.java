@@ -53,13 +53,13 @@ public final class InternationalBankAccountNumber extends StringType {
   private static final long MODULUS = 97;
   private static final int MAX_ALPHANUMERIC_VALUE = 35;
 
-  private static Boolean isValidIBAN(final String value) {
+  private static boolean isValidIBAN(final String value) {
     final int valueLength = value.length();
     long total = 0;
     for (int i = 0; i < valueLength; ++i) {
       final int numericValue = Character.getNumericValue(value.charAt((i + 4) % valueLength));
       if (numericValue < 0 || numericValue > MAX_ALPHANUMERIC_VALUE) {
-        return Boolean.FALSE;
+        return false;
       }
       total = (numericValue > 9 ? total * 100 : total * 10) + numericValue;
       if (total > MAX) {
