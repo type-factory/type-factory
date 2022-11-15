@@ -18,6 +18,9 @@ This example creates a custom type for currency codes that must conform to the I
   format for a currency code. 
 
 ```java
+import org.typefactory.StringType;
+import org.typefactory.TypeParser;
+
 public final class CurrencyCode extends StringType {   // ①
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  // ②
@@ -92,6 +95,10 @@ This example creates a custom type for international bank account numbers that a
 Below we've only highlighted the features not already introduced in the previous example.
 
 ```java
+import java.util.regex.Pattern;
+import org.typefactory.StringType;
+import org.typefactory.TypeParser;
+
 public final class InternationalBankAccountNumber extends StringType {
 
   public static final InternationalBankAccountNumber EMPTY_IBAN = 
