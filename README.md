@@ -105,7 +105,7 @@ public final class InternationalBankAccountNumber extends StringType {
       new InternationalBankAccountNumber("");
 
   private static final Pattern VALID_IBAN_PATTERN = 
-      Pattern.compile("[A-Z]{2}[0-9]{2}[0-9A-Z]{1,30}");  // ①
+      Pattern.compile("[A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+");  // ①
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
           .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
