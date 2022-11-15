@@ -56,10 +56,10 @@ class InternationalBankAccountNumberTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "FR76 3000 6000 0112 3456 7890 1890 9999 1111 | Invalid value - too long, maximum length is 34.                       ",
-      "B171 0961 2345 6769                          | Invalid value - does not match pattern [A-Z]{2}[0-9]{2}[0-9A-Z]{1,30} ",
-      "BRA5 0000 0000 0000 1093 2840 814 P2         | Invalid value - does not match pattern [A-Z]{2}[0-9]{2}[0-9A-Z]{1,30} ",
-      "FR77 3000 6000 0112 3456 7890 189            | Invalid value - does not pass custom validation criteria.             ",
+      "FR76 3000 6000 0112 3456 7890 1890 9999 1111 | Invalid value - too long, maximum length is 34.                          ",
+      "B171 0961 2345 6769                          | Invalid value - does not match pattern [A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+ ",
+      "BRA5 0000 0000 0000 1093 2840 814 P2         | Invalid value - does not match pattern [A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+ ",
+      "FR77 3000 6000 0112 3456 7890 189            | Invalid value - does not pass custom validation criteria.                ",
   }, delimiter = '|')
   void shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> InternationalBankAccountNumber.of(value))
