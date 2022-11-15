@@ -5,10 +5,6 @@
 
 name: Publish to Maven Central Repository
 
-#on:
-#  release:
-#    types: [created]
-
 on:
   workflow_dispatch:
     inputs:
@@ -22,6 +18,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Check that this is being executed on a 'release-n.n.n' branch
+    if: startsWith(github.ref, 'refs/heads/release-')
     steps:
       - id: checkout-code
         name: Checkout code
