@@ -1,3 +1,6 @@
+[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven.yml)
+
+
 Type Factory
 ============
 
@@ -15,25 +18,25 @@ This example creates a custom type for currency codes that must conform to the I
   format for a currency code. 
 
 ```java
-public final class CurrencyCode extends StringType {   ①
+public final class CurrencyCode extends StringType {   // ①
 
-  public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  ②
+  public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  // ②
 
-  private static final TypeParser TYPE_PARSER = TypeParser.builder()       ③
-      .errorMessage("must be a 3-character ISO 4217 alpha currency code")  ④
-      .acceptCharRange('a', 'z')  ⑤
+  private static final TypeParser TYPE_PARSER = TypeParser.builder()       // ③
+      .errorMessage("must be a 3-character ISO 4217 alpha currency code")  // ④
+      .acceptCharRange('a', 'z')  // ⑤
       .acceptCharRange('A', 'Z')
-      .fixedSize(3)          ⑥
-      .removeAllWhitespace() ⑦
-      .convertNullToEmpty()  ⑧
-      .toUpperCase()         ⑨
+      .fixedSize(3)               // ⑥
+      .removeAllWhitespace()      // ⑦
+      .convertNullToEmpty()       // ⑧
+      .toUpperCase()              // ⑨
       .build();
 
-  private CurrencyCode(final String value) {  ⑩
+  private CurrencyCode(final String value) {  // ⑩
     super(value);
   }
 
-  public static CurrencyCode of(final CharSequence value) {  ⑪
+  public static CurrencyCode of(final CharSequence value) {  // ⑪
     return TYPE_PARSER.parseToStringType(value, CurrencyCode::new); 
   }
 }
@@ -95,19 +98,19 @@ public final class InternationalBankAccountNumber extends StringType {
       new InternationalBankAccountNumber("");
 
   private static final Pattern VALID_IBAN_PATTERN = 
-      Pattern.compile("[A-Z]{2}[0-9]{2}[0-9A-Z]{1,30}");  ①
+      Pattern.compile("[A-Z]{2}[0-9]{2}[0-9A-Z]{1,30}");  // ①
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
           .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
-          .acceptLettersAtoZ()  ②
-          .acceptDigits0to9()   ③
+          .acceptLettersAtoZ()  // ②
+          .acceptDigits0to9()   // ③
           .minSize(5)
           .maxSize(34)
           .removeAllWhitespace()
-          .removeAllChars('.', '-', '–', '—')  ④  // period, hyphen, en-dash and em-dash
+          .removeAllChars('.', '-', '–', '—')  // ④  period, hyphen, en-dash and em-dash
           .toUpperCase()
-          .matchesRegex(VALID_IBAN_PATTERN)    ⑤
-          .customValidator(InternationalBankAccountNumber::isValidIBAN)  ⑥
+          .matchesRegex(VALID_IBAN_PATTERN)    // ⑤
+          .customValidator(InternationalBankAccountNumber::isValidIBAN)  // ⑥
           .build();
 
   private InternationalBankAccountNumber(final String value) {
@@ -118,11 +121,11 @@ public final class InternationalBankAccountNumber extends StringType {
     return TYPE_PARSER.parseToStringType(value, InternationalBankAccountNumber::new);
   }
 
-  private static final long MAX = 999999999;   ⑦
+  private static final long MAX = 999999999;   // ⑦
   private static final long MODULUS = 97;
   private static final int MAX_ALPHANUMERIC_VALUE = 35;
 
-  private static Boolean isValidIBAN(final String value) {  ⑧
+  private static Boolean isValidIBAN(final String value) {  // ⑧
     final int valueLength = value.length();
     long total = 0;
     for (int i = 0; i < valueLength; ++i) {
