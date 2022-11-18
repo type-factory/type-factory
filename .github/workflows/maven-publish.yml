@@ -78,7 +78,7 @@ jobs:
           git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
-          git tag -s "${RELEASE_TAG}" -m "Tagging version for release ${RELEASE_VERSION}" &&
+          git tag "${RELEASE_TAG}" -m "Tagging version for release ${RELEASE_VERSION}" &&
           echo &&
           echo "Deploying the application" &&
           mvn --batch-mode -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
