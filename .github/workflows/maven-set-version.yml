@@ -46,13 +46,14 @@ jobs:
         run: |
           CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
           NEW_VERSION="${{ inputs.NEW_VERSION_NUMBER }}" &&
-          NEW_BRANCH_NAME="set-new-version-${NEW_VERSION//\./-}" &&
+          BRANCH_NAME="set-new-version-${NEW_VERSION//\./-}" &&
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_OUTPUT &&
           echo &&
           echo "CURRENT_VERSION=${CURRENT_VERSION}" &&
           echo "NEW_VERSION=${NEW_VERSION}" &&
           echo &&
-          echo "Creating and checking out new branch ${NEW_BRANCH_NAME}" &&
-          git checkout -b "${NEW_BRANCH_NAME}" &&
+          echo "Creating and checking out new branch ${BRANCH_NAME}" &&
+          git checkout -b "${BRANCH_NAME}" &&
           echo &&
           echo "Update version for release to ${NEW_VERSION} – version was ${CURRENT_VERSION}" &&
           mvn --batch-mode --quiet -DnewVersion="${NEW_VERSION}" -DprocessAllModules=true versions:set &&
@@ -65,11 +66,13 @@ jobs:
           mvn --batch-mode -Dlogging.level.org.typefactory=WARNING verify &&
           echo &&
           echo "Pushing commit to GitHub – ${NEW_VERSION}" &&
-          git push --set-upstream origin "${NEW_BRANCH_NAME}" &&
+          git push --set-upstream origin "${BRANCH_NAME}" &&
           echo
       - id: create-pull-request
         name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
+        with:
+          branch: ${{ steps.update-version-number.outputs.BRANCH_NAME }}
       - name: Check outputs
         if: ${{ steps.create-pull-request.outputs.pull-request-number }}
         run: |
