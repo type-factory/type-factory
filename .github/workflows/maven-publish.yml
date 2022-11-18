@@ -54,7 +54,7 @@ jobs:
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          GPG_KEYNAME: ${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
+          GPG_KEY_ID: ${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
           GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         shell: bash
         run: |
