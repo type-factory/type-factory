@@ -72,6 +72,7 @@ jobs:
           mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
           echo &&
           echo "Committing to local branch" &&
+          git config user.signingKey "${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}" &&
           git config user.email "GitHub Actions Bot" &&
           git config user.name "GitHub Actions Bot" &&
           git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
