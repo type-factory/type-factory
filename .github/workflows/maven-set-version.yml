@@ -1,0 +1,74 @@
+# This workflow will build a package using Maven and then publish it to to the Maven Central Repository when a release is created
+# For more information see: 
+# - https://docs.github.com/en/actions/publishing-packages/publishing-java-packages-with-maven
+# - https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Set new version number using Maven
+
+on:
+  workflow_dispatch:
+    inputs:
+      NEW_VERSION_NUMBER:
+        description: 'Set new version number'
+        required: true
+
+jobs:
+  set-version:
+    # Check that this is being executed on 'main' or a 'release-N.x.x' branch
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-')
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout-code
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: "set-new-version-${{ INPUT_NEW_VERSION_NUMBER }}"
+      - id: setup-java-and-maven-settings
+        name: Set up Java and Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - id: import-gpg-key
+        name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - id: update-version-number
+        name: Update Maven artifact version number
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_KEY_ID: ${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
+          NEW_VERSION="${INPUT_NEW_VERSION_NUMBER}" &&
+          echo &&
+          echo "CURRENT_VERSION=${CURRENT_VERSION}" &&
+          echo "NEW_VERSION=${NEW_VERSION}" &&
+          echo &&
+          echo "Update version for release to ${NEW_VERSION} – version was ${CURRENT_VERSION}" &&
+          mvn --batch-mode --quiet -DnewVersion="${NEW_VERSION}" -DprocessAllModules=true versions:set &&
+          echo &&
+          echo "Committing to local branch" &&
+          git commit --gpg-sign --all --message "Update version for release to ${NEW_VERSION} – version was ${CURRENT_VERSION}" &&
+          git verify-commit HEAD &&
+          echo &&
+          echo "Deploying the application" &&
+          mvn --batch-mode -Dlogging.level.org.typefactory=WARNING verify &&
+          echo &&
+          echo "Pushing commit to GitHub – ${NEW_VERSION}" &&
+          git push origin
+      - id: create-pull-request
+        name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+      - name: Check outputs
+        if: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.create-pull-request.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.create-pull-request.outputs.pull-request-url }}"
