@@ -17,16 +17,14 @@ on:
 
 jobs:
   publish:
-    # Check that this is being executed on 'main' or a 'release-N.x.x' branch
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-')
+    # Check that this is not being executed on 'main' or a 'release-N.x.x' branch because they are protected
+    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release-')
     runs-on: ubuntu-latest
     steps:
       - id: checkout-code
         name: Checkout code
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.WORKFLOW_ACTIONS_BOT_ACCESS_TOKEN }}
-      - id: setup-java-and-maven-settings  
+      - id: setup-java-and-maven-settings
         name: Set up Java and Maven Central Repository
         uses: actions/setup-java@v3
         with:
