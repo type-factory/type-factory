@@ -68,14 +68,3 @@ jobs:
           echo "Pushing commit to GitHub – ${NEW_VERSION}" &&
           git push --set-upstream origin "${BRANCH_NAME}" &&
           echo
-      - id: create-pull-request
-        name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          base: main
-          branch: ${{ steps.update-version-number.outputs.BRANCH_NAME }}
-      - name: Check outputs
-        if: ${{ steps.create-pull-request.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.create-pull-request.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.create-pull-request.outputs.pull-request-url }}"
