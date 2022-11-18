@@ -22,7 +22,7 @@ jobs:
         name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: "set-new-version-${{ INPUT_NEW_VERSION_NUMBER }}"
+          ref: "set-new-version-${{ github.event.inputs.NEW_VERSION_NUMBER }}"
       - id: setup-java-and-maven-settings
         name: Set up Java and Maven Central Repository
         uses: actions/setup-java@v3
