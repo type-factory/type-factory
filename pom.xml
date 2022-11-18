@@ -47,6 +47,8 @@
     <assertj-core.version>3.23.1</assertj-core.version>
     <icu4j.version>72.1</icu4j.version>
 
+    <sonar.organization>type-factory</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
 
