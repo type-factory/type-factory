@@ -72,13 +72,13 @@ jobs:
           mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
           echo &&
           echo "Committing to local branch" &&
-          git config user.signingKey "${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}" &&
+          git config user.signingKey "${{ secrets.WORKFLOW_ACTIONS_GPG_SIGNING_KEY_ID }}" &&
           git config user.email "GitHub Actions Bot" &&
           git config user.name "GitHub Actions Bot" &&
           git commit --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
-          git tag "${RELEASE_TAG}" &&
+          git tag -s "${RELEASE_TAG}" -m "Tagging version for release ${RELEASE_VERSION}" &&
           echo &&
           echo "Deploying the application" &&
           mvn --batch-mode -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
