@@ -65,7 +65,8 @@ jobs:
           mvn --batch-mode -Dlogging.level.org.typefactory=WARNING verify &&
           echo &&
           echo "Pushing commit to GitHub – ${NEW_VERSION}" &&
-          git push origin
+          git push --set-upstream origin "${NEW_BRANCH_NAME}" &&
+          echo
       - id: create-pull-request
         name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
