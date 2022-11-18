@@ -36,8 +36,6 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          gpg-passphrase: GPG_PASSPHRASE
       - id: import-gpg-key
         name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
