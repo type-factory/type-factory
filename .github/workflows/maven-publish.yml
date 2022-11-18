@@ -44,6 +44,7 @@ jobs:
           passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
           git_user_signingkey: true
           git_commit_gpgsign: true
+          git_tag_gpgsign: true
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
         run: mvn --batch-mode --activate-profiles release -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
@@ -78,9 +79,11 @@ jobs:
           echo &&
           echo "Committing to local branch" &&
           git commit --gpg-sign --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
+          git verify-commit HEAD &&
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
           git tag --sign "${RELEASE_TAG}" --message "Tagging version for release ${RELEASE_VERSION}" &&
+          git verify-tag HEAD &&
           echo &&
           echo "Deploying the application" &&
           mvn --batch-mode --activate-profiles release -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
