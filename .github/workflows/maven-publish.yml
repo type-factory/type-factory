@@ -88,8 +88,10 @@ jobs:
           echo "Deploying the application" &&
           mvn --batch-mode --activate-profiles release -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
           echo &&
-          echo "Pushing to GitHub – ${RELEASE_VERSION}" &&
-          git push origin && git push origin "${RELEASE_TAG}" &&
+          echo "Pushing commit to GitHub – ${RELEASE_VERSION}" &&
+          git push origin &&
+          echo "Pushing tag to GitHub – ${RELEASE_TAG}" &&
+          git push origin "${RELEASE_TAG}" &&
           echo &&
           echo "Update to next snapshot version ${NEXT_SNAPSHOT_VERSION} – from release version of ${RELEASE_VERSION}" &&
           mvn --batch-mode --quiet -DnewVersion="${NEXT_SNAPSHOT_VERSION}" -DprocessAllModules=true versions:set &&
