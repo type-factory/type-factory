@@ -29,4 +29,4 @@ jobs:
         cache: maven
     - id: build-with-maven
       name: Build with Maven
-      run: mvn --batch-mode --file pom.xml clean package
+      run: mvn --batch-mode --file pom.xml clean verify
