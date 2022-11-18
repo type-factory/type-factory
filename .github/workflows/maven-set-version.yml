@@ -21,8 +21,6 @@ jobs:
       - id: checkout-code
         name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: "set-new-version-${{ github.event.inputs.NEW_VERSION_NUMBER }}"
       - id: setup-java-and-maven-settings
         name: Set up Java and Maven Central Repository
         uses: actions/setup-java@v3
@@ -48,9 +46,13 @@ jobs:
         run: |
           CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
           NEW_VERSION="${INPUT_NEW_VERSION_NUMBER}" &&
+          NEW_BRANCH="set-new-version-${NEW_VERSION}" &&
           echo &&
           echo "CURRENT_VERSION=${CURRENT_VERSION}" &&
           echo "NEW_VERSION=${NEW_VERSION}" &&
+          echo &&
+          echo "Creating and checking out new branch ${NEW_BRANCH}" &&
+          git checkout -b "${NEW_BRANCH}" &&
           echo &&
           echo "Update version for release to ${NEW_VERSION} – version was ${CURRENT_VERSION}" &&
           mvn --batch-mode --quiet -DnewVersion="${NEW_VERSION}" -DprocessAllModules=true versions:set &&
