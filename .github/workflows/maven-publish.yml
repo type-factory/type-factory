@@ -39,12 +39,15 @@ jobs:
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
         run: mvn --batch-mode -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
-      - id: configure-gpg-secret-key
-        name: Configure gpg secret key
-        run: |
-          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import &&
-          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}") | gpg-preset-passphrase --preset &&
-          gpg --list-secret-keys --keyid-format LONG
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_committer_name: GitHub Actions Bot
+          git_committer_email: GitHub Actions Bot
       - id: publish-to-central
         name: Publish to Maven Central Repository
         env:
@@ -73,9 +76,6 @@ jobs:
           mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
           echo &&
           echo "Committing to local branch" &&
-          git config user.signingKey "${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}" &&
-          git config user.name "GitHub Actions Bot" &&
-          git config user.email "${{ secrets.OSSRH_GPG_SECRET_KEY_EMAIL }}" &&
           git commit --gpg-sign --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
