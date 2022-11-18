@@ -42,7 +42,8 @@ jobs:
       - id: configure-gpg-secret-key
         name: Configure gpg secret key
         run: |
-          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import &&
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}") | gpg-preset-passphrase --preset &&
           gpg --list-secret-keys --keyid-format LONG
       - id: publish-to-central
         name: Publish to Maven Central Repository
@@ -72,9 +73,9 @@ jobs:
           mvn --batch-mode --quiet -DnewVersion="${RELEASE_VERSION}" -DprocessAllModules=true versions:set &&
           echo &&
           echo "Committing to local branch" &&
-          git config user.signingKey "${{ secrets.WORKFLOW_ACTIONS_GPG_SIGNING_KEY_ID }}" &&
+          git config user.signingKey "${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}" &&
           git config user.name "GitHub Actions Bot" &&
-          git config user.email "${{ secrets.WORKFLOW_ACTIONS_GPG_SIGNING_EMAIL }}" &&
+          git config user.email "${{ secrets.OSSRH_GPG_SECRET_KEY_EMAIL }}" &&
           git commit --gpg-sign --all --message "Update version for release to ${RELEASE_VERSION} – version was ${CURRENT_VERSION}" &&
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
