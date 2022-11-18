@@ -36,9 +36,8 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-      - id: build-and-verify-with-maven
-        name: Build and verify with Maven
-        run: mvn --batch-mode -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
       - id: import-gpg-key
         name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
@@ -47,13 +46,16 @@ jobs:
           passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
           git_user_signingkey: true
           git_commit_gpgsign: true
-          git_committer_name: GitHub Actions Bot
-          git_committer_email: evantoli+gpg@typefactory.org
+      - id: build-and-verify-with-maven
+        name: Build and verify with Maven
+        run: mvn --batch-mode --activate-profiles release -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
       - id: publish-to-central
         name: Publish to Maven Central Repository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_KEYNAME: ${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         shell: bash
         run: |
           CURRENT_VERSION="$(mvn --batch-mode --quiet -Dexpression=project.version -DforceStdout help:evaluate)" &&
@@ -83,7 +85,7 @@ jobs:
           git tag --sign "${RELEASE_TAG}" --message "Tagging version for release ${RELEASE_VERSION}" &&
           echo &&
           echo "Deploying the application" &&
-          mvn --batch-mode -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
+          mvn --batch-mode --activate-profiles release -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
           echo &&
           echo "Pushing to GitHub – ${RELEASE_VERSION}" &&
           git push origin && git push origin "${RELEASE_TAG}" &&
