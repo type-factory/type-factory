@@ -39,7 +39,8 @@ jobs:
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
         run: mvn --batch-mode -Dlogging.level.org.typefactory=WARNING --file pom.xml clean verify
-      - name: Import GPG key
+      - id: import-gpg-key
+        name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
         with:
           gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
@@ -47,7 +48,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
           git_committer_name: GitHub Actions Bot
-          git_committer_email: GitHub Actions Bot
+          git_committer_email: evantoli+gpg@typefactory.org
       - id: publish-to-central
         name: Publish to Maven Central Repository
         env:
