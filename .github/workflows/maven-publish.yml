@@ -83,7 +83,7 @@ jobs:
           echo &&
           echo "Creating Git tag ${RELEASE_TAG}" &&
           git tag --sign "${RELEASE_TAG}" --message "Tagging version for release ${RELEASE_VERSION}" &&
-          git verify-tag HEAD &&
+          git verify-tag "${RELEASE_TAG}" &&
           echo &&
           echo "Deploying the application" &&
           mvn --batch-mode --activate-profiles release -Dmaven.test.skip=true -Dlogging.level.org.typefactory=WARNING deploy &&
