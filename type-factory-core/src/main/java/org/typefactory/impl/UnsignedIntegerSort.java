@@ -20,16 +20,16 @@ public class UnsignedIntegerSort {
   private UnsignedIntegerSort() {
   }
 
-  public static void sort(int[] a) {
+  public static void sort(final int[] a) {
     sort(a, 0, a.length);
   }
 
-  public static void sort(int[] a, int fromIndexInclusive, int toIndexExclusive) {
+  public static void sort(final int[] a, final int fromIndexInclusive, final int toIndexExclusive) {
     rangeCheck(a.length, fromIndexInclusive, toIndexExclusive);
     unsignedIntegerDualPivotQuicksort(a, fromIndexInclusive, toIndexExclusive - 1, 3);
   }
 
-  private static void rangeCheck(int length, int fromIndexInclusive, int toIndexExclusive) {
+  private static void rangeCheck(final int length, final int fromIndexInclusive, final int toIndexExclusive) {
     if (fromIndexInclusive > toIndexExclusive) {
       throw new IllegalArgumentException("fromIndex > toIndex");
     }
@@ -41,15 +41,15 @@ public class UnsignedIntegerSort {
     }
   }
 
-  private static void swap(int[] a, int i, int j) {
+  private static void swap(final int[] a, final int i, final int j) {
     int temp = a[i];
     a[i] = a[j];
     a[j] = temp;
   }
 
-  private static void unsignedIntegerDualPivotQuicksort(int[] a, int left, int right, int div) {
+  private static void unsignedIntegerDualPivotQuicksort(final int[] a, final int left, final int right, int div) {
 
-    int len = right - left;
+    final int len = right - left;
     if (len < 27) { // insertion sort for tiny array
       for (int i = left + 1; i <= right; i++) {
         for (int j = i;
@@ -60,7 +60,7 @@ public class UnsignedIntegerSort {
       }
       return;
     }
-    int third = len / div;
+    final int third = len / div;
     // "medians"
     int m1 = left + third;
     int m2 = right - third;

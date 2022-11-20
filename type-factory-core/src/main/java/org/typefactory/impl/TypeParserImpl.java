@@ -146,25 +146,19 @@ class TypeParserImpl implements TypeParser {
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
   // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
-  // Suppress SonarQube "java:S1301 – 'switch' statements should have at least 3 'case' clauses"
-  // – In this instance I think the switch statements are clearer
-  @SuppressWarnings({"java:S3776", "java:S1301"})
+  @SuppressWarnings({"java:S3776"})
   @Override
   public String parseToString(final CharSequence originalValue) throws InvalidValueException {
     if (originalValue == null) {
-      switch (nullHandling) {
-        case CONVERT_NULL_TO_EMPTY:
-          return Constants.EMPTY_STRING;
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL:
-          return null;
-      }
+      return switch (nullHandling) {
+        case CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
+        case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> null;
+      };
     } else if (originalValue.isEmpty()) {
-      switch (nullHandling) {
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY:
-          return Constants.EMPTY_STRING;
-        case CONVERT_EMPTY_TO_NULL:
-          return null;
-      }
+      return switch (nullHandling) {
+        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
+        case CONVERT_EMPTY_TO_NULL -> null;
+      };
     }
 
     final CharSequence source = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
@@ -290,14 +284,10 @@ class TypeParserImpl implements TypeParser {
     final int parsedLength = targetEndIndex - targetStartIndex;
     final String parsedValue;
     if (parsedLength == 0) {
-      switch (nullHandling) {
-        case PRESERVE_NULL_AND_EMPTY:
-          return Constants.EMPTY_STRING;
-        case CONVERT_EMPTY_TO_NULL:
-          return null;
-        default:
-          // do nothing
-      }
+      return switch (nullHandling) {
+        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
+        case CONVERT_EMPTY_TO_NULL -> null;
+      };
     }
 
     parsedValue = new String(target, targetStartIndex, targetEndIndex - targetStartIndex);
