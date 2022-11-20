@@ -135,6 +135,30 @@ class UnsignedIntegerSortTest {
     assertThat(values).containsExactly(expected);
   }
 
+  @Test
+  void sort_shouldHandleArrayWithThirtyIdenticalElements() {
+    final var values = new int[]{
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+    };
+    final var expected = new int[]{
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+        0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000, 0x2222_0000,
+    };
+
+    assertThat(values).containsExactlyInAnyOrder(expected);
+
+    UnsignedIntegerSort.sort(values);
+    assertThat(values).containsExactly(expected);
+  }
 
   @Test
   void sort_shouldHandleArrayWithThirtyElementsInOrder() {
