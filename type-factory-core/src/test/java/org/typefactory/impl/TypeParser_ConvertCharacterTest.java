@@ -51,7 +51,7 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
             .acceptLettersAtoZ()
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
 }

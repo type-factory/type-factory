@@ -17,9 +17,9 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.TypeParser;
 
 class TypeParser_ConvertCharSequenceTest extends AbstractTypeParserTest {
 

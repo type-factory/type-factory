@@ -52,7 +52,8 @@ class TypeParserImpl implements TypeParser {
   private final Subset acceptedCodePoints;
   private final Converter converter;
 
-  @SuppressWarnings("java:S107") // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
+  @SuppressWarnings("java:S107")
+    // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
   TypeParserImpl(
       final Class<?> targetTypeClass,
       final String errorMessage,
@@ -81,7 +82,8 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod) throws InvalidValueException {
+  public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
     return (nullHandling == PRESERVE_NULL_AND_EMPTY && value == null)
         || (nullHandling == CONVERT_EMPTY_TO_NULL && (value == null || value.isEmpty()))
         ? null
@@ -89,7 +91,8 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
+  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
     final Short parsedValue = parseToShort(value);
     return parsedValue == null
         ? null
@@ -97,7 +100,8 @@ class TypeParserImpl implements TypeParser {
   }
 
   @Override
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
+  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
+      throws InvalidValueException {
     final Integer parsedValue = parseToInteger(value);
     return parsedValue == null
         ? null
@@ -139,21 +143,35 @@ class TypeParserImpl implements TypeParser {
     return Long.valueOf(parsedValue);
   }
 
-
-  // Suppress SonarQube "Cognitive Complexity of methods should not be too high" – this is the main parse method and I think it reads well.
-  @SuppressWarnings("java:S3776")
+  // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
+  // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
+  // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
+  // Suppress SonarQube "java:S1301 – 'switch' statements should have at least 3 'case' clauses"
+  // – In this instance I think the switch statements are clearer
+  @SuppressWarnings({"java:S3776", "java:S1301"})
   @Override
   public String parseToString(final CharSequence originalValue) throws InvalidValueException {
-    if ((nullHandling == PRESERVE_NULL_AND_EMPTY && originalValue == null)
-        || (nullHandling == CONVERT_EMPTY_TO_NULL && (originalValue == null || originalValue.isEmpty()))) {
-      return null;
+    if (originalValue == null) {
+      switch (nullHandling) {
+        case CONVERT_NULL_TO_EMPTY:
+          return Constants.EMPTY_STRING;
+        case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL:
+          return null;
+      }
+    } else if (originalValue.isEmpty()) {
+      switch (nullHandling) {
+        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY:
+          return Constants.EMPTY_STRING;
+        case CONVERT_EMPTY_TO_NULL:
+          return null;
+      }
     }
 
     final CharSequence source = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
         ? originalValue
         : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
 
-    final int length = source.length();
+    final int length = source == null ? 0 : source.length();
     if (length == 0) {
       return switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
@@ -255,18 +273,34 @@ class TypeParserImpl implements TypeParser {
       }
       ++sourceIndex;
     }
-    if (targetIndex < minNumberOfCodePoints) {
+    if (targetIndex > 0 && targetIndex < minNumberOfCodePoints) {
       throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, source, minNumberOfCodePoints);
     }
 
-    final String parsedValue;
+    final int targetEndIndex;
+    final int targetStartIndex;
     if (whiteSpace == WhiteSpace.NORMALIZE_WHITESPACE) {
-      final int targetEndIndex = endIndexIgnoringTrailingWhitespace(target, targetIndex);
-      final int targetStartIndex = startIndexIgnoringLeadingWhitespace(target, targetEndIndex);
-      parsedValue = new String(target, targetStartIndex, targetEndIndex - targetStartIndex);
+      targetEndIndex = endIndexIgnoringTrailingWhitespace(target, targetIndex);
+      targetStartIndex = startIndexIgnoringLeadingWhitespace(target, targetEndIndex);
     } else {
-      parsedValue = new String(target, 0, targetIndex);
+      targetEndIndex = targetIndex;
+      targetStartIndex = 0;
     }
+
+    final int parsedLength = targetEndIndex - targetStartIndex;
+    final String parsedValue;
+    if (parsedLength == 0) {
+      switch (nullHandling) {
+        case PRESERVE_NULL_AND_EMPTY:
+          return Constants.EMPTY_STRING;
+        case CONVERT_EMPTY_TO_NULL:
+          return null;
+        default:
+          // do nothing
+      }
+    }
+
+    parsedValue = new String(target, targetStartIndex, targetEndIndex - targetStartIndex);
 
     validateThatParsedValueConformToTheRegex(parsedValue, source);
 
@@ -316,7 +350,7 @@ class TypeParserImpl implements TypeParser {
    * @param codePoints the code-point array that may have trailing whitespace
    * @return the end-index of the last char-character ignoring trailing whitespace
    */
-  private static int endIndexIgnoringTrailingWhitespace(final int [] codePoints, int endIndex) {
+  private static int endIndexIgnoringTrailingWhitespace(final int[] codePoints, int endIndex) {
     if (codePoints == null) {
       return 0;
     }
@@ -332,7 +366,7 @@ class TypeParserImpl implements TypeParser {
    * Return the index of first character that is not whitespace
    *
    * @param codePoints the code-point array that may have trailing whitespace
-   * @param endIndex the index at which to stop progressing through the char-sequence
+   * @param endIndex   the index at which to stop progressing through the char-sequence
    * @return the index of first character that is not whitespace
    */
   private static int startIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {

@@ -16,11 +16,11 @@
 package org.typefactory.impl;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Category;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
@@ -38,7 +38,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(value);
   }
 
   @ParameterizedTest
@@ -78,7 +78,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(value);
   }
 
   @ParameterizedTest
@@ -118,7 +118,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
             .acceptUnicodeCategory(Category.LETTER)
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(value);
   }
 
   @ParameterizedTest

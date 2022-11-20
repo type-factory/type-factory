@@ -19,8 +19,6 @@ import static org.typefactory.impl.Constants.EMPTY_STRING;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
@@ -37,7 +35,6 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   private Normalizer.Form targetCharacterNormalizationForm = Form.NFC;
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
-  private boolean ignoreModifiersForMinMaxSize = false;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
 
   private Pattern regex = null;
@@ -45,9 +42,6 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
   private Predicate<String> validationFunction = null;
   private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
-
-  private final List<TypeParserBuilder> logicalOr = new ArrayList<>();
-
 
   TypeParserBuilderImpl() {
   }
@@ -294,6 +288,13 @@ class TypeParserBuilderImpl implements TypeParserBuilder {
         removeAllCodePoints(codePoints[i]);
       }
     }
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder removeAllDashesAndHyphens() {
+    acceptUnicodeCategory(Category.DASH_PUNCTUATION);
+    converterBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, EMPTY_STRING);
     return this;
   }
 

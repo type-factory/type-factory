@@ -17,10 +17,9 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.typefactory.impl.Converter;
-import org.typefactory.impl.Converter.ConverterResults;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.impl.Converter.ConverterResults;
 
 class ConverterTest {
 

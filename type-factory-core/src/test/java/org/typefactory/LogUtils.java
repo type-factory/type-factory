@@ -52,8 +52,6 @@ public class LogUtils {
 
   private static final LogManager logManager = getLogManager();
 
-  private static final Logger typeFactoryLogger = getTypeFactoryLogger();
-
   public static <T> Logger getLogger(Class<T> clazz) {
     return Logger.getLogger(clazz.getName());
   };

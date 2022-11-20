@@ -17,7 +17,6 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.text.ParseException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.TypeParser;

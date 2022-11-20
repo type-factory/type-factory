@@ -22,8 +22,9 @@ public final class ProductId extends LongType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 16-digit number")
+          .errorMessage("must be a 16-digit product-id")
           .removeAllWhitespace()
+          .removeAllDashesAndHyphens()
           .acceptDigits0to9()
           .fixedSize(16)
           .build();

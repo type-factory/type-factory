@@ -39,6 +39,7 @@ public final class InternationalBankAccountNumber extends StringType {
       .toUpperCase()
       .matchesRegex(VALID_IBAN_PATTERN)
       .customValidator(InternationalBankAccountNumber::isValidIBAN)
+      .preserveNullAndEmpty()
       .build();
 
   private InternationalBankAccountNumber(final String value) {

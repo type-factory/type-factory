@@ -21,7 +21,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.logging.Logger;
 import org.typefactory.TypeParser;
 
 class CodePointSequenceToCodePointSequenceConverter implements Converter {

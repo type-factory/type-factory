@@ -197,7 +197,7 @@ public class LettersClassGenerator {
         """);
 
     try (final FileWriter fileWriter = new FileWriter(
-        outputDirectory + /* TODO File.separator + "letters" + */ File.separator + lettersClassName + ".java")) {
+        outputDirectory + File.separator + lettersClassName + ".java")) {
       fileWriter.append(s.toString());
       fileWriter.flush();
     } catch (final IOException e) {

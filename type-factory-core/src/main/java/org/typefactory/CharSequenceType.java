@@ -27,25 +27,7 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
    * @see Character#isWhitespace(int)
    */
   default boolean isBlank() {
-    if (isNull()) {
-      return true;
-    }
-    final CharSequence value = value();
-    if (value.isEmpty() || (value instanceof String stringValue && stringValue.isBlank())) {
-      return true;
-    }
-    final int length = value.length();
-    int i = 0;
-    while (i < length) {
-      int codePoint = value().charAt(i++);
-      if (Character.isSurrogate((char) codePoint) && i < length) {
-        codePoint = Character.toCodePoint((char) codePoint, value.charAt(i++));
-      }
-      if (!Character.isWhitespace(codePoint)) {
-        return false;
-      }
-    }
-    return true;
+    return isNull() || CharSequenceUtils.isBlank(value());
   }
 
   static <T extends CharSequenceType<T>> boolean isEmpty(final T value) {

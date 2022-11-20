@@ -24,32 +24,31 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.InvalidValueException;
 
-class ProductIdTest {
+class InvoiceNumberTest {
 
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = "  ")
   void of_shouldReturnNull(final String value) {
-    final ProductId actual = ProductId.of(value);
+    final InvoiceNumber actual = InvoiceNumber.of(value);
     assertThatObject(actual).isNull();
   }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      0000000000000000          | 0
-      0000000000000001          | 1
-      1000200030004000          | 1000200030004000
-      1111222233334444          | 1111222233334444
-      9999999999999999          | 9999999999999999
-      0000 0000 0000 0000       | 0
-      0000-0000-0000-0001       | 1
-      2222 3333 4444 5555       | 2222333344445555
-      9999 9999 9999 9999       | 9999999999999999
-      ' 2222 3333 4444 5555 '   | 2222333344445555
-      '  2222 3333 4444 5555  ' | 2222333344445555
+      000000000         | 0
+      000000001         | 1
+      100020030         | 100020030
+      999999999         | 999999999
+      0000 000 00       | 0
+      0000-000-01       | 1
+      1000-200-30       | 100020030
+      9999-999-99       | 999999999
+      ' 1111-222-33 '   | 111122233
+      '  1111-222-33  ' | 111122233
       """, delimiter = '|')
-  void of_shouldCreateProductIdInstancesAsExpected(final String value, final Long expected) {
-    final ProductId actual = ProductId.of(value);
+  void of_shouldCreateInvoiceNumberInstancesAsExpected(final String value, final Integer expected) {
+    final InvoiceNumber actual = InvoiceNumber.of(value);
     assertThatObject(actual)
         .isNotNull()
         .hasToString(String.valueOf(expected));
@@ -58,23 +57,21 @@ class ProductIdTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      0                     | Invalid value - too short, minimum length is 16.
-      000000000000000       | Invalid value - too short, minimum length is 16.
-      0000-0000-0000-000    | Invalid value - too short, minimum length is 16.
-      0000.0000.0000.0000   | Invalid value - invalid character '.'.
-      0000_0000_0000_0000   | Invalid value - invalid character '_'.
-      00000000000000000     | Invalid value - too long, maximum length is 16.
-      99999999999999999     | Invalid value - too long, maximum length is 16.
-      0000-0000-0000-0000-0 | Invalid value - too long, maximum length is 16.
-      00000000000000A       | Invalid value - invalid character 'A'.
-      000000000000000A      | Invalid value - invalid character 'A'.
-      0000000000000000A     | Invalid value - invalid character 'A'.
-      A                     | Invalid value - invalid character 'A'.
+      0            | Invalid value - too short, minimum length is 9.
+      00000000     | Invalid value - too short, minimum length is 9.
+      0000-00-00   | Invalid value - too short, minimum length is 9.
+      0000.00.00   | Invalid value - invalid character '.'.
+      0000_00_00   | Invalid value - invalid character '_'.
+      0000000000   | Invalid value - too long, maximum length is 9.
+      9999999999   | Invalid value - too long, maximum length is 9.
+      0000-000-000 | Invalid value - too long, maximum length is 9.
+      00000000A    | Invalid value - invalid character 'A'.
+      A            | Invalid value - invalid character 'A'.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
-    assertThatThrownBy(() -> ProductId.of(value))
+    assertThatThrownBy(() -> InvoiceNumber.of(value))
         .isInstanceOf(InvalidValueException.class)
-        .hasMessage("must be a 16-digit product-id. " + expectedExceptionMessage)
+        .hasMessage("must be a 9-digit invoice-number. " + expectedExceptionMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
   }
 }
