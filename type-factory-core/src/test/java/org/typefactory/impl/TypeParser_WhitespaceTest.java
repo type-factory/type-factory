@@ -37,7 +37,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -55,7 +55,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -72,7 +72,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -94,7 +94,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -114,7 +114,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -131,7 +131,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(value);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(value);
   }
 
   @ParameterizedTest
@@ -153,7 +153,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -173,7 +173,7 @@ class TypeParser_WhitespaceTest extends AbstractTypeParserTest {
             .acceptCharRange('A', 'Z')
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
 }

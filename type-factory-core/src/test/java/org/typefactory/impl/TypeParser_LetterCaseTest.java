@@ -38,7 +38,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
             .preserveCase()
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -57,7 +57,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
             .toLowerCase()
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -76,7 +76,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
             .toUpperCase()
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 
   @ParameterizedTest
@@ -95,6 +95,6 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
             .toTitleCase()
             .build();
 
-    Assertions.assertThat(typeParser.parseToString(value)).hasToString(expected);
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
   }
 }
