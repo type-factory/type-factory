@@ -24,20 +24,20 @@ public class UnsignedIntegerSort {
     sort(a, 0, a.length);
   }
 
-  public static void sort(int[] a, int fromIndex, int toIndex) {
-    rangeCheck(a.length, fromIndex, toIndex);
-    unsignedIntegerDualPivotQuicksort(a, fromIndex, toIndex - 1, 3);
+  public static void sort(int[] a, int fromIndexInclusive, int toIndexExclusive) {
+    rangeCheck(a.length, fromIndexInclusive, toIndexExclusive);
+    unsignedIntegerDualPivotQuicksort(a, fromIndexInclusive, toIndexExclusive - 1, 3);
   }
 
-  private static void rangeCheck(int length, int fromIndex, int toIndex) {
-    if (fromIndex > toIndex) {
+  private static void rangeCheck(int length, int fromIndexInclusive, int toIndexExclusive) {
+    if (fromIndexInclusive > toIndexExclusive) {
       throw new IllegalArgumentException("fromIndex > toIndex");
     }
-    if (fromIndex < 0) {
-      throw new ArrayIndexOutOfBoundsException(fromIndex);
+    if (fromIndexInclusive < 0) {
+      throw new ArrayIndexOutOfBoundsException(fromIndexInclusive);
     }
-    if (toIndex > length) {
-      throw new ArrayIndexOutOfBoundsException(toIndex);
+    if (toIndexExclusive > length) {
+      throw new ArrayIndexOutOfBoundsException(toIndexExclusive);
     }
   }
 
