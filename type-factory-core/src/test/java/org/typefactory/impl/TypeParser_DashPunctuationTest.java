@@ -15,11 +15,10 @@
 */
 package org.typefactory.impl;
 
-import java.text.ParseException;
 import org.assertj.core.api.Assertions;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.TypeParser;
 
 class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
 
@@ -29,7 +28,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
       "Water–slide|Water-slide",
       "Water—slide|Water-slide",
   }, delimiter = '|')
-  void should_parse_converting_all_dashes_to_hyphen(final String value, final String expected) throws ParseException {
+  void should_parse_converting_all_dashes_to_hyphen(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -48,7 +47,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
       "Water–slide|Water_slide",
       "Water—slide|Water_slide",
   }, delimiter = '|')
-  void should_parse_converting_all_dashes_to_underscore(final String value, final String expected) throws ParseException {
+  void should_parse_converting_all_dashes_to_underscore(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -67,7 +66,7 @@ class TypeParser_DashPunctuationTest extends AbstractTypeParserTest {
       "Water–slide|Water===slide",
       "Water—slide|Water===slide",
   }, delimiter = '|')
-  void should_parse_converting_all_dashes_to_char_sequence(final String value, final String expected) throws ParseException {
+  void should_parse_converting_all_dashes_to_char_sequence(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()

@@ -22,10 +22,12 @@ public final class InvoiceNumber extends IntegerType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 12-digit number")
+          .errorMessage("must be a 9-digit invoice-number")
           .removeAllWhitespace()
+          .removeAllChars('-')
+          .convertEmptyToNull()
           .acceptDigits0to9()
-          .fixedSize(12)
+          .fixedSize(9)
           .build();
 
   private InvoiceNumber(final Integer value) {

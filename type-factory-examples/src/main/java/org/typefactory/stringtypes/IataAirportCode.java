@@ -29,6 +29,7 @@ public final class IataAirportCode extends StringType {
           .fixedSize(3)
           .toUpperCase()
           .convertNullToEmpty()
+          .removeAllWhitespace()
           .build();
 
   private IataAirportCode(final String value) {

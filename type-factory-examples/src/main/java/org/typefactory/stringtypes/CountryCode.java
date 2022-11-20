@@ -24,11 +24,12 @@ public final class CountryCode extends StringType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 2-character ISO 3166-1 country value")
+          .errorMessage("must be a 2-character ISO 3166-1 alpha country code")
           .acceptLettersAtoZ()
           .fixedSize(2)
           .toUpperCase()
           .preserveNullAndEmpty()
+          .removeAllWhitespace()
           .build();
 
   private CountryCode(final String value) {

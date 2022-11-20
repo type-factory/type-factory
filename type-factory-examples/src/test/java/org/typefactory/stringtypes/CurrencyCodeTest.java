@@ -15,21 +15,60 @@
 */
 package org.typefactory.stringtypes;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.InvalidValueException;
 
 class CurrencyCodeTest {
 
   @ParameterizedTest
-  @CsvSource(value = {
-      "AUD|AUD",
-      "uSd|USD",
-      "NzD|NZD",
-      "eur|EUR",
-  }, delimiter = '|')
-  void should_parse_valid_values(final String value, final String expected) {
+  @NullSource
+  void of_shouldReturnNull(final String value) {
     final CurrencyCode actual = CurrencyCode.of(value);
-    Assertions.assertThatObject(actual).hasToString(expected);
+    assertThatObject(actual).isNull();
+  }
+
+  @ParameterizedTest
+  @EmptySource
+  @ValueSource(strings = "  ")
+  void of_shouldReturnEmpty(final String value) {
+    final CurrencyCode actual = CurrencyCode.of(value);
+    assertThat((CharSequence) actual).isEmpty();
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      AUD       | AUD
+      ' AUD '   | AUD
+      '  AUD  ' | AUD
+      uSd       | USD
+      NzD       | NZD
+      eur       | EUR
+      e u r     | EUR
+      """, delimiter = '|')
+  void of_shouldCreateCurrencyCodeInstancesAsExpected(final String value, final String expected) {
+    final CurrencyCode actual = CurrencyCode.of(value);
+    assertThatObject(actual).hasToString(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      AU   | Invalid value - too short, minimum length is 3.
+      AUSD | Invalid value - too long, maximum length is 3.
+      USAD | Invalid value - too long, maximum length is 3.
+      61D  | Invalid value - invalid character '6'.
+      """, delimiter = '|')
+  void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
+    assertThatThrownBy(() -> CurrencyCode.of(value))
+        .isInstanceOf(InvalidValueException.class)
+        .hasMessage("must be a 3-character ISO 4217 alpha currency code. " + expectedExceptionMessage)
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
   }
 }

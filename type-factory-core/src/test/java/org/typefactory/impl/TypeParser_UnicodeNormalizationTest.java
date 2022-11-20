@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.logging.Logger;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.typefactory.Category;
 import org.typefactory.LogUtils;
 import org.typefactory.TypeParser;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
 
 class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {

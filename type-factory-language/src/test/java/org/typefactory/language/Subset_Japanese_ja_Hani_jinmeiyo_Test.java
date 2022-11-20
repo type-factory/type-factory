@@ -24,7 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class Subset_Japanese_ja_Hani_jinmeiyo_Test {
+class Subset_Japanese_ja_Hani_jinmeiyo_Test {
 
   static final List JAPANESE_JA_HANI_X_JINMEIYO_RANGES = new ArrayList();
 

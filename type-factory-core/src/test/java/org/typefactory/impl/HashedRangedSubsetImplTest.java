@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.typefactory.Subset.CodePointRange;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.typefactory.Subset.CodePointRange;
 
 class HashedRangedSubsetImplTest {
 

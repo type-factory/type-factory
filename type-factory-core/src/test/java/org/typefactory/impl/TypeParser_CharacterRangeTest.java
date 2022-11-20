@@ -16,10 +16,10 @@
 package org.typefactory.impl;
 
 import org.assertj.core.api.Assertions;
-import org.typefactory.InvalidValueException;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.InvalidValueException;
+import org.typefactory.TypeParser;
 
 class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
   

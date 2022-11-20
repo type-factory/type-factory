@@ -21,7 +21,6 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
-import org.typefactory.InvalidValueException.ParserErrorCode;
 
 public class MessageUtils {
 
@@ -37,14 +36,6 @@ public class MessageUtils {
 
   public static String getMessage(final String messageKey, final Object[] messageArgs) {
     return getMessage(Locale.getDefault(), messageKey, messageArgs);
-  }
-
-  public static String getMessage(final ParserErrorCode parserErrorCode, final Object[] messageArgs) {
-    return getMessage(Locale.getDefault(), parserErrorCode, messageArgs);
-  }
-
-  public static String getMessage(final Locale locale, final ParserErrorCode parserErrorCode, final Object[] messageArgs) {
-    return getMessage(locale, parserErrorCode, messageArgs);
   }
 
   public static String getMessage(final Locale locale, final String messageKey, final Object[] messageArgs) {

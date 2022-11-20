@@ -15,28 +15,30 @@
 */
 package org.typefactory.recordtypes;
 
-import org.typefactory.RecordType;
+import org.typefactory.CharSequenceType;
 import org.typefactory.TypeParser;
 
-public record CountryCode(String value) implements RecordType {
+public record CountryCode(String value) implements CharSequenceType<CountryCode> {
+
+  private static final TypeParser TYPE_PARSER =
+      TypeParser.builder()
+          .errorMessage("must be a 2-character ISO 3166-1 alpha country code")
+          .convertNullToEmpty()
+          .removeAllWhitespace()
+          .acceptLettersAtoZ()
+          .fixedSize(2)
+          .toUpperCase()
+          .build();
 
   public CountryCode(final String value) {
     this.value = TYPE_PARSER.parseToString(value);
   }
+
+  public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
 
   @Override
   public String toString() {
     return value();
   }
 
-  private static final TypeParser TYPE_PARSER =
-      TypeParser.builder()
-          .errorMessage("must be a 2-character ISO 3166-1 country code")
-          .convertNullToEmpty()
-          .acceptLettersAtoZ()
-          .fixedSize(2)
-          .toUpperCase()
-          .build();
-
-  public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
 }

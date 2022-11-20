@@ -719,8 +719,7 @@ public interface TypeParser {
 
     /**
      * <p>Configures the type-parser to accept the specified characters in the values to be parsed by the type-parser. The type-parser will only
-     * allow
-     * accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
+     * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param chars the characters to accept in the values to be parsed by the type-parser.
      * @return this {@code TypeParserBuilder}.
@@ -768,8 +767,7 @@ public interface TypeParser {
 
     /**
      * <p>Configures the type-parser to accept the specified code-point in the values to be parsed by the type-parser. The type-parser will only
-     * allow
-     * accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
+     * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param codePoint the code-point to accept in the values to be parsed by the type-parser.
      * @return this {@code TypeParserBuilder}.
@@ -791,8 +789,7 @@ public interface TypeParser {
 
     /**
      * <p>Configures the type-parser to accept the specified code-points in the values to be parsed by the type-parser. The type-parser will only
-     * allow
-     * accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
+     * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param codePoints the code-point to accept in the values to be parsed by the type-parser.
      * @return this {@code TypeParserBuilder}.
@@ -1154,6 +1151,40 @@ public interface TypeParser {
      * @see #removeAllCodePoints(int...)
      */
     TypeParserBuilder removeAllCodePoints(int... codePoints);
+
+    /**
+     * <p>This will configure the type-parser to remove all occurrences of any dashes and hyphens
+     * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation
+     * (Pd) category</a> from the parsed value.</p>
+     *
+     * <p>For more information about categories refer to the <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode
+     * General Character Categories</a> documentation.</p>
+     *
+     * <p>Specifying code-points to remove automatically adds them to the set of accepted code-points – so there is no need
+     * to specifically configure the type-parser to accept the hyphens and dashes category {@link #acceptUnicodeCategory(Category)}.
+     * If hyphens and dashes weren't considered accepted characters then the first occurrence of the character in the input sequence would result
+     * in an {@link InvalidValueException}.</p>
+     *
+     * <p><b>Example – removing 'grinning face' emoticons</b></p>
+     *
+     * <pre>{@code
+     * TypeParser.builder()
+     *     .errorMessage("must be a 16-digit product-id")
+     *     .removeAllWhitespace()
+     *     .removeAllDashesAndHyphens() // removes all hyphens and dashes
+     *     .acceptDigits0to9()
+     *     .fixedSize(16)
+     *     .build();
+     * }</pre>
+     *
+     * @return this {@code TypeParserBuilder}.
+     * @see #removeAllChars(char)
+     * @see #removeAllCodePoints(int)
+     * @see #removeAllCodePoints(int...)
+     * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
+     * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
+     */
+    TypeParserBuilder removeAllDashesAndHyphens();
 
     /**
      * <p>Configures the type-parser to accept all the characters/code-points found in the specified {@code subset}.</p>

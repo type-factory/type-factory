@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.typefactory.Subset.CodePointRange;
-import org.typefactory.Subset;
-import org.typefactory.Subset.SubsetBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.Subset;
+import org.typefactory.Subset.CodePointRange;
+import org.typefactory.Subset.SubsetBuilder;
 
 class Subset_Test {
 

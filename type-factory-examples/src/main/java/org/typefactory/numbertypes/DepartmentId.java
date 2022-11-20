@@ -22,8 +22,9 @@ public final class DepartmentId extends ShortType {
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 4-digit number")
+          .errorMessage("must be a 4-digit department-id")
           .removeAllWhitespace()
+          .convertEmptyToNull()
           .acceptDigits0to9()
           .fixedSize(4)
           .build();

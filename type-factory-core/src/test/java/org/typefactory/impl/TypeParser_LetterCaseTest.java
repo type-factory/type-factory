@@ -15,11 +15,10 @@
 */
 package org.typefactory.impl;
 
-import java.text.ParseException;
 import org.assertj.core.api.Assertions;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.TypeParser;
 
 class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
   
@@ -30,7 +29,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
       "newT|newT",
       "snAke|snAke",
   }, delimiter = '|')
-  void should_parse_preserving_case(final String value, final String expected) throws ParseException {
+  void should_parse_preserving_case(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -49,7 +48,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
       "newT|newt",
       "snAke|snake",
   }, delimiter = '|')
-  void should_parse_to_lower_case(final String value, final String expected) throws ParseException {
+  void should_parse_to_lower_case(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -68,7 +67,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
       "newT|NEWT",
       "snAke|SNAKE",
   }, delimiter = '|')
-  void should_parse_to_upper_case(final String value, final String expected) throws ParseException {
+  void should_parse_to_upper_case(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -87,7 +86,7 @@ class TypeParser_LetterCaseTest extends AbstractTypeParserTest {
       "newT|Newt",
       "snAke|Snake",
   }, delimiter = '|')
-  void should_parse_to_title_case(final String value, final String expected) throws ParseException {
+  void should_parse_to_title_case(final String value, final String expected) {
 
     final TypeParser typeParser =
         TypeParser.builder()

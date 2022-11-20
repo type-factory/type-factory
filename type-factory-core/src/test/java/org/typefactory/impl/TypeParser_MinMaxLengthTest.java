@@ -15,13 +15,12 @@
 */
 package org.typefactory.impl;
 
-import java.text.ParseException;
 import org.assertj.core.api.Assertions;
-import org.typefactory.InvalidValueException;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.InvalidValueException;
+import org.typefactory.TypeParser;
 
 class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
   
@@ -31,7 +30,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
       "Fish",
       "Bird",
   })
-  void should_parse_to_fixed_size(final String value) throws ParseException {
+  void should_parse_to_fixed_size(final String value) {
 
     final TypeParser typeParser =
         TypeParser.builder()

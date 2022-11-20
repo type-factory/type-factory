@@ -15,14 +15,33 @@
 */
 package org.typefactory.stringtypes;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import org.typefactory.InvalidValueException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.InvalidValueException;
 
 class InternationalBankAccountNumberTest {
+
+  @ParameterizedTest
+  @NullSource
+  void of_shouldReturnNull(final String value) {
+    final InternationalBankAccountNumber actual = InternationalBankAccountNumber.of(value);
+    assertThatObject(actual).isNull();
+  }
+
+  @ParameterizedTest
+  @EmptySource
+  @ValueSource(strings = "  ")
+  void of_shouldReturnEmpty(final String value) {
+    final InternationalBankAccountNumber actual = InternationalBankAccountNumber.of(value);
+    assertThat((CharSequence) actual).isEmpty();
+  }
 
   @ParameterizedTest
   @CsvSource(value = {
@@ -49,7 +68,7 @@ class InternationalBankAccountNumberTest {
       "CH56 0483 5012 3456 7800 9              | CH5604835012345678009            ",
       "GB98 MIDL 0700 9312 3456 78             | GB98MIDL07009312345678           ",
   }, delimiter = '|')
-  void shouldSuccessfullyParseValidValues(final String value, final String expected) {
+  void of_shouldSuccessfullyParseValidValues(final String value, final String expected) {
     final InternationalBankAccountNumber actual = InternationalBankAccountNumber.of(value);
     assertThatObject(actual).hasToString(expected);
   }
@@ -61,11 +80,10 @@ class InternationalBankAccountNumberTest {
       "BRA5 0000 0000 0000 1093 2840 814 P2         | Invalid value - does not match pattern [A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+ ",
       "FR77 3000 6000 0112 3456 7890 189            | Invalid value - does not pass custom validation criteria.                ",
   }, delimiter = '|')
-  void shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
+  void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> InternationalBankAccountNumber.of(value))
         .isInstanceOf(InvalidValueException.class)
         .hasMessage("must be a valid 5..34 character International Bank Account Number (IBAN). " + expectedExceptionMessage)
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
-
   }
 }

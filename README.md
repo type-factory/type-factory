@@ -1,4 +1,4 @@
-[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven.yml)
+[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
 
 
 Type Factory
