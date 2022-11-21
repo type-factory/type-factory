@@ -20,7 +20,7 @@ import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 
-public interface SubsetWrapper {
+public interface SubsetWrapper extends Subset {
 
   static SubsetWrapper optimisedSubset(final UnicodeSet unicodeSet) {
     final SubsetBuilder subsetBuilder = Subset.builder();
