@@ -18,7 +18,6 @@ package org.typefactory.impl;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
-import org.typefactory.Subset.SubsetBuilder;
 
 public interface SubsetWrapper extends Subset {
 
