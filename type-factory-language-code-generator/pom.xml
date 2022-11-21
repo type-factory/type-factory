@@ -31,7 +31,7 @@
     <maven.deploy.skip>true</maven.deploy.skip>
     <!-- TODO add coverage to the generator code -->
     <sonar.coverage.exclusions>
-      **/org/typefactory/generator/*.java
+      **/org/typefactory/generator/**/*.java
     </sonar.coverage.exclusions>
   </properties>
 
