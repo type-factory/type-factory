@@ -15,6 +15,8 @@
 */
 package org.typefactory.generator;
 
+import static org.typefactory.generator.LoggingConfig.configureLogging;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,17 +34,6 @@ public class Main {
     configureLogging();
   }
 
-  @SuppressWarnings("java:S106")
-  private static void configureLogging() {
-    // must set before the Logger
-    // loads logging.properties from the classpath
-    try (InputStream loggingProperties = Main.class.getClassLoader().getResourceAsStream("logging.properties")) {
-      LogManager.getLogManager().readConfiguration(loggingProperties);
-    } catch (final IOException e) {
-      System.err.println("Error – cannot load 'logging.properties' from the classpath");
-      System.exit(1);
-    }
-  }
 
   private static final Logger logger = Logger.getLogger(Main.class.getName());
 

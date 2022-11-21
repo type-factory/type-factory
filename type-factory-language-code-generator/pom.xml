@@ -29,6 +29,9 @@
 
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
+    <sonar.coverage.exclusions>
+      **/org/typefactory/generator/LoggingConfig.java
+    </sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
