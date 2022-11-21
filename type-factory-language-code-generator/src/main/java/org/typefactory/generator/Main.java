@@ -15,18 +15,27 @@
 */
 package org.typefactory.generator;
 
+import static org.typefactory.generator.LoggingConfig.configureLogging;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.typefactory.generator.letters.LettersClassGenerator;
 import org.typefactory.generator.unicodedata.UnicodeGroupData;
 
 public class Main {
 
-  private static final Logger logger = LogUtils.getLogger(Main.class);
+  static {
+    configureLogging();
+  }
+
+
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(final String[] args) {
 

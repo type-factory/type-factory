@@ -23,13 +23,12 @@ import java.util.logging.Logger;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.typefactory.Category;
-import org.typefactory.LogUtils;
 import org.typefactory.TypeParser;
 
 
 class TypeParser_UnicodeNormalizationTest extends AbstractTypeParserTest {
 
-  private static final Logger logger = LogUtils.getLogger(TypeParser_UnicodeNormalizationTest.class);
+  private static final Logger logger = Logger.getLogger(TypeParser_UnicodeNormalizationTest.class.getName());
 
   enum WordsWithDiacriticModifiers {
     GREEK_CAFFEINE("καφεΐνη", 'κ', 'α', 'φ', 'ε', 'ι', '̈', '́', 'ν', 'η'),

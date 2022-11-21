@@ -35,7 +35,7 @@ import org.typefactory.Subset;
 import org.typefactory.TypeParser;
 import org.typefactory.impl.Converter.ConverterResults;
 
-class TypeParserImpl implements TypeParser {
+final class TypeParserImpl implements TypeParser {
 
   private final Class<?> targetTypeClass;
   private final String errorMessage;
@@ -340,7 +340,7 @@ class TypeParserImpl implements TypeParser {
    * @param codePoints the code-point array that may have trailing whitespace
    * @return the end-index of the last char-character ignoring trailing whitespace
    */
-  private static int endIndexIgnoringTrailingWhitespace(final int[] codePoints, int endIndex) {
+  static int endIndexIgnoringTrailingWhitespace(final int[] codePoints, int endIndex) {
     if (codePoints == null) {
       return 0;
     }
@@ -359,7 +359,7 @@ class TypeParserImpl implements TypeParser {
    * @param endIndex   the index at which to stop progressing through the char-sequence
    * @return the index of first character that is not whitespace
    */
-  private static int startIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {
+  static int startIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {
     if (codePoints == null || endIndex == 0) {
       return 0;
     }

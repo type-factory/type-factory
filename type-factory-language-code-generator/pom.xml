@@ -29,6 +29,10 @@
 
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
+    <!-- TODO add coverage to the generator code -->
+    <sonar.coverage.exclusions>
+      **/org/typefactory/generator/**/*.java
+    </sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
@@ -74,6 +78,13 @@
       <groupId>org.relaxng</groupId>
       <artifactId>trang</artifactId>
       <version>20220510</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>4.9.0</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

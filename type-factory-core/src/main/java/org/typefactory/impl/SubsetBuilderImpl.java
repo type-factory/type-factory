@@ -18,6 +18,7 @@ package org.typefactory.impl;
 import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
+import static org.typefactory.impl.Constants.LINE_SEPARATOR;
 import static org.typefactory.impl.SubsetUtils.compactDoubleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.compactSingleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.compactTripleByteCodePointRanges;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.CodePointRange;
@@ -44,6 +46,8 @@ import org.typefactory.SubsetWithCategories;
 import org.typefactory.impl.SubsetBuilderImpl.SubsetOptimiser.HashedSubsetOption;
 
 class SubsetBuilderImpl implements SubsetBuilder {
+
+  final Logger logger = Logger.getLogger(SubsetBuilderImpl.class.getName());
 
   /**
    * Code-points to include in the set
@@ -274,7 +278,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
     final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(rangedSubset);
 
     // TODO get the stats into the generated language classes
-    // System.out.println("\n\nSubset Stats\n\n" + subsetOptimiser.toString() + "\n\n");
+    logger.finer(() -> "Subset Optimiser Stats – choosing preferred subset type from:\n" + subsetOptimiser + "\n");
 
     switch (subsetOptimiser.getPreferredSubsetType()) {
       case HASHED: {
@@ -678,12 +682,12 @@ class SubsetBuilderImpl implements SubsetBuilder {
     }
 
     /**
-     * Returns {@link SubsetOptimiser} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as
-     * some memory stats describing the bytes that will be used to hold the block key data and the code point ranges data.
+     * Returns {@link SubsetOptimiser} containing the full set of block-keys, how many code-point ranges there are for each block key, as well as some
+     * memory stats describing the bytes that will be used to hold the block key data and the code point ranges data.
      *
      * @param rangedSubset the ranged-subset that we want stats from.
-     * @return a {@link SubsetOptimiser} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory
-     * usage stats. each block key.
+     * @return a {@link SubsetOptimiser} tuple containing the full set of block-keys, how many code-point ranges there are for, and some memory usage
+     * stats. each block key.
      */
     void calculateCommonHashedStats(final RangedSubset rangedSubset) {
       hashcode = 0;
@@ -759,12 +763,13 @@ class SubsetBuilderImpl implements SubsetBuilder {
 
     @Override
     public String toString() {
-      final StringBuilder s = new StringBuilder();
-      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
-      s.append("\n|             |         |    hash buckets containing...     |     memory required (bytes)    |");
-      s.append("\n|             |  # hash |-----------------------------------|--------------------------------|");
-      s.append("\n| subset type | buckets | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |");
-      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      final StringBuilder s = new StringBuilder(1024);
+      s.append("""
+          |=============|=========|========|=======|========|=========|==========|=======|=============|
+          |             |         |    hash buckets containing...     |     memory required (bytes)    |
+          |             |  # hash |-----------------------------------|--------------------------------|
+          | subset type | buckets | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |
+          |=============|=========|========|=======|========|=========|==========|=======|=============|""");
       int countOfHashedOptions = 0;
       for (SubsetOption subsetOption : subsetOptions) {
         if (subsetOption instanceof RangedSubsetOption rangedSubsetOption) {
@@ -790,12 +795,14 @@ class SubsetBuilderImpl implements SubsetBuilder {
           }
         }
       }
-      s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+      s.append(LINE_SEPARATOR).append("|=============|=========|========|=======|========|=========|==========|=======|=============|");
       if (subsetOptions.length > 20) {
-        s.append("\n| subset type |  # hash | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |");
-        s.append("\n|             | buckets |-----------------------------------|--------------------------------|");
-        s.append("\n|             |         |    hash buckets containing...     |     memory required (bytes)    |");
-        s.append("\n|=============|=========|========|=======|========|=========|==========|=======|=============|");
+        s.append(LINE_SEPARATOR).append("""
+            | subset type |  # hash | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |
+            |             | buckets |-----------------------------------|--------------------------------|
+            |             |         |    hash buckets containing...     |     memory required (bytes)    |
+            |=============|=========|========|=======|========|=========|==========|=======|=============|
+            """).append(LINE_SEPARATOR);
       }
       return s.toString();
     }

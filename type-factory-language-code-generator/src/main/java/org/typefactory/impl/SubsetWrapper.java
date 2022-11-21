@@ -18,9 +18,8 @@ package org.typefactory.impl;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
-import org.typefactory.Subset.SubsetBuilder;
 
-public interface SubsetWrapper {
+public interface SubsetWrapper extends Subset {
 
   static SubsetWrapper optimisedSubset(final UnicodeSet unicodeSet) {
     final SubsetBuilder subsetBuilder = Subset.builder();
@@ -37,6 +36,6 @@ public interface SubsetWrapper {
     if (subset instanceof OptimalHashedRangedSubsetImpl optimalHashedRangedSubset) {
       return new OptimalHashedRangedSubsetWrapper(optimalHashedRangedSubset);
     }
-    throw new RuntimeException("Unknown sunset type.");
+    throw new SubsetException("Unknown subset type - " + subset.getClass().getName());
   }
 }

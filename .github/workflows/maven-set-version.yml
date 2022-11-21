@@ -62,7 +62,7 @@ jobs:
           git commit --gpg-sign --all --message "Update version for release to ${NEW_VERSION} – version was ${CURRENT_VERSION}" &&
           git verify-commit HEAD &&
           echo &&
-          echo "Deploying the application" &&
+          echo "Verifying the application" &&
           mvn --batch-mode -Dlogging.level.org.typefactory=WARNING verify &&
           echo &&
           echo "Pushing commit to GitHub – ${NEW_VERSION}" &&
