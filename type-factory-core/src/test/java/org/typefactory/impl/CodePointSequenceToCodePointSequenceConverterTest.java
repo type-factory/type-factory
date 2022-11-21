@@ -5,13 +5,12 @@ import static org.typefactory.impl.Constants.LINE_SEPARATOR;
 
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
-import org.typefactory.LogUtils;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
 
 
 class CodePointSequenceToCodePointSequenceConverterTest {
 
-  private static Logger logger = LogUtils.getLogger(CodePointSequenceToCodePointSequenceConverter.class);
+  private static Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
 
   @Test
   void nAryTreeIsFormedCorrectly() {

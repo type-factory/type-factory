@@ -29,7 +29,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import org.typefactory.generator.LogUtils;
 import org.unicode.ns._2003.ucd._1.Block;
 import org.unicode.ns._2003.ucd._1.Blocks;
 import org.unicode.ns._2003.ucd._1.CodePoint;
@@ -39,7 +38,7 @@ import org.unicode.ns._2003.ucd._1.Ucd;
 
 public class UnicodeGroupData {
 
-  private static final Logger logger = LogUtils.getLogger(UnicodeGroupData.class);
+  private static final Logger logger = Logger.getLogger(UnicodeGroupData.class.getName());
 
   public static final UnicodeGroupData INSTANCE = new UnicodeGroupData();
   private final String unicodeAllGroupedXmlFileName;

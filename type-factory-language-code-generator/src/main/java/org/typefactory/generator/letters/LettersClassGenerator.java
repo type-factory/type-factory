@@ -40,6 +40,8 @@ public class LettersClassGenerator {
   private static final Logger logger = Logger.getLogger(LettersClassGenerator.class.getName());
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
+  public static final String INDENT_08 = "        ";
+  public static final String INDENT_10 = "          ";
 
   private final String licenseHeader;
   private final File outputDirectory;
@@ -226,7 +228,7 @@ public class LettersClassGenerator {
       final String rangeFormat) {
 
     final UnicodeSet unicodeSet = lettersData.getUnicodeSet();
-    final String indentedRangeFormat = "          " + rangeFormat + ", // ";
+    final String indentedRangeFormat = INDENT_10 + rangeFormat + ", // ";
     if (unicodeSet == null || unicodeSet.isEmpty()) {
       return new Sizes(0, 0);
     }
@@ -359,7 +361,7 @@ public class LettersClassGenerator {
     for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
       final char[] buckets = keys[hashIndex];
       if (hashIndex % 8 == 0) {
-        s.append(LINE_SEPARATOR).append("        ");
+        s.append(LINE_SEPARATOR).append(INDENT_08);
       }
       final StringBuilder temp = new StringBuilder();
       if (buckets == null || buckets.length == 0) {
@@ -400,7 +402,7 @@ public class LettersClassGenerator {
             s.append(LINE_SEPARATOR).append("         ");
           }
           s.append(String.format(" // 0x%04x__ codePoint ranges", key));
-          s.append(LINE_SEPARATOR).append("          ");
+          s.append(LINE_SEPARATOR).append(INDENT_10);
           final char[] codePointRanges = codePointRangesByBlock[hashIndex][hashBucketIndex];
           s.append("{");
           for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
@@ -421,9 +423,9 @@ public class LettersClassGenerator {
     s.setLength(s.length() - 2);
     s.append("},");
     s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
-    s.append(LINE_SEPARATOR).append("        ").append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
+    s.append(LINE_SEPARATOR).append(INDENT_08).append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
     s.append(LINE_SEPARATOR).append("        // number of code-points");
-    s.append(LINE_SEPARATOR).append("        ").append(hashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges());
+    s.append(LINE_SEPARATOR).append(INDENT_08).append(hashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges());
   }
 
   private static void appendOptimalHashedBlockRangedSubset(
@@ -442,7 +444,7 @@ public class LettersClassGenerator {
     for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
       final int key = keys[hashIndex];
       if (hashIndex % 8 == 0) {
-        s.append(LINE_SEPARATOR).append("        ");
+        s.append(LINE_SEPARATOR).append(INDENT_08);
       }
       s.append(String.format("0x%04x, ", key));
     }
@@ -467,10 +469,10 @@ public class LettersClassGenerator {
         contiguousEmptyBucketCount = 0;
         s.append(LINE_SEPARATOR).append("        {");
         s.append(String.format(" // 0x%04x__ codePoint ranges", key));
-        s.append(LINE_SEPARATOR).append("          ");
+        s.append(LINE_SEPARATOR).append(INDENT_10);
         for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
           if (codePointRangeIndex > 0 && codePointRangeIndex % 8 == 0) {
-            s.append(LINE_SEPARATOR).append("          ");
+            s.append(LINE_SEPARATOR).append(INDENT_10);
           }
           final int from = InternalSubsetUtils.getInclusiveFrom(codePointRanges[codePointRangeIndex]);
           final int to = InternalSubsetUtils.getInclusiveTo(codePointRanges[codePointRangeIndex]);
@@ -483,9 +485,9 @@ public class LettersClassGenerator {
     s.setLength(s.length() - 1);
     s.append("},");
     s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
-    s.append(LINE_SEPARATOR).append("        ").append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
+    s.append(LINE_SEPARATOR).append(INDENT_08).append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
     s.append(LINE_SEPARATOR).append("        // number of code-points");
-    s.append(LINE_SEPARATOR).append("        ").append(optimalHashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges());
+    s.append(LINE_SEPARATOR).append(INDENT_08).append(optimalHashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges());
   }
 
   private void createAlphabetCharactersTxt(
@@ -543,7 +545,7 @@ public class LettersClassGenerator {
       fileWriter.append(s.toString());
       fileWriter.flush();
     } catch (final IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, e, () -> "Cannot write file to " + filePath);
     }
   }
 }

@@ -244,6 +244,12 @@
             <include>**/*TestCase.java</include>
             <include>**/*TestCases.java</include>
           </includes>
+          <systemProperties>
+            <property>
+              <name>java.util.logging.config.file</name>
+              <value>${project.basedir}/src/test/resources/logging.properties</value>
+            </property>
+          </systemProperties>
         </configuration>
       </plugin>
 
@@ -301,7 +307,7 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>publish</id>
       <build>
         <plugins>
           <plugin>

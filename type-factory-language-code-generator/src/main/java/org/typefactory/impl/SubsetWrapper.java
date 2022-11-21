@@ -37,6 +37,6 @@ public interface SubsetWrapper {
     if (subset instanceof OptimalHashedRangedSubsetImpl optimalHashedRangedSubset) {
       return new OptimalHashedRangedSubsetWrapper(optimalHashedRangedSubset);
     }
-    throw new RuntimeException("Unknown sunset type.");
+    throw new SubsetException("Unknown subset type - " + subset.getClass().getName());
   }
 }

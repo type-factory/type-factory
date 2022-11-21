@@ -17,16 +17,34 @@ package org.typefactory.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.typefactory.generator.letters.LettersClassGenerator;
 import org.typefactory.generator.unicodedata.UnicodeGroupData;
 
 public class Main {
 
-  private static final Logger logger = LogUtils.getLogger(Main.class);
+  static {
+    configureLogging();
+  }
+
+  @SuppressWarnings("java:S106")
+  private static void configureLogging() {
+    // must set before the Logger
+    // loads logging.properties from the classpath
+    try (InputStream loggingProperties = Main.class.getClassLoader().getResourceAsStream("logging.properties")) {
+      LogManager.getLogManager().readConfiguration(loggingProperties);
+    } catch (final IOException e) {
+      System.err.println("Error – cannot load 'logging.properties' from the classpath");
+      System.exit(1);
+    }
+  }
+
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(final String[] args) {
 

@@ -2,6 +2,10 @@ package org.typefactory;
 
 public class CharSequenceUtils {
 
+  private CharSequenceUtils() {
+    // don't instantiate me
+  }
+
   public static boolean isBlank(final CharSequence value) {
     if (value == null
         || value.isEmpty()
