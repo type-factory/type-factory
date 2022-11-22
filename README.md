@@ -57,7 +57,7 @@ public final class CurrencyCode extends StringType {   // ①
   methods, as well as receive appropriate implementations of the `equals`,
   `hashCode` and `toString` methods.
 
-② We've created and “empty” constant which can be re-used throughout our code
+② We've created an “empty” constant which can be re-used throughout our code
   where needed. Of course, this constant is optional.
 
 ③ We create a static, immutable, threadsafe, type-parser using a builder.
