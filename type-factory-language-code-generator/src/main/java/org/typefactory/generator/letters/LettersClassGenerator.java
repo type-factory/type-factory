@@ -73,11 +73,11 @@ public class LettersClassGenerator {
             value = "org.typefactory:type-factory-language-code-generator") 
         public class Letters {
                 
-          private static final Index index = new Index();
-          
           private Letters() {
             // don't instantiate
           }
+          
+          private static final Index index = new Index();
           
           private static class Index {
             private HashMap<Locale, Subset> localeSubsets = new HashMap();
@@ -179,10 +179,14 @@ public class LettersClassGenerator {
                 
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the type-factory-language-code-generator module.",
-            value = "org.typefactory:type-factory-language-code-generator")     
+            value = "org.typefactory:type-factory-language-code-generator")
         class %s {
+        
+          private %s() {
+            // don't instantiate me
+          }
                 
-        """, lettersClassName));
+        """, lettersClassName, lettersClassName));
 
     if (subsetWrapper instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
       s.append("  static final Subset SUBSET = Factory.hashedRangedSubset(").append(LINE_SEPARATOR);

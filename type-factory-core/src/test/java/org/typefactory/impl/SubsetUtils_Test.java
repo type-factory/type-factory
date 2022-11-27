@@ -20,6 +20,9 @@ import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
+import java.util.Arrays;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -173,9 +176,9 @@ class SubsetUtils_Test {
   @Test
   void defaultIfNullOrEmpty_returnsAsExpectedForCharArray() {
 
-    final char [] nullArray = null;
-    final char [] emptyArray = new char[0];
-    final char [] sampleArray = new char [] {'A', 'B'};
+    final char[] nullArray = null;
+    final char[] emptyArray = new char[0];
+    final char[] sampleArray = new char[]{'A', 'B'};
 
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_CHAR_ARRAY)).isSameAs(EMPTY_CHAR_ARRAY);
@@ -192,9 +195,9 @@ class SubsetUtils_Test {
   @Test
   void defaultIfNullOrEmpty_returnsAsExpectedForIntArray() {
 
-    final int [] nullArray = null;
-    final int [] emptyArray = new int[0];
-    final int [] sampleArray = new int [] {'A', 'B'};
+    final int[] nullArray = null;
+    final int[] emptyArray = new int[0];
+    final int[] sampleArray = new int[]{'A', 'B'};
 
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_INT_ARRAY)).isSameAs(EMPTY_INT_ARRAY);
@@ -211,9 +214,9 @@ class SubsetUtils_Test {
   @Test
   void defaultIfNullOrEmpty_returnsAsExpectedForLongArray() {
 
-    final long [] nullArray = null;
-    final long [] emptyArray = new long[0];
-    final long [] sampleArray = new long [] {'A', 'B'};
+    final long[] nullArray = null;
+    final long[] emptyArray = new long[0];
+    final long[] sampleArray = new long[]{'A', 'B'};
 
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, null)).isNull();
     assertThat(SubsetUtils.defaultIfNullOrEmpty(nullArray, EMPTY_LONG_ARRAY)).isSameAs(EMPTY_LONG_ARRAY);
@@ -243,9 +246,9 @@ class SubsetUtils_Test {
 
   @Test
   void aggregateCodePointRangeData_handlesCodePointRanges() {
-    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
-    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
-    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+    final char[] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int[] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long[] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
     assertThat(SubsetUtils.aggregateCodePointRangeData(singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isNotNull()
         .containsExactly(
@@ -304,9 +307,9 @@ class SubsetUtils_Test {
       0x00BB2200
   })
   void contains_returnTrueForCodePointsInclusivelyWithinRanges(final int codePoint) {
-    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
-    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
-    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+    final char[] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int[] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long[] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
 
     assertThat(SubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isTrue();
@@ -329,12 +332,162 @@ class SubsetUtils_Test {
       0x00FFFFFF,
   })
   void contains_returnFalseForCodePointsOutsideOfRanges(final int codePoint) {
-    final char [] singleByteRanges = new char[]{0x21_22, 0x30_44};
-    final int [] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
-    final long [] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
+    final char[] singleByteRanges = new char[]{0x21_22, 0x30_44};
+    final int[] doubleByteRanges = new int[]{0x1122_1133, 0xAA11_BB00};
+    final long[] tripleByteRanges = new long[]{0x00445500_00446600L, 0x00BB1100_00BB2200L};
 
     assertThat(SubsetUtils.contains(codePoint, singleByteRanges, doubleByteRanges, tripleByteRanges))
         .isFalse();
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x20_2F, 0x3A_45, 0xE1_F1 | 0 | 0x3A_45, 0xE1_F1
+      0x20_2F, 0x3A_45, 0xE1_F1 | 1 | 0x20_2F, 0xE1_F1
+      0x20_2F, 0x3A_45, 0xE1_F1 | 2 | 0x20_2F, 0x3A_45
+      """, delimiter = '|')
+  void removeSingleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
+    final char[] ranges = convertStringOfCharValuesToCharArray(rangesStr);
+    final char[] expectedRanges = convertStringOfCharValuesToCharArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.removeSingleByteElement(ranges, ranges.length, indexOfElementToRemove);
+    final char[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual)
+        .hasSize(2)
+        .containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x2000_2F00, 0x3A00_4500, 0x7100_F100 | 0 | 0x3A00_4500, 0x7100_F100
+      0x2000_2F00, 0x3A00_4500, 0x7100_F100 | 1 | 0x2000_2F00, 0x7100_F100
+      0x2000_2F00, 0x3A00_4500, 0x7100_F100 | 2 | 0x2000_2F00, 0x3A00_4500
+      """, delimiter = '|')
+  void removeDoubleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
+    final int[] ranges = convertStringOfIntValuesToIntArray(rangesStr);
+    final int[] expectedRanges = convertStringOfIntValuesToIntArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.removeDoubleByteElement(ranges, ranges.length, indexOfElementToRemove);
+    final int[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual)
+        .hasSize(2)
+        .containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x20001111_2F001111, 0x3A002222_45002222, 0x71003333_F1003333 | 0 | 0x3A002222_45002222, 0x71003333_F1003333
+      0x20001111_2F001111, 0x3A002222_45002222, 0x71003333_F1003333 | 1 | 0x20001111_2F001111, 0x71003333_F1003333
+      0x20001111_2F001111, 0x3A002222_45002222, 0x71003333_F1003333 | 2 | 0x20001111_2F001111, 0x3A002222_45002222
+      """, delimiter = '|')
+  void removeTripleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
+    final long[] ranges = convertStringOfLongValuesToLongArray(rangesStr);
+    final long[] expectedRanges = convertStringOfLongValuesToLongArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.removeTripleByteElement(ranges, ranges.length, indexOfElementToRemove);
+    final long[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual)
+        .hasSize(2)
+        .containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x00_30, 0x31_32, 0x33_44 | 0x00_44
+      0x00_30, 0x29_32, 0x31_44 | 0x00_44
+      0x00_30, 0x32_32, 0x33_44 | 0x00_30, 0x32_44
+      0x32_33, 0x22_44,         | 0x22_44
+      0x32_33, 0x35_37, 0x22_44 | 0x22_44
+      """, delimiter = '|')
+  void compactSingleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
+    final char[] ranges = convertStringOfCharValuesToCharArray(rangesStr);
+    final char[] expectedRanges = convertStringOfCharValuesToCharArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.compactSingleByteCodePointRanges(ranges, ranges.length);
+    final char[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual).containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x0000_30FF, 0x3100_32FF, 0x3300_4400 | 0x0000_4400
+      0x0000_3000, 0x2900_3200, 0x3100_4400 | 0x0000_4400
+      0x0000_3000, 0x3200_32FF, 0x3300_4400 | 0x0000_3000, 0x3200_4400
+      0x3200_3300, 0x2200_4400,             | 0x2200_4400
+      0x3200_3300, 0x3500_3700, 0x2200_4400 | 0x2200_4400
+      """, delimiter = '|')
+  void compactDoubleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
+    final int[] ranges = convertStringOfIntValuesToIntArray(rangesStr);
+    final int[] expectedRanges = convertStringOfIntValuesToIntArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.compactDoubleByteCodePointRanges(ranges, ranges.length);
+    final int[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual).containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x00000000_30FFFFFF, 0x31000000_32FFFFFF, 0x33000000_44000000 | 0x00000000_44000000
+      0x00000000_30000000, 0x29000000_32000000, 0x31000000_44000000 | 0x00000000_44000000
+      0x00000000_30000000, 0x32000000_32FFFFFF, 0x33000000_44000000 | 0x00000000_30000000, 0x32000000_44000000
+      0x32000000_33000000, 0x22000000_44000000,                     | 0x22000000_44000000
+      0x32000000_33000000, 0x35000000_37000000, 0x22000000_44000000 | 0x22000000_44000000
+      """, delimiter = '|')
+  void compactTripleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
+    final long[] ranges = convertStringOfLongValuesToLongArray(rangesStr);
+    final long[] expectedRanges = convertStringOfLongValuesToLongArray(expectedRangesStr);
+
+    final int newLength = SubsetUtils.compactTripleByteCodePointRanges(ranges, ranges.length);
+    final long[] actual = Arrays.copyOf(ranges, newLength);
+    assertThat(actual).containsExactly(expectedRanges);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0000_0000_0000_0000_0000_0000_0000_0000 | 0
+      0000_0000_0000_0000_0000_0000_0000_0001 | 1
+      1000_0000_0000_0000_0000_0000_0000_0000 | 1
+      0000_0000_0000_0000_0000_0010_0000_0000 | 1
+      0000_0000_0000_0000_0000_0010_0000_0001 | 2
+      0000_0000_1000_0000_0000_0010_0000_0001 | 3
+      1111_1111_1111_1111_1111_1111_1111_1111 | 32
+      """, delimiter = '|')
+  void numberOfUnicodeCategoriesFromCategoriesFlags_(final String categoryBitFlagsStr, final int expectedNumberOfCategories){
+    final long categoryBitFlags = Long.parseLong(categoryBitFlagsStr.replace("_", ""), 2);
+    final int actual = SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags(categoryBitFlags);
+    assertThat(actual).isEqualTo(expectedNumberOfCategories);
+  }
+
+  char[] convertStringOfCharValuesToCharArray(final String charArrayStr) {
+    final int[] ints = Arrays.stream(charArrayStr
+            .replace("0x", "")
+            .replace("_", "")
+            .split(",\s*+"))
+        .mapToInt(i -> Integer.parseInt(i, 16))
+        .toArray();
+    final char[] chars = new char[ints.length];
+    for (int i = 0; i < ints.length; ++i) {
+      chars[i] = (char) ints[i];
+    }
+    return chars;
+  }
+
+  int[] convertStringOfIntValuesToIntArray(final String charArrayStr) {
+    return Arrays.stream(charArrayStr
+            .replace("0x", "")
+            .replace("_", "")
+            .split(",\s*+"))
+        .mapToInt(i -> Integer.parseInt(i, 16))
+        .toArray();
+  }
+
+  long[] convertStringOfLongValuesToLongArray(final String charArrayStr) {
+    return Arrays.stream(charArrayStr
+            .replace("0x", "")
+            .replace("_", "")
+            .split(",\s*+"))
+        .mapToLong(i -> Long.parseLong(i, 16))
+        .toArray();
   }
 
   static class SingleByteRangeConverter implements ArgumentConverter {

@@ -39,7 +39,7 @@ public class SubsetWrapperTest {
     final var unicodeSet = new UnicodeSet('0', '9', 'A', 'Z', 'a', 'z');
 
     final var subsetBuilder = mock(SubsetBuilder.class);
-    when(subsetBuilder.build()).thenReturn(new AnotherSubset());
+    when(subsetBuilder.build()).thenReturn(new SomeSubset());
 
     try (final MockedStatic<Subset> utilities = Mockito.mockStatic(Subset.class)) {
 
@@ -47,7 +47,7 @@ public class SubsetWrapperTest {
 
       assertThatExceptionOfType(SubsetException.class)
           .isThrownBy(() -> SubsetWrapper.optimisedSubset(unicodeSet))
-          .withMessage("Unknown subset type - " + AnotherSubset.class.getName());
+          .withMessage("Unknown subset type - " + SomeSubset.class.getName());
     }
   }
 
@@ -114,7 +114,7 @@ public class SubsetWrapperTest {
     }
   }
 
-  static class AnotherSubset implements Subset {
+  static class SomeSubset implements Subset {
 
     @Override
     public boolean isEmpty() {

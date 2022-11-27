@@ -24,6 +24,10 @@ import org.typefactory.impl.Factory;
     value = "org.typefactory:type-factory-language-code-generator")
 class Letters_Japanese_ja_Hani_x_jsource {
 
+  private Letters_Japanese_ja_Hani_x_jsource() {
+    // don't instantiate me
+  }
+
   static final Subset SUBSET = Factory.optimalHashedRangedSubset(
 
       // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.

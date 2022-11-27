@@ -157,7 +157,7 @@ class SubsetBuilderImpl implements SubsetBuilder {
   }
 
   @Override
-  public SubsetBuilderImpl includeSubsets(final Collection<Subset> subsets) {
+  public SubsetBuilderImpl includeSubsets(final Iterable<Subset> subsets) {
     if (subsets != null) {
       for (Subset subset : subsets) {
         includeSubset(subset);
