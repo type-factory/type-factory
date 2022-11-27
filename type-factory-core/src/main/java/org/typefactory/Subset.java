@@ -182,7 +182,7 @@ public interface Subset {
 
     SubsetBuilder includeSubsets(final Subset... subsets);
 
-    SubsetBuilder includeSubsets(final Collection<Subset> subsets);
+    SubsetBuilder includeSubsets(final Iterable<Subset> subsets);
 
     SubsetBuilder includeUnicodeCategory(final Category category);
 

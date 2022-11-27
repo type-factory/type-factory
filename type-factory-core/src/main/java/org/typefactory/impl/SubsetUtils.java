@@ -447,7 +447,7 @@ final class SubsetUtils {
   /**
    * Count how many categories have been specified using category bit flags.
    *
-   * @param categoryFlags
+   * @param categoryFlags the bit flags representing the unicode character categories
    * @return the number categories that have been specified using category bit flags.
    */
   static int numberOfUnicodeCategoriesFromCategoriesFlags(final long categoryFlags) {

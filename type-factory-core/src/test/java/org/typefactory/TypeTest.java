@@ -47,6 +47,20 @@ class TypeTest {
     assertThat(Type.isNull(new ConcreteType("some-value"))).isFalse();
   }
 
+  @Test
+  void static_defaultIfNull_returnsDefaultValueWhenNull() {
+    final var defaultValue = new ConcreteType("some-default-value");
+    assertThat(Type.defaultIfNull(null, defaultValue)).isEqualTo(defaultValue);
+  }
+
+  @Test
+  void static_defaultIfNull_returnsValueWhenNotNull() {
+    final var defaultValue = new ConcreteType("some-default-value");
+    final var someValue = new ConcreteType("some-non-null-value");
+    assertThat(Type.defaultIfNull(someValue, defaultValue)).isEqualTo(someValue);
+  }
+
+
   @ParameterizedTest
   @CsvSource(value = {
       "null  | null  | true  ",
