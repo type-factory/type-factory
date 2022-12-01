@@ -199,7 +199,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
           .append(" [")
           .appendCodePoint(key)
           .append("] ⟶ ")
-          .append(new String(value, 0, value.length))
+          .append(value == null ? "" : new String(value, 0, value.length))
           .append(LINE_SEPARATOR);
     }
     return s.toString();
