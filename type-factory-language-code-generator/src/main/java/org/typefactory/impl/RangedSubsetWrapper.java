@@ -17,8 +17,6 @@ package org.typefactory.impl;
 
 import static org.typefactory.impl.RangedSubsetImpl.EMPTY_SUBSET;
 
-import org.typefactory.Subset;
-
 public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
 
   private final RangedSubsetImpl wrapped;

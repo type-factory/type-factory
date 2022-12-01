@@ -19,11 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.typefactory.Subset.CodePointRange;
 
 class RangedSubsetWrapperTest {
+
+  @Test
+  void constructor_returnsEmptySubsetForNull() {
+    final var subsetWrapper = new RangedSubsetWrapper(null);
+    assertThat(subsetWrapper.isEmpty()).isTrue();
+  }
 
   @Test
   void isEmpty_returnsTrue() {
