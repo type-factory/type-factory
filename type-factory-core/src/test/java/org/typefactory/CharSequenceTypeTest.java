@@ -509,6 +509,12 @@ class CharSequenceTypeTest {
       " BB  | bb  ",
       " BB  | BB  ",
       " abc | abc ",
+      " ß   | ß   ",
+      " I   | i   ",
+      " İ   | i   ", // asymmetric characters
+      " i   | I   ",
+      " i   | İ   ", // asymmetric characters
+      "\u0130 | \u0049 "
   }, delimiter = '|')
   void compareToIgnoreCase_returnsZero(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
@@ -526,7 +532,8 @@ class CharSequenceTypeTest {
       " bc  | AB  ",
       " BC  | ab  ",
       " BC  | AB  ",
-      " acc | abc "
+      " acc | abc ",
+      " ß   | s   ",
   }, delimiter = '|')
   void compareToIgnoreCase_returnsPositive(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
@@ -544,7 +551,8 @@ class CharSequenceTypeTest {
       " ab  | BC  ",
       " AB  | bc  ",
       " AB  | BC  ",
-      " abc | acc "
+      " abc | acc ",
+      " s   | ß   ",
   }, delimiter = '|')
   void compareToIgnoreCase_returnsNegative(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(value1);
