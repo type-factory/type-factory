@@ -22,6 +22,13 @@ import org.junit.jupiter.api.Test;
 class PrimitiveHashMapOfIntKeyToIntArrayValueTest {
 
   @Test
+  void toString_returnsEmptyForEmptyMap() {
+    final var map = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    final var actual = map.toString();
+    assertThat(actual).isEmpty();
+  }
+
+  @Test
   void toString_returnsStringForOneEntry() {
     final var map = new PrimitiveHashMapOfIntKeyToIntArrayValue();
     map.put('a', "zz".codePoints().toArray());
