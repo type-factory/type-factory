@@ -26,11 +26,11 @@ import org.typefactory.impl.Factory;
     value = "org.typefactory:type-factory-language-code-generator")
 public class Letters {
 
-  private static final Index index = new Index();
-
   private Letters() {
     // don't instantiate
   }
+
+  private static final Index index = new Index();
 
   private static class Index {
     private HashMap<Locale, Subset> localeSubsets = new HashMap();

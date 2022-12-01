@@ -28,6 +28,12 @@ import java.util.NoSuchElementException;
 
 class RangedSubsetImpl implements RangedSubset {
 
+  static final RangedSubsetImpl EMPTY_SUBSET = new RangedSubsetImpl(
+      EMPTY_CHAR_ARRAY,
+      EMPTY_INT_ARRAY,
+      EMPTY_LONG_ARRAY,
+      0, 0);
+
   private final char[] singleByteCodePointRanges;
   private final int[] doubleByteCodePointRanges;
   private final long[] tripleByteCodePointRanges;
@@ -107,12 +113,12 @@ class RangedSubsetImpl implements RangedSubset {
   }
 
   @Override
-  public int numberOfCodePointRanges() {
+  public final int numberOfCodePointRanges() {
     return numberOfCodePointRanges;
   }
 
   @Override
-  public int numberOfCodePointsInCodePointRanges() {
+  public final int numberOfCodePointsInCodePointRanges() {
     return numberOfCodePointsInCodePointRanges;
   }
 
@@ -124,7 +130,7 @@ class RangedSubsetImpl implements RangedSubset {
    * @return an array of 1-byte code-point ranges stored as char values.
    */
   @Override
-  public char[] getSingleByteCodePointRanges() {
+  public final char[] getSingleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(singleByteCodePointRanges, singleByteCodePointRanges.length);
   }
@@ -137,7 +143,7 @@ class RangedSubsetImpl implements RangedSubset {
    * @return an array of 2-byte code-point ranges stored as integer values.
    */
   @Override
-  public int[] getDoubleByteCodePointRanges() {
+  public final int[] getDoubleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(doubleByteCodePointRanges, doubleByteCodePointRanges.length);
   }
@@ -150,7 +156,7 @@ class RangedSubsetImpl implements RangedSubset {
    * @return an array of 4-byte code-point ranges stored as long values.
    */
   @Override
-  public long[] getTripleByteCodePointRanges() {
+  public final long[] getTripleByteCodePointRanges() {
     // Protect out data by returning a copy
     return Arrays.copyOf(tripleByteCodePointRanges, tripleByteCodePointRanges.length);
   }
@@ -165,7 +171,7 @@ class RangedSubsetImpl implements RangedSubset {
   }
 
   @Override
-  public String toString() {
+  public final String toString() {
     final StringBuilder s = new StringBuilder();
     s.append('[');
     for (char singleByteCodePointRange : singleByteCodePointRanges) {
@@ -185,11 +191,11 @@ class RangedSubsetImpl implements RangedSubset {
     return s.toString();
   }
 
-  public Iterable<CodePointRange> ranges() {
+  public final Iterable<CodePointRange> ranges() {
     return new CodePointRangeIterable();
   }
 
-  private class CodePointRangeIterable implements Iterable<CodePointRange> {
+  private final class CodePointRangeIterable implements Iterable<CodePointRange> {
 
     @Override
     public Iterator<CodePointRange> iterator() {
@@ -197,7 +203,7 @@ class RangedSubsetImpl implements RangedSubset {
     }
   }
 
-  private class CodePointRangeIterator implements Iterator<CodePointRange> {
+  private final class CodePointRangeIterator implements Iterator<CodePointRange> {
 
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;

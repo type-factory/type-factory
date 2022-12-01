@@ -26,7 +26,7 @@ import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser.TypeParserBuilder;
 
-class TypeParserBuilderImpl implements TypeParserBuilder {
+final class TypeParserBuilderImpl implements TypeParserBuilder {
 
   private Class<?> targetTypeClass;
   private String errorMessage;

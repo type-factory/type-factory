@@ -8,7 +8,7 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Type Factory</name>
+  <name>${project.artifactId}</name>
   <description>A set of modules designed to make creating custom data types easy.</description>
   <url>https://github.com/type-factory/type-factory</url>
 

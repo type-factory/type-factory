@@ -29,7 +29,7 @@ import java.util.Arrays;
  *   <li>a unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
-class PrimitiveHashMapOfIntKeyToIntArrayValue {
+final class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   /**
    * The load factor for the hash map.

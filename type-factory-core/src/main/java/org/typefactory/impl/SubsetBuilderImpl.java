@@ -45,29 +45,29 @@ import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.SubsetWithCategories;
 import org.typefactory.impl.SubsetBuilderImpl.SubsetOptimiser.HashedSubsetOption;
 
-class SubsetBuilderImpl implements SubsetBuilder {
+final class SubsetBuilderImpl implements SubsetBuilder {
 
   final Logger logger = Logger.getLogger(SubsetBuilderImpl.class.getName());
 
   /**
    * Code-points to include in the set
    */
-  protected final Ranges includes = new Ranges();
+  private final Ranges includes = new Ranges();
 
   /**
    * Code-points to exclude from the set
    */
-  protected final Ranges excludes = new Ranges();
+  final Ranges excludes = new Ranges();
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
-  protected long includeUnicodeCategoryBitFlags;
+  long includeUnicodeCategoryBitFlags;
 
   /**
    * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
    */
-  protected long excludeUnicodeCategoryBitFlags;
+  long excludeUnicodeCategoryBitFlags;
 
   @Override
   public SubsetBuilderImpl includeUnicodeCategory(final Category category) {
@@ -439,58 +439,67 @@ class SubsetBuilderImpl implements SubsetBuilder {
         removeInclusiveFrom = removeInclusiveTo;
         removeInclusiveTo = temp;
       }
-
       if (removeInclusiveFrom < 0x100) {
-        for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
-          final char range = singleByteCodePointRanges[i];
-          final int inclusiveFrom = getInclusiveFrom(range);
-          final int inclusiveTo = getInclusiveTo(range);
-          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-            singleByteCodePointRangesSize = removeSingleByteElement(singleByteCodePointRanges, singleByteCodePointRangesSize, i);
-          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-            singleByteCodePointRanges[i] = rangeToChar(inclusiveFrom, removeInclusiveFrom - 1);
-            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveTo >= inclusiveFrom) {
-            singleByteCodePointRanges[i] = rangeToChar(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveFrom <= inclusiveTo) {
-            singleByteCodePointRanges[i] = rangeToChar(inclusiveTo, removeInclusiveFrom - 1);
-          }
-        }
+        removeSingleByteCodePointRange(removeInclusiveFrom, removeInclusiveTo);
       }
-
       if (removeInclusiveFrom > 0xff || removeInclusiveTo < 0x10000) {
-        for (int i = doubleByteCodePointRanges.length - 1; i >= 0; --i) {
-          final int range = doubleByteCodePointRanges[i];
-          final int inclusiveFrom = getInclusiveFrom(range);
-          final int inclusiveTo = getInclusiveTo(range);
-          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-            doubleByteCodePointRangesSize = removeDoubleByteElement(doubleByteCodePointRanges, doubleByteCodePointRangesSize, i);
-          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-            doubleByteCodePointRanges[i] = rangeToInt(inclusiveFrom, removeInclusiveFrom - 1);
-            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveTo >= inclusiveFrom) {
-            doubleByteCodePointRanges[i] = rangeToInt(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveFrom <= inclusiveTo) {
-            doubleByteCodePointRanges[i] = rangeToInt(inclusiveTo, removeInclusiveFrom - 1);
-          }
+        removeDoubleByteCodePointRange(removeInclusiveFrom, removeInclusiveTo);
+      }
+      if (removeInclusiveTo > 0xffff) {
+        removeTripleByteCodePointRange(removeInclusiveFrom, removeInclusiveTo);
+      }
+    }
+
+    private void removeSingleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
+      for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
+        final char range = singleByteCodePointRanges[i];
+        final int inclusiveFrom = getInclusiveFrom(range);
+        final int inclusiveTo = getInclusiveTo(range);
+        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+          singleByteCodePointRangesSize = removeSingleByteElement(singleByteCodePointRanges, singleByteCodePointRangesSize, i);
+        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+          singleByteCodePointRanges[i] = rangeToChar(inclusiveFrom, removeInclusiveFrom - 1);
+          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveTo >= inclusiveFrom) {
+          singleByteCodePointRanges[i] = rangeToChar(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveFrom <= inclusiveTo) {
+          singleByteCodePointRanges[i] = rangeToChar(inclusiveTo, removeInclusiveFrom - 1);
         }
       }
+    }
 
-      if (removeInclusiveTo > 0xffff) {
-        for (int i = tripleByteCodePointRanges.length - 1; i >= 0; --i) {
-          final long range = tripleByteCodePointRanges[i];
-          final int inclusiveFrom = getInclusiveFrom(range);
-          final int inclusiveTo = getInclusiveTo(range);
-          if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
-            tripleByteCodePointRangesSize = removeTripleByteElement(tripleByteCodePointRanges, tripleByteCodePointRangesSize, i);
-          } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
-            tripleByteCodePointRanges[i] = rangeToLong(inclusiveFrom, removeInclusiveFrom - 1);
-            addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveTo >= inclusiveFrom) {
-            tripleByteCodePointRanges[i] = rangeToLong(removeInclusiveTo + 1, inclusiveTo);
-          } else if (removeInclusiveFrom <= inclusiveTo) {
-            tripleByteCodePointRanges[i] = rangeToLong(inclusiveTo, removeInclusiveFrom - 1);
-          }
+    private void removeDoubleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
+      for (int i = doubleByteCodePointRanges.length - 1; i >= 0; --i) {
+        final int range = doubleByteCodePointRanges[i];
+        final int inclusiveFrom = getInclusiveFrom(range);
+        final int inclusiveTo = getInclusiveTo(range);
+        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+          doubleByteCodePointRangesSize = removeDoubleByteElement(doubleByteCodePointRanges, doubleByteCodePointRangesSize, i);
+        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+          doubleByteCodePointRanges[i] = rangeToInt(inclusiveFrom, removeInclusiveFrom - 1);
+          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveTo >= inclusiveFrom) {
+          doubleByteCodePointRanges[i] = rangeToInt(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveFrom <= inclusiveTo) {
+          doubleByteCodePointRanges[i] = rangeToInt(inclusiveTo, removeInclusiveFrom - 1);
+        }
+      }
+    }
+
+    private void removeTripleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
+      for (int i = tripleByteCodePointRanges.length - 1; i >= 0; --i) {
+        final long range = tripleByteCodePointRanges[i];
+        final int inclusiveFrom = getInclusiveFrom(range);
+        final int inclusiveTo = getInclusiveTo(range);
+        if (removeInclusiveFrom <= inclusiveTo && removeInclusiveTo >= inclusiveTo) {
+          tripleByteCodePointRangesSize = removeTripleByteElement(tripleByteCodePointRanges, tripleByteCodePointRangesSize, i);
+        } else if (inclusiveFrom < removeInclusiveFrom && inclusiveTo > removeInclusiveTo) {
+          tripleByteCodePointRanges[i] = rangeToLong(inclusiveFrom, removeInclusiveFrom - 1);
+          addCodePointRange(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveTo >= inclusiveFrom) {
+          tripleByteCodePointRanges[i] = rangeToLong(removeInclusiveTo + 1, inclusiveTo);
+        } else if (removeInclusiveFrom <= inclusiveTo) {
+          tripleByteCodePointRanges[i] = rangeToLong(inclusiveTo, removeInclusiveFrom - 1);
         }
       }
     }
@@ -500,6 +509,15 @@ class SubsetBuilderImpl implements SubsetBuilder {
         return;
       }
       final List<Integer> codepointsToRemove = new ArrayList<>();
+      removeSingleByteCodepointsInCategories(unicodeCategoryBitFlags, codepointsToRemove);
+      removeDoubleByteCodepointsInCategories(unicodeCategoryBitFlags, codepointsToRemove);
+      removeTripleByteCodepointsInCategories(unicodeCategoryBitFlags, codepointsToRemove);
+      for (int codepoint : codepointsToRemove) {
+        removeCodePoint(codepoint);
+      }
+    }
+
+    private List<Integer> removeSingleByteCodepointsInCategories(long unicodeCategoryBitFlags, List<Integer> codepointsToRemove) {
       for (int i = singleByteCodePointRanges.length - 1; i >= 0; --i) {
         final char range = singleByteCodePointRanges[i];
         final int inclusiveFrom = getInclusiveFrom(range);
@@ -510,7 +528,10 @@ class SubsetBuilderImpl implements SubsetBuilder {
           }
         }
       }
+      return codepointsToRemove;
+    }
 
+    private void removeDoubleByteCodepointsInCategories(long unicodeCategoryBitFlags, List<Integer> codepointsToRemove) {
       for (int i = doubleByteCodePointRanges.length - 1; i >= 0; --i) {
         final int range = doubleByteCodePointRanges[i];
         final int inclusiveFrom = getInclusiveFrom(range);
@@ -521,7 +542,9 @@ class SubsetBuilderImpl implements SubsetBuilder {
           }
         }
       }
+    }
 
+    private void removeTripleByteCodepointsInCategories(long unicodeCategoryBitFlags, List<Integer> codepointsToRemove) {
       for (int i = tripleByteCodePointRanges.length - 1; i >= 0; --i) {
         final long range = tripleByteCodePointRanges[i];
         final int inclusiveFrom = getInclusiveFrom(range);
@@ -531,10 +554,6 @@ class SubsetBuilderImpl implements SubsetBuilder {
             codepointsToRemove.add(codePoint);
           }
         }
-      }
-
-      for (int codepoint : codepointsToRemove) {
-        removeCodePoint(codepoint);
       }
     }
 

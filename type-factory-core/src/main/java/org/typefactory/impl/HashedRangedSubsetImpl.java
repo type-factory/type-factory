@@ -77,17 +77,17 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public boolean isEmpty() {
+  public final boolean isEmpty() {
     return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
   }
 
   @Override
-  public int numberOfCodePointRanges() {
+  public final int numberOfCodePointRanges() {
     return numberOfCodePointRanges;
   }
 
   @Override
-  public int numberOfCodePointsInCodePointRanges() {
+  public final int numberOfCodePointsInCodePointRanges() {
     return numberOfCodePointsInCodePointRanges;
   }
 
@@ -115,7 +115,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public char[] getBlockKeySet() {
+  public final char[] getBlockKeySet() {
     if (blockKeySet == null) {
       int tempBlockKeySetSize = 0;
       char[] tempBlockKeySet = new char[256];
@@ -137,21 +137,21 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public char[][] getBlockKeys() {
+  public final char[][] getBlockKeys() {
     return blockKeys;
   }
 
   @Override
-  public char[][][] getCodePointRangesByBlock() {
+  public final char[][][] getCodePointRangesByBlock() {
     return codePointRangesByBlock;
   }
 
   @Override
-  public Iterable<CodePointRange> ranges() {
+  public final Iterable<CodePointRange> ranges() {
     return new CodePointRangeIterable();
   }
 
-  private class CodePointRangeIterable implements Iterable<CodePointRange> {
+  private final class CodePointRangeIterable implements Iterable<CodePointRange> {
 
     @Override
     public Iterator<CodePointRange> iterator() {
@@ -159,7 +159,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     }
   }
 
-  private class CodePointRangeIterator implements Iterator<CodePointRange> {
+  private final class CodePointRangeIterator implements Iterator<CodePointRange> {
 
     private final CodePointRange result = new CodePointRange(0, 0);
     private final char[] blockKeySet;
@@ -181,7 +181,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     }
 
     @Override
-    public boolean hasNext() {
+    public final boolean hasNext() {
       if (codePointRangeIndex == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
         ++hashBucketIndex;
         if (hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
@@ -200,7 +200,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     }
 
     @Override
-    public CodePointRange next() {
+    public final CodePointRange next() {
       if (hasNext()) {
         result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
         result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);

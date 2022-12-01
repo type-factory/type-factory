@@ -25,7 +25,7 @@ import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTr
 /**
  * A builder to create code-point conversions
  */
-class ConverterBuilder {
+final class ConverterBuilder {
 
   private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence = new PrimitiveHashMapOfIntKeyToIntArrayValue();
 

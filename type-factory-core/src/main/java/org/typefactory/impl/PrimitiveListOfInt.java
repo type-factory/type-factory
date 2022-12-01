@@ -18,7 +18,7 @@ package org.typefactory.impl;
 import java.util.Arrays;
 import java.util.Objects;
 
-class PrimitiveListOfInt {
+final class PrimitiveListOfInt {
 
   private static final int INITIAL_CAPACITY = 4;
   private int[] integers;

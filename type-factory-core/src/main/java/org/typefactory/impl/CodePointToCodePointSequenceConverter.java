@@ -18,7 +18,7 @@ package org.typefactory.impl;
 
 import org.typefactory.TypeParser;
 
-class CodePointToCodePointSequenceConverter implements Converter {
+final class CodePointToCodePointSequenceConverter implements Converter {
 
   /**
    * Hash-map of Character categories to code-point arrays:

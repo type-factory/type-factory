@@ -15,19 +15,17 @@
 */
 package org.typefactory.impl;
 
-final class Constants {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private Constants() {
+import org.junit.jupiter.api.Test;
+
+class InternalSubsetUtilsTest {
+
+  @Test
+  void getInclusiveFrom_getInclusiveTo_returnsAsExpected() {
+    final char codePointRange = 0x33_44;
+    assertThat(InternalSubsetUtils.getInclusiveFrom(codePointRange)).isEqualTo(0x33);
+    assertThat(InternalSubsetUtils.getInclusiveTo(codePointRange)).isEqualTo(0x44);
   }
-
-  static final String EMPTY_STRING = "";
-
-  static final int BYTE_MASK = 0xFF;
-
-  static final char[] EMPTY_CHAR_ARRAY = new char[0];
-  static final int[] EMPTY_INT_ARRAY = new int[0];
-  static final long[] EMPTY_LONG_ARRAY = new long[0];
-
-  static final String LINE_SEPARATOR = System.lineSeparator();
 
 }

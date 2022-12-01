@@ -47,12 +47,12 @@ class HashedRangedSubsetWithCategoriesImpl extends HashedRangedSubsetImpl implem
   }
 
   @Override
-  public long unicodeCategoryBitFlags() {
+  public final long unicodeCategoryBitFlags() {
     return unicodeCategoryBitFlags;
   }
 
   @Override
-  public int numberOfUnicodeCategories() {
+  public final int numberOfUnicodeCategories() {
     return numberOfUnicodeCategories;
   }
 }

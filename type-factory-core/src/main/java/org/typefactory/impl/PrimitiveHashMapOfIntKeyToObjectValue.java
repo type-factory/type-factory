@@ -26,7 +26,7 @@ import java.util.Arrays;
  *   <li>a unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
-class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
+final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
   private static final int INITIAL_CAPACITY = 20;
 
