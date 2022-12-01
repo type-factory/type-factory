@@ -595,7 +595,7 @@ class CharSequenceTypeTest {
       " BC   | AB  ",
       " acc  | abc ",
       " abcd | abc ",
-      " s    | ß   ",
+      " ß    | s   ",
   }, delimiter = '|')
   void compareToIgnoreCase_returnsPositiveForCustomCharSequenceValues(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
@@ -643,6 +643,7 @@ class CharSequenceTypeTest {
       " AB  | BC   ",
       " abc | acc  ",
       " abc | abcd ",
+      " s   | ß    ",
   }, delimiter = '|')
   void compareToIgnoreCase_returnsNegativeForCustomCharSequenceValues(final String value1, final String value2) {
     final var actual1 = new ConcreteCharSequenceType(CustomCharSequence.of(value1));
@@ -666,6 +667,7 @@ class CharSequenceTypeTest {
       " AB  | BC   ",
       " abc | acc  ",
       " abc | abcd ",
+      " s   | ß    ",
   }, delimiter = '|')
   void compareToIgnoreCase_returnsNegativeForDifferingInternalTypes(final String value1, final String value2) {
     {
