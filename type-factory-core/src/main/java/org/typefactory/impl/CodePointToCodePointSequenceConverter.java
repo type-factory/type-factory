@@ -18,7 +18,7 @@ package org.typefactory.impl;
 
 import org.typefactory.TypeParser;
 
-class CodePointToCodePointSequenceConverter implements Converter {
+final class CodePointToCodePointSequenceConverter implements Converter {
 
   /**
    * Hash-map of Character categories to code-point arrays:
@@ -88,19 +88,17 @@ class CodePointToCodePointSequenceConverter implements Converter {
   }
 
   private int[] getCodePointConversion(final int fromCodePoint) {
+    int[] toCodePoints = null;
     if (codePointToCodePointSequence != null) {
-      final int[] toCodePoints = codePointToCodePointSequence.get(fromCodePoint);
+      toCodePoints = codePointToCodePointSequence.get(fromCodePoint);
       if (toCodePoints != null) {
         return toCodePoints;
       }
     }
     if (categoryToCodePointSequence != null) {
-      final int[] toCodePoints = categoryToCodePointSequence.get(Character.getType(fromCodePoint));
-      if (toCodePoints != null) {
-        return toCodePoints;
-      }
+      toCodePoints = categoryToCodePointSequence.get(Character.getType(fromCodePoint));
     }
-    return null;
+    return toCodePoints;
   }
 
   static class ConverterResultsImpl implements ConverterResults {

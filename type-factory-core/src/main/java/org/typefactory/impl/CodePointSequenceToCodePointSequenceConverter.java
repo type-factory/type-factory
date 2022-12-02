@@ -23,7 +23,7 @@ import java.util.Deque;
 import java.util.List;
 import org.typefactory.TypeParser;
 
-class CodePointSequenceToCodePointSequenceConverter implements Converter {
+final class CodePointSequenceToCodePointSequenceConverter implements Converter {
   private final RootTreeNode rootTreeNode;
 
   /**

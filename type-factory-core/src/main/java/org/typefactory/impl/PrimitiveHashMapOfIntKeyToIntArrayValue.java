@@ -29,7 +29,7 @@ import java.util.Arrays;
  *   <li>a unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
-class PrimitiveHashMapOfIntKeyToIntArrayValue {
+final class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   /**
    * The load factor for the hash map.
@@ -192,15 +192,19 @@ class PrimitiveHashMapOfIntKeyToIntArrayValue {
   @Override
   public String toString() {
     final StringBuilder s = new StringBuilder();
-    int[] value = null;
+    int[] value;
     for (int key : keys()) {
       value = get(key);
-      s.append(key)
+      s.append("0x")
+          .append(Integer.toString(key, 16))
           .append(" [")
           .appendCodePoint(key)
           .append("] ⟶ ")
-          .append(new String(value, 0, value.length))
+          .append(value == null ? "" : new String(value, 0, value.length))
           .append(LINE_SEPARATOR);
+    }
+    if (s.length() >= LINE_SEPARATOR.length()) {
+      s.setLength(s.length() - LINE_SEPARATOR.length());
     }
     return s.toString();
   }

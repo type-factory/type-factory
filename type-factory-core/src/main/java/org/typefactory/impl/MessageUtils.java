@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
-public class MessageUtils {
+public final class MessageUtils {
 
   private MessageUtils() {
   }

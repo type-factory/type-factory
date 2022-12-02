@@ -26,6 +26,7 @@ import org.typefactory.Subset.CodePointRange;
 final class SubsetUtils {
 
   private SubsetUtils() {
+    // don't instantiate me
   }
 
   /**

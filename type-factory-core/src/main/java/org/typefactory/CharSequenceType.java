@@ -70,6 +70,9 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
 
   @Override
   default int compareTo(T o) {
+    if (this == o) {
+      return 0;
+    }
     if (o == null) {
       if (isNull()) {
         return 0;
@@ -92,7 +95,7 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
     }
     final int l1 = v1.length();
     final int l2 = v2.length();
-    int result = 0;
+    int result;
     int i1 = 0;
     int i2 = 0;
     while (i1 < l1 && i2 < l2) {
@@ -110,53 +113,73 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
     return 0;
   }
 
-  default boolean equalsIgnoreCase(final T o) {
+  default int compareToIgnoreCase(T o) {
     if (this == o) {
-      return true;
+      return 0;
     }
-    if (o == null || this.getClass() != o.getClass()) {
-      return false;
+    if (o == null) {
+      if (isNull()) {
+        return 0;
+      }
+      return 1;
     }
     final CharSequence v1 = value();
     final CharSequence v2 = o.value();
     if (v1 == null) {
       if (v2 == null) {
-        return true;
+        return 0;
       }
-      return false;
+      return -1;
     }
     if (v2 == null) {
-      return false;
+      return 1;
     }
     if (v1 instanceof String vs1 && v2 instanceof String vs2) {
-      return vs1.equalsIgnoreCase(vs2);
+      return vs1.compareToIgnoreCase(vs2);
     }
     final int l1 = v1.length();
     final int l2 = v2.length();
-    if (l1 != l2) {
-      return false;
-    }
     int i1 = 0;
     int i2 = 0;
+    char c1;
+    char c2;
     while (i1 < l1 && i2 < l2) {
-      final char c1 = v1.charAt(i1++);
-      final char c2 = v1.charAt(i2++);
-      final char u1 = Character.toUpperCase(c1);
-      final char u2 = Character.toUpperCase(c2);
-      if (u1 != u2 && Character.toLowerCase(u1) != Character.toLowerCase(u2)) {
-        return false;
+      c1 = Character.toUpperCase(v1.charAt(i1++));
+      c2 = Character.toUpperCase(v2.charAt(i2++));
+      if (c1 != c2) {
+        c1 = Character.toLowerCase(c1);
+        c2 = Character.toLowerCase(c2);
+        if (c1 != c2) {
+          return c1 - c2;
+        }
       }
     }
-    return true;
+    if (i1 < l1) {
+      return 1;
+    }
+    if (i2 < l2) {
+      return -1;
+    }
+    return 0;
+  }
+
+  default boolean equalsIgnoreCase(final T o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return this.isNull();
+    }
+    if (this.getClass() != o.getClass()) {
+      return false;
+    }
+    return this.compareToIgnoreCase(o) == 0;
   }
 
   static <T extends CharSequenceType<T>> boolean equalsIgnoreCase(final T value1, final T value2) {
-    if (value1 == value2) {
-      return true;
+    if (value1 != null) {
+      return value1.equalsIgnoreCase(value2);
     }
-    if (value1 == null || value2 == null) {
-      return false;
-    }
-    return value1.equalsIgnoreCase(value2);
+    return Type.isNull(value2);
   }
 }

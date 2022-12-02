@@ -21,17 +21,18 @@ import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
 import java.util.Arrays;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.converter.ArgumentConversionException;
-import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.Subset.CodePointRange;
+import org.typefactory.testutils.RangeAsIntegerConverter;
+import org.typefactory.testutils.RangesAsIntegerArrayConverter;
+import org.typefactory.testutils.RangeAsCharConverter;
+import org.typefactory.testutils.RangesAsCharArrayConverter;
+import org.typefactory.testutils.RangeAsLongConverter;
+import org.typefactory.testutils.RangesAsLongArrayConverter;
 
 class SubsetUtils_Test {
 
@@ -44,7 +45,7 @@ class SubsetUtils_Test {
       " 0xFF_FF | 0xFF ",
   }, delimiter = '|')
   void getInclusiveFrom_extractsUpper8BitsFrom16BitCharValue(
-      @ConvertWith(SingleByteRangeConverter.class) final char range, final int expected) {
+      @ConvertWith(RangeAsCharConverter.class) final char range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
@@ -59,7 +60,7 @@ class SubsetUtils_Test {
       " 0xFF_FF | 0xFF ",
   }, delimiter = '|')
   void getInclusiveTo_extractsLower8BitsFrom16BitCharValue(
-      @ConvertWith(SingleByteRangeConverter.class) final char range, final int expected) {
+      @ConvertWith(RangeAsCharConverter.class) final char range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
@@ -74,7 +75,7 @@ class SubsetUtils_Test {
       " 0xFFFF_FFFF | 0xFFFF ",
   }, delimiter = '|')
   void getInclusiveFrom_extractsUpper16BitsFrom32BitCharValue(
-      @ConvertWith(DoubleByteRangeConverter.class) final int range, final int expected) {
+      @ConvertWith(RangeAsIntegerConverter.class) final int range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
@@ -89,7 +90,7 @@ class SubsetUtils_Test {
       " 0xFFFF_FFFF | 0xFFFF ",
   }, delimiter = '|')
   void getInclusiveTo_extractsLower16BitsFrom32BitCharValue(
-      @ConvertWith(DoubleByteRangeConverter.class) final int range, final int expected) {
+      @ConvertWith(RangeAsIntegerConverter.class) final int range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
@@ -104,7 +105,7 @@ class SubsetUtils_Test {
       " 0x00FFFFFF_00FFFFFF | 0x00FFFFFF ",
   }, delimiter = '|')
   void getInclusiveFrom_extractsUpper32BitsFrom64BitCharValue(
-      @ConvertWith(TripleByteRangeConverter.class) final long range, final int expected) {
+      @ConvertWith(RangeAsLongConverter.class) final long range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveFrom(range);
     assertThat(actual).isEqualTo(expected);
@@ -119,7 +120,7 @@ class SubsetUtils_Test {
       " 0x00FFFFFF_00FFFFFF | 0x00FFFFFF ",
   }, delimiter = '|')
   void getInclusiveTo_extractsLower32BitsFrom64BitCharValue(
-      @ConvertWith(TripleByteRangeConverter.class) final long range, final int expected) {
+      @ConvertWith(RangeAsLongConverter.class) final long range, final int expected) {
 
     final int actual = SubsetUtils.getInclusiveTo(range);
     assertThat(actual).isEqualTo(expected);
@@ -135,7 +136,7 @@ class SubsetUtils_Test {
   }, delimiter = '|')
   void rangeToChar_creates16BitCodePointRangeFromTwo8BitCodePoints(
       final int inclusiveFrom, final int inclusiveTo,
-      @ConvertWith(SingleByteRangeConverter.class) final char expected) {
+      @ConvertWith(RangeAsCharConverter.class) final char expected) {
 
     final char actual = SubsetUtils.rangeToChar(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
@@ -151,7 +152,7 @@ class SubsetUtils_Test {
   }, delimiter = '|')
   void rangeToInt_creates32BitCodePointRangeFromTwo16BitCodePoints(
       final int inclusiveFrom, final int inclusiveTo,
-      @ConvertWith(DoubleByteRangeConverter.class) final int expected) {
+      @ConvertWith(RangeAsIntegerConverter.class) final int expected) {
 
     final int actual = SubsetUtils.rangeToInt(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
@@ -167,7 +168,7 @@ class SubsetUtils_Test {
   }, delimiter = '|')
   void rangeToLong_creates64BitCodePointRangeFromTwo24BitCodePoints(
       final int inclusiveFrom, final int inclusiveTo,
-      @ConvertWith(TripleByteRangeConverter.class) final long expected) {
+      @ConvertWith(RangeAsLongConverter.class) final long expected) {
 
     final long actual = SubsetUtils.rangeToLong(inclusiveFrom, inclusiveTo);
     assertThat(actual).isEqualTo(expected);
@@ -346,9 +347,10 @@ class SubsetUtils_Test {
       0x20_2F, 0x3A_45, 0xE1_F1 | 1 | 0x20_2F, 0xE1_F1
       0x20_2F, 0x3A_45, 0xE1_F1 | 2 | 0x20_2F, 0x3A_45
       """, delimiter = '|')
-  void removeSingleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
-    final char[] ranges = convertStringOfCharValuesToCharArray(rangesStr);
-    final char[] expectedRanges = convertStringOfCharValuesToCharArray(expectedRangesStr);
+  void removeSingleByteElement_removesElement(
+      @ConvertWith(RangesAsCharArrayConverter.class) final char[] ranges,
+      final int indexOfElementToRemove,
+      @ConvertWith(RangesAsCharArrayConverter.class) final char[] expectedRanges) {
 
     final int newLength = SubsetUtils.removeSingleByteElement(ranges, ranges.length, indexOfElementToRemove);
     final char[] actual = Arrays.copyOf(ranges, newLength);
@@ -363,9 +365,10 @@ class SubsetUtils_Test {
       0x2000_2F00, 0x3A00_4500, 0x7100_F100 | 1 | 0x2000_2F00, 0x7100_F100
       0x2000_2F00, 0x3A00_4500, 0x7100_F100 | 2 | 0x2000_2F00, 0x3A00_4500
       """, delimiter = '|')
-  void removeDoubleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
-    final int[] ranges = convertStringOfIntValuesToIntArray(rangesStr);
-    final int[] expectedRanges = convertStringOfIntValuesToIntArray(expectedRangesStr);
+  void removeDoubleByteElement_removesElement(
+      @ConvertWith(RangesAsIntegerArrayConverter.class) final int[] ranges,
+      final int indexOfElementToRemove,
+      @ConvertWith(RangesAsIntegerArrayConverter.class) final int[] expectedRanges) {
 
     final int newLength = SubsetUtils.removeDoubleByteElement(ranges, ranges.length, indexOfElementToRemove);
     final int[] actual = Arrays.copyOf(ranges, newLength);
@@ -380,9 +383,10 @@ class SubsetUtils_Test {
       0x20001111_2F001111, 0x3A002222_45002222, 0x71003333_F1003333 | 1 | 0x20001111_2F001111, 0x71003333_F1003333
       0x20001111_2F001111, 0x3A002222_45002222, 0x71003333_F1003333 | 2 | 0x20001111_2F001111, 0x3A002222_45002222
       """, delimiter = '|')
-  void removeTripleByteElement_removesElement(final String rangesStr, final int indexOfElementToRemove, final String expectedRangesStr) {
-    final long[] ranges = convertStringOfLongValuesToLongArray(rangesStr);
-    final long[] expectedRanges = convertStringOfLongValuesToLongArray(expectedRangesStr);
+  void removeTripleByteElement_removesElement(
+      @ConvertWith(RangesAsLongArrayConverter.class) final long[] ranges,
+      final int indexOfElementToRemove,
+      @ConvertWith(RangesAsLongArrayConverter.class) final long[] expectedRanges) {
 
     final int newLength = SubsetUtils.removeTripleByteElement(ranges, ranges.length, indexOfElementToRemove);
     final long[] actual = Arrays.copyOf(ranges, newLength);
@@ -399,9 +403,9 @@ class SubsetUtils_Test {
       0x32_33, 0x22_44,         | 0x22_44
       0x32_33, 0x35_37, 0x22_44 | 0x22_44
       """, delimiter = '|')
-  void compactSingleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
-    final char[] ranges = convertStringOfCharValuesToCharArray(rangesStr);
-    final char[] expectedRanges = convertStringOfCharValuesToCharArray(expectedRangesStr);
+  void compactSingleByteCodePointRanges_coalescesRangesAsExpected(
+      @ConvertWith(RangesAsCharArrayConverter.class) final char[] ranges,
+      @ConvertWith(RangesAsCharArrayConverter.class) final char[] expectedRanges){
 
     final int newLength = SubsetUtils.compactSingleByteCodePointRanges(ranges, ranges.length);
     final char[] actual = Arrays.copyOf(ranges, newLength);
@@ -416,9 +420,9 @@ class SubsetUtils_Test {
       0x3200_3300, 0x2200_4400,             | 0x2200_4400
       0x3200_3300, 0x3500_3700, 0x2200_4400 | 0x2200_4400
       """, delimiter = '|')
-  void compactDoubleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
-    final int[] ranges = convertStringOfIntValuesToIntArray(rangesStr);
-    final int[] expectedRanges = convertStringOfIntValuesToIntArray(expectedRangesStr);
+  void compactDoubleByteCodePointRanges_coalescesRangesAsExpected(
+      @ConvertWith(RangesAsIntegerArrayConverter.class) final int[] ranges,
+      @ConvertWith(RangesAsIntegerArrayConverter.class) final int[] expectedRanges){
 
     final int newLength = SubsetUtils.compactDoubleByteCodePointRanges(ranges, ranges.length);
     final int[] actual = Arrays.copyOf(ranges, newLength);
@@ -433,9 +437,9 @@ class SubsetUtils_Test {
       0x32000000_33000000, 0x22000000_44000000,                     | 0x22000000_44000000
       0x32000000_33000000, 0x35000000_37000000, 0x22000000_44000000 | 0x22000000_44000000
       """, delimiter = '|')
-  void compactTripleByteCodePointRanges_coalescesRangesAsExpected(final String rangesStr, final String expectedRangesStr){
-    final long[] ranges = convertStringOfLongValuesToLongArray(rangesStr);
-    final long[] expectedRanges = convertStringOfLongValuesToLongArray(expectedRangesStr);
+  void compactTripleByteCodePointRanges_coalescesRangesAsExpected(
+      @ConvertWith(RangesAsLongArrayConverter.class) final long[] ranges,
+      @ConvertWith(RangesAsLongArrayConverter.class) final long[] expectedRanges){
 
     final int newLength = SubsetUtils.compactTripleByteCodePointRanges(ranges, ranges.length);
     final long[] actual = Arrays.copyOf(ranges, newLength);
@@ -456,76 +460,5 @@ class SubsetUtils_Test {
     final long categoryBitFlags = Long.parseLong(categoryBitFlagsStr.replace("_", ""), 2);
     final int actual = SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags(categoryBitFlags);
     assertThat(actual).isEqualTo(expectedNumberOfCategories);
-  }
-
-  char[] convertStringOfCharValuesToCharArray(final String charArrayStr) {
-    final int[] ints = Arrays.stream(charArrayStr
-            .replace("0x", "")
-            .replace("_", "")
-            .split(",\s*+"))
-        .mapToInt(i -> Integer.parseInt(i, 16))
-        .toArray();
-    final char[] chars = new char[ints.length];
-    for (int i = 0; i < ints.length; ++i) {
-      chars[i] = (char) ints[i];
-    }
-    return chars;
-  }
-
-  int[] convertStringOfIntValuesToIntArray(final String charArrayStr) {
-    return Arrays.stream(charArrayStr
-            .replace("0x", "")
-            .replace("_", "")
-            .split(",\s*+"))
-        .mapToInt(i -> Integer.parseInt(i, 16))
-        .toArray();
-  }
-
-  long[] convertStringOfLongValuesToLongArray(final String charArrayStr) {
-    return Arrays.stream(charArrayStr
-            .replace("0x", "")
-            .replace("_", "")
-            .split(",\s*+"))
-        .mapToLong(i -> Long.parseLong(i, 16))
-        .toArray();
-  }
-
-  static class SingleByteRangeConverter implements ArgumentConverter {
-
-    @Override
-    public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-      try {
-        final String value = ((String) source).replaceFirst("0x", "").replaceFirst("_", "");
-        return (char) Integer.parseInt(value, 16);
-      } catch (Exception e) {
-        throw new IllegalArgumentException("The argument should be a string defining a range in format `0x00_00`: " + source, e);
-      }
-    }
-  }
-
-  static class DoubleByteRangeConverter implements ArgumentConverter {
-
-    @Override
-    public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-      try {
-        final String value = ((String) source).replaceFirst("0x", "").replaceFirst("_", "");
-        return (int) Long.parseLong(value, 16);
-      } catch (Exception e) {
-        throw new IllegalArgumentException("The argument should be a string defining a range in format `0x0000_0000`: " + source, e);
-      }
-    }
-  }
-
-  static class TripleByteRangeConverter implements ArgumentConverter {
-
-    @Override
-    public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-      try {
-        final String value = ((String) source).replaceFirst("0x", "").replaceFirst("_", "");
-        return Long.parseLong(value, 16);
-      } catch (Exception e) {
-        throw new IllegalArgumentException("The argument should be a string defining a range in format `0x00000000_00000000`: " + source, e);
-      }
-    }
   }
 }

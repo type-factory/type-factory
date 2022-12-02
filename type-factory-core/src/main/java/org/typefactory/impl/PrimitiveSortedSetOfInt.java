@@ -17,7 +17,7 @@ package org.typefactory.impl;
 
 import java.util.Arrays;
 
-class PrimitiveSortedSetOfInt {
+final class PrimitiveSortedSetOfInt {
 
   private static final int CAPACITY_INCREMENT = 4;
   private int[] integers;

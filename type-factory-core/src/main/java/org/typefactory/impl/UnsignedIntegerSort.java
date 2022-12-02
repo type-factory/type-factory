@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-public class UnsignedIntegerSort {
+public final class UnsignedIntegerSort {
 
   private UnsignedIntegerSort() {
   }

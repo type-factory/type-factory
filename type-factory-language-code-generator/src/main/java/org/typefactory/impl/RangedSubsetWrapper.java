@@ -15,12 +15,14 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.impl.RangedSubsetImpl.EMPTY_SUBSET;
+
 public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
 
   private final RangedSubsetImpl wrapped;
 
-  public RangedSubsetWrapper(RangedSubsetImpl wrapped) {
-    this.wrapped = wrapped;
+  public RangedSubsetWrapper(final RangedSubsetImpl wrapped) {
+    this.wrapped = wrapped == null ? EMPTY_SUBSET : wrapped;
   }
 
   @Override
