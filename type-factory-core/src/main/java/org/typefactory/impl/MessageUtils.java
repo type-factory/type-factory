@@ -31,7 +31,7 @@ public final class MessageUtils {
 
 
   public static String getMessage(final String messageKey) {
-    return getMessage(Locale.getDefault(), messageKey, null);
+    return getMessage(messageKey, null);
   }
 
   public static String getMessage(final String messageKey, final Object[] messageArgs) {
@@ -39,7 +39,7 @@ public final class MessageUtils {
   }
 
   public static String getMessage(final Locale locale, final String messageKey, final Object[] messageArgs) {
-    if (messageKey == null) {
+    if (messageKey == null || messageKey.isBlank()) {
       return EMPTY_STRING;
     }
     final ResourceBundle resourceBundle = ResourceBundle
@@ -48,11 +48,16 @@ public final class MessageUtils {
             Thread.currentThread().getContextClassLoader(),
             Control.getControl(Control.FORMAT_DEFAULT));
     try {
-      final Object[] args = messageArgs == null ? EMPTY_MESSAGE_ARGS : messageArgs;
-      return resourceBundle.containsKey(messageKey)
-          ? new MessageFormat(resourceBundle.getString(messageKey), locale).format(args)
-          : messageKey;
-    } catch (final IllegalArgumentException e) {
+      final Object[] args = messageArgs == null
+          ? EMPTY_MESSAGE_ARGS
+          : messageArgs;
+      final String messageFormat = resourceBundle.containsKey(messageKey)
+          ? resourceBundle.getString(messageKey)
+          : EMPTY_STRING;
+      return messageFormat.isBlank()
+          ? messageKey
+          : new MessageFormat(messageFormat, locale).format(args);
+    } catch (final Exception e) {
       // swallow exception.
       return messageKey;
     }
