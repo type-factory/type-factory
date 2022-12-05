@@ -109,7 +109,7 @@ class RangedSubsetImpl implements RangedSubset {
 
   @Override
   public boolean isEmpty() {
-    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+    return numberOfCodePointRanges == 0;
   }
 
   @Override
@@ -175,15 +175,19 @@ class RangedSubsetImpl implements RangedSubset {
     final StringBuilder s = new StringBuilder();
     s.append('[');
     for (char singleByteCodePointRange : singleByteCodePointRanges) {
-      s.append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('.').append('.')
+      s.append("0x").append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('_')
           .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
     }
+    s.setLength(s.length() - 1); // remove final comma
+    s.append("],[");
     for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
-      s.append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('.').append('.')
+      s.append("0x").append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('_')
           .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
     }
+    s.setLength(s.length() - 1); // remove final comma
+    s.append("],[");
     for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
-      s.append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('.').append('.')
+      s.append("0x").append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('_')
           .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
     }
     s.setLength(s.length() - 1); // remove final comma
@@ -208,7 +212,7 @@ class RangedSubsetImpl implements RangedSubset {
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;
     private int tripleByteIndex = 0;
-    private CodePointRange result = new CodePointRange(0,0);
+    private CodePointRange result = new CodePointRange(0, 0);
 
     @Override
     public boolean hasNext() {
