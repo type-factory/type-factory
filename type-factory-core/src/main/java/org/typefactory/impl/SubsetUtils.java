@@ -180,6 +180,39 @@ final class SubsetUtils {
     return ((long) min(inclusiveFrom, inclusiveTo) << 32) | max(inclusiveFrom, inclusiveTo);
   }
 
+  static int numberOfCodePointsInRanges(final char [] singleByteCodePointRanges) {
+    if (singleByteCodePointRanges == null) {
+      return 0;
+    }
+    int count = 0;
+    for (char range : singleByteCodePointRanges) {
+      count += getInclusiveTo(range) - getInclusiveFrom(range) + 1;
+    }
+    return count;
+  }
+
+  static int numberOfCodePointsInRanges(final int [] doubleByteCodePointRanges) {
+    if (doubleByteCodePointRanges == null) {
+      return 0;
+    }
+    int count = 0;
+    for (int range : doubleByteCodePointRanges) {
+      count += getInclusiveTo(range) - getInclusiveFrom(range) + 1;
+    }
+    return count;
+  }
+
+  static int numberOfCodePointsInRanges(final long [] tripleByteCodePointRanges) {
+    if (tripleByteCodePointRanges == null) {
+      return 0;
+    }
+    int count = 0;
+    for (long range : tripleByteCodePointRanges) {
+      count += getInclusiveTo(range) - getInclusiveFrom(range) + 1;
+    }
+    return count;
+  }
+
   static char[] defaultIfNullOrEmpty(final char[] array, final char[] defaultArray) {
     return array == null || array.length == 0 ? defaultArray : array;
   }
