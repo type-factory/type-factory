@@ -179,26 +179,27 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       this.codePointBlock = blockKey << 8;
       this.hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
       this.hashBucketIndex = 0;
+      while (blockKey != blockKeys[hashIndex][hashBucketIndex]) {
+        ++hashBucketIndex;
+      }
       this.codePointRangeIndex = 0;
     }
 
     @Override
     public boolean hasNext() {
-      if (hashIndex == codePointRangesByBlock.length || hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
-        return false;
-      }
       if (codePointRangeIndex == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
-        ++hashBucketIndex;
-        if (hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
           blockKeySetIndex++;
           if (blockKeySetIndex == blockKeySet.length) {
+            --blockKeySetIndex;
             return false;
           }
           blockKey = this.blockKeySet[blockKeySetIndex];
           codePointBlock = blockKey << 8;
           hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
           hashBucketIndex = 0;
-        }
+          while (blockKey != blockKeys[hashIndex][hashBucketIndex]) {
+            ++hashBucketIndex;
+          }
         codePointRangeIndex = 0;
       }
       return true;

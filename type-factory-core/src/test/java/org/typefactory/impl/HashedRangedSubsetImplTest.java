@@ -101,8 +101,8 @@ class HashedRangedSubsetImplTest {
 
     assertThat(actual.ranges())
         .flatMap(CodePointRange::copy)
-        .containsAll(testSource.expectedCodePointRanges())
-        .doesNotContainAnyElementsOf(testSource.expectedDoesNotContainCharacters());
+        .containsExactly(testSource.expectedCodePointRanges())
+        .doesNotContain(testSource.expectedDoesNotContainCharacters());
   }
 
   @ParameterizedTest
@@ -238,9 +238,9 @@ class HashedRangedSubsetImplTest {
         new int[]{ // expectedCodePointRanges
             0x0551_0553, 0x0555_0555, 0x0557_0559},
         new char[]{ // expectedContainsCharacters
-            '\u0551', '\u0552', '\u0553', '\u0555', '\u0557', '\u0559', '\u0558'},
+            0x0551, 0x0552, 0x0553, 0x0555, 0x0557, 0x0559, 0x0558},
         new char[]{ // expectedDoesNotContainCharacters
-            '\u0550', '\u0554', '\u0556', '\u0560'}),
+            0x0550, 0x0554, 0x0556, 0x0560}),
     MULTIPLE_BLOCKS(
         new char[][]{ // blockKeys
             {0x0000}, null, {0x0002}, null, null, {0x0005}},
@@ -256,9 +256,9 @@ class HashedRangedSubsetImplTest {
         new int[]{ // expectedCodePointRanges
             0x0035_0036, 0x0038_0038, 0x0242_0242, 0x0551_0553, 0x0555_0555, 0x0557_0559},
         new char[]{ // expectedContainsCharacters
-            '\u0035', '\u0036', '\u0038', '\u0242', '\u0551', '\u0552', '\u0553', '\u0555', '\u0557', '\u0559', '\u0558'},
+            0x0035, 0x0036, 0x0038, 0x0242, 0x0551, 0x0552, 0x0553, 0x0555, 0x0557, 0x0559, 0x0558},
         new char[]{ // expectedDoesNotContainCharacters
-            '\u0034', '\u0037', '\u0037', '\u0039', '\u0155', '\u0241', '\u0243', '\u0366', '\u0550', '\u0554', '\u0556', '\u0560'}),
+            0x0034, 0x0037, 0x0037, 0x0039, 0x0155, 0x0241, 0x0243, 0x0366, 0x0550, 0x0554, 0x0556, 0x0560}),
 
     MULTIPLE_BLOCKS_WITH_MULTIPLE_BLOCK_KEYS_IN_HASH_BUCKET(
         new char[][]{ // blockKeys
@@ -273,9 +273,9 @@ class HashedRangedSubsetImplTest {
         new int[]{ // expectedCodePointRanges
             0x0035_0036, 0x0038_0038, 0x0242_0242, 0x0551_0553, 0x0555_0555, 0x0557_0559},
         new char[]{ // expectedContainsCharacters
-            '\u0035', '\u0036', '\u0038', '\u0242', '\u0551', '\u0552', '\u0553', '\u0555', '\u0557', '\u0559', '\u0558'},
+            0x0035, 0x0036, 0x0038, 0x0242, 0x0551, 0x0552, 0x0553, 0x0555, 0x0557, 0x0559, 0x0558},
         new char[]{ // expectedDoesNotContainCharacters
-            '\u0034', '\u0037', '\u0037', '\u0039', '\u0155', '\u0241', '\u0243', '\u0366', '\u0550', '\u0554', '\u0556', '\u0560'}),
+            0x0034, 0x0037, 0x0037, 0x0039, 0x0155, 0x0241, 0x0243, 0x0366, 0x0550, 0x0554, 0x0556, 0x0560}),
 
     MULTIPLE_BLOCKS_WITH_MULTIPLE_BLOCK_KEYS_IN_A_SINGLE_HASH_BUCKET(
         new char[][]{ // blockKeys
@@ -288,9 +288,9 @@ class HashedRangedSubsetImplTest {
         new int[]{ // expectedCodePointRanges
             0x0035_0036, 0x0038_0038, 0x0242_0242, 0x0551_0553, 0x0555_0555, 0x0557_0559},
         new char[]{ // expectedContainsCharacters
-            '\u0035', '\u0036', '\u0038', '\u0242', '\u0551', '\u0552', '\u0553', '\u0555', '\u0557', '\u0559', '\u0558'},
+            0x0035, 0x0036, 0x0038, 0x0242, 0x0551, 0x0552, 0x0553, 0x0555, 0x0557, 0x0559, 0x0558},
         new char[]{ // expectedDoesNotContainCharacters
-            '\u0034', '\u0037', '\u0037', '\u0039', '\u0155', '\u0241', '\u0243', '\u0366', '\u0550', '\u0554', '\u0556', '\u0560'}),
+            0x0034, 0x0037, 0x0037, 0x0039, 0x0155, 0x0241, 0x0243, 0x0366, 0x0550, 0x0554, 0x0556, 0x0560}),
     ;
 
     final char[][] blockKeys;
@@ -322,24 +322,24 @@ class HashedRangedSubsetImplTest {
       this.expectedDoesNotContainCharacters = expectedDoesNotContainCharacters;
     }
 
-    Iterable<CodePointRange> expectedCodePointRanges() {
+    CodePointRange[] expectedCodePointRanges() {
       final List<CodePointRange> result = new ArrayList<>();
       for (int expectedRange : expectedCodePointRanges) {
         result.add(new CodePointRange(
             SubsetUtils.getInclusiveFrom(expectedRange),
             SubsetUtils.getInclusiveTo(expectedRange)));
       }
-      return result;
+      return result.toArray(new CodePointRange[0]);
     }
 
-    Iterable<CodePointRange> expectedDoesNotContainCharacters() {
+    CodePointRange[] expectedDoesNotContainCharacters() {
       final List<CodePointRange> result = new ArrayList<>();
       for (int expectedRange : expectedDoesNotContainCharacters) {
         result.add(new CodePointRange(
             SubsetUtils.getInclusiveFrom(expectedRange),
             SubsetUtils.getInclusiveTo(expectedRange)));
       }
-      return result;
+      return result.toArray(new CodePointRange[0]);
     }
   }
 
