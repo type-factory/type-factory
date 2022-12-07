@@ -91,7 +91,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
-    final char blockKey = (char)((codePoint >> 8) & 0xFFFF);
+    final char blockKey = (char) ((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final int availableBlockKey = blockKeys[hashIndex];
     if (availableBlockKey == 0xFFFF || blockKey != availableBlockKey) {
@@ -109,7 +109,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   public char[] getBlockKeySet() {
     if (blockKeySet == null) {
       int tempBlockKeySetSize = 0;
-      char [] tempBlockKeySet = new char[256];
+      char[] tempBlockKeySet = new char[256];
       for (int hashIndex = 0; hashIndex < blockKeys.length; ++hashIndex) {
         if (tempBlockKeySetSize == tempBlockKeySet.length) {
           tempBlockKeySet = Arrays.copyOf(tempBlockKeySet, tempBlockKeySet.length + 128);
@@ -144,13 +144,15 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator(getBlockKeySet());
+      return isEmpty()
+          ? new EmptyCodePointRangeIterator()
+          : new CodePointRangeIterator(getBlockKeySet());
     }
   }
 
   private class CodePointRangeIterator implements Iterator<CodePointRange> {
 
-    private final CodePointRange result = new CodePointRange(0,0);
+    private final CodePointRange result = new CodePointRange(0, 0);
     private final char[] blockKeySet;
     private int blockKeySetIndex;
     private int blockKey;
@@ -172,6 +174,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
       if (codePointRangeIndex == codePointRangesByBlock[hashIndex].length) {
         blockKeySetIndex++;
         if (blockKeySetIndex == blockKeySet.length) {
+          --blockKeySetIndex;
           return false;
         }
         this.blockKey = this.blockKeySet[blockKeySetIndex];

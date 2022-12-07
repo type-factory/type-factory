@@ -155,7 +155,9 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator(getBlockKeySet());
+      return isEmpty()
+          ? new EmptyCodePointRangeIterator()
+          : new CodePointRangeIterator(getBlockKeySet());
     }
   }
 
@@ -177,30 +179,34 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       this.codePointBlock = blockKey << 8;
       this.hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
       this.hashBucketIndex = 0;
+      while (blockKey != blockKeys[hashIndex][hashBucketIndex]) {
+        ++hashBucketIndex;
+      }
       this.codePointRangeIndex = 0;
     }
 
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
       if (codePointRangeIndex == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
-        ++hashBucketIndex;
-        if (hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
           blockKeySetIndex++;
           if (blockKeySetIndex == blockKeySet.length) {
+            --blockKeySetIndex;
             return false;
           }
           blockKey = this.blockKeySet[blockKeySetIndex];
           codePointBlock = blockKey << 8;
           hashIndex = (0x7FFF_FFFF & blockKey) % blockKeys.length;
           hashBucketIndex = 0;
-        }
+          while (blockKey != blockKeys[hashIndex][hashBucketIndex]) {
+            ++hashBucketIndex;
+          }
         codePointRangeIndex = 0;
       }
       return true;
     }
 
     @Override
-    public final CodePointRange next() {
+    public CodePointRange next() {
       if (hasNext()) {
         result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
         result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
@@ -210,10 +216,6 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       }
       return result;
     }
-
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
   }
+
 }

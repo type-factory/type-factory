@@ -337,8 +337,38 @@ class RangedSubsetImpl_Test {
     assertThatExceptionOfType(UnsupportedOperationException.class)
         .isThrownBy(iterator::remove);
   }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      0x30_3F                            | 1 | 16
+      0x30_3F, 0x50_5F                   | 2 | 32
+      0x30_3F, 0x50_5F, 0x61_61          | 3 | 33
+      0x30_3F, 0x50_5F, 0x61_61, 0x63_64 | 4 | 35
+      """, delimiter = '|')
+  void ranges_iteratorNext_throwsExceptionWhenNoMoreElementsExist(
+      @ConvertWith(RangesAsCharArrayConverter.class) final char[] singleByteCodePointRanges,
+      final int numberOfCodePointRanges,
+      final int numberOfCodePointsInCodePointRanges) {
+
+    final var subset = new RangedSubsetImpl(singleByteCodePointRanges, numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+
+    final var ranges = subset.ranges();
+    assertThat(ranges).isNotNull();
+
+    final var iterator = ranges.iterator();
+    assertThat(iterator).isNotNull();
+
+    // iterate over elements until none are left.
+    while (iterator.hasNext()){
+      assertThat(iterator.next()).isNotNull();
+    }
+
+    assertThatExceptionOfType(NoSuchElementException.class)
+        .isThrownBy(iterator::next);
+  }
+
   @Test
-  void ranges_iteratorNext_throwsException() {
+  void ranges_iteratorNext_throwsExceptionForEmptySubset() {
     final var subset = new RangedSubsetImpl(new char[0], -1, -1);
 
     final var ranges = subset.ranges();
