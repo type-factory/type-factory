@@ -15,6 +15,26 @@
 */
 package org.typefactory.impl;
 
+/**
+ * <p>Provides a Dual-Pivot Quicksort for an array of primitive {@code int} values treating each element in the array as if it
+ * were an {@code unsigned int}.</p>
+ *
+ * <p>This implementation is only slightly modified from the Dual-Pivot Quicksort by Vladimir Yaroslavskiy and documented in his original research
+ * paper:</p>
+ * <ul>
+ *   <li><a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a></li>
+ * </ul>
+ *
+ * <blockquote>
+ *   <i>"This algorithm offers O(n log(n)) performance on many data sets that cause other quicksorts to degrade to quadratic performance,
+ *   and is typically faster than traditional (one-pivot) Quicksort implementations."</i>
+ * </blockquote>
+ *
+ * @author Vladimir Yaroslavskiy
+ * @author Evan Toliopoulos
+ *
+ * @see <a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a>
+ */
 public final class UnsignedIntegerSort {
 
   private UnsignedIntegerSort() {

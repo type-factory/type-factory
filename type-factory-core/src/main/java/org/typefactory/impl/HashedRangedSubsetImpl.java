@@ -155,7 +155,9 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator(getBlockKeySet());
+      return isEmpty()
+          ? new EmptyCodePointRangeIterator()
+          : new CodePointRangeIterator(getBlockKeySet());
     }
   }
 
@@ -181,7 +183,10 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     }
 
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
+      if (hashIndex == codePointRangesByBlock.length || hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
+        return false;
+      }
       if (codePointRangeIndex == codePointRangesByBlock[hashIndex][hashBucketIndex].length) {
         ++hashBucketIndex;
         if (hashBucketIndex == codePointRangesByBlock[hashIndex].length) {
@@ -200,7 +205,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
     }
 
     @Override
-    public final CodePointRange next() {
+    public CodePointRange next() {
       if (hasNext()) {
         result.inclusiveFrom = codePointBlock | getInclusiveFrom(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
         result.inclusiveTo = codePointBlock | getInclusiveTo(codePointRangesByBlock[hashIndex][hashBucketIndex][codePointRangeIndex]);
@@ -210,10 +215,6 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       }
       return result;
     }
-
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
   }
+
 }

@@ -203,7 +203,9 @@ class RangedSubsetImpl implements RangedSubset {
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return new CodePointRangeIterator();
+      return isEmpty()
+          ? new EmptyCodePointRangeIterator()
+          : new CodePointRangeIterator();
     }
   }
 
@@ -239,11 +241,6 @@ class RangedSubsetImpl implements RangedSubset {
         throw new NoSuchElementException();
       }
       return result;
-    }
-
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
     }
   }
 
