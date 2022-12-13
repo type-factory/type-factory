@@ -22,6 +22,7 @@ import java.text.Normalizer.Form;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
+import org.typefactory.ErrorCode;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser.TypeParserBuilder;
@@ -29,7 +30,7 @@ import org.typefactory.TypeParser.TypeParserBuilder;
 final class TypeParserBuilderImpl implements TypeParserBuilder {
 
   private Class<?> targetTypeClass;
-  private String errorMessage;
+  private ErrorCode errorCode;
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private NullHandling nullHandling = NullHandling.PRESERVE_NULL_AND_EMPTY;
   private Normalizer.Form targetCharacterNormalizationForm = Form.NFC;
@@ -51,8 +52,8 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
     return this;
   }
 
-  public TypeParserBuilder errorMessage(final String errorMessage) {
-    this.errorMessage = errorMessage;
+  public TypeParserBuilder errorCode(final ErrorCode errorCode) {
+    this.errorCode = errorCode;
     return this;
   }
 
@@ -454,7 +455,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   @Override
   public TypeParserImpl build() {
     return new TypeParserImpl(
-        targetTypeClass, errorMessage, targetCase,
+        targetTypeClass, errorCode, targetCase,
         whiteSpace,
         nullHandling,
         targetCharacterNormalizationForm,

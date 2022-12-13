@@ -26,6 +26,7 @@ import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import org.typefactory.ErrorCode;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
@@ -38,7 +39,7 @@ import org.typefactory.impl.Converter.ConverterResults;
 final class TypeParserImpl implements TypeParser {
 
   private final Class<?> targetTypeClass;
-  private final String errorMessage;
+  private final ErrorCode errorCode;
   private final TargetCase targetCase;
   private final WhiteSpace whiteSpace;
   private final NullHandling nullHandling;
@@ -56,7 +57,7 @@ final class TypeParserImpl implements TypeParser {
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
   TypeParserImpl(
       final Class<?> targetTypeClass,
-      final String errorMessage,
+      final ErrorCode errorCode,
       final TargetCase targetCase,
       final WhiteSpace whiteSpace,
       final NullHandling nullHandling,
@@ -68,7 +69,7 @@ final class TypeParserImpl implements TypeParser {
       final Subset acceptedCodePoints,
       final Converter converter) {
     this.targetTypeClass = targetTypeClass;
-    this.errorMessage = errorMessage;
+    this.errorCode = errorCode;
     this.targetCase = targetCase;
     this.whiteSpace = whiteSpace;
     this.nullHandling = nullHandling;
@@ -190,7 +191,7 @@ final class TypeParserImpl implements TypeParser {
         if (++sourceIndex < length) {
           codePoint = Character.toCodePoint(ch, source.charAt(sourceIndex));
         } else {
-          throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
+          throw ExceptionUtils.forInvalidCodePoint(errorCode, targetTypeClass, source, ch);
         }
       } else {
         codePoint = ch;
@@ -200,7 +201,7 @@ final class TypeParserImpl implements TypeParser {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
             if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
-              throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, ch);
+              throw ExceptionUtils.forInvalidCodePoint(errorCode, targetTypeClass, source, ch);
             }
             break;
           case PRESERVE_WHITESPACE:
@@ -228,7 +229,7 @@ final class TypeParserImpl implements TypeParser {
       }
 
       if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {
-        throw InvalidValueException.forInvalidCodePoint(errorMessage, targetTypeClass, source, codePoint);
+        throw ExceptionUtils.forInvalidCodePoint(errorCode, targetTypeClass, source, codePoint);
       }
 
       if (converter != null &&
@@ -252,7 +253,7 @@ final class TypeParserImpl implements TypeParser {
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
         if (targetIndex >= maxNumberOfCodePoints) {
-          throw InvalidValueException.forValueTooLong(errorMessage, targetTypeClass, source, maxNumberOfCodePoints);
+          throw ExceptionUtils.forValueTooLong(errorCode, targetTypeClass, source, maxNumberOfCodePoints);
         }
         if (targetIndex == target.length) {
           target = Arrays.copyOf(target, target.length + Math.max(16, toCodePoints.length));
@@ -268,7 +269,7 @@ final class TypeParserImpl implements TypeParser {
       ++sourceIndex;
     }
     if (targetIndex > 0 && targetIndex < minNumberOfCodePoints) {
-      throw InvalidValueException.forValueTooShort(errorMessage, targetTypeClass, source, minNumberOfCodePoints);
+      throw ExceptionUtils.forValueTooShort(errorCode, targetTypeClass, source, minNumberOfCodePoints);
     }
 
     final int targetEndIndex;
@@ -304,7 +305,7 @@ final class TypeParserImpl implements TypeParser {
       return;
     }
     if (!regex.matcher(parsedValue).matches()) {
-      throw InvalidValueException.forValueNotMatchRegex(errorMessage, targetTypeClass, originalValue, regex);
+      throw ExceptionUtils.forValueNotMatchRegex(errorCode, targetTypeClass, originalValue, regex);
     }
   }
 
@@ -315,10 +316,10 @@ final class TypeParserImpl implements TypeParser {
     try {
       final boolean isValid = validationFunction.test(parsedValue);
       if (!isValid) {
-        throw InvalidValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, null);
+        throw ExceptionUtils.forValueNotValidUsingCustomValidation(errorCode, targetTypeClass, originalValue, null);
       }
     } catch (final Exception e) {
-      throw InvalidValueException.forValueNotValidUsingCustomValidation(errorMessage, targetTypeClass, originalValue, e);
+      throw ExceptionUtils.forValueNotValidUsingCustomValidation(errorCode, targetTypeClass, originalValue, e);
     }
   }
 

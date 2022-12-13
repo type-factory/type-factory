@@ -35,7 +35,7 @@ import org.typefactory.impl.Factory;
  * <p><b>Example 1 – type-parser for an ISO 4217 currency code</b></p>
  * <pre>{@code
  * static final TypeParser TYPE_PARSER = TypeParser.builder()
- *     .errorMessage("must be a 3 character ISO 4217 alpha currency code")
+ *     .errorCode("must be a 3 character ISO 4217 alpha currency code")
  *     .acceptCharRange('a', 'z')
  *     .acceptCharRange('A', 'Z')
  *     .fixedSize(3)
@@ -47,7 +47,7 @@ import org.typefactory.impl.Factory;
  * <p><b>Example 2 – type-parser for an International Bank Account Number (IBAN)</b></p>
  * <pre>{@code
  * static final TypeParser TYPE_PARSER = TypeParser.builder()
- *     .errorMessage("must be a valid 5..34 alpha-numeric character International Bank Account Number (IBAN)")
+ *     .errorCode("must be a valid 5..34 alpha-numeric character International Bank Account Number (IBAN)")
  *     .acceptLettersAtoZ() // convenience method for a-zA-Z
  *     .acceptDigits0to9()  // convenience method for 0-9
  *     .minSize(5)
@@ -361,7 +361,32 @@ public interface TypeParser {
     // Todo add Javadoc if still required.
     TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
 
-    TypeParserBuilder errorMessage(final String errorMessage);
+    /**
+     * <p>An error message object containing an error code and a default error message to be returned in the {@link InvalidValueException} if the
+     * provided value cannot be parsed.</p>
+     *
+     * <p>Error messages can be localized by providing one or more Java resource bundles with a base name
+     * of {@code 'org.typefactory.Messages'}. The resource bundles can be either:</p>
+     * <ul>
+     *   <li>Java properties files.</li>
+     *   <li>Java classes that implement {@link java.util.ResourceBundle}.</li>
+     * </ul>
+     *
+     * <p>For example, the following are valid examples of localization properties files and classes for providing localized error messages:</p>
+     * <pre>
+     *   org/typefactory/Messages.properties
+     *   org/typefactory/Messages_en.properties
+     *   org/typefactory/Messages_en_US.properties
+     *   class org.typefactory.Messages_fr extends java.util.ListResourceBundle
+     *   class org.typefactory.Messages_fr_CA extends java.util.ListResourceBundle
+     * </pre>
+     *
+     * @param errorCode the error message object containing an error-code and a default error message.
+     * @return this builder
+     * @see java.util.ListResourceBundle
+     * @see java.util.ResourceBundle
+     */
+    TypeParserBuilder errorCode(final ErrorCode errorCode);
 
     /**
      * <p>The minimum number of Unicode characters (code-points) that the parsed value must contain. </p>
@@ -982,7 +1007,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character product code")
+     *   .errorCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1012,7 +1037,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character product code")
+     *   .errorCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1045,7 +1070,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character product code")
+     *   .errorCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('0', '9')
      *   .removeAllCharSequences("sku") // "sku" will be removed from parsed values
@@ -1076,7 +1101,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character product code")
+     *   .errorCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('0', '9')
      *   .removeAllCharSequences("sku", "item") // "sku" and "item" will be removed from parsed values
@@ -1104,7 +1129,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character identifier code")
+     *   .errorCode("must be an 8-character identifier code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1134,7 +1159,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorMessage("must be an 8-character product code")
+     *   .errorCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1154,22 +1179,22 @@ public interface TypeParser {
 
     /**
      * <p>This will configure the type-parser to remove all occurrences of any dashes and hyphens
-     * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation
-     * (Pd) category</a> from the parsed value.</p>
+     * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a> from the parsed
+     * value.</p>
      *
      * <p>For more information about categories refer to the <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode
      * General Character Categories</a> documentation.</p>
      *
      * <p>Specifying code-points to remove automatically adds them to the set of accepted code-points – so there is no need
-     * to specifically configure the type-parser to accept the hyphens and dashes category {@link #acceptUnicodeCategory(Category)}.
-     * If hyphens and dashes weren't considered accepted characters then the first occurrence of the character in the input sequence would result
-     * in an {@link InvalidValueException}.</p>
+     * to specifically configure the type-parser to accept the hyphens and dashes category {@link #acceptUnicodeCategory(Category)}. If hyphens and
+     * dashes weren't considered accepted characters then the first occurrence of the character in the input sequence would result in an
+     * {@link InvalidValueException}.</p>
      *
      * <p><b>Example – removing 'grinning face' emoticons</b></p>
      *
      * <pre>{@code
      * TypeParser.builder()
-     *     .errorMessage("must be a 16-digit product-id")
+     *     .errorCode("must be a 16-digit product-id")
      *     .removeAllWhitespace()
      *     .removeAllDashesAndHyphens() // removes all hyphens and dashes
      *     .acceptDigits0to9()
@@ -1544,7 +1569,7 @@ public interface TypeParser {
      *   private static final Pattern VALID_PRODUCT_CODE_PATTERN = Pattern.compile("[A-Z]{2}[0-9]{8}"); ①
      *
      *   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-     *       .errorMessage("must be a valid 10 character alphanumeric product code")
+     *       .errorCode("must be a valid 10 character alphanumeric product code")
      *       .acceptLettersAtoZ()
      *       .acceptDigits0to9()
      *       .fixedSize(10)
@@ -1572,7 +1597,7 @@ public interface TypeParser {
      * <p><b>Example:</b></p>
      * <pre>{@code
      *   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-     *       .errorMessage("must be a valid 6..8 character product code")
+     *       .errorCode("must be a valid 6..8 character product code")
      *       .acceptLettersAtoZ()
      *       .acceptDigits0to9()
      *       .minSize(6)

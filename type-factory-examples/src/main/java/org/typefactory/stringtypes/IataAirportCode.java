@@ -15,6 +15,7 @@
 */
 package org.typefactory.stringtypes;
 
+import org.typefactory.ErrorCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
@@ -22,9 +23,12 @@ public final class IataAirportCode extends StringType {
 
   public static final IataAirportCode EMPTY_IATA_AIRPORT_CODE = new IataAirportCode("");
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.iata.airport.code", "must be a 3-character IATA airport value");
+
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 3-character IATA airport value")
+          .errorCode(ERROR_CODE)
           .acceptLettersAtoZ()
           .fixedSize(3)
           .toUpperCase()

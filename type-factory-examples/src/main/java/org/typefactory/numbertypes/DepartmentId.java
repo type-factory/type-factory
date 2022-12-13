@@ -15,14 +15,18 @@
 */
 package org.typefactory.numbertypes;
 
+import org.typefactory.ErrorCode;
 import org.typefactory.ShortType;
 import org.typefactory.TypeParser;
 
 public final class DepartmentId extends ShortType {
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.department.id", "must be a 4-digit department-id");
+
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 4-digit department-id")
+          .errorCode(ERROR_CODE)
           .removeAllWhitespace()
           .convertEmptyToNull()
           .acceptDigits0to9()

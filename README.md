@@ -33,7 +33,7 @@ public final class CurrencyCode extends StringType {   // ①
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  // ②
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()       // ③
-      .errorMessage("must be a 3-character ISO 4217 alpha currency code")  // ④
+      .errorCode("must be a 3-character ISO 4217 alpha currency code")  // ④
       .acceptCharRange('a', 'z')  // ⑤
       .acceptCharRange('A', 'Z')
       .fixedSize(3)               // ⑥
@@ -115,7 +115,7 @@ public final class InternationalBankAccountNumber extends StringType {
       Pattern.compile("[A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+");  // ①
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-          .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
+          .errorCode("must be a valid 5..34 character International Bank Account Number (IBAN)")
           .acceptLettersAtoZ()  // ②
           .acceptDigits0to9()   // ③
           .minSize(5)

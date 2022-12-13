@@ -16,16 +16,17 @@
 package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
-import org.typefactory.InvalidValueException;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.ErrorCode;
+import org.typefactory.InvalidValueException;
+import org.typefactory.TypeParser;
 
 class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("Must be made up of Hindi letters only.")
+          .errorCode(ErrorCode.of("must.be.hindi.letters.only", "Must be made up of Hindi letters only."))
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.HINDI_hi)
           .normalizeWhitespace()
