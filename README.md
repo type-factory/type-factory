@@ -1,14 +1,12 @@
-<div style="text-align: center;">
-  [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=coverage)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-  <br/>
-  [![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
-  [![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
-</div>
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=coverage)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+<br/>
+[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
+[![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
 
 Type Factory
 ============
