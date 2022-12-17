@@ -19,6 +19,9 @@ import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
+import java.util.Map;
+import org.typefactory.ErrorCode;
+import org.typefactory.InvalidValueException.ParserErrorCode;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser;
@@ -179,6 +182,18 @@ public class Factory {
         unicodeCategoryBitFlags,
         blocks, codePointRangesByBlock,
         numberOfCodePointRanges, numberOfCodePointsInCodePointRanges, numberOfUnicodeCategories);
+  }
+
+  public static ErrorCode errorCode(final String errorCode, final String defaultMessage) {
+    return new ErrorCodeImpl(errorCode, defaultMessage);
+  }
+
+  public static ParserErrorCode parserErrorCode(final String errorCode, final String defaultMessage) {
+    return new ParserErrorCodeImpl(errorCode, defaultMessage);
+  }
+
+  public static Map<String, String> defaultErrorCodeProperties() {
+    return ErrorCodeImpl.defaultErrorCodeProperties();
   }
 
 }

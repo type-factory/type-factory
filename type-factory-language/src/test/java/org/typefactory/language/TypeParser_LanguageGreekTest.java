@@ -16,16 +16,17 @@
 package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
-import org.typefactory.InvalidValueException;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.ErrorCode;
+import org.typefactory.InvalidValueException;
+import org.typefactory.TypeParser;
 
 class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("Must be made up of Greek letters only.")
+          .errorCode(ErrorCode.of("must.be.greek.letters.only", "Must be made up of Greek letters only."))
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.GREEK_el)
           .normalizeWhitespace()

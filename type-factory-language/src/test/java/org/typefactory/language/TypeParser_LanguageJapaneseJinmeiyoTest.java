@@ -16,16 +16,16 @@
 package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
-import org.typefactory.language.Letters;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.typefactory.ErrorCode;
+import org.typefactory.TypeParser;
 
 class TypeParser_LanguageJapaneseJinmeiyoTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("Must be made up of Japanese Jinmeiyō letters only.")
+          .errorCode(ErrorCode.of("must.be.japanese.jinmeiyo.letters.only", "Must be made up of Japanese Jinmeiyō letters only."))
           .preserveCharacterNormalizationForm()
           .acceptSubset(Letters.JAPANESE_ja_Hani_x_jinmeiyo)
           .normalizeWhitespace()

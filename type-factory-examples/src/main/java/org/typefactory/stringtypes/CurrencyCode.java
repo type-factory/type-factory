@@ -15,6 +15,7 @@
 */
 package org.typefactory.stringtypes;
 
+import org.typefactory.ErrorCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
@@ -22,8 +23,11 @@ public final class CurrencyCode extends StringType {
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.currency.code", "must be a 3-character ISO 4217 alpha currency code");
+
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-      .errorMessage("must be a 3-character ISO 4217 alpha currency code")
+      .errorCode(ERROR_CODE)
       .acceptCharRange('a', 'z')
       .acceptCharRange('A', 'Z')
       .fixedSize(3)

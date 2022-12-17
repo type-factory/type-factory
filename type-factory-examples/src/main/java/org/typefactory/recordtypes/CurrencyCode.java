@@ -16,13 +16,17 @@
 package org.typefactory.recordtypes;
 
 import org.typefactory.CharSequenceType;
+import org.typefactory.ErrorCode;
 import org.typefactory.TypeParser;
 
 public record CurrencyCode(String value) implements CharSequenceType<CurrencyCode> {
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.currency.code", "must be a 3-character ISO 4217 alpha currency code");
+
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 3-character ISO 4217 alpha currency code")
+          .errorCode(ERROR_CODE)
           .removeAllWhitespace()
           .convertNullToEmpty()
           .acceptLettersAtoZ()

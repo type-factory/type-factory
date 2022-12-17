@@ -17,6 +17,7 @@ package org.typefactory.stringtypes;
 
 import java.io.Serial;
 import java.util.regex.Pattern;
+import org.typefactory.ErrorCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
@@ -28,8 +29,11 @@ public final class InternationalBankAccountNumber extends StringType {
   public static final InternationalBankAccountNumber EMPTY_IBAN = new InternationalBankAccountNumber("");
   private static final Pattern VALID_IBAN_PATTERN = Pattern.compile("[A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+");
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.international.bank.account.number", "must be a valid 5..34 character International Bank Account Number (IBAN)");
+
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-      .errorMessage("must be a valid 5..34 character International Bank Account Number (IBAN)")
+      .errorCode(ERROR_CODE)
       .acceptLettersAtoZ()
       .acceptDigits0to9()
       .minSize(5)

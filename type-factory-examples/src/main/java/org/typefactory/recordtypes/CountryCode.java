@@ -16,13 +16,16 @@
 package org.typefactory.recordtypes;
 
 import org.typefactory.CharSequenceType;
+import org.typefactory.ErrorCode;
 import org.typefactory.TypeParser;
 
 public record CountryCode(String value) implements CharSequenceType<CountryCode> {
 
+  private static final ErrorCode ERROR_CODE =
+      ErrorCode.of("invalid.country.code", "must be a 2-character ISO 3166-1 alpha country code");
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorMessage("must be a 2-character ISO 3166-1 alpha country code")
+          .errorCode(ERROR_CODE)
           .convertNullToEmpty()
           .removeAllWhitespace()
           .acceptLettersAtoZ()

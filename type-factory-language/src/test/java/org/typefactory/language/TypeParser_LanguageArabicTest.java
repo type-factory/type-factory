@@ -16,10 +16,10 @@
 package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
-import org.typefactory.language.Letters;
-import org.typefactory.TypeParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.ErrorCode;
+import org.typefactory.TypeParser;
 
 class TypeParser_LanguageArabicTest extends AbstractTypeParserTest {
 
@@ -33,7 +33,7 @@ class TypeParser_LanguageArabicTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorMessage("Must be made up of Arabic letters only.")
+            .errorCode(ErrorCode.of("must.be.arabic.letters.only", "Must be made up of Arabic letters only."))
             .toCharacterNormalizationFormNFC()
             .acceptSubset(Letters.ARABIC_ar)
             .normalizeWhitespace()

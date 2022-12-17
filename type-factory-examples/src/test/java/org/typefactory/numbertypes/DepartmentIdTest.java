@@ -23,7 +23,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.InvalidValueException;
-import org.typefactory.stringtypes.InternationalBankAccountNumber;
 
 class DepartmentIdTest {
 
