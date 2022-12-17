@@ -1,12 +1,14 @@
-[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
-[![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
-<br/>
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
-
-
+<div style="text-align: center;">
+  [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=coverage)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
+  <br/>
+  [![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
+  [![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
+</div>
 
 Type Factory
 ============
@@ -28,12 +30,16 @@ This example creates a custom type for currency codes that must conform to the I
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
-public final class CurrencyCode extends StringType {   // ①
+public final class CurrencyCode extends StringType {        // ①
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");  // ②
 
+  private static final ErrorCode ERROR_CODE = ErrorCode.of( // ④
+      "invalid.currency.code", 
+      "must be a 3-character ISO 4217 alpha currency code");
+
   private static final TypeParser TYPE_PARSER = TypeParser.builder()       // ③
-      .errorCode("must be a 3-character ISO 4217 alpha currency code")  // ④
+      .errorCode(ERROR_CODE)      // ④
       .acceptCharRange('a', 'z')  // ⑤
       .acceptCharRange('A', 'Z')
       .fixedSize(3)               // ⑥
@@ -64,9 +70,11 @@ public final class CurrencyCode extends StringType {   // ①
   This type-parser will do the heavy lifting of parsing and/or cleaning a
   value so that a valid `CurrencyCode` can be created.
 
-④ We provide a message that will be used to create an `InvalidValueException`
-  when the value being parsed doesn't meet the required criteria for a
-  currency-code.
+④ We provide an error code with a default error message that will be used to 
+  create an `InvalidValueException` when the value being parsed doesn't meet 
+  the required criteria for a currency-code. Error messages can be localized 
+  by provide localized resource bundles. Consider defining all your error codes
+  in a separate class.
 
 ⑤ We specify the characters that are acceptable for a currency-code.
 
@@ -111,11 +119,15 @@ public final class InternationalBankAccountNumber extends StringType {
   public static final InternationalBankAccountNumber EMPTY_IBAN = 
       new InternationalBankAccountNumber("");
 
+  private static final ErrorCode ERROR_CODE = ErrorCode.of(
+      "invalid.international.bank.account.number", 
+      "must be a valid 5..34 character International Bank Account Number (IBAN)");
+
   private static final Pattern VALID_IBAN_PATTERN = 
       Pattern.compile("[A-Z]{2}+[0-9]{2}+[0-9A-Z]{1,30}+");  // ①
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-          .errorCode("must be a valid 5..34 character International Bank Account Number (IBAN)")
+          .errorCode(ERROR_CODE)
           .acceptLettersAtoZ()  // ②
           .acceptDigits0to9()   // ③
           .minSize(5)
