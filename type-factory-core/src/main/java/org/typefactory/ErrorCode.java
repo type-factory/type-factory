@@ -29,7 +29,7 @@ public interface ErrorCode extends Serializable {
    *
    * @return the error code.
    */
-  String errorCode();
+  String code();
 
   /**
    * Returns the default error message.
@@ -39,25 +39,25 @@ public interface ErrorCode extends Serializable {
   String defaultMessage();
 
   /**
-   * Returns {@code true} if the provided {@code errorCode} argument matches the value of {@link #errorCode()}, and {@code false} otherwise.
+   * Returns {@code true} if the provided {@code errorCode} argument matches the value of {@link #code()}, and {@code false} otherwise.
    *
    * @param errorCode the error code to test.
-   * @return {@code true} if the provided {@code errorCode} argument matches the value of {@link #errorCode()}, and {@code false} otherwise.
+   * @return {@code true} if the provided {@code errorCode} argument matches the value of {@link #code()}, and {@code false} otherwise.
    */
   default boolean matches(final String errorCode) {
-    if (errorCode() == null && errorCode == null) {
+    if (code() == null && errorCode == null) {
       return true;
     }
-    return errorCode() != null && errorCode().equals(errorCode);
+    return code() != null && code().equals(errorCode);
   }
 
   /**
    * Returns {@code true} if both the error-code and default error-message are blank and {@code false} otherwise.
    *
-   * @return {@code true} if both the {@link #errorCode()} and {@link #defaultMessage()} are blank and {@code false} otherwise.
+   * @return {@code true} if both the {@link #code()} and {@link #defaultMessage()} are blank and {@code false} otherwise.
    */
   default boolean isBlank() {
-    return (errorCode() == null || errorCode().isBlank()) && (defaultMessage() == null || defaultMessage().isBlank());
+    return (code() == null || code().isBlank()) && (defaultMessage() == null || defaultMessage().isBlank());
   }
 
   /**

@@ -15,6 +15,8 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.EMPTY_STRING;
+
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +34,13 @@ class ErrorCodeImpl implements ErrorCode {
   private final String defaultMessage;
 
   ErrorCodeImpl(final String errorCode, final String defaultMessage) {
-    PROPERTIES.put(errorCode, defaultMessage);
     this.errorCode = errorCode;
-    this.defaultMessage = defaultMessage;
+    this.defaultMessage = defaultMessage == null ? EMPTY_STRING : defaultMessage;
+    PROPERTIES.put(this.errorCode, this.defaultMessage);
   }
 
   @Override
-  public final String errorCode() {
+  public final String code() {
     return errorCode;
   }
 
@@ -55,7 +57,7 @@ class ErrorCodeImpl implements ErrorCode {
     if (!(o instanceof ErrorCode other)) {
       return false;
     }
-    return Objects.equals(errorCode, other.errorCode()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(errorCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
   }
 
   @Override

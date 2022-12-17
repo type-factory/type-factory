@@ -19,14 +19,18 @@ import static org.typefactory.impl.Constants.EMPTY_STRING;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.typefactory.ErrorCode;
 import org.typefactory.InvalidValueException;
 import org.typefactory.InvalidValueException.ParserErrorCode;
 import org.typefactory.impl.ParserErrorCodeImpl.ParserErrorCodeArgKeys;
 
-public final class ExceptionUtils {
+public class ExceptionUtils {
+
+  private static final Logger logger = Logger.getLogger(ExceptionUtils.class.getName());
 
   private ExceptionUtils() {
     // don't instantiate me
@@ -37,57 +41,61 @@ public final class ExceptionUtils {
   private static final Object[] EMPTY_MESSAGE_ARGS = new Object[0];
 
   public static String getMessage(final ErrorCode errorCode) {
-    return getMessage(errorCode, EMPTY_MESSAGE_ARGS);
-  }
-
-  public static String getMessage(final ErrorCode errorCode, final Object[] messageArgs) {
-    return getMessage(Locale.getDefault(), errorCode, messageArgs);
+    return loadMessageFromResourceBundleAndFormat(Locale.getDefault(), errorCode, EMPTY_MESSAGE_ARGS);
   }
 
   public static String getMessage(final Locale locale, final ErrorCode errorCode) {
-    return getMessage(locale, errorCode, EMPTY_MESSAGE_ARGS);
+    return loadMessageFromResourceBundleAndFormat(locale, errorCode, EMPTY_MESSAGE_ARGS);
   }
 
-  public static String getMessage(final Locale locale, final ErrorCode errorCode, final Object[] messageArgs) {
+  public static String getMessage(final Locale locale, final ParserErrorCode parserErrorCode, final Object[] parserErrorMessageArgs) {
+    return loadMessageFromResourceBundleAndFormat(locale, parserErrorCode, parserErrorMessageArgs);
+  }
+
+  public static String getCombinedMessage(final ErrorCode errorCode, final ParserErrorCode parserErrorCode, final Object[] parserErrorMessageArgs) {
+    return combineMessagesIntoSentences(
+        loadMessageFromResourceBundleAndFormat(Locale.getDefault(), errorCode, EMPTY_MESSAGE_ARGS),
+        loadMessageFromResourceBundleAndFormat(Locale.getDefault(), parserErrorCode, parserErrorMessageArgs));
+  }
+
+  public static String getCombinedMessage(final Locale locale, final ErrorCode errorCode, final ParserErrorCode parserErrorCode,
+      final Object[] parserErrorMessageArgs) {
+    return combineMessagesIntoSentences(
+        loadMessageFromResourceBundleAndFormat(locale, errorCode, EMPTY_MESSAGE_ARGS),
+        loadMessageFromResourceBundleAndFormat(locale, parserErrorCode, parserErrorMessageArgs));
+  }
+
+  protected static String loadMessageFromResourceBundleAndFormat(final Locale locale, final ErrorCode errorCode, final Object[] messageArgs) {
     if (errorCode == null || errorCode.isBlank()) {
       return EMPTY_STRING;
     }
     try {
-      final String message = getMessage(errorCode, locale);
+      final String message = loadMessageFromResourceBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME, locale, errorCode);
       final Object[] args = messageArgs == null
           ? EMPTY_MESSAGE_ARGS
           : messageArgs;
       return new MessageFormat(message, locale).format(args);
-    } catch (final Exception ignore) {
-      // ignore exception.
-      return errorCode.errorCode();
+    } catch (final Exception e) {
+      logger.fine(() ->
+          String.format("Can't load error message for key '%s' from resource bundle for base name %s, locale %s – %s",
+              errorCode.code(), MESSAGES_RESOURCE_BUNDLE_BASE_NAME, locale.toLanguageTag(), e.getClass().getSimpleName()));
+      return errorCode.code();
     }
   }
 
-  private static String getMessage(final ErrorCode errorCode, final Locale locale) {
-    final ResourceBundle resourceBundle;
-    String message = EMPTY_STRING;
-    try {
-      resourceBundle = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME, locale);
-      message = resourceBundle.getString(errorCode.errorCode());
-      if (!message.isBlank()) {
-        return message;
-      }
-    } catch (final Exception ignore) {
-      // ignore exception
-    }
-    message = errorCode.defaultMessage();
-    return message == null || message.isBlank()
-        ? errorCode.errorCode()
-        : message;
-  }
-
-  public static String combineMessagesIntoSentences(
+  protected static String combineMessagesIntoSentences(
       final String message1,
       final String message2) {
 
     if (message1 == null || message1.isBlank()) {
+      if (message2 == null || message2.isBlank()) {
+        return EMPTY_STRING;
+      }
       return message2;
+    }
+
+    if (message2 == null || message2.isBlank()) {
+      return message1;
     }
 
     final StringBuilder s = new StringBuilder(message2.length() + message1.length() + 4);
@@ -101,8 +109,29 @@ public final class ExceptionUtils {
     return s.toString();
   }
 
+  protected static String loadMessageFromResourceBundle(final String resourceBundleBaseName, final Locale locale, final ErrorCode errorCode) {
+    final ResourceBundle resourceBundle;
+    String message;
+    try {
+      resourceBundle = ResourceBundle.getBundle(resourceBundleBaseName, locale);
+      message = resourceBundle.getString(errorCode.code());
+      if (!message.isBlank()) {
+        return message;
+      }
+    } catch (final MissingResourceException e) {
+      logger.fine(() -> e.getMessage() + " - " + e.getClass().getSimpleName());
+    } catch (final Exception e) {
+      logger.fine(() -> String.format("Can't load error message for key '%s' from resource bundle for base name %s, locale %s – %s",
+          errorCode.code(), resourceBundleBaseName, locale.toLanguageTag(), e.getClass().getSimpleName()));
+    }
+    message = errorCode.defaultMessage();
+    return message == null || message.isBlank()
+        ? errorCode.code()
+        : message;
+  }
+
   static InvalidValueException forValueTooShort(
-      final ErrorCode message,
+      final ErrorCode errorCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int minLength) {
@@ -110,7 +139,7 @@ public final class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .errorCode(message)
+        .errorCode(errorCode)
         .parserErrorCode(ParserErrorCode.INVALID_VALUE_TOO_SHORT)
         .addParserErrorCodeArgs(
             ParserErrorCodeArgKeys.MIN_LENGTH,
@@ -119,7 +148,7 @@ public final class ExceptionUtils {
   }
 
   static InvalidValueException forValueTooLong(
-      final ErrorCode message,
+      final ErrorCode errorCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int maxLength) {
@@ -127,7 +156,7 @@ public final class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .errorCode(message)
+        .errorCode(errorCode)
         .parserErrorCode(ParserErrorCode.INVALID_VALUE_TOO_LONG)
         .addParserErrorCodeArgs(
             ParserErrorCodeArgKeys.MAX_LENGTH,
@@ -136,7 +165,7 @@ public final class ExceptionUtils {
   }
 
   static InvalidValueException forInvalidCodePoint(
-      final ErrorCode message,
+      final ErrorCode errorCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int invalidCodePoint) {
@@ -145,7 +174,7 @@ public final class ExceptionUtils {
       return InvalidValueException.builder()
           .invalidValue(value)
           .targetTypeClass(targetTypeClass)
-          .errorCode(message)
+          .errorCode(errorCode)
           .parserErrorCode(ParserErrorCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER)
           .addParserErrorCodeArgs(
               ParserErrorCodeArgKeys.INVALID_CODE_POINT,
@@ -157,7 +186,7 @@ public final class ExceptionUtils {
       return InvalidValueException.builder()
           .invalidValue(value)
           .targetTypeClass(targetTypeClass)
-          .errorCode(message)
+          .errorCode(errorCode)
           .parserErrorCode(ParserErrorCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER)
           .addParserErrorCodeArgs(
               ParserErrorCodeArgKeys.INVALID_CODE_POINT,
@@ -169,7 +198,7 @@ public final class ExceptionUtils {
       return InvalidValueException.builder()
           .invalidValue(value)
           .targetTypeClass(targetTypeClass)
-          .errorCode(message)
+          .errorCode(errorCode)
           .parserErrorCode(ParserErrorCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER)
           .addParserErrorCodeArgs(
               ParserErrorCodeArgKeys.INVALID_CODE_POINT,
@@ -180,7 +209,7 @@ public final class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .errorCode(message)
+        .errorCode(errorCode)
         .parserErrorCode(ParserErrorCode.INVALID_VALUE_INVALID_CHARACTER)
         .addParserErrorCodeArgs(
             ParserErrorCodeArgKeys.INVALID_CODE_POINT,
@@ -189,7 +218,7 @@ public final class ExceptionUtils {
   }
 
   static InvalidValueException forValueNotMatchRegex(
-      final ErrorCode message,
+      final ErrorCode errorCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final Pattern regex) {
@@ -197,7 +226,7 @@ public final class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .errorCode(message)
+        .errorCode(errorCode)
         .parserErrorCode(ParserErrorCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN)
         .addParserErrorCodeArgs(
             ParserErrorCodeArgKeys.REGEX_PATTERN,
@@ -206,21 +235,21 @@ public final class ExceptionUtils {
   }
 
   static InvalidValueException forValueNotValidUsingCustomValidation(
-      final ErrorCode message,
+      final ErrorCode errorCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final Exception cause) {
+      final Throwable cause) {
 
     return InvalidValueException.builder()
         .cause(cause)
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .errorCode(message)
+        .errorCode(errorCode)
         .parserErrorCode(ParserErrorCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
         .build();
   }
 
-  private static String unicodeHexCode(final int codePoint) {
+  static String unicodeHexCode(final int codePoint) {
     return Character.isSupplementaryCodePoint(codePoint)
         ? String.format("U+%06x", codePoint)
         : String.format("U+%04x", (short) codePoint);

@@ -39,30 +39,48 @@ import org.typefactory.impl.Factory;
  * <p>The exception contains the invalid value which can be retrieved with {@link #getInvalidValue()}. This value will not be presented in the
  * exception message as it may contain sensitive, secret or personal information. It is captured solely to enable any exception handlers meaningful
  * access to the invalid value.</p>
+ *
+ * @author Evan Toliopoulos
  */
 public class InvalidValueException extends IllegalArgumentException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
 
-  private static final Serializable[] EMPTY_MESSAGE_ARGS = new Serializable[0];
+  /**
+   * Immutable empty array.
+   */
+  private static final Serializable[] EMPTY_PARSER_MESSAGE_ARGS = new Serializable[0];
+
+  /**
+   * Immutable empty map.
+   */
+  private static final Map<String, Serializable> EMPTY_PARSER_ERROR_PROPERTIES = Map.of();
 
   private final Class<?> targetTypeClass;
+
   private final ErrorCode errorCode;
+
   private final ParserErrorCode parserErrorCode;
-  private final LinkedHashMap<String, Serializable> parserErrorCodeArgs;
+
+  private final Map<String, Serializable> parserErrorCodeArgs;
 
   private final Serializable[] parserErrorCodeArgsValues;
 
   private final String invalidValue;
 
+  /**
+   * Provides a builder to create {@link InvalidValueException} instances.
+   *
+   * @return a builder to create {@link InvalidValueException} instances.
+   */
   public static InvalidValueExceptionBuilder builder() {
     return new InvalidValueExceptionBuilder();
   }
 
 
   /**
-   * Private constructor – use the {@link #builder()} to create an {@code InvalidValueException}.
+   * Protected constructor – use the {@link #builder()} to create an {@code InvalidValueException}.
    *
    * @param cause               the optional cause of the exception. Pass {@code null} if there is no cause.
    * @param invalidValue        the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom type.
@@ -76,27 +94,27 @@ public class InvalidValueException extends IllegalArgumentException {
    * @param parserErrorCodeArgs the message arguments to supply to the message formatter used to create the error message.
    * @see #builder()
    */
-  private InvalidValueException(
+  protected InvalidValueException(
       final Throwable cause,
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
       final ErrorCode errorCode,
       final ParserErrorCode parserErrorCode,
       final LinkedHashMap<String, Serializable> parserErrorCodeArgs) {
-    super(ExceptionUtils.combineMessagesIntoSentences(
-            ExceptionUtils.getMessage(errorCode),
-            ExceptionUtils.getMessage(parserErrorCode, parserErrorCodeArgs == null
-                ? EMPTY_MESSAGE_ARGS
-                : parserErrorCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS))),
+    super(ExceptionUtils.getCombinedMessage(errorCode, parserErrorCode, parserErrorCodeArgs == null
+            ? EMPTY_PARSER_MESSAGE_ARGS
+            : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
         cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
     this.targetTypeClass = targetTypeClass;
     this.errorCode = errorCode;
     this.parserErrorCode = parserErrorCode;
-    this.parserErrorCodeArgs = parserErrorCodeArgs;
+    this.parserErrorCodeArgs = parserErrorCodeArgs == null
+        ? EMPTY_PARSER_ERROR_PROPERTIES
+        : parserErrorCodeArgs;
     this.parserErrorCodeArgsValues = parserErrorCodeArgs == null
-        ? EMPTY_MESSAGE_ARGS
-        : parserErrorCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS);
+        ? EMPTY_PARSER_MESSAGE_ARGS
+        : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
   }
 
   /**
@@ -122,15 +140,16 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getMessage()
    */
   public String getLocalizedMessage(final Locale locale) {
-    return ExceptionUtils.combineMessagesIntoSentences(getErrorMessage(locale), getParserErrorMessage(locale));
+    return ExceptionUtils.getCombinedMessage(locale, errorCode, parserErrorCode, parserErrorCodeArgsValues);
   }
+
 
   public Class<?> getTargetTypeClass() {
     return targetTypeClass;
   }
 
   public String getErrorCode() {
-    return errorCode.errorCode();
+    return errorCode.code();
   }
 
   public String getErrorMessage() {
@@ -142,7 +161,7 @@ public class InvalidValueException extends IllegalArgumentException {
   }
 
   public String getParserErrorCode() {
-    return parserErrorCode.errorCode();
+    return parserErrorCode.code();
   }
 
   public String getParserErrorMessage() {
@@ -153,7 +172,7 @@ public class InvalidValueException extends IllegalArgumentException {
     return ExceptionUtils.getMessage(locale, parserErrorCode, parserErrorCodeArgsValues);
   }
 
-  public Map<String, Serializable> getErrorCodeProperties() {
+  public Map<String, Serializable> getParserErrorProperties() {
     return parserErrorCodeArgs;
   }
 
@@ -161,6 +180,9 @@ public class InvalidValueException extends IllegalArgumentException {
     return invalidValue;
   }
 
+  /**
+   * A builder to create {@link InvalidValueException} instances.
+   */
   public static class InvalidValueExceptionBuilder {
 
     private Throwable cause;
@@ -171,6 +193,11 @@ public class InvalidValueException extends IllegalArgumentException {
     private LinkedHashMap<String, Serializable> parserErrorCodeArgs = new LinkedHashMap<>();
     private String invalidValue;
 
+    /**
+     * Creates and returns an {@link InvalidValueException} instance.
+     *
+     * @return an {@link InvalidValueException} instance.
+     */
     public InvalidValueException build() {
       return new InvalidValueException(cause, invalidValue, targetTypeClass, errorCode, parserErrorCode, parserErrorCodeArgs);
     }
@@ -224,16 +251,21 @@ public class InvalidValueException extends IllegalArgumentException {
     }
 
     /**
-     * Set the message arguments to supply to the message formatter used to create the parser error message.
+     * <p>Add message arguments to supply to the message formatter used to create the parser error message.</p>
+     *
+     * <p>Note: this method will silently ignore attempts to add parser message arguments that are provided with a null or blank {@code key}.</p>
      *
      * @param key   the message argument name. Note that this is ignored for purposes of message creation by the message formatter which uses argument
-     *              index only. It is captured solely to enable any exception handlers meaningful access to argument name-value pairs.
+     *              index only. It is captured solely to enable any exception handlers meaningful access to argument name-value pairs. This method
+     *              will silently ignore attempts to add parser message arguments that are provided with a null or blank {@code key}.
      * @param value the message argument value.
      * @param <V>   message argument values must be serializable because the {@link InvalidValueException} class is serializable.
      * @return
      */
     public <V extends Serializable> InvalidValueExceptionBuilder addParserErrorCodeArgs(final String key, final V value) {
-      this.parserErrorCodeArgs.put(key, value);
+      if (key != null && !key.isBlank()) {
+        this.parserErrorCodeArgs.put(key, value);
+      }
       return this;
     }
 
@@ -246,7 +278,11 @@ public class InvalidValueException extends IllegalArgumentException {
      * @return this builder
      */
     public InvalidValueExceptionBuilder invalidValue(final CharSequence invalidValue) {
-      this.invalidValue = invalidValue == null ? null : invalidValue.toString();
+      if (invalidValue instanceof String invalidValueString) {
+        this.invalidValue = invalidValueString;
+      } else {
+        this.invalidValue = invalidValue == null ? null : invalidValue.toString();
+      }
       return this;
     }
 
@@ -255,8 +291,8 @@ public class InvalidValueException extends IllegalArgumentException {
   /**
    * <p>Provides a string representation of the {@link InvalidValueException}.</p>
    *
-   * <p><b>Note</b>, it will not include the invalid-value (provided by {@link #getInvalidValue()}) as it may include sensitive, secret, or personal information. It is left to
-   * your own exception handlers to decide if they wish to show or log the invalid-value.</p>
+   * <p><b>Note</b>, it will not include the invalid-value (provided by {@link #getInvalidValue()}) as it may include sensitive, secret, or personal
+   * information. It is left to your own exception handlers to decide if they wish to show or log the invalid-value.</p>
    *
    * @return a string representation of the {@link InvalidValueException}.
    * @see #getInvalidValue()
@@ -267,15 +303,18 @@ public class InvalidValueException extends IllegalArgumentException {
     s.append(this.getClass().getSimpleName())
         .append("{")
         .append("message='").append(getMessage()).append('\'')
-        .append(", errorCode='").append(errorCode.errorCode()).append('\'')
+        .append(", errorCode='").append(errorCode.code()).append('\'')
         .append(", defaultErrorMessage='").append(errorCode.defaultMessage()).append('\'')
-        .append(", parserErrorCode='").append(parserErrorCode.errorCode()).append('\'')
+        .append(", parserErrorCode='").append(parserErrorCode.code()).append('\'')
         .append(", defaultParserErrorMessage='").append(parserErrorCode.defaultMessage()).append('\'');
+    for (Map.Entry<String, Serializable> entry : parserErrorCodeArgs.entrySet()) {
+      s.append(", ").append(entry.getKey()).append("='").append(entry.getValue()).append('\'');
+    }
     if (targetTypeClass != null) {
       s.append(", targetTypeClass='").append(targetTypeClass).append('\'');
     }
-    for (Map.Entry<String, Serializable> entry : parserErrorCodeArgs.entrySet()) {
-      s.append(", ").append(entry.getKey()).append("='").append(entry.getValue()).append('\'');
+    if (getCause() != null) {
+      s.append(", cause='").append(getCause().getClass().getSimpleName()).append(" - ").append(getCause().getMessage()).append('\'');
     }
     s.append("}");
     return s.toString();
