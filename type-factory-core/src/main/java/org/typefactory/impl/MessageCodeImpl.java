@@ -18,30 +18,25 @@ package org.typefactory.impl;
 import static org.typefactory.impl.Constants.EMPTY_STRING;
 
 import java.io.Serial;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 
-class ErrorCodeImpl implements ErrorCode {
+class MessageCodeImpl implements MessageCode {
 
   @Serial
-  private static final long serialVersionUID = -8041222544374363104L;
+  private static final long serialVersionUID = -2182286351618585098L;
 
-  private static final HashMap<String, String> PROPERTIES = new HashMap<>();
+  protected final String messageCode;
+  protected final String defaultMessage;
 
-  private final String errorCode;
-  private final String defaultMessage;
-
-  ErrorCodeImpl(final String errorCode, final String defaultMessage) {
-    this.errorCode = errorCode;
+  MessageCodeImpl(final String messageCode, final String defaultMessage) {
+    this.messageCode = messageCode;
     this.defaultMessage = defaultMessage == null ? EMPTY_STRING : defaultMessage;
-    PROPERTIES.put(this.errorCode, this.defaultMessage);
   }
 
   @Override
   public final String code() {
-    return errorCode;
+    return messageCode;
   }
 
   @Override
@@ -54,18 +49,14 @@ class ErrorCodeImpl implements ErrorCode {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ErrorCode other)) {
+    if (!(o instanceof MessageCode other)) {
       return false;
     }
-    return Objects.equals(errorCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(errorCode, defaultMessage);
-  }
-
-  static Map<String, String> defaultErrorCodeProperties() {
-    return Map.copyOf(PROPERTIES);
+    return Objects.hash(messageCode, defaultMessage);
   }
 }

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.typefactory.impl.ExceptionUtils;
 import org.typefactory.impl.Factory;
 
 /**
@@ -31,7 +30,7 @@ import org.typefactory.impl.Factory;
  * <pre>{@code
  *   private static final TypeParser TYPE_PARSER =
  *       TypeParser.builder()
- *           .errorCode("must be a 2-character ISO 3166-1 alpha country code")
+ *           .messageCode("must be a 2-character ISO 3166-1 alpha country code")
  *           ...
  *           .build();
  * }</pre>
@@ -47,10 +46,16 @@ public class InvalidValueException extends IllegalArgumentException {
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
 
+  private static final String EMPTY_STRING = "";
+
   /**
    * Immutable empty array.
    */
   private static final Serializable[] EMPTY_PARSER_MESSAGE_ARGS = new Serializable[0];
+
+  private static final MessageCode EMPTY_MESSAGE_CODE = Factory.messageCode(EMPTY_STRING, EMPTY_STRING);
+
+  private static final ParserMessageCode EMPTY_PARSER_MESSAGE_CODE = Factory.parserMessageCode(EMPTY_STRING, EMPTY_STRING);
 
   /**
    * Immutable empty map.
@@ -59,13 +64,13 @@ public class InvalidValueException extends IllegalArgumentException {
 
   private final Class<?> targetTypeClass;
 
-  private final ErrorCode errorCode;
+  private final MessageCode messageCode;
 
-  private final ParserErrorCode parserErrorCode;
+  private final ParserMessageCode parserMessageCode;
 
-  private final Map<String, Serializable> parserErrorCodeArgs;
+  private final Map<String, Serializable> parserMessageCodeArgs;
 
-  private final Serializable[] parserErrorCodeArgsValues;
+  private final Serializable[] parserMessageCodeArgsValues;
 
   private final String invalidValue;
 
@@ -82,39 +87,41 @@ public class InvalidValueException extends IllegalArgumentException {
   /**
    * Protected constructor – use the {@link #builder()} to create an {@code InvalidValueException}.
    *
-   * @param cause               the optional cause of the exception. Pass {@code null} if there is no cause.
-   * @param invalidValue        the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom type.
-   * @param targetTypeClass     an optional target custom type class. Pass {@code null} if the target type class is not known.
-   * @param errorCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If
-   *                            no error message is found in the resource-bundle or properties file then this value will be used as the error
-   *                            message.
-   * @param parserErrorCode     the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
-   *                            file. If no parser error message is found in the resource-bundle or properties file then this value will be used as
-   *                            the error message.
-   * @param parserErrorCodeArgs the message arguments to supply to the message formatter used to create the error message.
+   * @param cause                 the optional cause of the exception. Pass {@code null} if there is no cause.
+   * @param invalidValue          the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom
+   *                              type.
+   * @param targetTypeClass       an optional target custom type class. Pass {@code null} if the target type class is not known.
+   * @param messageCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
+   *                              If no error message is found in the resource-bundle or properties file then this value will be used as the error
+   *                              message.
+   * @param parserMessageCode     the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
+   *                              file. If no parser error message is found in the resource-bundle or properties file then this value will be used as
+   *                              the error message.
+   * @param parserMessageCodeArgs the message arguments to supply to the message formatter used to create the error message.
    * @see #builder()
    */
   protected InvalidValueException(
       final Throwable cause,
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
-      final ErrorCode errorCode,
-      final ParserErrorCode parserErrorCode,
-      final LinkedHashMap<String, Serializable> parserErrorCodeArgs) {
-    super(ExceptionUtils.getCombinedMessage(errorCode, parserErrorCode, parserErrorCodeArgs == null
-            ? EMPTY_PARSER_MESSAGE_ARGS
-            : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
+      final MessageCode messageCode,
+      final ParserMessageCode parserMessageCode,
+      final LinkedHashMap<String, Serializable> parserMessageCodeArgs) {
+    super(combineMessagesIntoSentences(messageCode, parserMessageCode,
+            parserMessageCodeArgs == null
+                ? EMPTY_PARSER_MESSAGE_ARGS
+                : parserMessageCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
         cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
     this.targetTypeClass = targetTypeClass;
-    this.errorCode = errorCode;
-    this.parserErrorCode = parserErrorCode;
-    this.parserErrorCodeArgs = parserErrorCodeArgs == null
+    this.messageCode = messageCode == null ? EMPTY_MESSAGE_CODE : messageCode;
+    this.parserMessageCode = parserMessageCode == null ? EMPTY_PARSER_MESSAGE_CODE : parserMessageCode;
+    this.parserMessageCodeArgs = parserMessageCodeArgs == null
         ? EMPTY_PARSER_ERROR_PROPERTIES
-        : parserErrorCodeArgs;
-    this.parserErrorCodeArgsValues = parserErrorCodeArgs == null
+        : parserMessageCodeArgs;
+    this.parserMessageCodeArgsValues = parserMessageCodeArgs == null
         ? EMPTY_PARSER_MESSAGE_ARGS
-        : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
+        : parserMessageCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
   }
 
   /**
@@ -140,7 +147,9 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getMessage()
    */
   public String getLocalizedMessage(final Locale locale) {
-    return ExceptionUtils.getCombinedMessage(locale, errorCode, parserErrorCode, parserErrorCodeArgsValues);
+    return combineMessagesIntoSentences(
+        messageCode.message(locale),
+        parserMessageCode.message(locale, parserMessageCodeArgsValues));
   }
 
 
@@ -148,32 +157,32 @@ public class InvalidValueException extends IllegalArgumentException {
     return targetTypeClass;
   }
 
-  public String getErrorCode() {
-    return errorCode.code();
+  public String getMessageCode() {
+    return messageCode.code();
   }
 
   public String getErrorMessage() {
-    return getErrorMessage(Locale.getDefault());
+    return messageCode.message();
   }
 
   public String getErrorMessage(final Locale locale) {
-    return ExceptionUtils.getMessage(locale, errorCode);
+    return messageCode.message(locale);
   }
 
-  public String getParserErrorCode() {
-    return parserErrorCode.code();
+  public String getParserMessageCode() {
+    return parserMessageCode.code();
   }
 
   public String getParserErrorMessage() {
-    return getParserErrorMessage(Locale.getDefault());
+    return parserMessageCode.message(parserMessageCodeArgsValues);
   }
 
   public String getParserErrorMessage(final Locale locale) {
-    return ExceptionUtils.getMessage(locale, parserErrorCode, parserErrorCodeArgsValues);
+    return parserMessageCode.message(locale, parserMessageCodeArgsValues);
   }
 
   public Map<String, Serializable> getParserErrorProperties() {
-    return parserErrorCodeArgs;
+    return parserMessageCodeArgs;
   }
 
   public String getInvalidValue() {
@@ -187,10 +196,10 @@ public class InvalidValueException extends IllegalArgumentException {
 
     private Throwable cause;
     private Class<?> targetTypeClass;
-    private ErrorCode errorCode;
-    private ParserErrorCode parserErrorCode;
+    private MessageCode messageCode;
+    private ParserMessageCode parserMessageCode;
 
-    private LinkedHashMap<String, Serializable> parserErrorCodeArgs = new LinkedHashMap<>();
+    private LinkedHashMap<String, Serializable> parserMessageCodeArgs = new LinkedHashMap<>();
     private String invalidValue;
 
     /**
@@ -199,7 +208,7 @@ public class InvalidValueException extends IllegalArgumentException {
      * @return an {@link InvalidValueException} instance.
      */
     public InvalidValueException build() {
-      return new InvalidValueException(cause, invalidValue, targetTypeClass, errorCode, parserErrorCode, parserErrorCodeArgs);
+      return new InvalidValueException(cause, invalidValue, targetTypeClass, messageCode, parserMessageCode, parserMessageCodeArgs);
     }
 
     /**
@@ -228,25 +237,26 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * Set the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no error
-     *                  message is found in the resource-bundle or properties file then the value you provide here will be used as the error message.
+     * @param messageCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
+     *                    error message is found in the resource-bundle or properties file then the value you provide here will be used as the error
+     *                    message.
      * @return this builder
      */
-    public InvalidValueExceptionBuilder errorCode(final ErrorCode errorCode) {
-      this.errorCode = errorCode;
+    public InvalidValueExceptionBuilder messageCode(final MessageCode messageCode) {
+      this.messageCode = messageCode;
       return this;
     }
 
     /**
      * Set the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param parserErrorCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
-     *                        file. If no parser error message is found in the resource-bundle or properties file then the value you provide here will
-     *                        be used as the error message.
+     * @param parserMessageCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
+     *                          file. If no parser error message is found in the resource-bundle or properties file then the value you provide here
+     *                          will be used as the error message.
      * @return this builder
      */
-    public InvalidValueExceptionBuilder parserErrorCode(final ParserErrorCode parserErrorCode) {
-      this.parserErrorCode = parserErrorCode;
+    public InvalidValueExceptionBuilder parserMessageCode(final ParserMessageCode parserMessageCode) {
+      this.parserMessageCode = parserMessageCode;
       return this;
     }
 
@@ -262,9 +272,9 @@ public class InvalidValueException extends IllegalArgumentException {
      * @param <V>   message argument values must be serializable because the {@link InvalidValueException} class is serializable.
      * @return
      */
-    public <V extends Serializable> InvalidValueExceptionBuilder addParserErrorCodeArgs(final String key, final V value) {
+    public <V extends Serializable> InvalidValueExceptionBuilder addParserMessageCodeArg(final String key, final V value) {
       if (key != null && !key.isBlank()) {
-        this.parserErrorCodeArgs.put(key, value);
+        this.parserMessageCodeArgs.put(key, value);
       }
       return this;
     }
@@ -285,7 +295,44 @@ public class InvalidValueException extends IllegalArgumentException {
       }
       return this;
     }
+  }
 
+  protected static String combineMessagesIntoSentences(
+      final MessageCode messageCode1,
+      final MessageCode messageCode2,
+      final Object[] messageCode2Args) {
+
+    final Object[] message2Args = messageCode2Args == null ? EMPTY_PARSER_MESSAGE_ARGS : messageCode2Args;
+    final String message1 = messageCode1 == null ? EMPTY_STRING : messageCode1.message();
+    final String message2 = messageCode2 == null ? EMPTY_STRING : messageCode2.message(message2Args);
+
+    return combineMessagesIntoSentences(message1, message2);
+  }
+
+  protected static String combineMessagesIntoSentences(
+      final String message1,
+      final String message2) {
+
+    if (message1 == null || message1.isBlank()) {
+      if (message2 == null || message2.isBlank()) {
+        return EMPTY_STRING;
+      }
+      return message2;
+    }
+
+    if (message2 == null || message2.isBlank()) {
+      return message1;
+    }
+
+    final StringBuilder s = new StringBuilder(message2.length() + message1.length() + 4);
+    s.append(message1.trim());
+    if (s.charAt(s.length() - 1) == '.') {
+      s.append(' ');
+    } else {
+      s.append(". ");
+    }
+    s.append(message2);
+    return s.toString();
   }
 
   /**
@@ -303,11 +350,11 @@ public class InvalidValueException extends IllegalArgumentException {
     s.append(this.getClass().getSimpleName())
         .append("{")
         .append("message='").append(getMessage()).append('\'')
-        .append(", errorCode='").append(errorCode.code()).append('\'')
-        .append(", defaultErrorMessage='").append(errorCode.defaultMessage()).append('\'')
-        .append(", parserErrorCode='").append(parserErrorCode.code()).append('\'')
-        .append(", defaultParserErrorMessage='").append(parserErrorCode.defaultMessage()).append('\'');
-    for (Map.Entry<String, Serializable> entry : parserErrorCodeArgs.entrySet()) {
+        .append(", messageCode='").append(messageCode.code()).append('\'')
+        .append(", defaultErrorMessage='").append(messageCode.defaultMessage()).append('\'')
+        .append(", parserMessageCode='").append(parserMessageCode.code()).append('\'')
+        .append(", defaultParserErrorMessage='").append(parserMessageCode.defaultMessage()).append('\'');
+    for (Map.Entry<String, Serializable> entry : parserMessageCodeArgs.entrySet()) {
       s.append(", ").append(entry.getKey()).append("='").append(entry.getValue()).append('\'');
     }
     if (targetTypeClass != null) {
@@ -321,32 +368,32 @@ public class InvalidValueException extends IllegalArgumentException {
   }
 
   /**
-   * <p>Parser error-codes are used internally by the {@link TypeParser}.</p>
+   * <p>Parser message codes are used internally by the {@link TypeParser}.</p>
    */
-  public interface ParserErrorCode extends ErrorCode {
+  public interface ParserMessageCode extends MessageCode {
 
-    ParserErrorCode INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN = Factory.parserMessageCode(
         "invalid_value_does_not_match_regex_pattern",
         "Invalid value - does not match regular-expression pattern {0}");
-    ParserErrorCode INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION = Factory.parserMessageCode(
         "invalid_value_does_not_pass_custom_validation",
         "Invalid value - does not pass custom validation criteria.");
-    ParserErrorCode INVALID_VALUE_INVALID_CHARACTER = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_INVALID_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_character",
         "Invalid value - invalid character ''{0}''.");
-    ParserErrorCode INVALID_VALUE_INVALID_CONTROL_CHARACTER = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_INVALID_CONTROL_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_control_character",
         "Invalid value - invalid control character {0}.");
-    ParserErrorCode INVALID_VALUE_INVALID_QUOTE_CHARACTER = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_INVALID_QUOTE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_quote_character",
         "Invalid value - invalid quote character \"{0}\".");
-    ParserErrorCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_whitespace_character",
         "Invalid value - invalid white-space character {0}.");
-    ParserErrorCode INVALID_VALUE_TOO_LONG = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_TOO_LONG = Factory.parserMessageCode(
         "invalid_value_too_long",
         "Invalid value - too long, maximum length is {0,number,integer}.");
-    ParserErrorCode INVALID_VALUE_TOO_SHORT = Factory.parserErrorCode(
+    ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");
   }

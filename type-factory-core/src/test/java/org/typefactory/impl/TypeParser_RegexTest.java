@@ -21,7 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import java.util.regex.Pattern;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
@@ -40,7 +40,7 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("must.conform.to.format", "Must conform to format."))
+            .messageCode(MessageCode.of("must.conform.to.format", "Must conform to format."))
             .acceptLettersAtoZ()
             .acceptDigits0to9()
             .acceptChars('-', '.')
@@ -64,7 +64,7 @@ class TypeParser_RegexTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("must.conform.to.format", "Must conform to format."))
+            .messageCode(MessageCode.of("must.conform.to.format", "Must conform to format."))
             .acceptLettersAtoZ()
             .acceptDigits0to9()
             .acceptChars('_', '-', '.')

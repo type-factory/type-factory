@@ -16,20 +16,37 @@
 package org.typefactory.impl;
 
 import java.io.Serial;
-import org.typefactory.InvalidValueException.ParserErrorCode;
+import java.util.Objects;
+import org.typefactory.InvalidValueException.ParserMessageCode;
 
-class ParserErrorCodeImpl extends ErrorCodeImpl implements ParserErrorCode {
+class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode {
 
   @Serial
   private static final long serialVersionUID = -344851934396452075L;
 
-  ParserErrorCodeImpl(final String errorCode, final String defaultMessage) {
-    super(errorCode, defaultMessage);
+  ParserMessageCodeImpl(final String messageCode, final String defaultMessage) {
+    super(messageCode, defaultMessage);
   }
 
-  static class ParserErrorCodeArgKeys {
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ParserMessageCode other)) {
+      return false;
+    }
+    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+  }
 
-    private ParserErrorCodeArgKeys() {
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
+  static class ParserMessageCodeArgKeys {
+
+    private ParserMessageCodeArgKeys() {
       // don't instantiate me
     }
 

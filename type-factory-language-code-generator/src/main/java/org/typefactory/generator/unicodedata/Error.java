@@ -26,16 +26,16 @@ public enum Error {
   THERE_ARE_TOO_MANY_BLOCKS_ELEMENTS_IN_THE_FILE(3, "There are too many blocks elements in the file '%s'."),
 
   ;
-  private final int errorCode;
+  private final int messageCode;
   private final String errorMessage;
 
-  Error(final int errorCode, final String errorMessage) {
-    this.errorCode = errorCode;
+  Error(final int messageCode, final String errorMessage) {
+    this.messageCode = messageCode;
     this.errorMessage = errorMessage;
   }
 
-  public int getErrorCode() {
-    return errorCode;
+  public int getMessageCode() {
+    return messageCode;
   }
 
   public String getErrorMessage(final String dataFile) {

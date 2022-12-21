@@ -31,7 +31,7 @@ import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 
 @ExtendWith(MockitoExtension.class)
-public class SubsetWrapperTest {
+class SubsetWrapperTest {
 
   @Test
   void optimisedSubset_throwsExceptionForUnknownSubsetType() {
@@ -41,9 +41,9 @@ public class SubsetWrapperTest {
     final var subsetBuilder = mock(SubsetBuilder.class);
     when(subsetBuilder.build()).thenReturn(new SomeSubset());
 
-    try (final MockedStatic<Subset> utilities = Mockito.mockStatic(Subset.class)) {
+    try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
 
-      utilities.when(Subset::builder).thenReturn(subsetBuilder);
+      subset.when(Subset::builder).thenReturn(subsetBuilder);
 
       assertThatExceptionOfType(SubsetException.class)
           .isThrownBy(() -> SubsetWrapper.optimisedSubset(unicodeSet))
@@ -78,9 +78,9 @@ public class SubsetWrapperTest {
     final var hashedRangedSubset = mock(HashedRangedSubsetImpl.class);
     when(subsetBuilder.build()).thenReturn(hashedRangedSubset);
 
-    try (final MockedStatic<Subset> utilities = Mockito.mockStatic(Subset.class)) {
+    try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
 
-      utilities.when(Subset::builder).thenReturn(subsetBuilder);
+      subset.when(Subset::builder).thenReturn(subsetBuilder);
 
       final var actual = SubsetWrapper.optimisedSubset(unicodeSet);
 
@@ -101,9 +101,9 @@ public class SubsetWrapperTest {
     final var optimalHashedRangedSubset = mock(OptimalHashedRangedSubsetImpl.class);
     when(subsetBuilder.build()).thenReturn(optimalHashedRangedSubset);
 
-    try (final MockedStatic<Subset> utilities = Mockito.mockStatic(Subset.class)) {
+    try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
 
-      utilities.when(Subset::builder).thenReturn(subsetBuilder);
+      subset.when(Subset::builder).thenReturn(subsetBuilder);
 
       final var actual = SubsetWrapper.optimisedSubset(unicodeSet);
 

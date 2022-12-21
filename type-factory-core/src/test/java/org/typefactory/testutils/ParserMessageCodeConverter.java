@@ -15,24 +15,24 @@
 */
 package org.typefactory.testutils;
 
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_INVALID_CHARACTER;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_TOO_LONG;
-import static org.typefactory.InvalidValueException.ParserErrorCode.INVALID_VALUE_TOO_SHORT;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_TOO_LONG;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_TOO_SHORT;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
-import org.typefactory.InvalidValueException.ParserErrorCode;
+import org.typefactory.InvalidValueException.ParserMessageCode;
 
-public class ParserErrorCodeConverter implements ArgumentConverter {
+public class ParserMessageCodeConverter implements ArgumentConverter {
 
   @Override
-  public ParserErrorCode convert(Object source, ParameterContext context) throws ArgumentConversionException {
+  public ParserMessageCode convert(Object source, ParameterContext context) throws ArgumentConversionException {
     try {
       return switch ((String) source) {
         case "INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN" -> INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN;
@@ -43,10 +43,10 @@ public class ParserErrorCodeConverter implements ArgumentConverter {
         case "INVALID_VALUE_INVALID_WHITESPACE_CHARACTER" -> INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
         case "INVALID_VALUE_TOO_LONG" -> INVALID_VALUE_TOO_LONG;
         case "INVALID_VALUE_TOO_SHORT" -> INVALID_VALUE_TOO_SHORT;
-        default -> throw new IllegalArgumentException("The argument should be a string matching the ParserErrorCode constants – '" + source + "' was not recognised.");
+        default -> throw new IllegalArgumentException("The argument should be a string matching the ParserMessageCode constants – '" + source + "' was not recognised.");
       };
     } catch (Exception e) {
-      throw new IllegalArgumentException("The argument should be a string matching the ParserErrorCode constants – '" + source + "' was not recognised.", e);
+      throw new IllegalArgumentException("The argument should be a string matching the ParserMessageCode constants – '" + source + "' was not recognised.", e);
     }
   }
 }

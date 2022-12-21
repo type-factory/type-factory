@@ -15,7 +15,7 @@
 */
 package org.typefactory.stringtypes;
 
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
@@ -23,12 +23,12 @@ public final class CountryCode extends StringType {
 
   public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
 
-  private static final ErrorCode ERROR_CODE =
-      ErrorCode.of("invalid.country.code", "must be a 2-character ISO 3166-1 alpha country code");
+  private static final MessageCode ERROR_MESSAGE =
+      MessageCode.of("invalid.country.code", "must be a 2-character ISO 3166-1 alpha country code");
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorCode(ERROR_CODE)
+          .messageCode(ERROR_MESSAGE)
           .acceptLettersAtoZ()
           .fixedSize(2)
           .toUpperCase()

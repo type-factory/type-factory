@@ -35,7 +35,7 @@ import org.typefactory.impl.Factory;
  * <p><b>Example 1 – type-parser for an ISO 4217 currency code</b></p>
  * <pre>{@code
  * static final TypeParser TYPE_PARSER = TypeParser.builder()
- *     .errorCode("must be a 3 character ISO 4217 alpha currency code")
+ *     .messageCode("must be a 3 character ISO 4217 alpha currency code")
  *     .acceptCharRange('a', 'z')
  *     .acceptCharRange('A', 'Z')
  *     .fixedSize(3)
@@ -47,7 +47,7 @@ import org.typefactory.impl.Factory;
  * <p><b>Example 2 – type-parser for an International Bank Account Number (IBAN)</b></p>
  * <pre>{@code
  * static final TypeParser TYPE_PARSER = TypeParser.builder()
- *     .errorCode("must be a valid 5..34 alpha-numeric character International Bank Account Number (IBAN)")
+ *     .messageCode("must be a valid 5..34 alpha-numeric character International Bank Account Number (IBAN)")
  *     .acceptLettersAtoZ() // convenience method for a-zA-Z
  *     .acceptDigits0to9()  // convenience method for 0-9
  *     .minSize(5)
@@ -362,8 +362,8 @@ public interface TypeParser {
     TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
 
     /**
-     * <p>An error message object containing an error code and a default error message to be returned in the {@link InvalidValueException} if the
-     * provided value cannot be parsed.</p>
+     * <p>Set a {@link MessageCode} containing a message code and default message to be returned in the {@link InvalidValueException} if the
+     * type-parser cannot parse a provided value.</p>
      *
      * <p>Error messages can be localized by providing one or more Java resource bundles with a base name
      * of {@code 'org.typefactory.Messages'}. The resource bundles can be either:</p>
@@ -381,12 +381,12 @@ public interface TypeParser {
      *   class org.typefactory.Messages_fr_CA extends java.util.ListResourceBundle
      * </pre>
      *
-     * @param errorCode the error message object containing an error-code and a default error message.
+     * @param messageCode a {@link MessageCode} containing a message code and default message to be.
      * @return this builder
      * @see java.util.ListResourceBundle
      * @see java.util.ResourceBundle
      */
-    TypeParserBuilder errorCode(final ErrorCode errorCode);
+    TypeParserBuilder messageCode(final MessageCode messageCode);
 
     /**
      * <p>The minimum number of Unicode characters (code-points) that the parsed value must contain. </p>
@@ -1007,7 +1007,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character product code")
+     *   .messageCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1037,7 +1037,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character product code")
+     *   .messageCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1070,7 +1070,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character product code")
+     *   .messageCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('0', '9')
      *   .removeAllCharSequences("sku") // "sku" will be removed from parsed values
@@ -1101,7 +1101,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character product code")
+     *   .messageCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('0', '9')
      *   .removeAllCharSequences("sku", "item") // "sku" and "item" will be removed from parsed values
@@ -1129,7 +1129,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character identifier code")
+     *   .messageCode("must be an 8-character identifier code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1159,7 +1159,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *   .errorCode("must be an 8-character product code")
+     *   .messageCode("must be an 8-character product code")
      *   .fixedSize(8)
      *   .acceptCharRange('a', 'z')
      *   .acceptCharRange('A', 'Z')
@@ -1194,7 +1194,7 @@ public interface TypeParser {
      *
      * <pre>{@code
      * TypeParser.builder()
-     *     .errorCode("must be a 16-digit product-id")
+     *     .messageCode("must be a 16-digit product-id")
      *     .removeAllWhitespace()
      *     .removeAllDashesAndHyphens() // removes all hyphens and dashes
      *     .acceptDigits0to9()
@@ -1569,7 +1569,7 @@ public interface TypeParser {
      *   private static final Pattern VALID_PRODUCT_CODE_PATTERN = Pattern.compile("[A-Z]{2}[0-9]{8}"); ①
      *
      *   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-     *       .errorCode("must be a valid 10 character alphanumeric product code")
+     *       .messageCode("must be a valid 10 character alphanumeric product code")
      *       .acceptLettersAtoZ()
      *       .acceptDigits0to9()
      *       .fixedSize(10)
@@ -1597,7 +1597,7 @@ public interface TypeParser {
      * <p><b>Example:</b></p>
      * <pre>{@code
      *   private static final TypeParser TYPE_PARSER = TypeParser.builder()
-     *       .errorCode("must be a valid 6..8 character product code")
+     *       .messageCode("must be a valid 6..8 character product code")
      *       .acceptLettersAtoZ()
      *       .acceptDigits0to9()
      *       .minSize(6)

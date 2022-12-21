@@ -15,18 +15,18 @@
 */
 package org.typefactory.numbertypes;
 
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.IntegerType;
 import org.typefactory.TypeParser;
 
 public final class InvoiceNumber extends IntegerType {
 
-  private static final ErrorCode ERROR_CODE =
-      ErrorCode.of("invalid.invoice.number", "must be a 9-digit invoice-number");
+  private static final MessageCode ERROR_MESSAGE =
+      MessageCode.of("invalid.invoice.number", "must be a 9-digit invoice-number");
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorCode(ERROR_CODE)
+          .messageCode(ERROR_MESSAGE)
           .removeAllWhitespace()
           .removeAllChars('-')
           .convertEmptyToNull()

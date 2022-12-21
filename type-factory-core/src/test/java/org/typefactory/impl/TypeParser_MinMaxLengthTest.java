@@ -19,7 +19,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
@@ -52,7 +52,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("some.type.must.be.4.alpha.characters", "Some type must be 4 alpha characters."))
+            .messageCode(MessageCode.of("some.type.must.be.4.alpha.characters", "Some type must be 4 alpha characters."))
             .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
@@ -74,7 +74,7 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("some.type.must.be.4.alpha.characters", "Some type must be 4 alpha characters."))
+            .messageCode(MessageCode.of("some.type.must.be.4.alpha.characters", "Some type must be 4 alpha characters."))
             .fixedSize(4)
             .acceptCharRange('a', 'z')
             .acceptCharRange('A', 'Z')
