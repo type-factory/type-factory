@@ -30,8 +30,8 @@ class MessageCodeImpl implements MessageCode {
   protected final String defaultMessage;
 
   MessageCodeImpl(final String messageCode, final String defaultMessage) {
-    this.messageCode = messageCode;
-    this.defaultMessage = defaultMessage == null ? EMPTY_STRING : defaultMessage;
+    this.messageCode = messageCode == null || messageCode.isBlank() ? EMPTY_STRING : messageCode;
+    this.defaultMessage = defaultMessage == null || defaultMessage.isBlank() ? EMPTY_STRING : defaultMessage;
   }
 
   @Override
