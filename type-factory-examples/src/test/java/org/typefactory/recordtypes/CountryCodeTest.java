@@ -16,9 +16,11 @@
 package org.typefactory.recordtypes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -26,6 +28,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.InvalidValueException;
 
 class CountryCodeTest {
+
+  @Test
+  void emptyCountryCodeIsEmpty() {
+    assertThatObject(CountryCode.EMPTY_COUNTRY_CODE).isNotNull();
+    assertThat(CountryCode.EMPTY_COUNTRY_CODE.isEmpty()).isTrue();
+  }
 
   @ParameterizedTest
   @NullAndEmptySource

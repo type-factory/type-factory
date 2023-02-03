@@ -31,12 +31,12 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.typefactory.InvalidValueException.ParserErrorCode;
+import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.impl.ExceptionUtils;
 import org.typefactory.impl.Factory;
-import org.typefactory.testutils.ParserErrorCodeConverter;
+import org.typefactory.testutils.ParserMessageCodeConverter;
 
-class InvalidValueException_ParserErrorCodeTest {
+class InvalidValueException_ParserMessageCodeTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -49,14 +49,14 @@ class InvalidValueException_ParserErrorCodeTest {
       INVALID_VALUE_TOO_LONG                        | invalid_value_too_long                        | Invalid value - too long, maximum length is {0,number,integer}.
       INVALID_VALUE_TOO_SHORT                       | invalid_value_too_short                       | Invalid value - too short, minimum length is {0,number,integer}.
       """, delimiter = '|')
-  void parserErrorCode_containsExpectedCodeAndMessage(
-      @ConvertWith(ParserErrorCodeConverter.class) final ParserErrorCode errorCode,
+  void parserMessageCode_containsExpectedCodeAndMessage(
+      @ConvertWith(ParserMessageCodeConverter.class) final ParserMessageCode messageCode,
       final String expectedCode,
       final String expectedDefaultMessage) {
 
-    assertThat(errorCode).isNotNull();
-    assertThat(errorCode.code()).isEqualTo(expectedCode);
-    assertThat(errorCode.defaultMessage()).isEqualTo(expectedDefaultMessage);
+    assertThat(messageCode).isNotNull();
+    assertThat(messageCode.code()).isEqualTo(expectedCode);
+    assertThat(messageCode.defaultMessage()).isEqualTo(expectedDefaultMessage);
   }
 
 }

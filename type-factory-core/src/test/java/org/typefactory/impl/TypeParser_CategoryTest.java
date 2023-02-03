@@ -19,7 +19,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Category;
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
@@ -54,7 +54,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
+            .messageCode(MessageCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
             .acceptUnicodeCategory(Category.UPPERCASE_LETTER)
             .build();
 
@@ -94,7 +94,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
+            .messageCode(MessageCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
             .acceptUnicodeCategory(Category.LOWERCASE_LETTER)
             .build();
 
@@ -134,7 +134,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
     final TypeParser typeParser =
         TypeParser.builder()
-            .errorCode(ErrorCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
+            .messageCode(MessageCode.of("some.type.must.be.uppercase.alpha.characters", "Some type must be uppercase alpha characters."))
             .acceptUnicodeCategory(Category.LETTER)
             .build();
 

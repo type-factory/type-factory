@@ -18,7 +18,7 @@ package org.typefactory.language;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
@@ -26,7 +26,7 @@ class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorCode(ErrorCode.of("must.be.vietnamese.letters.only", "Must be made up of Vietnamese letters only."))
+          .messageCode(MessageCode.of("must.be.vietnamese.letters.only", "Must be made up of Vietnamese letters only."))
           .toCharacterNormalizationFormNFC()
           .acceptSubset(Letters.VIETNAMESE_vi)
           .normalizeWhitespace()

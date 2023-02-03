@@ -15,18 +15,18 @@
 */
 package org.typefactory.numbertypes;
 
-import org.typefactory.ErrorCode;
+import org.typefactory.MessageCode;
 import org.typefactory.LongType;
 import org.typefactory.TypeParser;
 
 public final class ProductId extends LongType {
 
-  private static final ErrorCode ERROR_CODE =
-      ErrorCode.of("invalid.product.id", "must be a 16-digit product-id");
+  private static final MessageCode ERROR_MESSAGE =
+      MessageCode.of("invalid.product.id", "must be a 16-digit product-id");
 
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
-          .errorCode(ERROR_CODE)
+          .messageCode(ERROR_MESSAGE)
           .removeAllWhitespace()
           .removeAllDashesAndHyphens()
           .acceptDigits0to9()
