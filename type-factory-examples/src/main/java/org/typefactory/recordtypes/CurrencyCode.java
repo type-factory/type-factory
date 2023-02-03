@@ -28,7 +28,7 @@ public record CurrencyCode(String value) implements CharSequenceType<CurrencyCod
       TypeParser.builder()
           .messageCode(ERROR_MESSAGE)
           .removeAllWhitespace()
-          .convertNullToEmpty()
+          .preserveNullAndEmpty()
           .acceptLettersAtoZ()
           .fixedSize(3)
           .toUpperCase()
@@ -40,7 +40,7 @@ public record CurrencyCode(String value) implements CharSequenceType<CurrencyCod
 
   @Override
   public String toString() {
-    return value();
-  }
+    return value == null ? "" : value;
+}
 
 }

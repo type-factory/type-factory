@@ -59,6 +59,21 @@ public interface MessageCode extends Serializable {
   String defaultMessage();
 
   /**
+   * <p>Creates a new message code instance.</p>
+   *
+   * <p><b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.</p>
+   *
+   * @param messageCode    the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
+   *                       <b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.
+   * @param defaultMessage the default message that will be used if no entry in a resource bundle can be found.
+   *                       <b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.
+   * @return a new {@link MessageCode} instance for the message code and default message.
+   */
+  static MessageCode of(final String messageCode, final String defaultMessage) {
+    return Factory.messageCode(messageCode, defaultMessage);
+  }
+
+  /**
    * Returns the message for the default {@link Locale} or the {@link #defaultMessage()} if no localized message can be found.
    *
    * @return the message for the default {@link Locale} or the {@link #defaultMessage()} if no localized message can be found.
@@ -96,22 +111,22 @@ public interface MessageCode extends Serializable {
         TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE_BASE_NAME, locale, this, messageArgs);
   }
 
-  static String message(final Locale locale, final MessageCode messageCode, final Object[] messageArgs) {
-    return MessageUtils.getMessage(
-        TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE_BASE_NAME, locale, messageCode, messageArgs);
-  }
-
   /**
-   * Returns {@code true} if the provided {@code messageCode} argument matches the value of {@link #code()}, and {@code false} otherwise.
+   * <p>Returns {@code true} if the provided {@code messageCode.code()} equals {@link this#code()}, and {@code false} otherwise.</p>
    *
-   * @param messageCode the message code to test.
-   * @return {@code true} if the provided {@code messageCode} argument matches the value of {@link #code()}, and {@code false} otherwise.
+   * <p>If the provided {@code messageCode} argument is {@code null} then this method will return {@code false}.</p>
+   *
+   * @param messageCode the message code instance to test.
+   * @return {@code true} if the provided {@code messageCode.code()} equals {@link this#code()}, and {@code false} otherwise.
    */
-  default boolean matches(final String messageCode) {
-    if (code() == null && messageCode == null) {
-      return true;
+  default boolean hasSameCodeAs(final MessageCode messageCode) {
+    if (messageCode == null) {
+      return false;
     }
-    return code() != null && code().equals(messageCode);
+    if (code() == null) {
+      return messageCode.code() == null;
+    }
+    return code().equals(messageCode.code());
   }
 
   /**
@@ -123,15 +138,4 @@ public interface MessageCode extends Serializable {
     return (code() == null || code().isBlank()) && (defaultMessage() == null || defaultMessage().isBlank());
   }
 
-  /**
-   * Creates a new message code instance.
-   *
-   * @param messageCode    the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name
-   *                       {@code org.typefactory.Messages}.
-   * @param defaultMessage the default message that will be used if no entry in a resource bundle can be found.
-   * @return a new {@link MessageCode} instance for the message code and default message.
-   */
-  static MessageCode of(final String messageCode, final String defaultMessage) {
-    return Factory.messageCode(messageCode, defaultMessage);
-  }
 }

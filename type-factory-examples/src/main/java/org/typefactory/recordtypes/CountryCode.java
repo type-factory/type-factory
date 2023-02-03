@@ -21,12 +21,13 @@ import org.typefactory.TypeParser;
 
 public record CountryCode(String value) implements CharSequenceType<CountryCode> {
 
-  private static final MessageCode ERROR_MESSAGE =
-      MessageCode.of("invalid.country.code", "must be a 2-character ISO 3166-1 alpha country code");
+  private static final MessageCode ERROR_MESSAGE = MessageCode.of(
+      "invalid.country.code",
+      "must be a 2-character ISO 3166-1 alpha country code");
   private static final TypeParser TYPE_PARSER =
       TypeParser.builder()
           .messageCode(ERROR_MESSAGE)
-          .convertNullToEmpty()
+          .preserveNullAndEmpty()
           .removeAllWhitespace()
           .acceptLettersAtoZ()
           .fixedSize(2)
@@ -37,11 +38,8 @@ public record CountryCode(String value) implements CharSequenceType<CountryCode>
     this.value = TYPE_PARSER.parseToString(value);
   }
 
-  public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
-
   @Override
   public String toString() {
-    return value();
+    return value == null ? "" : value;
   }
-
 }
