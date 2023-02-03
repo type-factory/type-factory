@@ -38,6 +38,8 @@ public record CountryCode(String value) implements CharSequenceType<CountryCode>
     this.value = TYPE_PARSER.parseToString(value);
   }
 
+  public static final CountryCode EMPTY_COUNTRY_CODE = new CountryCode("");
+
   @Override
   public String toString() {
     return value == null ? "" : value;
