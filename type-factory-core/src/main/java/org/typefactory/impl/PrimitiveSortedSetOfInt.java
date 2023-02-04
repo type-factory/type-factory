@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 final class PrimitiveSortedSetOfInt {
 
-  private static final int CAPACITY_INCREMENT = 8;
+  private static final int CAPACITY_INCREMENT = 4;
   private int[] integers;
 
   private int size = 0;
