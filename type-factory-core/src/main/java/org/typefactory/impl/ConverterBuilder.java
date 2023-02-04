@@ -159,7 +159,7 @@ final class ConverterBuilder {
     if (!codePointSequenceToCodePointSequence.isEmpty()) {
       if (!codePointToCodePointSequence.isEmpty()) {
         int[] temp = new int[1];
-        for (int key : codePointToCodePointSequence.keys()) {
+        for (int key : codePointToCodePointSequence.keySet()) {
           temp[0] = key;
           codePointSequenceToCodePointSequence.add(temp, codePointToCodePointSequence.get(key));
         }

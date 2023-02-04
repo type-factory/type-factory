@@ -28,7 +28,7 @@ import java.util.Arrays;
  */
 final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
-  private static final int INITIAL_CAPACITY = 20;
+  static final int INITIAL_CAPACITY = 20;
 
   /**
    * The load factor for the hash map.
@@ -67,14 +67,13 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
   private HashTable<T> hashTable;
 
-  private PrimitiveSortedSetOfInt keyset = new PrimitiveSortedSetOfInt();
+  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+
   PrimitiveHashMapOfIntKeyToObjectValue() {
     this.hashTable = new HashTable<>();
     this.hashTable.keys = new int[INITIAL_CAPACITY][];
     this.hashTable.values = (T[][]) new Object[INITIAL_CAPACITY][];
-    this.threshold = (int) (this.hashTable.keys.length * LOAD_FACTOR);
-
-    threshold = (int) (INITIAL_CAPACITY * LOAD_FACTOR);
+    this.threshold = (int) (INITIAL_CAPACITY * LOAD_FACTOR);
   }
 
   /**
@@ -83,7 +82,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
    * @return the number of keys in this hash map.
    */
   int size() {
-    return keyset.size();
+    return keySet.size();
   }
 
   /**
@@ -95,9 +94,10 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     return size() == 0;
   }
 
-  int[] keys() {
-    return keyset.toArray();
+  int[] keySet() {
+    return keySet.toArray();
   }
+
   T get(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -112,9 +112,6 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   }
 
   void put(final int key, final T value) {
-    if (value == null) {
-      return;
-    }
     if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
@@ -139,7 +136,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
       hashTable.keys[hashIndex][bucketIndex] = key;
       hashTable.values[hashIndex][bucketIndex] = value;
     }
-    keyset.add(key);
+    keySet.add(key);
   }
 
   private void rehash() {

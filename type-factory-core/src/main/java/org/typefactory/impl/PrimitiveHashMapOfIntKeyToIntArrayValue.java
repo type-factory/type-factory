@@ -15,7 +15,6 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.LINE_SEPARATOR;
 
 import java.util.Arrays;
@@ -30,6 +29,8 @@ import java.util.Arrays;
  * </ul>
  */
 final class PrimitiveHashMapOfIntKeyToIntArrayValue {
+
+  static final int INITIAL_CAPACITY = 20;
 
   /**
    * The load factor for the hash map.
@@ -70,18 +71,13 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   private int maxValueArrayLength = 0;
 
-  private int size = 0;
-
-  private int[] keys = null;
+  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
 
   PrimitiveHashMapOfIntKeyToIntArrayValue() {
-    final int initialCapacity = 20;
     this.hashTable = new HashTable();
-    this.hashTable.keys = new int[initialCapacity][];
-    this.hashTable.values = new int[initialCapacity][][];
-    this.threshold = (int) (this.hashTable.keys.length * LOAD_FACTOR);
-
-    threshold = (int) (initialCapacity * LOAD_FACTOR);
+    this.hashTable.keys = new int[INITIAL_CAPACITY][];
+    this.hashTable.values = new int[INITIAL_CAPACITY][][];
+    this.threshold = (int) (INITIAL_CAPACITY * LOAD_FACTOR);
   }
 
   /**
@@ -90,7 +86,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
    * @return the number of keys in this hash map.
    */
   int size() {
-    return size;
+    return keySet.size();
   }
 
   /**
@@ -99,31 +95,15 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
    * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
    */
   boolean isEmpty() {
-    return size == 0;
+    return size() == 0;
   }
 
   int getMaxValueArrayLength() {
     return maxValueArrayLength;
   }
 
-  int[] keys() {
-    if (isEmpty()) {
-      return EMPTY_INT_ARRAY;
-    }
-    if (keys == null) {
-      final int[] tempKeys = new int[size];
-      int tempKeyIndex = 0;
-      for (int i = 0; i < hashTable.keys.length; ++i) {
-        int[] keyValues = hashTable.keys[i];
-        if (keyValues != null) {
-          for (int j = 0; j < keyValues.length; ++j) {
-            tempKeys[tempKeyIndex++] = keyValues[j];
-          }
-        }
-      }
-      keys = tempKeys;
-    }
-    return keys;
+  int[] keySet() {
+    return keySet.toArray();
   }
 
   int[] get(final int key) {
@@ -140,15 +120,11 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
   }
 
   void put(final int key, final int[] value) {
-    if (value == null) {
-      return;
-    }
-    keys = null; // reset keys because we are updating the map.
-    if (threshold < (int) (size * LOAD_FACTOR)) {
+    if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
     put(key, value, hashTable);
-    maxValueArrayLength = Math.max(maxValueArrayLength, value.length);
+    maxValueArrayLength = Math.max(maxValueArrayLength, value == null ? 0 : value.length);
   }
 
   private void put(final int key, final int[] value, final HashTable hashTable) {
@@ -157,7 +133,6 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
       hashTable.values[hashIndex] = new int[][]{value};
-      ++size;
     } else {
       int bucketIndex = 0;
       while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
@@ -166,11 +141,11 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
       if (bucketIndex == bucket.length) {
         hashTable.keys[hashIndex] = Arrays.copyOf(hashTable.keys[hashIndex], bucketIndex + 1);
         hashTable.values[hashIndex] = Arrays.copyOf(hashTable.values[hashIndex], bucketIndex + 1);
-        ++size;
       }
       hashTable.keys[hashIndex][bucketIndex] = key;
       hashTable.values[hashIndex][bucketIndex] = value;
     }
+    keySet.add(key);
   }
 
   private void rehash() {
@@ -193,7 +168,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
   public String toString() {
     final StringBuilder s = new StringBuilder();
     int[] value;
-    for (int key : keys()) {
+    for (int key : keySet()) {
       value = get(key);
       s.append("0x")
           .append(Integer.toString(key, 16))

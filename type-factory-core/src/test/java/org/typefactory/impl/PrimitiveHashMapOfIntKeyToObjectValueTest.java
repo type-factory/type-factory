@@ -17,6 +17,7 @@ package org.typefactory.impl;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToObjectValue.INITIAL_CAPACITY;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,19 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
     assertThat(actual.get(132)).isNull();
   }
 
+  @Test
+  void put_canOverrideWithNullValue() {
+    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+
+    actual.put(131, "aaa");
+    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.get(131)).isNotNull().isEqualTo("aaa");
+
+    actual.put(131, null);
+    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.get(131)).isNull();
+  }
+
   @ParameterizedTest
   @EnumSource(TestSource.class)
   void setContainsAllValuesSorted(TestSource testSource) {
@@ -61,7 +75,7 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
 
     assertThat(actual.size()).isEqualTo(testSource.expectedSize);
     assertThat(actual.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
-    assertThat(actual.keys()).containsExactly(testSource.expectedKeys);
+    assertThat(actual.keySet()).containsExactly(testSource.expectedKeys);
 
     for (Map.Entry<Integer, String> entry : testSource.map.entrySet()) {
       assertThat(actual.get(entry.getKey()))
@@ -78,29 +92,41 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
 
     THREE_ENTRIES(Map.of(3, "AA", 131, "BB", 191, "CC")),
 
+    TEN_ENTRIES_IN_SAME_BUCKET(Map.ofEntries(
+        entry(0 * INITIAL_CAPACITY, "ab"),
+        entry(1 * INITIAL_CAPACITY, "ac"),
+        entry(2 * INITIAL_CAPACITY, "ad"),
+        entry(3 * INITIAL_CAPACITY, "ae"),
+        entry(4 * INITIAL_CAPACITY, "af"),
+        entry(5 * INITIAL_CAPACITY, "bb"),
+        entry(6 * INITIAL_CAPACITY, "bc"),
+        entry(7 * INITIAL_CAPACITY, "bd"),
+        entry(8 * INITIAL_CAPACITY, "be"),
+        entry(9 * INITIAL_CAPACITY, "bf"))),
+
     FOURTEEN_ENTRIES(Map.ofEntries(
         entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
-        entry(283, ""), entry(307, ""), entry(311, ""), entry(331, ""), entry(349, ""),
-        entry(419, ""), entry(431, ""), entry(433, ""), entry(449, ""))),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"))),
 
     FIFTEEN_ENTRIES(Map.ofEntries(
         entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
-        entry(283, ""), entry(307, ""), entry(311, ""), entry(331, ""), entry(349, ""),
-        entry(419, ""), entry(431, ""), entry(433, ""), entry(449, ""), entry(463, ""))),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"))),
 
     SIXTEEN_ENTRIES(Map.ofEntries(
         entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
-        entry(283, ""), entry(307, ""), entry(311, ""), entry(331, ""), entry(349, ""),
-        entry(419, ""), entry(431, ""), entry(433, ""), entry(449, ""), entry(463, ""),
-        entry(547, ""))),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"),
+        entry(547, "db"))),
 
     THIRTY_ENTRIES(Map.ofEntries(
         entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
-        entry(283, ""), entry(307, ""), entry(311, ""), entry(331, ""), entry(349, ""),
-        entry(419, ""), entry(431, ""), entry(433, ""), entry(449, ""), entry(463, ""),
-        entry(547, ""), entry(563, ""), entry(569, ""), entry(587, ""), entry(601, ""),
-        entry(661, ""), entry(677, ""), entry(683, ""), entry(709, ""), entry(733, ""),
-        entry(811, ""), entry(823, ""), entry(827, ""), entry(853, ""), entry(863, ""))),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"),
+        entry(547, "db"), entry(563, "dc"), entry(569, "dd"), entry(587, "de"), entry(601, "df"),
+        entry(661, "eb"), entry(677, "ec"), entry(683, "ed"), entry(709, "ee"), entry(733, "ef"),
+        entry(811, "fb"), entry(823, "fc"), entry(827, "fd"), entry(853, "fe"), entry(863, "ff"))),
     ;
     private final Map<Integer, String> map;
     private final int expectedSize;

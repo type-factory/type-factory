@@ -219,7 +219,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
     }
 
     int[] codePoints() {
-      return nodesByCodePoint.keys();
+      return nodesByCodePoint.keySet();
     }
 
     boolean hasToSequence() {
