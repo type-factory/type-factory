@@ -45,16 +45,23 @@ class CountryCodeTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      AU       | AU
-      ' AU '   | AU
-      '  AU  ' | AU
-      uS       | US
-      Nz       | NZ
-      de       | DE
-      """, delimiter = '|')
-  void of_shouldCreateCountryCodeInstancesAsExpected(final String value, final String expected) {
+      null     | null | ''
+      ''       | ''   | ''
+      '  '     | ''   | ''
+      AU       | AU   | AU
+      ' AU '   | AU   | AU
+      '  AU  ' | AU   | AU
+      uS       | US   | US
+      Nz       | NZ   | NZ
+      de       | DE   | DE
+      """, delimiter = '|', nullValues = "null")
+  void of_shouldCreateCountryCodeInstancesAsExpected(
+      final String value, final String expectedValue, final String expectedString) {
+
     final CountryCode actual = new CountryCode(value);
-    Assertions.assertThatObject(actual).hasToString(expected);
+
+    assertThat(actual.value()).isEqualTo(expectedValue);
+    assertThatObject(actual).hasToString(expectedString);
   }
 
   @ParameterizedTest

@@ -223,13 +223,17 @@ public interface Subset {
   final class CodePointRange implements Comparable<CodePointRange>, Serializable {
 
     /**
-     * The inclusive start code-point of the code-point range.
+     * The inclusive start code-point of the code-point range. This value will be modified with each
+     * iteration of the {@code Iterable<CodePointRange>}.
      */
+    @SuppressWarnings("java:S1104") // 'Class variable fields should not have public accessibility' - I want this to be accessible and mutable
     public int inclusiveFrom;
 
     /**
-     * The inclusive end code-point of the code-point range.
+     * The inclusive end code-point of the code-point range. This value will be modified with each
+     * iteration of the {@code Iterable<CodePointRange>}.
      */
+    @SuppressWarnings("java:S1104") // 'Class variable fields should not have public accessibility' - I want this to be accessible and mutable
     public int inclusiveTo;
 
     public CodePointRange(final char inclusiveFrom, final char inclusiveTo) {

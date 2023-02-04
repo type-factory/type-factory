@@ -16,6 +16,7 @@
 package org.typefactory.recordtypes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import org.assertj.core.api.Assertions;
@@ -37,16 +38,23 @@ class CurrencyCodeTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      AUD       | AUD
-      ' AUD '   | AUD
-      '  AUD  ' | AUD
-      uSd       | USD
-      Nzd       | NZD
-      eur       | EUR
-      """, delimiter = '|')
-  void of_shouldCreateCurrencyCodeInstancesAsExpected(final String value, final String expected) {
+      null      | null | ''
+      ''        | ''   | ''
+      '  '      | ''   | ''
+      AUD       | AUD  | AUD
+      ' AUD '   | AUD  | AUD
+      '  AUD  ' | AUD  | AUD
+      uSd       | USD  | USD
+      Nzd       | NZD  | NZD
+      eur       | EUR  | EUR
+      """, delimiter = '|', nullValues = "null")
+  void of_shouldCreateCurrencyCodeInstancesAsExpected(
+      final String value, final String expectedValue, final String expectedString) {
+
     final CurrencyCode actual = new CurrencyCode(value);
-    Assertions.assertThatObject(actual).hasToString(expected);
+
+    assertThat(actual.value()).isEqualTo(expectedValue);
+    assertThatObject(actual).hasToString(expectedString);
   }
 
   @ParameterizedTest

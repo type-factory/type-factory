@@ -78,7 +78,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
   @Override
   public boolean isEmpty() {
-    return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
+    return numberOfCodePointRanges == 0;
   }
 
   @Override
