@@ -18,6 +18,7 @@ package org.typefactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Locale;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -161,6 +162,13 @@ class MessageCodeTest {
     assertThat(actual).isEqualTo(expectedMessage);
   }
 
+  @Test
+  void hasSameCodeAs_returnsFalseWhenOtherIsNull() {
+    final var messageCode1 = new SomeMessageCode("come.message.code", "some default message");
+    assertThat(messageCode1.hasSameCodeAs(null)).isFalse();
+  }
+
+
   @ParameterizedTest
   @CsvSource(textBlock = """
       null | null | true
@@ -170,10 +178,12 @@ class MessageCodeTest {
       ''   | ''   | true
       '  ' | '  ' | true
       AA   | AA   | true
+      AA   | null | false
       AA   | BB   | false
+      null | BB   | false
       BB   | AA   | false
       """, delimiter = '|', nullValues = "null")
-  void hasSameMessageCodeAs_returnsAsExpected(
+  void hasSameCodeAs_returnsAsExpected(
       final String code1, final String code2,
       final boolean expected) {
 
