@@ -98,7 +98,7 @@ public class ExceptionUtils {
           .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER)
           .addParserMessageCodeArg(
               ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-              "''")
+              "'")
           .build();
     }
 
