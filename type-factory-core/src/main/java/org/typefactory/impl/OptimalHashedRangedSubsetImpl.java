@@ -91,6 +91,9 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
+    if (blockKeys.length == 0) {
+      return false;
+    }
     final char blockKey = (char) ((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final int availableBlockKey = blockKeys[hashIndex];
