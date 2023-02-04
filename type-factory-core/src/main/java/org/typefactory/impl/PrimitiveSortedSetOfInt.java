@@ -19,19 +19,13 @@ import java.util.Arrays;
 
 final class PrimitiveSortedSetOfInt {
 
-  private static final int CAPACITY_INCREMENT = 4;
+  private static final int CAPACITY_INCREMENT = 8;
   private int[] integers;
 
   private int size = 0;
 
   PrimitiveSortedSetOfInt() {
     this.integers = new int[CAPACITY_INCREMENT];
-  }
-
-  private void ensureCapacity() {
-    if ((integers.length - size) < CAPACITY_INCREMENT) {
-      integers = Arrays.copyOf(integers, integers.length + CAPACITY_INCREMENT);
-    }
   }
 
   boolean add(final int value) {
@@ -42,22 +36,32 @@ final class PrimitiveSortedSetOfInt {
           return false;
         }
         if (integers[i] > value) {
-          System.arraycopy(integers, i, integers, i + 1, size - i);
-          integers[i] = value;
+          insertIntoArray(value, i);
           return true;
         }
       }
     } else {
-      final int i = Arrays.binarySearch(integers, 0, size, value);
-      if (integers[i] == value) {
-        return false;
+      int i = Arrays.binarySearch(integers, 0, size, value);
+      if (i < 0) {
+        insertIntoArray(value, -i - 1);
+        return true;
       }
-      System.arraycopy(integers, i, integers, i + 1, size - i);
-      integers[i] = value;
-      return true;
+      return false;
     }
     integers[size++] = value;
     return true;
+  }
+
+  private void ensureCapacity() {
+    if (integers.length == size) {
+      integers = Arrays.copyOf(integers, integers.length + CAPACITY_INCREMENT);
+    }
+  }
+
+  private void insertIntoArray(final int value, final int index) {
+    System.arraycopy(integers, index, integers, index + 1, size - index);
+    integers[index] = value;
+    ++size;
   }
 
   public int[] toArray() {
