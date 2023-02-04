@@ -77,7 +77,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public final boolean isEmpty() {
+  public boolean isEmpty() {
     return numberOfCodePointRanges == 0 && numberOfCodePointsInCodePointRanges == 0;
   }
 
@@ -93,6 +93,9 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
 
   @Override
   public boolean contains(final int codePoint) {
+    if (blockKeys.length == 0) {
+      return false;
+    }
     final char blockKey = (char) ((codePoint >> 8) & 0xFFFF);
     final int hashIndex = (blockKey & 0x7FFFFFFF) % blockKeys.length;
     final char[] availableBlockKeys = blockKeys[hashIndex];

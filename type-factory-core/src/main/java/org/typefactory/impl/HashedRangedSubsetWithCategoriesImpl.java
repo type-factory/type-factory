@@ -40,6 +40,11 @@ class HashedRangedSubsetWithCategoriesImpl extends HashedRangedSubsetImpl implem
   }
 
   @Override
+  public boolean isEmpty() {
+    return numberOfUnicodeCategories == 0 && super.isEmpty();
+  }
+
+  @Override
   public boolean contains(final int codePoint) {
     return super.contains(codePoint)
         || (unicodeCategoryBitFlags > 0L
