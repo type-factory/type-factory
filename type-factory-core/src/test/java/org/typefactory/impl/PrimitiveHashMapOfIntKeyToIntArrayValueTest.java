@@ -15,11 +15,58 @@
 */
 package org.typefactory.impl;
 
+import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntArrayValue.INITIAL_CAPACITY;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class PrimitiveHashMapOfIntKeyToIntArrayValueTest {
+
+  @Test
+  void isEmpty_returnsTrue() {
+    final var actual = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    assertThat(actual.isEmpty()).isTrue();
+  }
+
+  @Test
+  void isEmpty_returnsFalse() {
+    final var actual = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    actual.put(131, new int[]{1,2,3});
+
+    assertThat(actual.isEmpty()).isFalse();
+    assertThat(actual.size()).isEqualTo(1);
+  }
+
+  @Test
+  void get_returnsAsExpected() {
+    final var value = new int[]{1,2,3};
+    final var actual = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    actual.put(131, value);
+
+    assertThat(actual.get(131)).isNotNull().isEqualTo(value);
+    assertThat(actual.get(130)).isNull();
+    assertThat(actual.get(132)).isNull();
+  }
+
+  @Test
+  void put_canOverrideWithNullValue() {
+    final var value = new int[]{1,2,3};
+    final var actual = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+
+    actual.put(131, value);
+    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.get(131)).isNotNull().isEqualTo(value);
+
+    actual.put(131, null);
+    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.get(131)).isNull();
+  }
 
   @Test
   void toString_returnsEmptyForEmptyMap() {
@@ -45,5 +92,87 @@ class PrimitiveHashMapOfIntKeyToIntArrayValueTest {
     assertThat(actual).isEqualTo("""
         0x61 [a] ⟶ zz
         0x62 [b] ⟶ yyy""");
+  }
+
+  @ParameterizedTest
+  @EnumSource(PrimitiveHashMapOfIntKeyToIntArrayValueTest.TestSource.class)
+  void setContainsAllValuesSorted(PrimitiveHashMapOfIntKeyToIntArrayValueTest.TestSource testSource) {
+
+    final var actual = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    for (Map.Entry<Integer, int[]> entry : testSource.map.entrySet()) {
+      actual.put(entry.getKey(), entry.getValue());
+    }
+
+    assertThat(actual.size()).isEqualTo(testSource.expectedSize);
+    assertThat(actual.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
+    assertThat(actual.keySet()).containsExactly(testSource.expectedKeys);
+
+    for (Map.Entry<Integer, int[]> entry : testSource.map.entrySet()) {
+      assertThat(actual.get(entry.getKey()))
+          .isNotNull()
+          .containsExactly(entry.getValue());
+    }
+  }
+
+  private enum TestSource {
+
+    ONE_ENTRY(Map.of(3, "AA")),
+
+    TWO_ENTRIES(Map.of(3, "AA", 131, "BB")),
+
+    THREE_ENTRIES(Map.of(3, "AA", 131, "BB", 191, "CC")),
+
+    TEN_ENTRIES_IN_SAME_BUCKET(Map.ofEntries(
+        entry(0 * INITIAL_CAPACITY, "ab"),
+        entry(1 * INITIAL_CAPACITY, "ac"),
+        entry(2 * INITIAL_CAPACITY, "ad"),
+        entry(3 * INITIAL_CAPACITY, "ae"),
+        entry(4 * INITIAL_CAPACITY, "af"),
+        entry(5 * INITIAL_CAPACITY, "bb"),
+        entry(6 * INITIAL_CAPACITY, "bc"),
+        entry(7 * INITIAL_CAPACITY, "bd"),
+        entry(8 * INITIAL_CAPACITY, "be"),
+        entry(9 * INITIAL_CAPACITY, "bf"))),
+
+    FOURTEEN_ENTRIES(Map.ofEntries(
+        entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"))),
+
+    FIFTEEN_ENTRIES(Map.ofEntries(
+        entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"))),
+
+    SIXTEEN_ENTRIES(Map.ofEntries(
+        entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"),
+        entry(547, "db"))),
+
+    THIRTY_ENTRIES(Map.ofEntries(
+        entry(179, "ab"), entry(191, "ac"), entry(193, "ad"), entry(211, "ae"), entry(229, "af"),
+        entry(283, "bb"), entry(307, "bc"), entry(311, "bd"), entry(331, "be"), entry(349, "bf"),
+        entry(419, "cb"), entry(431, "cc"), entry(433, "cd"), entry(449, "ce"), entry(463, "cf"),
+        entry(547, "db"), entry(563, "dc"), entry(569, "dd"), entry(587, "de"), entry(601, "df"),
+        entry(661, "eb"), entry(677, "ec"), entry(683, "ed"), entry(709, "ee"), entry(733, "ef"),
+        entry(811, "fb"), entry(823, "fc"), entry(827, "fd"), entry(853, "fe"), entry(863, "ff"))),
+    ;
+    private final Map<Integer, int[]> map;
+    private final int expectedSize;
+    private final boolean expectedIsEmpty;
+    private final int[] expectedKeys;
+
+
+    TestSource(final Map<Integer, String> map) {
+      final Map<Integer, int[]> temp = new HashMap<>();
+      for (Entry<Integer, String> entry: map.entrySet()) {
+        temp.put(entry.getKey(), entry.getValue().codePoints().toArray());
+      }
+      this.map = Map.copyOf(temp);
+      this.expectedSize = map.size();
+      this.expectedIsEmpty = map.isEmpty();
+      this.expectedKeys = map.keySet().stream().mapToInt(Integer::intValue).sorted().toArray();
+    }
   }
 }
