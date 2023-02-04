@@ -28,6 +28,10 @@ final class PrimitiveSortedSetOfInt {
     this.integers = new int[CAPACITY_INCREMENT];
   }
 
+  int size() {
+    return size;
+  }
+
   boolean add(final int value) {
     ensureCapacity();
     if (size < 5) {

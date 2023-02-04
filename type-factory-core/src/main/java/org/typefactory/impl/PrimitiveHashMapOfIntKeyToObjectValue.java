@@ -68,8 +68,6 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   private HashTable<T> hashTable;
 
   private PrimitiveSortedSetOfInt keyset = new PrimitiveSortedSetOfInt();
-  private int size;
-
   PrimitiveHashMapOfIntKeyToObjectValue() {
     this.hashTable = new HashTable<>();
     this.hashTable.keys = new int[INITIAL_CAPACITY][];
@@ -85,7 +83,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
    * @return the number of keys in this hash map.
    */
   int size() {
-    return size;
+    return keyset.size();
   }
 
   /**
@@ -94,7 +92,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
    * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
    */
   boolean isEmpty() {
-    return size == 0;
+    return size() == 0;
   }
 
   int[] keys() {
@@ -117,7 +115,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     if (value == null) {
       return;
     }
-    if (threshold < (int) (size * LOAD_FACTOR)) {
+    if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
     put(key, value, hashTable);
@@ -129,7 +127,6 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
       hashTable.values[hashIndex] = (T[]) new Object[]{value};
-      ++size;
     } else {
       int bucketIndex = 0;
       while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
@@ -138,7 +135,6 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
       if (bucketIndex == bucket.length) {
         hashTable.keys[hashIndex] = Arrays.copyOf(hashTable.keys[hashIndex], bucketIndex + 1);
         hashTable.values[hashIndex] = Arrays.copyOf(hashTable.values[hashIndex], bucketIndex + 1);
-        ++size;
       }
       hashTable.keys[hashIndex][bucketIndex] = key;
       hashTable.values[hashIndex][bucketIndex] = value;

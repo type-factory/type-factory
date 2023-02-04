@@ -57,8 +57,8 @@ class PrimitiveSortedSetOfIntTest {
       primitiveSortedSetOfInt.add(value);
     }
     final var actual = primitiveSortedSetOfInt.toArray();
-    assertThat(actual).containsExactly(expected);
+    assertThat(actual)
+        .hasSize(expected.length)
+        .containsExactly(expected);
   }
-
-
 }
