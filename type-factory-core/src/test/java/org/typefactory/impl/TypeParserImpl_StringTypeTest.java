@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
-class TypeParserImpl_Test {
+class TypeParserImpl_StringTypeTest {
 
   @Test
   void parseToStringType_withPreserveNullAndEmpty_returnsNullForNullValue() {
@@ -33,6 +33,18 @@ class TypeParserImpl_Test {
         .build();
 
     final var actual = parser.parseToStringType(null, SomeStringType::new);
+
+    assertThatObject(actual).isNull();
+  }
+
+  @Test
+  void parseToStringType_withConvertEmptyToNull_returnsNullForNullValue() {
+
+    final var parser = TypeParser.builder()
+        .convertEmptyToNull()
+        .build();
+
+    final var actual = parser.parseToStringType("", SomeStringType::new);
 
     assertThatObject(actual).isNull();
   }
@@ -49,7 +61,7 @@ class TypeParserImpl_Test {
     final var parser = TypeParser.builder()
         .preserveNullAndEmpty()
         .preserveWhitespace()
-        .acceptChars('A')
+        .acceptLettersAtoZ()
         .build();
 
     final var actual = parser.parseToStringType(value, SomeStringType::new);
