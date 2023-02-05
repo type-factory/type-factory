@@ -300,7 +300,11 @@ final class TypeParserImpl implements TypeParser {
     return parsedValue;
   }
 
-  private void validateThatParsedValueConformToTheRegex(final String parsedValue, final CharSequence originalValue) {
+  private boolean isAcceptedCodePoint(final int codePoint) {
+    return acceptedCodePoints.contains(codePoint);
+  }
+
+  void validateThatParsedValueConformToTheRegex(final String parsedValue, final CharSequence originalValue) {
     if (regex == null) {
       return;
     }
@@ -309,7 +313,7 @@ final class TypeParserImpl implements TypeParser {
     }
   }
 
-  private void validationUsingCustomValidationFunction(final String parsedValue, final CharSequence originalValue) {
+  void validationUsingCustomValidationFunction(final String parsedValue, final CharSequence originalValue) {
     if (validationFunction == null) {
       return;
     }
@@ -323,11 +327,14 @@ final class TypeParserImpl implements TypeParser {
     }
   }
 
-  private boolean isAcceptedCodePoint(final int codePoint) {
-    return acceptedCodePoints.contains(codePoint);
-  }
-
-  private static int[] appendCodePoint(int[] result, final int index, final int codePoint) {
+  /**
+   * Append a code point to a result-string within an array of code-points.
+   * @param result The array of code-points that holds an, often shorter, result-string.
+   * @param index The index at which the code-point needs to be set in the array. The index should be one position after the last code-point of the result.
+   * @param codePoint the code-point to append
+   * @return the code-point array which holds an often shorter, result-string. This may be a different array to the array
+   */
+  static int[] appendCodePoint(int[] result, final int index, final int codePoint) {
     if (index == result.length) {
       result = Arrays.copyOf(result, result.length + 16);
     }
