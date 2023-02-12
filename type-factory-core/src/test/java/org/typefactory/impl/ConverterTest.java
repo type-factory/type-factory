@@ -150,7 +150,7 @@ class ConverterTest {
       abc-aba | 1 | z | abc-aba
       abc-123 | 1 | z | abc-z23
       """, delimiter = '|')
-  void addCharConversion_fromCharSequenceCharToCharReturnsAsExpected(
+  void addCharConversion_fromCharToCharReturnsAsExpected(
       final String input,
       final char fromChar,
       final char toChar,
@@ -184,7 +184,7 @@ class ConverterTest {
       abc-aba | 1 | zY | abc-aba
       abc-123 | 1 | zY | abc-zY23
       """, delimiter = '|')
-  void addCharConversion_fromCharSequenceCharToCharSequenceReturnsAsExpected(
+  void addCharConversion_fromCharToCharSequenceReturnsAsExpected(
       final String input,
       final char fromChar,
       final String toCharSequence,
@@ -218,7 +218,7 @@ class ConverterTest {
       abc-aba | 1 | z | abc-aba
       abc-123 | 1 | z | abc-z23
       """, delimiter = '|')
-  void addCodePointConversion_fromCharSequenceCodePointToCodePointReturnsAsExpected(
+  void addCodePointConversion_fromCodePointToCodePointReturnsAsExpected(
       final String input,
       @ConvertWith(CodePointConverter.class) final int fromCodePoint,
       @ConvertWith(CodePointConverter.class) final int toCodePoint,
@@ -252,7 +252,7 @@ class ConverterTest {
       abc-aba | 1 | zY | abc-aba
       abc-123 | 1 | zY | abc-zY23
       """, delimiter = '|')
-  void addCodePointConversion_fromCharSequenceCodePointToCharSequenceReturnsAsExpected(
+  void addCodePointConversion_fromCodePointToCharSequenceReturnsAsExpected(
       final String input,
       @ConvertWith(CodePointConverter.class) final int fromCodePoint,
       final String toCharSequence,

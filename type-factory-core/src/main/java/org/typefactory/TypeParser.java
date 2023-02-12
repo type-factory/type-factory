@@ -952,31 +952,58 @@ public interface TypeParser {
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
     /**
-     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
+     * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
      *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toChar the character to convert to.
      * @return this {@code TypeParserBuilder}.
      */
-    TypeParserBuilder convertCategory(final Category fromCategory, final char toChar);
+    TypeParserBuilder convertAnyInCategory(final Category fromCategory, final char toChar);
 
     /**
-     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toCodePoint}.</p>
+     * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toCodePoint}.</p>
      *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toCodePoint the code-point to convert to.
      * @return this {@code TypeParserBuilder}.
      */
-    TypeParserBuilder convertCategory(final Category fromCategory, final int toCodePoint);
+    TypeParserBuilder convertAnyInCategory(final Category fromCategory, final int toCodePoint);
 
     /**
-     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toCharSequence}.</p>
+     * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toCharSequence}.</p>
      *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toCharSequence the char-sequence to convert to.
      * @return this {@code TypeParserBuilder}.
      */
-    TypeParserBuilder convertCategory(final Category fromCategory, final CharSequence toCharSequence);
+    TypeParserBuilder convertAnyInCategory(final Category fromCategory, final CharSequence toCharSequence);
+
+    /**
+     * <p>Configures the type-parser to convert any code-point (character)  in the {@link Subset} that is found in the input sequence to a {@code toChar}.</p>
+     *
+     * @param fromSubset the {@link Subset} containing code-points to convert from.
+     * @param toChar the character to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final char toChar);
+
+    /**
+     * <p>Configures the type-parser to convert any code-point (character) in the {@link Subset} that is found in the input sequence to a {@code toCodePoint}.</p>
+     *
+     * @param fromSubset the {@link Subset} containing code-points to convert from.
+     * @param toCodePoint the code-point to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final int toCodePoint);
+
+    /**
+     * <p>Configures the type-parser to convert any code-point (character) in the {@link Subset} that is found in the input sequence to a {@code toCharSequence}.</p>
+     *
+     * @param fromSubset the {@link Subset} containing code-points to convert from.
+     * @param toCharSequence the char-sequence to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final CharSequence toCharSequence);
 
     /**
      * <p>Configures the type-parser to convert any {@code fromCharSequence} in the input sequence to a {@code toCharSequence}.</p>

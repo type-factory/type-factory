@@ -242,20 +242,38 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   }
 
   @Override
-  public TypeParserBuilder convertCategory(final Category fromCategory, final char toChar) {
+  public TypeParserBuilder convertAnyInCategory(final Category fromCategory, final char toChar) {
     converterBuilder.addCategoryConversion(fromCategory, toChar);
     return this;
   }
 
   @Override
-  public TypeParserBuilder convertCategory(final Category fromCategory, final int toCodePoint) {
+  public TypeParserBuilder convertAnyInCategory(final Category fromCategory, final int toCodePoint) {
     converterBuilder.addCategoryConversion(fromCategory, toCodePoint);
     return this;
   }
 
   @Override
-  public TypeParserBuilder convertCategory(final Category fromCategory, final CharSequence toCharSequence) {
+  public TypeParserBuilder convertAnyInCategory(final Category fromCategory, final CharSequence toCharSequence) {
     converterBuilder.addCategoryConversion(fromCategory, toCharSequence);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final char toChar) {
+    converterBuilder.addCodePointConversions(fromSubset, toChar);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final int toCodePoint) {
+    converterBuilder.addCodePointConversions(fromSubset, toCodePoint);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final CharSequence toCharSequence) {
+    converterBuilder.addCodePointConversions(fromSubset, toCharSequence);
     return this;
   }
 
