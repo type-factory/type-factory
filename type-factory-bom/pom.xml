@@ -8,8 +8,8 @@
   <version>1.0.0</version>
   <packaging>pom</packaging>
 
-  <name>${project.artifactId}</name>
-  <description>A bill-of-materials providing dependencies to type-factory modules.</description>
+  <name>Type Factory – Bill-of-Materials (BOM)</name>
+  <description>The Type Factory bill-of-materials providing dependencies to all type-factory modules.</description>
   <url>https://github.com/type-factory/type-factory</url>
 
   <licenses>
