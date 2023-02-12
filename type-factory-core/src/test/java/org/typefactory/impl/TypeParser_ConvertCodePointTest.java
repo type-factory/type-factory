@@ -17,12 +17,13 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.TypeParser;
+import org.typefactory.testutils.CodePointConverter;
 
-class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
+class TypeParser_ConvertCodePointTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -43,15 +44,15 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
       abc-aba | 1 | z | abc-aba
       abc-123 | 1 | z | abc-z23
       """, delimiter = '|')
-  void addCharConversion_fromCharToCharReturnsAsExpected(
+  void addCodePointConversion_fromCodePointToCodePointReturnsAsExpected(
       final String input,
-      final char fromChar,
-      final char toChar,
+      @ConvertWith(CodePointConverter.class) final int fromCodePoint,
+      @ConvertWith(CodePointConverter.class) final int toCodePoint,
       final String expected) {
 
     final var typeParser = TypeParser.builder()
         .acceptCodePoints(input.codePoints().toArray())
-        .convertChar(fromChar, toChar)
+        .convertCodePoint(fromCodePoint, toCodePoint)
         .build();
 
     final String actual = typeParser.parseToString(input);
@@ -78,54 +79,19 @@ class TypeParser_ConvertCharacterTest extends AbstractTypeParserTest {
       abc-aba | 1 | zY | abc-aba
       abc-123 | 1 | zY | abc-zY23
       """, delimiter = '|')
-  void addCharConversion_fromCharToCharSequenceReturnsAsExpected(
+  void addCodePointConversion_fromCodePointToCharSequenceReturnsAsExpected(
       final String input,
-      final char fromChar,
+      @ConvertWith(CodePointConverter.class) final int fromCodePoint,
       final String toCharSequence,
       final String expected) {
 
     final var typeParser = TypeParser.builder()
         .acceptCodePoints(input.codePoints().toArray())
-        .convertChar(fromChar, toCharSequence)
+        .convertCodePoint(fromCodePoint, toCharSequence)
         .build();
 
     final String actual = typeParser.parseToString(input);
 
     assertThat(actual).isEqualTo(expected);
   }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-      111052                                       | 111052
-      7ILOSZ                                       | 111052
-      OIZS-ABCD                                    | 0125-ABCD
-      OIZS_ABCD                                    | 0125-ABCD
-      OIZS ABCD                                    | 0125-ABCD
-      0123-4567-89AB-CDEF-GHIJ-KLMN-OPQR-STUV-WXYZ | 0123-4561-89AB-CDEF-GH1J-K1MN-0PQR-5TUV-WXY2
-      """,
-      value = {
-  }, delimiter = '|')
-  void typeParser_shouldConvertCharacters(final String value, final String expected) {
-
-    final TypeParser typeParser =
-        TypeParser.builder()
-            .minSize(4)
-            .maxSize(44)
-            .toUpperCase()
-            .convertChar('7', '1')
-            .convertChar('I', '1')
-            .convertChar('L', '1')
-            .convertChar('O', '0')
-            .convertChar('S', '5')
-            .convertChar('Z', '2')
-            .convertChar('_', '-')
-            .normalizeAndConvertWhitespaceTo('-')
-            .acceptHyphenAndConvertAllDashesToHyphen()
-            .acceptDigits0to9()
-            .acceptLettersAtoZ()
-            .build();
-
-    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expected);
-  }
-
 }

@@ -38,17 +38,20 @@ class CurrencyCodeTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      null      | null | ''
-      ''        | ''   | ''
-      '  '      | ''   | ''
-      AUD       | AUD  | AUD
-      ' AUD '   | AUD  | AUD
-      '  AUD  ' | AUD  | AUD
-      uSd       | USD  | USD
-      Nzd       | NZD  | NZD
-      eur       | EUR  | EUR
-      """, delimiter = '|', nullValues = "null")
-  void of_shouldCreateCurrencyCodeInstancesAsExpected(
+      Raw-value | Expected value() | Expected toString()
+      null      | null             | ''
+      ''        | ''               | ''
+      '  '      | ''               | ''
+      AUD       | AUD              | AUD
+      ' AUD '   | AUD              | AUD
+      '  AUD  ' | AUD              | AUD
+      uSd       | USD              | USD
+      Nzd       | NZD              | NZD
+      eur       | EUR              | EUR
+      """,
+      delimiter = '|', nullValues = "null",
+      useHeadersInDisplayName = true)
+  void constructor_shouldCreateCurrencyCodeInstancesAsExpected(
       final String value, final String expectedValue, final String expectedString) {
 
     final CurrencyCode actual = new CurrencyCode(value);
