@@ -18,6 +18,48 @@ Easily create custom data types and remove cruft and boilerplate from your code.
   <img src="docs/intro-video-light.gif" alt="intro video" style="border: 1px solid #AAAAAA;"/>
 </picture>
 
+Latest release
+==============
+
+### type-factory-bom
+
+The Type Factory bill-of-materials (bom) containing dependencies to all Type Factory modules.
+
+```xml
+<dependency>
+  <groupId>org.typefactory</groupId>
+  <artifactId>type-factory-bom</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+### type-factory-core
+
+The core module contains everything you need to create your custom data types. 
+It is a good place to start.
+
+```xml
+<dependency>
+  <groupId>org.typefactory</groupId>
+  <artifactId>type-factory-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+### type-factory-language
+
+This module provides language specific alphabet subsets that will help you write your custom
+data types. It is still very young and a work in progress.
+
+```xml
+<dependency>
+  <groupId>org.typefactory</groupId>
+  <artifactId>type-factory-language</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 Example 1 – currency code
 -------------------------
 
