@@ -20,6 +20,7 @@ import static org.typefactory.impl.SubsetUtils.getInclusiveFrom;
 import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 
 import org.typefactory.Category;
+import org.typefactory.Subset;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
 
 /**
@@ -76,25 +77,40 @@ final class ConverterBuilder {
     return this;
   }
 
-  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final CharSequence toCharSequence) {
+  public ConverterBuilder addCodePointConversions(final Subset subset, final CharSequence toCharSequence) {
     return addCodePointConversions(subset, toCharSequence.codePoints().toArray());
   }
 
-  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final char toChar) {
+  public ConverterBuilder addCodePointConversions(final Subset subset, final char toChar) {
     return addCodePointConversions(subset, new int[]{toChar});
   }
 
-  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final int toCodePoint) {
+  public ConverterBuilder addCodePointConversions(final Subset subset, final int toCodePoint) {
     return addCodePointConversions(subset, new int[]{toCodePoint});
   }
 
   /**
    * Converts any of the code-points found in the {@code subset} to the {@code toCodePointSequence}
-   * @param subset a subset containing the code-points that you wish to convert. May be null or empty.
+   *
+   * @param subset              a subset containing the code-points that you wish to convert. May be null or empty.
    * @param toCodePointSequence the code-point sequence that you wish to convert to.
    * @return this {@link ConverterBuilder}
    */
-  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final int[] toCodePointSequence) {
+  public ConverterBuilder addCodePointConversions(final Subset subset, final int[] toCodePointSequence) {
+    if (subset instanceof RangedSubset rangedSubset) {
+      return addRangedSubsetCodePointConversions(rangedSubset, toCodePointSequence);
+    }
+    throw new UnsupportedOperationException("subset of type '" + subset.getClass().getSimpleName() + "' not yet supported.");
+  }
+
+  /**
+   * Converts any of the code-points found in the {@code subset} to the {@code toCodePointSequence}
+   *
+   * @param subset              a subset containing the code-points that you wish to convert. May be null or empty.
+   * @param toCodePointSequence the code-point sequence that you wish to convert to.
+   * @return this {@link ConverterBuilder}
+   */
+  private ConverterBuilder addRangedSubsetCodePointConversions(final RangedSubset subset, final int[] toCodePointSequence) {
 
     if (subset != null) {
       final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();

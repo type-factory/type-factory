@@ -21,7 +21,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Category;
+import org.typefactory.Subset;
+import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.impl.Converter.ConverterResults;
+import org.typefactory.testutils.CodePointArrayConverter;
 import org.typefactory.testutils.CodePointConverter;
 
 class ConverterTest {
@@ -257,6 +260,52 @@ class ConverterTest {
 
     final var converter = new ConverterBuilder()
         .addCodePointConversion(fromCodePoint, toCharSequence)
+        .build();
+
+    final String actual = convert(input, converter);
+
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      1       | [a,2,Σ] | z | 1
+      11      | [a,2,Σ] | z | 11
+      12      | [a,2,Σ] | z | 1z
+      13      | [a,2,Σ] | z | 13
+      a       | [a,2,Σ] | z | z
+      aa      | [a,2,Σ] | z | zz
+      abcdef1 | [a,2,Σ] | z | zbcdef1
+      abcdef2 | [a,2,Σ] | z | zbcdefz
+      abc-aba | [a,2,Σ] | z | zbc-zbz
+      abc-123 | [a,2,Σ] | z | zbc-1z3
+      abc-ΔΣΩ | [a,2,Σ] | z | zbc-ΔzΩ
+      abc-ΔΣ2 | [a,2,Σ] | z | zbc-Δzz
+      1       | [1,2,Σ] | z | z
+      11      | [1,2,Σ] | z | zz
+      12      | [1,2,Σ] | z | zz
+      13      | [1,2,Σ] | z | z3
+      a       | [1,2,Σ] | z | a
+      aa      | [1,2,Σ] | z | aa
+      abcdef1 | [1,2,Σ] | z | abcdefz
+      abcdef2 | [1,2,Σ] | z | abcdefz
+      abc-aba | [1,2,Σ] | z | abc-aba
+      abc-123 | [1,2,Σ] | z | abc-zz3
+      abc-ΔΣΩ | [1,2,Σ] | z | abc-ΔzΩ
+      abc-ΔΣ2 | [1,2,Σ] | z | abc-Δzz
+      """, delimiter = '|')
+  void addCodePointConversions_fromSubsetToCharSequenceReturnsAsExpected(
+      final String input,
+      @ConvertWith(CodePointArrayConverter.class) final int[] fromCodePoints,
+      @ConvertWith(CodePointConverter.class) final int toCodePoint,
+      final String expected) {
+
+    final var subset = Subset.builder()
+        .includeCodePoints(fromCodePoints)
+        .build();
+
+    final var converter = new ConverterBuilder()
+        .addCodePointConversions(subset, toCodePoint)
         .build();
 
     final String actual = convert(input, converter);
