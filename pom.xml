@@ -274,6 +274,10 @@
             <goals>
               <goal>flatten</goal>
             </goals>
+            <configuration>
+              <!-- We want to keep the following POM elements in the flattened POM files because Sonatype Maven Central requires them -->
+              <pomElements><name/><description/><url/><scm/><developers/><contributors/></pomElements>
+            </configuration>
           </execution>
           <execution>
             <!-- ensure proper cleanup -->

@@ -17,21 +17,6 @@
   <description>The Type Factory language library – contains some useful language alphabets to use with the core library to make creating custom data types easy.</description>
   <url>https://github.com/type-factory/type-factory</url>
 
-  <licenses>
-    <license>
-      <name>The Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <name>Evan Toliopoulos</name>
-      <email>evantoli+info@typefactory.org</email>
-      <organizationUrl>https://github.com/type-factory/type-factory</organizationUrl>
-    </developer>
-  </developers>
-
   <properties>
     <maven.deploy.skip>false</maven.deploy.skip>
   </properties>
