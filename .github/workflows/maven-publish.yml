@@ -7,10 +7,6 @@ name: Publish to Maven Central Repository
 
 on:
   workflow_dispatch:
-    inputs:
-      NEW_VERSION_NUMBER:
-        description: 'Set new version number'
-        required: true
 
 jobs:
   publish:
