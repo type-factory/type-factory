@@ -10,13 +10,16 @@ on:
 
 jobs:
   publish:
+
     # Check that this is being executed on 'main' or a 'release-N.x.x' branch
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-')
     runs-on: ubuntu-latest
     steps:
+
       - id: checkout-code
         name: Checkout code
         uses: actions/checkout@v3
+
       - id: setup-java-and-maven-settings
         name: Set up Java and Maven Central Repository
         uses: actions/setup-java@v3
@@ -27,6 +30,7 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
+
       - id: import-gpg-key
         name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
@@ -35,9 +39,11 @@ jobs:
           passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
           git_user_signingkey: true
           git_commit_gpgsign: true
+
       - id: build-and-verify-with-maven
         name: Build and verify with Maven
         run: mvn --batch-mode --activate-profiles publish -Djava.util.logging.config.file="./.github/workflows/config/logging.properties" clean verify
+
       - id: publish-to-central
         name: Publish to Maven Central Repository
         env:
