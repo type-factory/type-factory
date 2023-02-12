@@ -48,61 +48,53 @@ final class ConverterBuilder {
     return addCategoryConversion(category, toCharSequence.codePoints().toArray());
   }
 
-  public ConverterBuilder addCategoryConversion(final Category category, final int[] toCodePoints) {
+  private ConverterBuilder addCategoryConversion(final Category category, final int[] toCodePointSequence) {
     for (int characterCategory : category.getCharacterCategories()) {
-      categoryToCodePointSequence.put(characterCategory, toCodePoints);
+      categoryToCodePointSequence.put(characterCategory, toCodePointSequence);
     }
     return this;
   }
 
   public ConverterBuilder addCharConversion(final char fromChar, final char toChar) {
-    addCodePointConversion(fromChar, new int[]{toChar});
-    return this;
-  }
-
-  public ConverterBuilder addCharConversions(final char[] fromChars, final char toChar) {
-    if (fromChars != null) {
-      for (int i = 0; i < fromChars.length; ++i) {
-        addCodePointConversion(fromChars[i], new int[]{toChar});
-      }
-    }
-    return this;
+    return addCodePointConversion(fromChar, new int[]{toChar});
   }
 
   public ConverterBuilder addCharConversion(final char fromChar, final CharSequence toCharSequence) {
-    addCodePointConversion(fromChar, toCharSequence.codePoints().toArray());
-    return this;
+    return addCodePointConversion(fromChar, toCharSequence.codePoints().toArray());
   }
 
   public ConverterBuilder addCodePointConversion(final int fromCodePoint, final int toCodePoint) {
-    addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
-    return this;
+    return addCodePointConversion(fromCodePoint, new int[]{toCodePoint});
   }
 
-  public ConverterBuilder addCharConversion(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
-    if (fromCharSequence != null && !fromCharSequence.isEmpty()) {
-      final int[] codePointSequence = fromCharSequence.codePoints().toArray();
-      addCodePointConversion(codePointSequence, toCharSequence.codePoints().toArray());
-    }
+  public ConverterBuilder addCodePointConversion(final int fromCodePoint, final CharSequence toCharSequence) {
+    return addCodePointConversion(fromCodePoint, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
+  }
+
+  private ConverterBuilder addCodePointConversion(final int fromCodePoint, final int[] toCodePointSequence) {
+    codePointToCodePointSequence.put(fromCodePoint, toCodePointSequence);
     return this;
   }
 
   public ConverterBuilder addCodePointConversions(final RangedSubset subset, final CharSequence toCharSequence) {
-    addCodePointConversions(subset, toCharSequence.codePoints().toArray());
-    return this;
+    return addCodePointConversions(subset, toCharSequence.codePoints().toArray());
   }
 
   public ConverterBuilder addCodePointConversions(final RangedSubset subset, final char toChar) {
-    addCodePointConversions(subset, new int[]{toChar});
-    return this;
+    return addCodePointConversions(subset, new int[]{toChar});
   }
 
   public ConverterBuilder addCodePointConversions(final RangedSubset subset, final int toCodePoint) {
-    addCodePointConversions(subset, new int[]{toCodePoint});
-    return this;
+    return addCodePointConversions(subset, new int[]{toCodePoint});
   }
 
-  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final int[] toCodePoints) {
+  /**
+   * Converts any of the code-points found in the {@code subset} to the {@code toCodePointSequence}
+   * @param subset a subset containing the code-points that you wish to convert. May be null or empty.
+   * @param toCodePointSequence the code-point sequence that you wish to convert to.
+   * @return this {@link ConverterBuilder}
+   */
+  public ConverterBuilder addCodePointConversions(final RangedSubset subset, final int[] toCodePointSequence) {
 
     if (subset != null) {
       final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();
@@ -110,7 +102,7 @@ final class ConverterBuilder {
         final int inclusiveFrom = getInclusiveFrom(c);
         final int inclusiveTo = getInclusiveTo(c);
         for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePoints);
+          addCodePointConversion(j, toCodePointSequence);
         }
       }
       final int[] doubleByteRangedSubset = subset.getDoubleByteCodePointRanges();
@@ -118,7 +110,7 @@ final class ConverterBuilder {
         final int inclusiveFrom = getInclusiveFrom(c);
         final int inclusiveTo = getInclusiveTo(c);
         for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePoints);
+          addCodePointConversion(j, toCodePointSequence);
         }
       }
       final long[] tripleByteRangedSubset = subset.getTripleByteCodePointRanges();
@@ -126,24 +118,23 @@ final class ConverterBuilder {
         final int inclusiveFrom = getInclusiveFrom(c);
         final int inclusiveTo = getInclusiveTo(c);
         for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePoints);
+          addCodePointConversion(j, toCodePointSequence);
         }
       }
     }
     return this;
   }
 
-  public ConverterBuilder addCodePointConversion(final int fromCodePoint, final CharSequence toCharSequence) {
-    addCodePointConversion(fromCodePoint, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
+  public ConverterBuilder addCharSequenceConversion(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
+    if (fromCharSequence != null && !fromCharSequence.isEmpty()) {
+      final int[] fromCodePointSequence = fromCharSequence.codePoints().toArray();
+      final int[] toCodePointSequence = toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray();
+      addCodePointSequenceConversion(fromCodePointSequence, toCodePointSequence);
+    }
     return this;
   }
 
-  public ConverterBuilder addCodePointConversion(final int fromCodePoint, final int[] toCodePointSequence) {
-    codePointToCodePointSequence.put(fromCodePoint, toCodePointSequence);
-    return this;
-  }
-
-  public ConverterBuilder addCodePointConversion(final int[] fromCodePointSequence, final int[] toCodePointSequence) {
+  public ConverterBuilder addCodePointSequenceConversion(final int[] fromCodePointSequence, final int[] toCodePointSequence) {
     if (fromCodePointSequence == null || fromCodePointSequence.length == 0) {
       return this;
     }

@@ -250,21 +250,22 @@ final class TypeParserImpl implements TypeParser {
         continue;
       }
 
+      if ((targetIndex + toCodePoints.length) >= target.length) {
+        target = Arrays.copyOf(target, target.length + Math.max(16, toCodePoints.length));
+      }
+
       for (int j = 0; j < toCodePoints.length; ++j) {
         codePoint = toCodePoints[j];
         if (targetIndex >= maxNumberOfCodePoints) {
           throw ExceptionUtils.forValueTooLong(messageCode, targetTypeClass, source, maxNumberOfCodePoints);
         }
-        if (targetIndex == target.length) {
-          target = Arrays.copyOf(target, target.length + Math.max(16, toCodePoints.length));
-        }
-        target = appendCodePoint(target, targetIndex++,
+        target[targetIndex++] =
             switch (targetCase) {
               case PRESERVE_CASE -> codePoint;
               case TO_LOWER_CASE -> Character.toLowerCase(codePoint);
               case TO_UPPER_CASE -> Character.toUpperCase(codePoint);
               case TO_TITLE_CASE -> targetIndex == 1 ? Character.toTitleCase(codePoint) : Character.toLowerCase(codePoint);
-            });
+            };
       }
       ++sourceIndex;
     }
@@ -275,8 +276,8 @@ final class TypeParserImpl implements TypeParser {
     final int targetEndIndex;
     final int targetStartIndex;
     if (whiteSpace == WhiteSpace.NORMALIZE_WHITESPACE) {
-      targetEndIndex = endIndexIgnoringTrailingWhitespace(target, targetIndex);
-      targetStartIndex = startIndexIgnoringLeadingWhitespace(target, targetEndIndex);
+      targetEndIndex = exclusiveEndIndexIgnoringTrailingWhitespace(target, targetIndex);
+      targetStartIndex = inclusiveStartIndexIgnoringLeadingWhitespace(target, targetEndIndex);
     } else {
       targetEndIndex = targetIndex;
       targetStartIndex = 0;
@@ -328,30 +329,13 @@ final class TypeParserImpl implements TypeParser {
   }
 
   /**
-   * Append a code point to a result-string within an array of code-points.
-   * @param result The array of code-points that holds an, often shorter, result-string.
-   * @param index The index at which the code-point needs to be set in the array. The index should be one position after the last code-point of the result.
-   * @param codePoint the code-point to append
-   * @return the code-point array which holds an often shorter, result-string. This may be a different array to the array
-   */
-  static int[] appendCodePoint(int[] result, final int index, final int codePoint) {
-    if (index == result.length) {
-      result = Arrays.copyOf(result, result.length + 16);
-    }
-    result[index] = codePoint;
-    return result;
-  }
-
-  /**
-   * Return the end-index of the last char-character ignoring trailing whitespace
+   * Return the exclusive end-index of the last code-point ignoring trailing whitespace
    *
    * @param codePoints the code-point array that may have trailing whitespace
-   * @return the end-index of the last char-character ignoring trailing whitespace
+   * @return the exclusive end-index of the last code-point ignoring trailing whitespace
+   * @throws NullPointerException if {@code codePoints} argument is null
    */
-  static int endIndexIgnoringTrailingWhitespace(final int[] codePoints, int endIndex) {
-    if (codePoints == null) {
-      return 0;
-    }
+  static int exclusiveEndIndexIgnoringTrailingWhitespace(final int[] codePoints, int endIndex) {
     endIndex--;
     // Find end index of char-sequence ignoring trailing whitespace.
     while (endIndex >= 0 && isWhitespace(codePoints[endIndex])) {
@@ -361,14 +345,15 @@ final class TypeParserImpl implements TypeParser {
   }
 
   /**
-   * Return the index of first character that is not whitespace
+   * Return the inclusive index of first code-point that is not whitespace
    *
    * @param codePoints the code-point array that may have trailing whitespace
    * @param endIndex   the index at which to stop progressing through the char-sequence
-   * @return the index of first character that is not whitespace
+   * @return the inclusive index of first code-point that is not whitespace
+   * @throws NullPointerException if {@code codePoints} argument is null
    */
-  static int startIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {
-    if (codePoints == null || endIndex == 0) {
+  static int inclusiveStartIndexIgnoringLeadingWhitespace(final int[] codePoints, final int endIndex) {
+    if (endIndex == 0) {
       return 0;
     }
     int startIndex = 0;

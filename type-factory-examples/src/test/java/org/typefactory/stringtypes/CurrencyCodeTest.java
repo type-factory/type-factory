@@ -45,17 +45,25 @@ class CurrencyCodeTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      AUD       | AUD
-      ' AUD '   | AUD
-      '  AUD  ' | AUD
-      uSd       | USD
-      NzD       | NZD
-      eur       | EUR
-      e u r     | EUR
-      """, delimiter = '|')
-  void of_shouldCreateCurrencyCodeInstancesAsExpected(final String value, final String expected) {
+      Raw-value | Expected value() | Expected toString()
+      ''        | ''               | ''
+      '  '      | ''               | ''
+      AUD       | AUD              | AUD
+      ' AUD '   | AUD              | AUD
+      '  AUD  ' | AUD              | AUD
+      uSd       | USD              | USD
+      Nzd       | NZD              | NZD
+      eur       | EUR              | EUR
+      """,
+      delimiter = '|', nullValues = "null",
+      useHeadersInDisplayName = true)
+  void of_shouldCreateCurrencyCodeInstancesAsExpected(
+      final String value, final String expectedValue, final String expectedString) {
+
     final CurrencyCode actual = CurrencyCode.of(value);
-    assertThatObject(actual).hasToString(expected);
+
+    assertThat(actual.value()).isEqualTo(expectedValue);
+    assertThatObject(actual).hasToString(expectedString);
   }
 
   @ParameterizedTest

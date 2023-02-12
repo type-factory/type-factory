@@ -952,6 +952,33 @@ public interface TypeParser {
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
     /**
+     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
+     *
+     * @param fromCategory the Unicode {@code fromCategory} to convert from.
+     * @param toChar the character to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertCategory(final Category fromCategory, final char toChar);
+
+    /**
+     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toCodePoint}.</p>
+     *
+     * @param fromCategory the Unicode {@code fromCategory} to convert from.
+     * @param toCodePoint the code-point to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertCategory(final Category fromCategory, final int toCodePoint);
+
+    /**
+     * <p>Configures the type-parser to convert any code-point in the Unicode {@code fromCategory} in the input sequence to a {@code toCharSequence}.</p>
+     *
+     * @param fromCategory the Unicode {@code fromCategory} to convert from.
+     * @param toCharSequence the char-sequence to convert to.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertCategory(final Category fromCategory, final CharSequence toCharSequence);
+
+    /**
      * <p>Configures the type-parser to convert any {@code fromCharSequence} in the input sequence to a {@code toCharSequence}.</p>
      *
      * <p>Conversion is carried out in the reading order of the input sequence.</p>
@@ -1465,6 +1492,15 @@ public interface TypeParser {
      * @see <a href="https://unicode.org/charts/PDF/U0000.pdf">C0 Controls and Basic Latin – unicode.org</a>
      */
     TypeParserBuilder convertAllDashesTo(CharSequence toCharSequence);
+
+    /**
+     * <p>Forbids any character is designated to be whitespace as per the {@link Character#isWhitespace(int)} method.</p>
+     *
+     * @return this {@code TypeParserBuilder}
+     * @see Character#isWhitespace(char)
+     * @see Character#isWhitespace(int)
+     */
+    TypeParserBuilder forbidWhitespace();
 
     /**
      * <p>Removes any character or code-point that is designated to be whitespace as per the {@link Character#isWhitespace(int)} method.</p>

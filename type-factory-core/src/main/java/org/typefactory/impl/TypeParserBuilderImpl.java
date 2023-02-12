@@ -222,7 +222,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
 
   @Override
   public TypeParserBuilder convertCharSequence(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
-    converterBuilder.addCharConversion(fromCharSequence, toCharSequence);
+    converterBuilder.addCharSequenceConversion(fromCharSequence, toCharSequence);
     acceptCodePointsInCharSequence(fromCharSequence);
     return this;
   }
@@ -238,6 +238,24 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   public TypeParserBuilder convertCodePoint(final int fromCodePoint, final CharSequence toCharSequence) {
     converterBuilder.addCodePointConversion(fromCodePoint, toCharSequence);
     acceptCodePoint(fromCodePoint);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertCategory(final Category fromCategory, final char toChar) {
+    converterBuilder.addCategoryConversion(fromCategory, toChar);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertCategory(final Category fromCategory, final int toCodePoint) {
+    converterBuilder.addCategoryConversion(fromCategory, toCodePoint);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder convertCategory(final Category fromCategory, final CharSequence toCharSequence) {
+    converterBuilder.addCategoryConversion(fromCategory, toCharSequence);
     return this;
   }
 
@@ -260,7 +278,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
 
   @Override
   public TypeParserBuilder removeAllCharSequences(final CharSequence charSequence) {
-    converterBuilder.addCharConversion(charSequence, EMPTY_STRING);
+    converterBuilder.addCharSequenceConversion(charSequence, EMPTY_STRING);
     acceptCodePointsInCharSequence(charSequence);
     return this;
   }
@@ -371,6 +389,12 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   public TypeParserBuilder convertAllDashesTo(final CharSequence toCharSequence) {
     acceptCodePointsInCharSequence(toCharSequence);
     converterBuilder.addCategoryConversion(Category.DASH_PUNCTUATION, toCharSequence);
+    return this;
+  }
+
+  @Override
+  public TypeParserBuilder forbidWhitespace() {
+    whiteSpace = WhiteSpace.FORBID_WHITESPACE;
     return this;
   }
 
