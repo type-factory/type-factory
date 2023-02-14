@@ -7,6 +7,9 @@
 <br/>
 [![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
 [![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
+[![OpenSSF
+Scorecard](https://api.securityscorecards.dev/projects/github.com/type-factory/type-factory/badge)](https://api.securityscorecards.dev/projects/github.com/type-factory/type-factory)
+[![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
 Type Factory
 ============
@@ -21,7 +24,7 @@ Easily create custom data types and remove cruft and boilerplate from your code.
 Latest release
 ==============
 
-### type-factory-bom
+### type-factory-bom <div style="float:right;">[![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)</div>
 
 The Type Factory bill-of-materials (bom) containing dependencies to all Type Factory modules.
 
@@ -34,7 +37,7 @@ The Type Factory bill-of-materials (bom) containing dependencies to all Type Fac
 </dependency>
 ```
 
-### type-factory-core
+### type-factory-core <div style="float:right;">[![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-core?label=type-factory-core)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)</div>
 
 The core module contains everything you need to create your custom data types. 
 It is a good place to start.
@@ -47,7 +50,7 @@ It is a good place to start.
 </dependency>
 ```
 
-### type-factory-language
+### type-factory-language <div style="float:right;">[![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-language?label=type-factory-language)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)</div>
 
 This module provides language specific alphabet subsets that will help you write your custom
 data types. It is still very young and a work in progress.
