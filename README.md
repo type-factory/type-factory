@@ -22,6 +22,8 @@ Easily create custom data types and remove cruft and boilerplate from your code.
 Latest release
 ==============
 
+To use Type Factory, you must be using Java 17 or later. 
+
 ### type-factory-bom [<img alt="Maven Central" align="right" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
 The Type Factory bill-of-materials (bom) containing dependencies to all Type Factory modules.
