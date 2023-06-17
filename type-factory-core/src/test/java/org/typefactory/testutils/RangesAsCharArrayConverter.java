@@ -19,7 +19,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
-import org.typefactory.Subset.CodePointRange;
 
 public class RangesAsCharArrayConverter implements ArgumentConverter {
 

@@ -15,11 +15,13 @@
 */
 package org.typefactory;
 
+import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import org.typefactory.impl.ComparisonMethod;
 import org.typefactory.impl.Factory;
 
 /**
@@ -400,7 +402,7 @@ public interface TypeParser {
      *   symbols and emoticons.</li>
      * </ul>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param minSize the minimum number of Unicode characters (code-points) that the parsed value must contain.
@@ -424,7 +426,7 @@ public interface TypeParser {
      * <p>If you create a data-type with {@code maxSize} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param maxSize the maximum number of Unicode characters (code-points) that the parsed value must contain.
@@ -451,7 +453,7 @@ public interface TypeParser {
      * <p>So be aware that if you create a data-type with fixed {@code size} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param size the fixed number of Unicode characters (code-points) that the parsed value must contain.
@@ -1689,6 +1691,11 @@ public interface TypeParser {
      * @see Predicate
      */
     TypeParserBuilder customValidator(Predicate<String> validationFunction);
+
+    <T> TypeParserBuilder minValue(T minValue, Comparator<T> comparator, ComparisonMethod comparisonMethod);
+    <T> TypeParserBuilder maxValue(T maxValue, Comparator<T> comparator, ComparisonMethod comparisonMethod);
+
+
 
     /**
      * Creates an immutable, threadsafe {@link TypeParser} instance.

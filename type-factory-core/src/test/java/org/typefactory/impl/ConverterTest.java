@@ -22,7 +22,6 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Category;
 import org.typefactory.Subset;
-import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.impl.Converter.ConverterResults;
 import org.typefactory.testutils.CodePointArrayConverter;
 import org.typefactory.testutils.CodePointConverter;
@@ -473,7 +472,6 @@ class ConverterTest {
           s.appendCodePoint(toCodePointSequence[j]);
         }
       }
-      ;
     }
     return s.toString();
   }

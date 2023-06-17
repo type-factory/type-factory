@@ -17,7 +17,7 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThatObject;
 
-import org.junit.jupiter.api.Test;
+import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -89,6 +89,10 @@ class TypeParserImpl_ShortTypeTest {
   }
 
   static class SomeShortType extends ShortType {
+
+    @Serial
+    private static final long serialVersionUID = -4972685693079333504L;
+
     public SomeShortType(Short value) {
       super(value);
     }

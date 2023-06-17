@@ -19,8 +19,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {

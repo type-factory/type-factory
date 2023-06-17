@@ -18,7 +18,7 @@ package org.typefactory.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatObject;
 
-import org.assertj.core.api.Assertions;
+import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -26,8 +26,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.ShortType;
 import org.typefactory.TypeParser;
-import org.typefactory.testutils.CodePointArrayConverter;
-import org.typefactory.testutils.CodePointConverter;
 import org.typefactory.testutils.CodePointSequenceConverter;
 
 class TypeParserImpl_Test {
@@ -89,6 +87,10 @@ class TypeParserImpl_Test {
   }
 
   static class SomeShortType extends ShortType {
+
+    @Serial
+    private static final long serialVersionUID = 2218906995987773770L;
+
     public SomeShortType(Short value) {
       super(value);
     }

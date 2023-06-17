@@ -15,6 +15,8 @@
 */
 package org.typefactory.language;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,19 +27,22 @@ import org.typefactory.TypeParser;
 class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER = TypeParser.builder()
-      .messageCode(MessageCode.of("must.be.french.letters.only", "Must be made up of French letters only."))
-      .toCharacterNormalizationFormNFC()
       .acceptSubset(Letters.FRENCH_fr)
+      .toCharacterNormalizationFormNFC()
       .convertAllDashesToHyphen()
       .acceptChar('\'')
       .normalizeWhitespace()
+      .messageCode(MessageCode.of(
+          "must.be.french.letters.only",
+          "Must be made up of characters in the French "
+              + "alphabet, hyphens, apostrophes or spaces only."))
       .build();
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "l'huître", // French 'Oyster'
+      "l'huître",     // French 'Oyster'
       "le porc-épic", // French 'Porcupine'
-      "le léopard", // French 'Leopard'
+      "le léopard",   // French 'Leopard'
   })
   void should_parse_accepting_only_french_letters(final String value) {
     Assertions.assertThat(TYPE_PARSER.parseToString(value)).hasToString(value);
@@ -45,14 +50,14 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "l'hυître", // French 'Oyster' with Greek 'υ' upsilon
+      "l'hυître",     // French 'Oyster' with Greek 'υ' upsilon
       "le pοrc-épic", // French 'Porcupine' with Greek 'ο' omicron
-      "le léoρard", // French 'Leopard' with Greek 'ρ' rho
+      "le léoρard",   // French 'Leopard' with Greek 'ρ' rho
   })
   void should_throw_exception_with_non_french_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidValueException.class)
+    assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of French letters only. Invalid value - invalid character '[^']+'.");
+        .withMessageMatching("Must be made up of characters in the French alphabet, hyphens, apostrophes or spaces only. Invalid value - invalid character '[^']+'.");
   }
 
 }

@@ -60,6 +60,40 @@ public class ExceptionUtils {
         .build();
   }
 
+  static InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final String minInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            minInclusiveValue)
+        .build();
+  }
+
+  static InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final String maxInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            maxInclusiveValue)
+        .build();
+  }
+
   static InvalidValueException forInvalidCodePoint(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,

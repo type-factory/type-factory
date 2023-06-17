@@ -26,10 +26,10 @@ import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import org.typefactory.MessageCode;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
+import org.typefactory.MessageCode;
 import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
@@ -46,12 +46,12 @@ final class TypeParserImpl implements TypeParser {
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
-
-  private final Pattern regex;
-
-  private final Predicate<String> validationFunction;
   private final Subset acceptedCodePoints;
   private final Converter converter;
+  private final Pattern regex;
+  private final Predicate<String> validationFunction;
+  private final MinValueValidator<?> minValueValidator;
+  private final MaxValueValidator<?> maxValueValidator;
 
   @SuppressWarnings("java:S107")
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
@@ -64,10 +64,12 @@ final class TypeParserImpl implements TypeParser {
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
+      final Subset acceptedCodePoints,
+      final Converter converter,
       final Pattern regex,
       final Predicate<String> validationFunction,
-      final Subset acceptedCodePoints,
-      final Converter converter) {
+      final MinValueValidator<?> minValueValidator,
+      final MaxValueValidator<?> maxValueValidator) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
     this.targetCase = targetCase;
@@ -76,10 +78,12 @@ final class TypeParserImpl implements TypeParser {
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
-    this.regex = regex;
-    this.validationFunction = validationFunction;
     this.acceptedCodePoints = acceptedCodePoints;
     this.converter = converter;
+    this.regex = regex;
+    this.validationFunction = validationFunction;
+    this.minValueValidator = minValueValidator;
+    this.maxValueValidator = maxValueValidator;
   }
 
   @Override
@@ -141,7 +145,14 @@ final class TypeParserImpl implements TypeParser {
     if (parsedValue == null || parsedValue.isBlank()) {
       return null;
     }
-    return Long.valueOf(parsedValue);
+    final Long result = Long.valueOf(parsedValue);
+    if (minValueValidator != null && ((MinValueValidator<Long>)minValueValidator).isInvalid(result)) {
+      throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, originalValue, minValueValidator.minValueAsString());
+    }
+    if (maxValueValidator != null && ((MaxValueValidator<Long>)maxValueValidator).isInvalid(result)) {
+      throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, originalValue, maxValueValidator.maxValueAsString());
+    }
+    return result;
   }
 
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
@@ -297,6 +308,7 @@ final class TypeParserImpl implements TypeParser {
     validateThatParsedValueConformToTheRegex(parsedValue, source);
 
     validationUsingCustomValidationFunction(parsedValue, source);
+
 
     return parsedValue;
   }
