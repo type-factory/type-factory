@@ -22,21 +22,22 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
-class TypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParser_parseCorruptCharSequenceTest {
+class TypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @EnumSource(CorruptCharSequence.class)
   void parseToString_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
 
     final var typeParser = TypeParser.builder()
-        // Using the Caucasian Albanian alphabet U+10530..U+10563 as numbers to a radix of the alphabet size.
-        // Each of these letters require two chars in Java UTF-8
-        .acceptCodePoints("𐔰𐔱𐔲𐔳𐔴𐔵𐔶𐔷𐔸𐔹𐔺𐔻𐔼𐔽𐔾𐔿𐕀𐕁𐕂𐕃𐕄𐕅𐕆𐕇𐕈𐕉𐕊𐕋𐕌𐕍𐕎𐕏𐕐𐕑𐕒𐕓𐕔𐕕𐕖𐕗𐕘𐕙𐕚𐕛𐕜𐕝𐕞𐕟𐕠𐕡𐕢𐕣".codePoints().toArray())
+        // Accepting code points in the Caucasian Albanian alphabet U+10530..U+10563.
+        // Each of these letters require two chars in Java UTF-16.
+        // Note that the test values are all Caucasian Albanian char-sequences.
+        .acceptCodePoints(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
         .removeAllWhitespace()
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> typeParser.parseToString(corruptCharSequence))
-        .withMessageMatching(corruptCharSequence.expectedErrorMessage);
+        .withMessage(corruptCharSequence.getExpectedErrorMessage());
   }
 }
