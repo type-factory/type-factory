@@ -409,7 +409,7 @@ public class InvalidValueException extends IllegalArgumentException {
      */
     ParserMessageCode INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE = Factory.parserMessageCode(
         "invalid_value_high_surrogate_without_low_surrogate",
-        "Invalid value - incomplete surrogate-pair, low-surrogate code unit missing for the high-surrogate code unit {0}.");
+        "Invalid value - incomplete surrogate-pair - the low-surrogate code unit is missing for the high-surrogate code unit {0}.");
 
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
@@ -429,7 +429,7 @@ public class InvalidValueException extends IllegalArgumentException {
      */
     ParserMessageCode INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE = Factory.parserMessageCode(
         "invalid_value_low_surrogate_without_high_surrogate",
-        "Invalid value - incomplete surrogate-pair, high-surrogate code unit missing for the low-surrogate code unit {0}.");
+        "Invalid value - incomplete surrogate-pair - the high-surrogate code unit is missing for the low-surrogate code unit {0}.");
     ParserMessageCode INVALID_VALUE_TOO_LONG = Factory.parserMessageCode(
         "invalid_value_too_long",
         "Invalid value - too long, maximum length is {0,number,integer}.");
