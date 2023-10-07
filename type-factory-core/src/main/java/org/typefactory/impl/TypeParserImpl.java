@@ -186,7 +186,7 @@ final class TypeParserImpl implements TypeParser {
     ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
     while (sourceIndex < length) {
-      { // block to ensure that variable "ch" is limited in scope
+      { // Get the codepoint. The anonymous block ensures that variable "ch" is limited in scope.
         final char ch = source.charAt(sourceIndex);
         if (Character.isHighSurrogate(ch)) {
           if (++sourceIndex < length) {
