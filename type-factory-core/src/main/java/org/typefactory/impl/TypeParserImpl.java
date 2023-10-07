@@ -50,8 +50,6 @@ final class TypeParserImpl implements TypeParser {
   private final Converter converter;
   private final Pattern regex;
   private final Predicate<String> validationFunction;
-  private final MinValueValidator<?> minValueValidator;
-  private final MaxValueValidator<?> maxValueValidator;
 
   @SuppressWarnings("java:S107")
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
@@ -67,9 +65,7 @@ final class TypeParserImpl implements TypeParser {
       final Subset acceptedCodePoints,
       final Converter converter,
       final Pattern regex,
-      final Predicate<String> validationFunction,
-      final MinValueValidator<?> minValueValidator,
-      final MaxValueValidator<?> maxValueValidator) {
+      final Predicate<String> validationFunction) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
     this.targetCase = targetCase;
@@ -82,8 +78,6 @@ final class TypeParserImpl implements TypeParser {
     this.converter = converter;
     this.regex = regex;
     this.validationFunction = validationFunction;
-    this.minValueValidator = minValueValidator;
-    this.maxValueValidator = maxValueValidator;
   }
 
   @Override
@@ -95,65 +89,58 @@ final class TypeParserImpl implements TypeParser {
         : constructorOrFactoryMethod.apply(parseToString(value));
   }
 
-  @Override
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Short parsedValue = parseToShort(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = parseToLong(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Short.valueOf(parsedValue);
-  }
-
-  @Override
-  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Integer.valueOf(parsedValue);
-  }
-
-  @Override
-  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    final Long result = Long.valueOf(parsedValue);
-    if (minValueValidator != null && ((MinValueValidator<Long>)minValueValidator).isInvalid(result)) {
-      throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, originalValue, minValueValidator.minValueAsString());
-    }
-    if (maxValueValidator != null && ((MaxValueValidator<Long>)maxValueValidator).isInvalid(result)) {
-      throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, originalValue, maxValueValidator.maxValueAsString());
-    }
-    return result;
-  }
+//  @Override
+//  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
+//      throws InvalidValueException {
+//    final Short parsedValue = parseToShort(value);
+//    return parsedValue == null
+//        ? null
+//        : constructorOrFactoryMethod.apply(parsedValue);
+//  }
+//
+//  @Override
+//  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
+//      throws InvalidValueException {
+//    final Integer parsedValue = parseToInteger(value);
+//    return parsedValue == null
+//        ? null
+//        : constructorOrFactoryMethod.apply(parsedValue);
+//  }
+//
+//  @Override
+//  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
+//    final Long parsedValue = parseToLong(value);
+//    return parsedValue == null
+//        ? null
+//        : constructorOrFactoryMethod.apply(parsedValue);
+//  }
+//
+//  @Override
+//  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
+//    final String parsedValue = parseToString(originalValue);
+//    if (parsedValue == null || parsedValue.isBlank()) {
+//      return null;
+//    }
+//    return Short.valueOf(parsedValue);
+//  }
+//
+//  @Override
+//  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
+//    final String parsedValue = parseToString(originalValue);
+//    if (parsedValue == null || parsedValue.isBlank()) {
+//      return null;
+//    }
+//    return Integer.valueOf(parsedValue);
+//  }
+//
+//  @Override
+//  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
+//    final String parsedValue = parseToString(originalValue);
+//    if (parsedValue == null || parsedValue.isBlank()) {
+//      return null;
+//    }
+//    return Long.valueOf(parsedValue);
+//  }
 
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
@@ -198,12 +185,19 @@ final class TypeParserImpl implements TypeParser {
 
     while (sourceIndex < length) {
       ch = source.charAt(sourceIndex);
-      if (Character.isSurrogate(ch)) {
+      if (Character.isHighSurrogate(ch)) {
         if (++sourceIndex < length) {
-          codePoint = Character.toCodePoint(ch, source.charAt(sourceIndex));
+          final char lowCh = source.charAt(sourceIndex);
+          if (Character.isLowSurrogate(lowCh)) {
+            codePoint = Character.toCodePoint(ch, lowCh);
+          } else {
+            throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+          }
         } else {
-          throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, ch);
+          throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
         }
+      } else if (Character.isLowSurrogate(ch)) {
+        throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
       } else {
         codePoint = ch;
       }
@@ -212,7 +206,7 @@ final class TypeParserImpl implements TypeParser {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
             if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
-              throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, ch);
+              throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
             }
             break;
           case PRESERVE_WHITESPACE:

@@ -18,15 +18,17 @@ package org.typefactory.impl;
 import java.util.Arrays;
 
 /**
- * <p>This is a hash-map of integer keys mapped to object values.</p>
+ * <p>This is a hash-map of integer keys mapped to integer values.</p>
  *
  * <p>We can use it to map:</p>
  * <ul>
- *   <li>a single code point to an object.</li>
- *   <li>a unicode category identified by an integer to an object.</li>
+ *   <li>a single code point to an integer value.</li>
  * </ul>
+ *
+ * <p>We currently use maps of this type to map code-points (characters)
+ * for an arbitrary numeric radix (base) to their corresponding value.</p>
  */
-final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
+final class PrimitiveHashMapOfIntKeyToIntValue {
 
   static final int INITIAL_CAPACITY = 20;
 
@@ -38,7 +40,12 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   /**
    * Use and internal struct-like class to ensure an atomic transfer after a rehash.
    */
-  private static class HashTable<T extends Object> {
+  private static class HashTable {
+
+    public HashTable() {
+      this.keys = new int[INITIAL_CAPACITY][];
+      this.values = new int[INITIAL_CAPACITY][];
+    }
 
     /**
      * 2-dimensional array for the keys which is aligned with the values array:
@@ -53,10 +60,10 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
      * 2-dimensional array for the values which is aligned with the key array:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map values.</li>
-     *   <li>second index/dimension to get the value objects which are objects of type T.</li>
+     *   <li>second index/dimension to get the value which is an int.</li>
      * </ul>
      */
-    private T[][] values;
+    private int[][] values;
   }
 
   /**
@@ -64,14 +71,17 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
    */
   private int threshold;
 
-  private HashTable<T> hashTable;
+  private HashTable hashTable;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private PrimitiveSortedSetOfInt keySet;
 
-  PrimitiveHashMapOfIntKeyToObjectValue() {
-    this.hashTable = new HashTable<>();
-    this.hashTable.keys = new int[INITIAL_CAPACITY][];
-    this.hashTable.values = (T[][]) new Object[INITIAL_CAPACITY][];
+  PrimitiveHashMapOfIntKeyToIntValue() {
+    clear();
+  }
+
+  void clear() {
+    this.hashTable = new HashTable();
+    this.keySet = new PrimitiveSortedSetOfInt();
     this.threshold = (int) (INITIAL_CAPACITY * LOAD_FACTOR);
   }
 
@@ -97,7 +107,26 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     return keySet.toArray();
   }
 
-  T get(final int key) {
+  boolean contains(final int key) {
+    int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+    int[] bucket = hashTable.keys[hashIndex];
+    if (bucket != null) {
+      for (int bucketIndex = 0; bucketIndex < bucket.length; ++bucketIndex) {
+        if (bucket[bucketIndex] == key) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
+   * @param key the key identifying the entry in the map.
+   * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
+   * @see Integer#MIN_VALUE
+   */
+  int get(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
     if (bucket != null) {
@@ -107,22 +136,22 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
         }
       }
     }
-    return null;
+    return Integer.MIN_VALUE;
   }
 
-  void put(final int key, final T value) {
+  void put(final int key, final int value) {
     if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
     put(key, value, hashTable);
   }
 
-  private void put(final int key, final T value, final HashTable<T> hashTable) {
+  private void put(final int key, final int value, final HashTable hashTable) {
     final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     final int[] bucket = hashTable.keys[hashIndex];
     if (bucket == null) {
       hashTable.keys[hashIndex] = new int[]{key};
-      hashTable.values[hashIndex] = (T[]) new Object[]{value};
+      hashTable.values[hashIndex] = new int[]{value};
     } else {
       int bucketIndex = 0;
       while (bucketIndex < bucket.length && bucket[bucketIndex] != key) {
@@ -141,9 +170,9 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   private void rehash() {
     final int newCapacity = (int) (hashTable.keys.length * 1.5F + 1);
     threshold = (int) (newCapacity * LOAD_FACTOR);
-    final HashTable<T> newHashTable = new HashTable<>();
+    final HashTable newHashTable = new HashTable();
     newHashTable.keys = new int[newCapacity][];
-    newHashTable.values = (T[][]) new Object[newCapacity][];
+    newHashTable.values = new int[newCapacity][];
     for (int i = 0; i < hashTable.keys.length; ++i) {
       if (hashTable.keys[i] != null) {
         for (int j = 0; j < hashTable.keys[i].length; ++j) {

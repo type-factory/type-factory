@@ -66,12 +66,12 @@
   </properties>
 
   <modules>
-    <module>type-factory-examples</module>
+<!--    <module>type-factory-examples</module>-->
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
     <module>type-factory-core</module>
     <module>type-factory-bom</module>
-    <module>type-factory-spring-boot-example</module>
+<!--    <module>type-factory-spring-boot-example</module>-->
   </modules>
 
   <distributionManagement>

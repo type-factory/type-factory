@@ -40,9 +40,6 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
   private Pattern regex = null;
   private Predicate<String> validationFunction = null;
-  private MinValueValidator<?> minValueValidator;
-  private MaxValueValidator<?> maxValueValidator;
-
   private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
 
@@ -498,18 +495,6 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   }
 
   @Override
-  public <T> TypeParserBuilder minValue(T minValue, Comparator<T> comparator, ComparisonMethod comparisonMethod) {
-    this.minValueValidator = MinValueValidator.of(minValue, comparator, comparisonMethod);
-    return this;
-  }
-
-  @Override
-  public <T> TypeParserBuilder maxValue(T maxValue, Comparator<T> comparator, ComparisonMethod comparisonMethod) {
-    this.maxValueValidator = MaxValueValidator.of(maxValue, comparator, comparisonMethod);
-    return this;
-  }
-
-  @Override
   public TypeParserImpl build() {
     return new TypeParserImpl(
         targetTypeClass, messageCode, targetCase,
@@ -520,8 +505,6 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
         rangedSubsetBuilder.build(),
         converterBuilder.build(),
         regex,
-        validationFunction,
-        minValueValidator,
-        maxValueValidator);
+        validationFunction);
   }
 }

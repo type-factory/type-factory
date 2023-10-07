@@ -31,36 +31,6 @@ import org.typefactory.testutils.CodePointSequenceConverter;
 class TypeParserImpl_Test {
 
   @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = "  ")
-  void parseToShortType_withPreserveNullAndEmpty_returnsNullForNullValue(final String value) {
-
-    final var parser = TypeParser.builder()
-        .preserveNullAndEmpty()
-        .removeAllWhitespace()
-        .build();
-
-    final var actual = parser.parseToShortType(value, SomeShortType::new);
-
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = "  ")
-  void parseToShortType_withConvertEmptyToNull_returnsNullForNullValue(final String value) {
-
-    final var parser = TypeParser.builder()
-        .convertEmptyToNull()
-        .removeAllWhitespace()
-        .build();
-
-    final var actual = parser.parseToShortType(value, SomeShortType::new);
-
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
   @CsvSource(textBlock = """
       ''             | 0 | 0
       ' '            | 0 | 0
@@ -75,7 +45,7 @@ class TypeParserImpl_Test {
       ' \tEE\t '     | 2 | 4
       '\t \tFF\t \t' | 3 | 5
       """, delimiter = '|', nullValues = "null")
-  void parseToShortType_withPreserveNullAndEmpty_returnsAsExpected(
+  void endAndStartIndex_returnAsExpected(
       @ConvertWith(CodePointSequenceConverter.class) final int[] codePointSequence,
       final int expectedInclusiveStartIndex, final int expectedExclusiveEndIndex) {
 
@@ -84,15 +54,5 @@ class TypeParserImpl_Test {
 
     assertThat(actualEndIndex).isEqualTo(expectedExclusiveEndIndex);
     assertThat(actualStartIndex).isEqualTo(expectedInclusiveStartIndex);
-  }
-
-  static class SomeShortType extends ShortType {
-
-    @Serial
-    private static final long serialVersionUID = 2218906995987773770L;
-
-    public SomeShortType(Short value) {
-      super(value);
-    }
   }
 }
