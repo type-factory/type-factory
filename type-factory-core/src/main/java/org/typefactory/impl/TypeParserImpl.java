@@ -173,12 +173,12 @@ final class TypeParserImpl implements TypeParser {
         case CONVERT_EMPTY_TO_NULL -> null;
       };
     }
+
     int[] target = converter == null ? new int[length] : new int[Math.min(maxNumberOfCodePoints, length * 2)];
     boolean codePointWasWhitespace = true;
     boolean codePointIsRepeatedWhitespaceRequiringNormalisation = false;
     int sourceIndex = 0;
     int targetIndex = 0;
-    char ch;
     int codePoint;
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
@@ -186,22 +186,31 @@ final class TypeParserImpl implements TypeParser {
     ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
     while (sourceIndex < length) {
-      ch = source.charAt(sourceIndex);
-      if (Character.isSurrogate(ch)) {
-        if (++sourceIndex < length) {
-          codePoint = Character.toCodePoint(ch, source.charAt(sourceIndex));
+      { // Get the codepoint. The anonymous block ensures that variable "ch" is limited in scope.
+        final char ch = source.charAt(sourceIndex);
+        if (Character.isHighSurrogate(ch)) {
+          if (++sourceIndex < length) {
+            final char lowCh = source.charAt(sourceIndex);
+            if (Character.isLowSurrogate(lowCh)) {
+              codePoint = Character.toCodePoint(ch, lowCh);
+            } else {
+              throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+            }
+          } else {
+            throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+          }
+        } else if (Character.isLowSurrogate(ch)) {
+          throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
         } else {
-          throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, ch);
+          codePoint = ch;
         }
-      } else {
-        codePoint = ch;
       }
 
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
             if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
-              throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, ch);
+              throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
             }
             break;
           case PRESERVE_WHITESPACE:
