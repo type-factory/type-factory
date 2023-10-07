@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongTypeParser;
 
-class LongTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParser_parseCorruptCharSequenceTest {
+class LongTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @EnumSource(CorruptCharSequence.class)
@@ -33,12 +33,12 @@ class LongTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParser
         .maxValueExclusive(Long.MAX_VALUE)
         // Using the Caucasian Albanian alphabet U+10530..U+10563 as numbers to a radix of the alphabet size.
         // Each of these letters require two chars in Java UTF-8
-        .acceptDigitsToArbitraryRadix("𐔰𐔱𐔲𐔳𐔴𐔵𐔶𐔷𐔸𐔹𐔺𐔻𐔼𐔽𐔾𐔿𐕀𐕁𐕂𐕃𐕄𐕅𐕆𐕇𐕈𐕉𐕊𐕋𐕌𐕍𐕎𐕏𐕐𐕑𐕒𐕓𐕔𐕕𐕖𐕗𐕘𐕙𐕚𐕛𐕜𐕝𐕞𐕟𐕠𐕡𐕢𐕣")
+        .acceptDigitsToArbitraryRadix(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
         .ignoreAllWhitespace()
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> longTypeParser.parseToLong(corruptCharSequence))
-        .withMessageMatching(corruptCharSequence.expectedErrorMessage);
+        .withMessage(corruptCharSequence.getExpectedErrorMessage());
   }
 }
