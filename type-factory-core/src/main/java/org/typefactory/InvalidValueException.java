@@ -199,7 +199,7 @@ public class InvalidValueException extends IllegalArgumentException {
     private MessageCode messageCode;
     private ParserMessageCode parserMessageCode;
 
-    private LinkedHashMap<String, Serializable> parserMessageCodeArgs = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Serializable> parserMessageCodeArgs = new LinkedHashMap<>();
     private String invalidValue;
 
     /**
@@ -270,7 +270,7 @@ public class InvalidValueException extends IllegalArgumentException {
      *              will silently ignore attempts to add parser message arguments that are provided with a null or blank {@code key}.
      * @param value the message argument value.
      * @param <V>   message argument values must be serializable because the {@link InvalidValueException} class is serializable.
-     * @return
+     * @return this builder
      */
     public <V extends Serializable> InvalidValueExceptionBuilder addParserMessageCodeArg(final String key, final V value) {
       if (key != null && !key.isBlank()) {
@@ -390,6 +390,46 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_whitespace_character",
         "Invalid value - invalid white-space character {0}.");
+
+    /**
+     * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
+     * <blockquote>
+     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
+     *   where a pair of surrogate code units (a
+     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
+     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * </blockquote>
+     *
+     * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>
+     * @see <a href="https://www.unicode.org/glossary/#surrogate_pair">Surrogate pair</a>
+     * @see <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">High-surrogate code unit</a>
+     * @see <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">Low-surrogate code unit</a>
+     * @see <a href="https://www.unicode.org/glossary/#supplementary_code_point">Supplementary code point</a>
+     */
+    ParserMessageCode INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE = Factory.parserMessageCode(
+        "invalid_value_high_surrogate_without_low_surrogate",
+        "Invalid value - incomplete surrogate-pair - the low-surrogate code unit is missing for the high-surrogate code unit {0}.");
+
+    /**
+     * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
+     * <blockquote>
+     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
+     *   where a pair of surrogate code units (a
+     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
+     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * </blockquote>
+     *
+     * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>
+     * @see <a href="https://www.unicode.org/glossary/#surrogate_pair">Surrogate pair</a>
+     * @see <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">High-surrogate code unit</a>
+     * @see <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">Low-surrogate code unit</a>
+     * @see <a href="https://www.unicode.org/glossary/#supplementary_code_point">Supplementary code point</a>
+     */
+    ParserMessageCode INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE = Factory.parserMessageCode(
+        "invalid_value_low_surrogate_without_high_surrogate",
+        "Invalid value - incomplete surrogate-pair - the high-surrogate code unit is missing for the low-surrogate code unit {0}.");
     ParserMessageCode INVALID_VALUE_TOO_LONG = Factory.parserMessageCode(
         "invalid_value_too_long",
         "Invalid value - too long, maximum length is {0,number,integer}.");

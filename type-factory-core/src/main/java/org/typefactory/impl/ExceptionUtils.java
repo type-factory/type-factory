@@ -113,6 +113,40 @@ public class ExceptionUtils {
         .build();
   }
 
+  static InvalidValueException forHighSurrogateWithoutLowSurrogate(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
+            unicodeHexCode(invalidCodePoint))
+        .build();
+  }
+
+  static InvalidValueException forLowSurrogateWithoutHighSurrogate(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
+            unicodeHexCode(invalidCodePoint))
+        .build();
+  }
+
   static InvalidValueException forValueNotMatchRegex(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
@@ -147,8 +181,8 @@ public class ExceptionUtils {
 
   static String unicodeHexCode(final int codePoint) {
     return Character.isSupplementaryCodePoint(codePoint)
-        ? String.format("U+%06x", codePoint)
-        : String.format("U+%04x", (short) codePoint);
+        ? String.format("U+%06X", codePoint)
+        : String.format("U+%04X", (short) codePoint);
   }
 
 }
