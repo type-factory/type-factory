@@ -107,10 +107,8 @@ class ExceptionUtilsTest {
     final var actual = ExceptionUtils.forValueNotValidUsingCustomValidation(MESSAGE_CODE, SomeClass.class, someValue, cause);
     assertThat(actual)
         .isInstanceOf(InvalidValueException.class)
-        .satisfies(exception -> {
-          assertThat(exception.getMessage()).
-              isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - does not pass custom validation criteria.");
-        });
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - does not pass custom validation criteria."));
   }
 
   @ParameterizedTest
@@ -119,7 +117,7 @@ class ExceptionUtilsTest {
       `\b` | U+0008
       '    | U+0027
       e    | U+0065
-      🈂    | U+01f202
+      🈂    | U+01F202
       """, delimiter = '|', quoteCharacter = '`')
   void unicodeHexCode(
       final String codePointAsString,
