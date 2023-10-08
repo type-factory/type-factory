@@ -132,8 +132,6 @@ public interface LongTypeParser {
 
     LongTypeParserBuilder acceptDigitsToArbitraryRadix(int... digitCodePoints);
 
-    LongTypeParserBuilder acceptDigitsToArbitraryRadix(String digits);
-
     LongTypeParserBuilder acceptDigitsForBase8();
 
     LongTypeParserBuilder acceptDigitsForBase10();

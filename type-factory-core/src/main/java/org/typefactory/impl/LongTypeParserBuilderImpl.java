@@ -79,12 +79,6 @@ class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsToArbitraryRadix(String digits) {
-    wrapperBuilder.acceptDigitsToArbitraryRadix(digits);
-    return this;
-  }
-
-  @Override
   public LongTypeParserBuilder acceptDigitsForBase8() {
     wrapperBuilder.acceptDigitsForBase8();
     return this;

@@ -209,10 +209,6 @@ final class IntegralNumericTypeParserImpl {
         continue;
       }
 
-      if (!caseSensitive) {
-        codePoint = Character.toLowerCase(codePoint);
-      }
-
       if (ignoreCharactersSubset.contains(codePoint)) {
         ++sourceIndex;
         continue;

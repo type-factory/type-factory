@@ -31,11 +31,13 @@ final class IntegralNumericTypeParserBuilderImpl {
       'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
       'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
+  private static final String DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE = "Arbitrary radix characters must not contain duplicates – check both your radix characters and case-insensitivity.";
+
   private Class<?> targetTypeClass;
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
   private boolean caseSensitive = false;
-  private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
+  private WhiteSpace whiteSpace = WhiteSpace.REMOVE_WHITESPACE;
   private NumericNullHandling nullHandling;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints;
@@ -53,18 +55,7 @@ final class IntegralNumericTypeParserBuilderImpl {
 
   IntegralNumericTypeParserImpl build() {
 
-    final var numericRadixCodePointsMap = new PrimitiveHashMapOfIntKeyToIntValue();
-
-    numericRadixCodePointsMap.clear();
-    for (int i = 0; i < numericRadixCodePoints.length; ++i) {
-      final int codepoint = caseSensitive
-          ? numericRadixCodePoints[i]
-          : Character.toLowerCase(numericRadixCodePoints[i]);
-      if (numericRadixCodePointsMap.contains(codepoint)) {
-        throw new TypeParserBuilderException("Arbitrary radix characters must not contain duplicates – check both your radix characters and case-insensitivity.");
-      }
-      numericRadixCodePointsMap.put(codepoint, i);
-    }
+    final var numericRadixCodePointsMap = createNumericRadixCodePointsMap();
 
     return new IntegralNumericTypeParserImpl(
         targetTypeClass, messageCode, defaultLocale, caseSensitive,
@@ -74,6 +65,56 @@ final class IntegralNumericTypeParserBuilderImpl {
         defaultMinValue, defaultMaxValue,
         minValue, maxValue,
         minValueComparisonInclusive, maxValueComparisonInclusive);
+  }
+
+  /**
+   * <p>Create a hashmap of letters to their corresponding number for a numeric base of arbitrary radix.</p>
+   *
+   * <p>Note that upper and lower case characters in Unicode are not always symmetric, so we will consider each separately and individually,
+   * if the hashmap is catering to a case-insensitive number base.</p>
+   *
+   * <p>One example of letter case asymmetry occurs in the Greek alphabet:</p>
+   * <ul>
+   *   <li>{@code Character.toUpperCase('σ') → 'Σ'} — a lowercase non-final Greek Sigma 'σ' is always converted to an uppercase capital Greek Sigma 'Σ'</li>
+   *   <li>{@code Character.toUpperCase('ς') → 'Σ'} — a lowercase final Greek Sigma 'ς' is also always converted to an uppercase capital Greek Sigma 'Σ'</li>
+   *   <li>{@code Character.toLowerCase('Σ') → 'σ'} — an uppercase Greek Sigma 'Σ' is always converted to a lowercase non-final Greek Sigma 'σ'</li>
+   * </ul>
+   *
+   * <p>This method can't work magic, but it will always consider the codepoint as-is and then consider its lowercase and uppercase counterparts separately and individually.</p>
+   *
+   * @return a hashmap of letters to their corresponding number for a numeric base of arbitrary radix.
+   */
+  private PrimitiveHashMapOfIntKeyToIntValue createNumericRadixCodePointsMap() {
+
+    final var numericRadixCodePointsMap = new PrimitiveHashMapOfIntKeyToIntValue();
+
+    for (int i = 0; i < numericRadixCodePoints.length; ++i) {
+      final int codepoint = numericRadixCodePoints[i];
+      addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, codepoint, i);
+      if (!caseSensitive) { // case-insensitive
+        // Upper and lower case characters in Unicode are not always symmetric, so we will consider each separately and individually
+        final int lowerCaseCodepoint = Character.toLowerCase(codepoint);
+        if (lowerCaseCodepoint != codepoint) {
+          addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, lowerCaseCodepoint, i);
+        }
+        final int upperCaseCodepoint = Character.toUpperCase(codepoint);
+        if (upperCaseCodepoint != codepoint) {
+          addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, upperCaseCodepoint, i);
+        }
+      }
+    }
+    return numericRadixCodePointsMap;
+  }
+
+  private static void addCodePointToRadixCodePointsMap(
+      final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
+      final int codepoint,
+      final int numericValue) {
+
+    if (numericRadixCodePointsMap.contains(codepoint)) {
+      throw new TypeParserBuilderException(DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE);
+    }
+    numericRadixCodePointsMap.put(codepoint, numericValue);
   }
 
   public void defaultLocale(final Locale locale) {
@@ -118,6 +159,24 @@ final class IntegralNumericTypeParserBuilderImpl {
     this.caseSensitive = true;
   }
 
+  /**
+   * <p>Configures the numeric type parser to consider numbers that are also made up of letters to be case-insensitive. For example,
+   * you may have a number radix (base) that is greater than 10 and have chosen to use letters for the remaining "digits" as in the standard
+   * hexadecimal system (radix/base 16) which employs the digits 0-9 and letters A-F to write numbers.</p>
+   *
+   * <p>Note that upper and lower case characters in Unicode are not always symmetric. Keep this in mind if you choose
+   * to define a type parser for an arbitrary radix and specify your own set of digits/letters using one
+   * of the {@link #acceptDigitsToArbitraryRadix(int...)} methods. In this situation, the type parser will
+   * always consider the letters you specified as they were provided. It will then also consider
+   * the lowercase version and uppercase version of that letter if case-insensitivity has been configured.</p>
+   *
+   * <p>One example of letter case asymmetry occurs in the Greek alphabet where:</p>
+   * <ul>
+   *   <li>{@code Character.toUpperCase('σ') → 'Σ'} — a lowercase non-final Greek Sigma 'σ' is always converted to an uppercase capital Greek Sigma 'Σ'</li>
+   *   <li>{@code Character.toUpperCase('ς') → 'Σ'} — a lowercase final Greek Sigma 'ς' is also always converted to an uppercase capital Greek Sigma 'Σ'</li>
+   *   <li>{@code Character.toLowerCase('Σ') → 'σ'} — an uppercase Greek Sigma 'Σ' is always converted to a lowercase non-final Greek Sigma 'σ'</li>
+   * </ul>
+   */
   public void caseInsensitive() {
     this.caseSensitive = false;
   }
