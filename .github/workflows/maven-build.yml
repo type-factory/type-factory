@@ -24,25 +24,25 @@ jobs:
     steps:
     - id: checkout-code
       name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         # 0 indicates all history – avoid shallow clone for SonarCloud analysis
         fetch-depth: 0
     - id: setup-java-17
       name: Set up JDK 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
     - name: Cache SonarCloud packages
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
     - name: Cache Maven packages
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
