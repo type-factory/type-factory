@@ -16,12 +16,10 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.typefactory.InvalidValueException;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_parseLocaleSpecificTest {
@@ -65,6 +63,8 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
       de-DE  |     +1.444 |     1444
       de-DE  |  1.444.555 |  1444555
 
+      de-CH  | -3'111'222 | -3111222
+      de-CH  | -3’111’222 | -3111222
       de-CH  | -3'111’222 | -3111222
       de-CH  |     -3'111 |    -3111
       de-CH  |    -3'’222 |    -3222
@@ -100,7 +100,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .defaultLocale(locale)
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase10()
+        .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 

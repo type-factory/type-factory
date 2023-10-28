@@ -52,13 +52,13 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToLong_acceptDigitsToArbitraryRadixBase16GreekLetters(
+  void parseToLong_allowCustomBaseNumbersForRadix16UsingGreekLetters(
       final String value, final long expected, final String ignoredComments) {
 
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsToArbitraryRadix('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
+        .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
         .ignoreAllWhitespace()
         .build();
 
@@ -81,13 +81,13 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToLong_acceptDigitsToArbitraryRadixBase2UsingEmoji(
+  void parseToLong_allowCustomBaseNumbersForRadix2UsingEmoji(
       final String value, final long expected, final String ignoredComments) {
 
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(-4L)
         .maxValueInclusive(4L)
-        .acceptDigitsToArbitraryRadix(0x01F600, 0x01F61E) // 😀😞
+        .allowCustomBaseNumbers(0x01F600, 0x01F61E) // 😀😞
         .ignoreAllWhitespace()
         .build();
 

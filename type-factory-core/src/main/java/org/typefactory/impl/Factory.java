@@ -19,6 +19,7 @@ import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
+import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 import org.typefactory.MessageCode;
@@ -56,6 +57,10 @@ public class Factory {
 
   public static LongTypeParserBuilder longTypeParserBuilder() {
     return new LongTypeParserBuilderImpl();
+  }
+
+  public static IntegerTypeParserBuilder integerTypeParserBuilder() {
+    return new IntegerTypeParserBuilderImpl();
   }
 
   public static Subset rangedSubset(

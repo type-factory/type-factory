@@ -166,7 +166,7 @@ final class IntegralNumericTypeParserBuilderImpl {
    *
    * <p>Note that upper and lower case characters in Unicode are not always symmetric. Keep this in mind if you choose
    * to define a type parser for an arbitrary radix and specify your own set of digits/letters using one
-   * of the {@link #acceptDigitsToArbitraryRadix(int...)} methods. In this situation, the type parser will
+   * of the {@link #allowCustomBaseNumbers(int...)} methods. In this situation, the type parser will
    * always consider the letters you specified as they were provided. It will then also consider
    * the lowercase version and uppercase version of that letter if case-insensitivity has been configured.</p>
    *
@@ -181,28 +181,24 @@ final class IntegralNumericTypeParserBuilderImpl {
     this.caseSensitive = false;
   }
 
-  public void acceptDigitsToArbitraryRadix(final char... arbitraryRadixChars) {
-    if (arbitraryRadixChars == null) {
-      acceptDigitsToArbitraryRadix((int[]) null);
+  public void allowCustomBaseNumbers(final char... charactersForCustomNumericBase) {
+    if (charactersForCustomNumericBase == null) {
+      allowCustomBaseNumbers((int[]) null);
     } else {
-      final int[] codePoints = new int[arbitraryRadixChars.length];
-      for (int i = 0; i < arbitraryRadixChars.length; ++i) {
-        codePoints[i] = arbitraryRadixChars[i];
+      final int[] codePoints = new int[charactersForCustomNumericBase.length];
+      for (int i = 0; i < charactersForCustomNumericBase.length; ++i) {
+        codePoints[i] = charactersForCustomNumericBase[i];
       }
-      acceptDigitsToArbitraryRadix(codePoints);
+      allowCustomBaseNumbers(codePoints);
     }
   }
 
-  public void acceptDigitsToArbitraryRadix(final int... arbitraryRadixCodePoints) {
-    if (arbitraryRadixCodePoints == null) {
+  public void allowCustomBaseNumbers(final int... codePointsForCustomNumericBase) {
+    if (codePointsForCustomNumericBase == null) {
       numericRadixCodePoints = Constants.EMPTY_INT_ARRAY;
     } else {
-      numericRadixCodePoints = arbitraryRadixCodePoints;
+      numericRadixCodePoints = codePointsForCustomNumericBase;
     }
-  }
-
-  public void acceptDigitsToArbitraryRadix(final String digits) {
-    acceptDigitsToArbitraryRadix(digits.codePoints().toArray());
   }
 
   /**
@@ -212,8 +208,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * 0, 1, 2, 3, 4, 5, 6, 7
    * }</pre>
    */
-  public void acceptDigitsForBase8() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_8_CODE_POINTS);
+  public void allowBase8Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_8_CODE_POINTS);
   }
 
   /**
@@ -223,8 +219,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
    * }</pre>
    */
-  public void acceptDigitsForBase10() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_10_CODE_POINTS);
+  public void allowBase10Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_10_CODE_POINTS);
   }
 
   /**
@@ -234,8 +230,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
    * }</pre>
    */
-  public void acceptDigitsForBase16() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_16_CODE_POINTS);
+  public void allowBase16Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_16_CODE_POINTS);
   }
 
   /**
@@ -246,8 +242,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V
    * }</pre>
    */
-  public void acceptDigitsForBase32() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_32_CODE_POINTS);
+  public void allowBase32Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_32_CODE_POINTS);
   }
 
   /**
@@ -259,8 +255,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * W, X, Y, Z
    * }</pre>
    */
-  public void acceptDigitsForBase36() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_36_CODE_POINTS);
+  public void allowBase36Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_36_CODE_POINTS);
   }
 
   /**
@@ -273,8 +269,8 @@ final class IntegralNumericTypeParserBuilderImpl {
    * m, n, o, p, q, r, s, t, u, v, w, x, y, z
    * }</pre>
    */
-  public void acceptDigitsForBase62() {
-    acceptDigitsToArbitraryRadix(DEFAULT_BASE_62_CODE_POINTS);
+  public void allowBase62Numbers() {
+    allowCustomBaseNumbers(DEFAULT_BASE_62_CODE_POINTS);
   }
 
   public void ignoreAllOccurrencesOfChar(final char ch) {

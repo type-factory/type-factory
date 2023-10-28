@@ -17,15 +17,10 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE;
-import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE;
 
-import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.typefactory.InvalidValueException;
-import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_parseToLongTest {
@@ -62,7 +57,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase8()
+        .allowBase8Numbers()
         .ignoreAllWhitespace()
         .build();
 
@@ -104,7 +99,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase10()
+        .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 
@@ -145,7 +140,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase16()
+        .allowBase16Numbers()
         .ignoreAllWhitespace()
         .caseInsensitive()
         .build();
@@ -187,7 +182,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase32()
+        .allowBase32Numbers()
         .ignoreAllWhitespace()
         .caseInsensitive()
         .build();
@@ -229,7 +224,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase36()
+        .allowBase36Numbers()
         .ignoreAllWhitespace()
         .caseInsensitive()
         .build();
@@ -271,7 +266,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .acceptDigitsForBase62()
+        .allowBase62Numbers()
         .ignoreAllWhitespace()
         .caseSensitive()
         .build();
@@ -303,7 +298,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(min)
         .maxValueInclusive(max)
-        .acceptDigitsForBase10()
+        .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 
@@ -342,7 +337,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueExclusive(min)
         .maxValueExclusive(max)
-        .acceptDigitsForBase10()
+        .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 

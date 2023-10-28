@@ -5,8 +5,15 @@ import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 
 class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
-  private final IntegralNumericTypeParserBuilderImpl wrapperBuilder =
-      new IntegralNumericTypeParserBuilderImpl(Long.MIN_VALUE, Long.MAX_VALUE);
+  private final IntegralNumericTypeParserBuilderImpl wrapperBuilder;
+
+  LongTypeParserBuilderImpl() {
+    this.wrapperBuilder = new IntegralNumericTypeParserBuilderImpl(Long.MIN_VALUE, Long.MAX_VALUE);
+  }
+
+  LongTypeParserBuilderImpl(final long defaultMinValue, final long defaultMaxValue) {
+    this.wrapperBuilder = new IntegralNumericTypeParserBuilderImpl(defaultMinValue, defaultMaxValue);
+  }
 
   public LongTypeParserImpl build() {
     return new LongTypeParserImpl(wrapperBuilder.build());
@@ -67,50 +74,50 @@ class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsToArbitraryRadix(char... digitChars) {
-    wrapperBuilder.acceptDigitsToArbitraryRadix(digitChars);
+  public LongTypeParserBuilder allowCustomBaseNumbers(char... charactersForCustomNumericBase) {
+    wrapperBuilder.allowCustomBaseNumbers(charactersForCustomNumericBase);
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsToArbitraryRadix(int... digitCodePoints) {
-    wrapperBuilder.acceptDigitsToArbitraryRadix(digitCodePoints);
+  public LongTypeParserBuilder allowCustomBaseNumbers(int... codePointsForCustomNumericBase) {
+    wrapperBuilder.allowCustomBaseNumbers(codePointsForCustomNumericBase);
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase8() {
-    wrapperBuilder.acceptDigitsForBase8();
+  public LongTypeParserBuilder allowBase8Numbers() {
+    wrapperBuilder.allowBase8Numbers();
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase10() {
-    wrapperBuilder.acceptDigitsForBase10();
+  public LongTypeParserBuilder allowBase10Numbers() {
+    wrapperBuilder.allowBase10Numbers();
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase16() {
-    wrapperBuilder.acceptDigitsForBase16();
+  public LongTypeParserBuilder allowBase16Numbers() {
+    wrapperBuilder.allowBase16Numbers();
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase32() {
-    wrapperBuilder.acceptDigitsForBase32();
+  public LongTypeParserBuilder allowBase32Numbers() {
+    wrapperBuilder.allowBase32Numbers();
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase36() {
-    wrapperBuilder.acceptDigitsForBase36();
+  public LongTypeParserBuilder allowBase36Numbers() {
+    wrapperBuilder.allowBase36Numbers();
     return this;
   }
 
   @Override
-  public LongTypeParserBuilder acceptDigitsForBase62() {
-    wrapperBuilder.acceptDigitsForBase62();
+  public LongTypeParserBuilder allowBase62Numbers() {
+    wrapperBuilder.allowBase62Numbers();
     return this;
   }
 

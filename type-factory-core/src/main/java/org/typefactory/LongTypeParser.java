@@ -128,21 +128,21 @@ public interface LongTypeParser {
 
     LongTypeParserBuilder caseInsensitive();
 
-    LongTypeParserBuilder acceptDigitsToArbitraryRadix(char... digitChars);
+    LongTypeParserBuilder allowCustomBaseNumbers(char... charactersForCustomNumericBase);
 
-    LongTypeParserBuilder acceptDigitsToArbitraryRadix(int... digitCodePoints);
+    LongTypeParserBuilder allowCustomBaseNumbers(int... codePointsForCustomNumericBase);
 
-    LongTypeParserBuilder acceptDigitsForBase8();
+    LongTypeParserBuilder allowBase8Numbers();
 
-    LongTypeParserBuilder acceptDigitsForBase10();
+    LongTypeParserBuilder allowBase10Numbers();
 
-    LongTypeParserBuilder acceptDigitsForBase16();
+    LongTypeParserBuilder allowBase16Numbers();
 
-    LongTypeParserBuilder acceptDigitsForBase32();
+    LongTypeParserBuilder allowBase32Numbers();
 
-    LongTypeParserBuilder acceptDigitsForBase36();
+    LongTypeParserBuilder allowBase36Numbers();
 
-    LongTypeParserBuilder acceptDigitsForBase62();
+    LongTypeParserBuilder allowBase62Numbers();
 
 
     /**

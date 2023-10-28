@@ -33,7 +33,7 @@ class LongTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParser
         .maxValueExclusive(Long.MAX_VALUE)
         // Using the Caucasian Albanian alphabet U+10530..U+10563 as numbers to a radix of the alphabet size.
         // Each of these letters require two chars in Java UTF-8
-        .acceptDigitsToArbitraryRadix(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
+        .allowCustomBaseNumbers(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
         .ignoreAllWhitespace()
         .build();
 
