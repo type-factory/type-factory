@@ -23,6 +23,7 @@ import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 import org.typefactory.MessageCode;
+import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser;
@@ -61,6 +62,10 @@ public class Factory {
 
   public static IntegerTypeParserBuilder integerTypeParserBuilder() {
     return new IntegerTypeParserBuilderImpl();
+  }
+
+  public static ShortTypeParserBuilder shortTypeParserBuilder() {
+    return new ShortTypeParserBuilderImpl();
   }
 
   public static Subset rangedSubset(
