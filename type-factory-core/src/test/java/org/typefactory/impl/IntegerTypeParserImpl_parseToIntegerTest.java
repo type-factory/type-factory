@@ -54,14 +54,14 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base8NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase8Numbers()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -96,14 +96,14 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base10NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -137,7 +137,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base16NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase16Numbers()
@@ -145,7 +145,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -179,7 +179,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base32NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase32Numbers()
@@ -187,7 +187,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -221,7 +221,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base36NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase36Numbers()
@@ -229,7 +229,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -263,7 +263,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parseToInteger_base62NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase62Numbers()
@@ -271,7 +271,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseSensitive()
         .build();
 
-    final var actual = longTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parseToInteger(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -295,7 +295,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       final int min, final int max,
       final String value, final String expectedMessage) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(min)
         .maxValueInclusive(max)
         .allowBase10Numbers()
@@ -303,7 +303,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToInteger(value))
+        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -334,7 +334,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       final int min, final int max,
       final String value, final String expectedMessage) {
 
-    final var longTypeParser = IntegerTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueExclusive(min)
         .maxValueExclusive(max)
         .allowBase10Numbers()
@@ -342,7 +342,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToInteger(value))
+        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
         .withMessageStartingWith(expectedMessage);
   }
 

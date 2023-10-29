@@ -59,6 +59,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
+        .caseInsensitive()
         .ignoreAllWhitespace()
         .build();
 

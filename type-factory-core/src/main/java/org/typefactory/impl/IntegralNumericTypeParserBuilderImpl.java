@@ -31,12 +31,12 @@ final class IntegralNumericTypeParserBuilderImpl {
       'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
       'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-  private static final String DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE = "Arbitrary radix characters must not contain duplicates – check both your radix characters and case-insensitivity.";
+  private static final String DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE = "Custom numeric-base character-set must not contain duplicates – check both your character-set and case-sensitivity.";
 
   private Class<?> targetTypeClass;
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
-  private boolean caseSensitive = false;
+  private boolean caseSensitive = true;
   private WhiteSpace whiteSpace = WhiteSpace.REMOVE_WHITESPACE;
   private NumericNullHandling nullHandling;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
