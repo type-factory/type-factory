@@ -15,9 +15,6 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.NumericNullHandling.PRESERVE_NULL;
-import static org.typefactory.impl.NumericNullHandling.PRESERVE_NULL_AND_CONVERT_EMPTY_TO_NULL;
-
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
@@ -38,7 +35,6 @@ final class IntegralNumericTypeParserImpl {
   private final DecimalFormatSymbols defaultDecimalFormatSymbols;
   private final boolean caseSensitive;
   private final WhiteSpace whiteSpace;
-  private final NumericNullHandling nullHandling;
   private final Subset ignoreCharactersSubset;
   private final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap;
   private final int [] numericRadixCodePoints;
@@ -59,7 +55,6 @@ final class IntegralNumericTypeParserImpl {
       final Locale defaultLocale,
       final boolean caseSensitive,
       final WhiteSpace whiteSpace,
-      final NumericNullHandling nullHandling,
       final Subset ignoreCharactersSubset,
       final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
       final int [] numericRadixCodePoints,
@@ -75,7 +70,6 @@ final class IntegralNumericTypeParserImpl {
     this.defaultDecimalFormatSymbols = DecimalFormatSymbols.getInstance(this.defaultLocale);
     this.caseSensitive = caseSensitive;
     this.whiteSpace = whiteSpace;
-    this.nullHandling = nullHandling;
     this.ignoreCharactersSubset = ignoreCharactersSubset;
     this.numericRadixCodePointsMap = numericRadixCodePointsMap;
     this.numericRadixCodePoints = numericRadixCodePoints;
@@ -114,39 +108,27 @@ final class IntegralNumericTypeParserImpl {
 
   public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = parse(originalValue);
-    if (parsedValue == null) {
-      return null;
-    }
-    return parsedValue.shortValue();
+    return parsedValue == null
+        ? null
+        : parsedValue.shortValue();
   }
 
   public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = parse(originalValue);
-    if (parsedValue == null) {
-      return null;
-    }
-    return parsedValue.intValue();
+    return parsedValue == null
+        ? null
+        : parsedValue.intValue();
   }
 
   public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue);
-    if (parsedValue == null) {
-      return null;
-    }
-    return parsedValue;
+    return parse(originalValue);
   }
 
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
   @SuppressWarnings({"java:S3776"})
   private Long parse(final CharSequence source) throws InvalidValueException {
-    if (source == null) {
-      if (nullHandling == PRESERVE_NULL) {
-        return null;
-      }
-    } else if (source.isEmpty()) {
-      if (nullHandling == PRESERVE_NULL_AND_CONVERT_EMPTY_TO_NULL) {
-        return null;
-      }
+    if (source == null || source.isEmpty()) {
+      return null;
     }
 
     final int groupingSeparator = defaultDecimalFormatSymbols.getGroupingSeparator();

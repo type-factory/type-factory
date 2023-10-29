@@ -38,7 +38,6 @@ final class IntegralNumericTypeParserBuilderImpl {
   private Locale defaultLocale = Locale.getDefault();
   private boolean caseSensitive = true;
   private WhiteSpace whiteSpace = WhiteSpace.REMOVE_WHITESPACE;
-  private NumericNullHandling nullHandling;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints;
   private final long defaultMinValue;
@@ -59,7 +58,7 @@ final class IntegralNumericTypeParserBuilderImpl {
 
     return new IntegralNumericTypeParserImpl(
         targetTypeClass, messageCode, defaultLocale, caseSensitive,
-        whiteSpace, nullHandling,
+        whiteSpace,
         ignoreCharactersSubsetBuilder.build(),
         numericRadixCodePointsMap, numericRadixCodePoints,
         defaultMinValue, defaultMaxValue,
