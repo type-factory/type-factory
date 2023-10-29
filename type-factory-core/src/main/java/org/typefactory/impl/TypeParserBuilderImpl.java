@@ -19,6 +19,7 @@ import static org.typefactory.impl.Constants.EMPTY_STRING;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
@@ -37,12 +38,11 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
-
   private Pattern regex = null;
-
   private Predicate<String> validationFunction = null;
   private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
+
 
   TypeParserBuilderImpl() {
   }
@@ -502,9 +502,9 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
-        regex,
-        validationFunction,
         rangedSubsetBuilder.build(),
-        converterBuilder.build());
+        converterBuilder.build(),
+        regex,
+        validationFunction);
   }
 }

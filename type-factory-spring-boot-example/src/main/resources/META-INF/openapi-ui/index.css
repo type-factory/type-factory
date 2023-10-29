@@ -1,0 +1,61 @@
+
+/* Apply to an element like '<code>' currently styled by StopLight OpenAPI UI as a block */
+.loyalty-display-inline {
+  display: inline;
+}
+
+/* Apply to '<div>' containing large content like a '<table>' */
+.loyalty-overflow-auto {
+  padding: 0.1rem;
+  overflow: auto;
+}
+.loyalty-overflow-auto table {
+  margin: 0.1rem;
+}
+
+.loyalty-small-font,
+table.loyalty-small-font td,
+table.loyalty-small-font th {
+  font-size: 0.8rem;
+}
+.loyalty-smaller-font,
+table.loyalty-smaller-font td,
+table.loyalty-smaller-font th {
+  font-size: 0.7rem;
+}
+.loyalty-smallest-font,
+table.loyalty-smallest-font td,
+table.loyalty-smallest-font th {
+  font-size: 0.6rem;
+}
+.loyalty-condensed-font,
+table.loyalty-condensed-font td,
+table.loyalty-condensed-font th {
+  font-stretch: condensed;
+}
+.loyalty-extra-condensed-font,
+table.loyalty-extra-condensed-font td,
+table.loyalty-extra-condensed-font th {
+  font-stretch: extra-condensed;
+}
+.loyalty-ultra-condensed-font,
+table.loyalty-ultra-condensed-font td,
+table.loyalty-ultra-condensed-font th {
+  font-stretch: ultra-condensed;
+}
+table.cellBorders,
+table.cellBorders th,
+table.cellBorders td {
+  border: 1px solid #cccccc;
+}
+table.loyalty th,
+table.loyalty td {
+  padding: 0.2rem;
+}
+table.loyalty thead tr th {
+  background-color: #dddddd;
+  text-transform: none;
+}
+table.loyalty tbody tr th {
+  background-color: #eeeeee;
+}

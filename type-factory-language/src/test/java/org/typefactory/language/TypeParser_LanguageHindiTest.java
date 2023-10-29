@@ -48,9 +48,13 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "\uD805\uDE13ल्लू", // Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead 'उ' (u) from the Devanagari script
-      "बा\uD805\uDE11", // Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead 'घ' (gha) from the Devanagari script
-      "कबू\uD805\uDE1Dर", // Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead 'त' (ta) from the Devanagari script
+      "\uD805\uDE13ल्लू", // Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead of 'उ' (u) from the Devanagari script
+      "बा\uD805\uDE11", // Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead of 'घ' (gha) from the Devanagari script
+      "कबू\uD805\uDE1Dर", // Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead of 'त' (ta) from the Devanagari script
+      // Freya (फ्रेया)
+      // Ranhita (रंहिता) (रंहिता)
+      // Jasmeet (जसमीत) जसमीत
+      // "रंहिता"
   })
   void should_throw_exception_with_non_hindi_letters(final String value) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

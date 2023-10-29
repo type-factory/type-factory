@@ -15,6 +15,8 @@
 */
 package org.typefactory;
 
+import java.math.BigInteger;
+import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
@@ -104,105 +106,8 @@ public interface TypeParser {
    */
   <T extends StringType> T parseToStringType(CharSequence value, Function<String, T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link ShortType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToShortType} method:</p>
-   *
-   * <pre>{@code
-   * public final class DepartmentId extends ShortType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private DepartmentId(final Short value) {
-   *     super(value);
-   *   }
-   *
-   *   public static DepartmentId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToShortType(value, DepartmentId::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToShort(CharSequence)} method to simply parse into a {@link Short} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link ShortType}
-   * @return a custom type instance that extends {@link ShortType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   */
-  <T extends ShortType> T parseToShortType(CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link IntegerType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code InvoiceNumber} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToIntegerType} method:</p>
-   *
-   * <pre>{@code
-   * public final class InvoiceNumber extends IntegerType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private InvoiceNumber(final Integer value) {
-   *     super(value);
-   *   }
-   *
-   *   public static InvoiceNumber of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToIntegerType(value, InvoiceNumber::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToInteger(CharSequence)} method to simply parse into a {@link Integer} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link IntegerType}
-   * @return a custom type instance that extends {@link IntegerType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   */
-  <T extends IntegerType> T parseToIntegerType(CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link LongType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToLongType} method:</p>
-   *
-   * <pre>{@code
-   * public final class ProductId extends LongType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private ProductId(final Long value) {
-   *     super(value);
-   *   }
-   *
-   *   public static ProductId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToLongType(value, ProductId::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToLong(CharSequence)} method to simply parse into a {@link Long} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link LongType}
-   * @return a custom type instance that extends {@link LongType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   * @see #parseToString(CharSequence)
-   */
-  <T extends LongType> T parseToLongType(CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link String} value.</p>
@@ -241,122 +146,12 @@ public interface TypeParser {
    * @see #parseToStringType(CharSequence, Function)
    */
   String parseToString(CharSequence value) throws InvalidValueException;
-
-  /**
-   * <p>Parse the provided {@code value} into a {@link Short} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Short} variable</b></p>
-   *
-   * <pre>{@code
-   * Short someVariable = TYPE_PARSER.parseToShort(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code DepartmentId} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code DepartmentId} instance:</p>
-   *
-   * <pre>{@code
-   * public final class DepartmentId extends ShortType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public DepartmentId(final Short value) {
-   *     super(TYPE_PARSER.parseToShortType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link ShortType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToShortType(CharSequence, Function)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Short}.
-   * @return parses the provided {@code value} into a {@link Short} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Short}.
-   * @see #parseToShortType(CharSequence, Function)
-   */
-  Short parseToShort(CharSequence value) throws InvalidValueException;
-
-  /**
-   * <p>Parse the provided {@code value} into a {@link Integer} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Integer} variable</b></p>
-   *
-   * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code InvoiceNumber} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code InvoiceNumber} instance:</p>
-   *
-   * <pre>{@code
-   * public final class InvoiceNumber extends IntegerType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public InvoiceNumber(final Integer value) {
-   *     super(TYPE_PARSER.parseToIntegerType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link IntegerType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Integer}.
-   * @return parses the provided {@code value} into a {@link Integer} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Integer}.
-   * @see #parseToIntegerType(CharSequence, IntFunction)
-   */
-  Integer parseToInteger(CharSequence value) throws InvalidValueException;
-
-  /**
-   * <p>Parse the provided {@code value} into a {@link Long} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Long} variable</b></p>
-   *
-   * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code ProductId} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code ProductId} instance:</p>
-   *
-   * <pre>{@code
-   * public final class ProductId extends LongType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public ProductId(final Long value) {
-   *     super(TYPE_PARSER.parseToLongType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link LongType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Long}.
-   * @return parses the provided {@code value} into a {@link Long} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
-   * @see #parseToLongType(CharSequence, LongFunction)
-   */
-  Long parseToLong(CharSequence value) throws InvalidValueException;
+  
 
   /**
    * A builder that can create immutable, threadsafe {@link TypeParser} instances.
    */
-  interface TypeParserBuilder {
+  interface TypeParserBuilder{
 
     // Todo add Javadoc if still required.
     TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
@@ -400,7 +195,7 @@ public interface TypeParser {
      *   symbols and emoticons.</li>
      * </ul>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param minSize the minimum number of Unicode characters (code-points) that the parsed value must contain.
@@ -424,7 +219,7 @@ public interface TypeParser {
      * <p>If you create a data-type with {@code maxSize} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param maxSize the maximum number of Unicode characters (code-points) that the parsed value must contain.
@@ -451,7 +246,7 @@ public interface TypeParser {
      * <p>So be aware that if you create a data-type with fixed {@code size} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param size the fixed number of Unicode characters (code-points) that the parsed value must contain.
@@ -1689,6 +1484,8 @@ public interface TypeParser {
      * @see Predicate
      */
     TypeParserBuilder customValidator(Predicate<String> validationFunction);
+
+
 
     /**
      * Creates an immutable, threadsafe {@link TypeParser} instance.
