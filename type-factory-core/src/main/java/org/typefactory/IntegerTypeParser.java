@@ -94,7 +94,7 @@ public interface IntegerTypeParser {
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Integer value.
      * @param minValue the minimum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMinValue()
      */
     IntegerTypeParserBuilder minValueInclusive(int minValue);
@@ -102,7 +102,7 @@ public interface IntegerTypeParser {
     /**
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMaxValue()
      */
     IntegerTypeParserBuilder maxValueInclusive(int maxValue);
@@ -110,7 +110,7 @@ public interface IntegerTypeParser {
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Integer value.
      * @param minValue the minimum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMinValue()
      */
     IntegerTypeParserBuilder minValueExclusive(int minValue);
@@ -118,7 +118,7 @@ public interface IntegerTypeParser {
     /**
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMaxValue()
      */
     IntegerTypeParserBuilder maxValueExclusive(int maxValue);
@@ -166,7 +166,7 @@ public interface IntegerTypeParser {
      * }</pre>
      *
      * @param ch the character you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -196,7 +196,7 @@ public interface IntegerTypeParser {
      * }</pre>
      *
      * @param chars the characters you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -226,7 +226,7 @@ public interface IntegerTypeParser {
      * }</pre>
      *
      * @param codePoint the code-point you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -256,7 +256,7 @@ public interface IntegerTypeParser {
      * }</pre>
      *
      * @param codePoints the code-points you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -291,7 +291,7 @@ public interface IntegerTypeParser {
      *     .build();
      * }</pre>
      *
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -300,7 +300,7 @@ public interface IntegerTypeParser {
      */
     IntegerTypeParserBuilder ignoreAllDashesAndHyphens();
 
-    IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingMinusSign();
+    IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
   }
 
 }

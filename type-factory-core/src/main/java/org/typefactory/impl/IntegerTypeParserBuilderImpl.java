@@ -151,8 +151,8 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
-  public IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingMinusSign() {
-    wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingMinusSign();
+  public IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign() {
+    wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
     return this;
   }
 }

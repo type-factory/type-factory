@@ -2,6 +2,7 @@ package org.typefactory.impl;
 
 import java.util.Locale;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
+import org.typefactory.MessageCode;
 
 class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
@@ -17,6 +18,18 @@ class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
   public LongTypeParserImpl build() {
     return new LongTypeParserImpl(wrapperBuilder.build());
+  }
+
+  @Override
+  public LongTypeParserBuilder targetTypeClass(final Class<?> targetTypeClass) {
+    wrapperBuilder.targetTypeClass(targetTypeClass);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder messageCode(final MessageCode messageCode) {
+    wrapperBuilder.messageCode(messageCode);
+    return this;
   }
 
   @Override
@@ -158,8 +171,31 @@ class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   @Override
-  public LongTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingMinusSign() {
-    wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingMinusSign();
+  public LongTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign() {
+    wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder allowLeadingNegativeSign() {
+    wrapperBuilder.allowLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder ignoreLeadingNegativeSign() {
+    wrapperBuilder.ignoreLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder allowLeadingPositiveSign() {
+    wrapperBuilder.allowLeadingPositiveSign();
+    return this;
+  }
+  @Override
+  public LongTypeParserBuilder ignoreLeadingPositiveSign() {
+    wrapperBuilder.ignoreLeadingPositiveSign();
     return this;
   }
 }

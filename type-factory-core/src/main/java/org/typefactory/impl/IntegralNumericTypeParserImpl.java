@@ -29,6 +29,20 @@ import org.typefactory.Subset;
 
 final class IntegralNumericTypeParserImpl {
 
+  static final int HYPHEN_MINUS = '-';
+  static final int MATH_MINUS = '\u2212';
+  static final int HEAVY_MINUS = '\u2796';
+  static final int PLUS = '+';
+  static final int HEAVY_PLUS = '\u2795';
+
+  static final int [] MINUS_CODEPOINTS = new int [] {HYPHEN_MINUS, MATH_MINUS, HEAVY_MINUS};
+  static final int [] PLUS_CODEPOINTS = new int [] {PLUS, HEAVY_PLUS};
+
+  private enum Sign {
+    NEGATIVE,
+    POSITIVE
+  }
+
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
   private final Locale defaultLocale;
@@ -45,7 +59,8 @@ final class IntegralNumericTypeParserImpl {
   private final long maxValue;
   private final boolean minValueComparisonInclusive;
   private final boolean maxValueComparisonInclusive;
-//  private boolean allowNegative;
+  private final boolean ignoreLeadingNegativeSign;
+  private final boolean ignoreLeadingPositiveSign;
 
   @SuppressWarnings("java:S107")
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
@@ -63,7 +78,9 @@ final class IntegralNumericTypeParserImpl {
       final long minValue,
       final long maxValue,
       final boolean minValueComparisonInclusive,
-      final boolean maxValueComparisonInclusive) {
+      final boolean maxValueComparisonInclusive,
+      final boolean ignoreLeadingNegativeSign,
+      final boolean ignoreLeadingPositiveSign) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
     this.defaultLocale = defaultLocale == null ? Locale.getDefault() : defaultLocale;
@@ -80,7 +97,8 @@ final class IntegralNumericTypeParserImpl {
     this.maxValue = maxValue;
     this.minValueComparisonInclusive = minValueComparisonInclusive;
     this.maxValueComparisonInclusive = maxValueComparisonInclusive;
-//    this.allowNegative = minValueComparisonInclusive ? minValue < 0 : minValue < -1;
+    this.ignoreLeadingNegativeSign = ignoreLeadingNegativeSign;
+    this.ignoreLeadingPositiveSign = ignoreLeadingPositiveSign;
   }
 
   public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
@@ -107,31 +125,36 @@ final class IntegralNumericTypeParserImpl {
   }
 
   public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue);
+    final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
     return parsedValue == null
         ? null
         : parsedValue.shortValue();
   }
 
   public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue);
+    final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
     return parsedValue == null
         ? null
         : parsedValue.intValue();
   }
 
   public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-    return parse(originalValue);
+    return parse(originalValue, defaultDecimalFormatSymbols);
   }
+
+  public Long parseToLong(final CharSequence source, final Locale locale) throws InvalidValueException {
+    return parse(source, DecimalFormatSymbols.getInstance(locale));
+  }
+
 
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
   @SuppressWarnings({"java:S3776"})
-  private Long parse(final CharSequence source) throws InvalidValueException {
+  private Long parse(final CharSequence source, final DecimalFormatSymbols decimalFormatSymbols) throws InvalidValueException {
     if (source == null || source.isEmpty()) {
       return null;
     }
 
-    final int groupingSeparator = defaultDecimalFormatSymbols.getGroupingSeparator();
+    final int groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
     final int altGroupingSeparator = groupingSeparator == '\u2019' ? '\'' : -1;
 
     final int length = source.length();
@@ -141,7 +164,7 @@ final class IntegralNumericTypeParserImpl {
     char ch;
     int codePoint;
     boolean intoDigits = false;
-    boolean negative = false;
+    Sign sign = null;
 
     while (sourceIndex < length) {
       ch = source.charAt(sourceIndex);
@@ -172,15 +195,16 @@ final class IntegralNumericTypeParserImpl {
         }
       }
 
-      // Check for negative looking for either hyphen-minus sign (U+002D) or math-minus sign (U+2212)
-      if ((codePoint == '-' || codePoint == '\u2212') && !intoDigits && !negative) {
-        negative = true;
+      // Check for negative
+      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == MATH_MINUS || codePoint == HEAVY_MINUS) && !intoDigits) {
+        sign = Sign.NEGATIVE;
         ++sourceIndex;
         continue;
       }
 
-      // Check for positive looking for plus sign (U+002B)
-      if (codePoint == '+' && !intoDigits && !negative) {
+      // Check for positive
+      if (sign == null && !ignoreLeadingPositiveSign && (codePoint == '+' || codePoint == HEAVY_PLUS) && !intoDigits) {
+        sign = Sign.POSITIVE;
         ++sourceIndex;
         continue;
       }
@@ -203,7 +227,7 @@ final class IntegralNumericTypeParserImpl {
         throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
       }
 
-      if (negative) {
+      if (sign == Sign.NEGATIVE) {
         newTargetValue = (targetValue * radix) - value;
         if (newTargetValue > targetValue) {
           // primitive overflow so number too small

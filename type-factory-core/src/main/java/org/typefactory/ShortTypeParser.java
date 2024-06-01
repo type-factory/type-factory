@@ -95,7 +95,7 @@ public interface ShortTypeParser {
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Short value.
      * @param minValue the minimum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMinValue()
      */
     ShortTypeParserBuilder minValueInclusive(short minValue);
@@ -103,7 +103,7 @@ public interface ShortTypeParser {
     /**
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMaxValue()
      */
     ShortTypeParserBuilder maxValueInclusive(short maxValue);
@@ -111,7 +111,7 @@ public interface ShortTypeParser {
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Short value.
      * @param minValue the minimum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMinValue()
      */
     ShortTypeParserBuilder minValueExclusive(short minValue);
@@ -119,7 +119,7 @@ public interface ShortTypeParser {
     /**
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #clearMaxValue()
      */
     ShortTypeParserBuilder maxValueExclusive(short maxValue);
@@ -167,7 +167,7 @@ public interface ShortTypeParser {
      * }</pre>
      *
      * @param ch the character you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -197,7 +197,7 @@ public interface ShortTypeParser {
      * }</pre>
      *
      * @param chars the characters you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -227,7 +227,7 @@ public interface ShortTypeParser {
      * }</pre>
      *
      * @param codePoint the code-point you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -257,7 +257,7 @@ public interface ShortTypeParser {
      * }</pre>
      *
      * @param codePoints the code-points you want the type-parser to ignore from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -292,7 +292,7 @@ public interface ShortTypeParser {
      *     .build();
      * }</pre>
      *
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -301,7 +301,7 @@ public interface ShortTypeParser {
      */
     ShortTypeParserBuilder ignoreAllDashesAndHyphens();
 
-    ShortTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingMinusSign();
+    ShortTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
   }
 
 }

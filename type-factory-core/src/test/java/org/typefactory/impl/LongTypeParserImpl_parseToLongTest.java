@@ -100,6 +100,7 @@ class LongTypeParserImpl_parseToLongTest {
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase10Numbers()
+        .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
         .ignoreAllWhitespace()
         .build();
 

@@ -1,5 +1,8 @@
 package org.typefactory.impl;
 
+import static org.typefactory.impl.IntegralNumericTypeParserImpl.MINUS_CODEPOINTS;
+import static org.typefactory.impl.IntegralNumericTypeParserImpl.PLUS_CODEPOINTS;
+
 import java.math.BigInteger;
 import java.util.Locale;
 import org.typefactory.Category;
@@ -46,6 +49,8 @@ final class IntegralNumericTypeParserBuilderImpl {
   private long maxValue;
   private boolean minValueComparisonInclusive;
   private boolean maxValueComparisonInclusive;
+  private boolean ignoreLeadingNegativeSign = false;
+  private boolean ignoreLeadingPositiveSign = false;
 
   IntegralNumericTypeParserBuilderImpl(final long defaultMinValue, final long defaultMaxValue) {
     this.minValue = (this.defaultMinValue = defaultMinValue);
@@ -63,7 +68,8 @@ final class IntegralNumericTypeParserBuilderImpl {
         numericRadixCodePointsMap, numericRadixCodePoints,
         defaultMinValue, defaultMaxValue,
         minValue, maxValue,
-        minValueComparisonInclusive, maxValueComparisonInclusive);
+        minValueComparisonInclusive, maxValueComparisonInclusive,
+        ignoreLeadingNegativeSign, ignoreLeadingPositiveSign);
   }
 
   /**
@@ -114,6 +120,14 @@ final class IntegralNumericTypeParserBuilderImpl {
       throw new TypeParserBuilderException(DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE);
     }
     numericRadixCodePointsMap.put(codepoint, numericValue);
+  }
+
+  public void targetTypeClass(final Class<?> targetTypeClass) {
+    this.targetTypeClass = targetTypeClass;
+  }
+
+  public void messageCode(final MessageCode messageCode) {
+    this.messageCode = messageCode;
   }
 
   public void defaultLocale(final Locale locale) {
@@ -180,15 +194,20 @@ final class IntegralNumericTypeParserBuilderImpl {
     this.caseSensitive = false;
   }
 
+  @SuppressWarnings({"java:S3012"}) // The suggested SonarCloud fixes all copy arrays of the same primitive type – this method does not.
+  private static int[] convertCharArrayToCodePointArray(final char[] characters) {
+    final int[] codePoints = new int[characters.length];
+    for (int i = 0; i < characters.length; ++i) {
+      codePoints[i] = characters[i];
+    }
+    return codePoints;
+  }
+
   public void allowCustomBaseNumbers(final char... charactersForCustomNumericBase) {
     if (charactersForCustomNumericBase == null) {
       allowCustomBaseNumbers((int[]) null);
     } else {
-      final int[] codePoints = new int[charactersForCustomNumericBase.length];
-      for (int i = 0; i < charactersForCustomNumericBase.length; ++i) {
-        codePoints[i] = charactersForCustomNumericBase[i];
-      }
-      allowCustomBaseNumbers(codePoints);
+      allowCustomBaseNumbers(convertCharArrayToCodePointArray(charactersForCustomNumericBase));
     }
   }
 
@@ -272,6 +291,26 @@ final class IntegralNumericTypeParserBuilderImpl {
     allowCustomBaseNumbers(DEFAULT_BASE_62_CODE_POINTS);
   }
 
+  public void allowLeadingNegativeSign() {
+    ignoreCharactersSubsetBuilder.excludeCodePoints(MINUS_CODEPOINTS);
+    ignoreLeadingNegativeSign = false;
+  }
+
+  public void ignoreLeadingNegativeSign() {
+    ignoreCharactersSubsetBuilder.includeCodePoints(MINUS_CODEPOINTS);
+    ignoreLeadingNegativeSign = true;
+  }
+
+  public void allowLeadingPositiveSign() {
+    ignoreCharactersSubsetBuilder.excludeCodePoints(PLUS_CODEPOINTS);
+    ignoreLeadingPositiveSign = false;
+  }
+
+  public void ignoreLeadingPositiveSign() {
+    ignoreCharactersSubsetBuilder.includeCodePoints(PLUS_CODEPOINTS);
+    ignoreLeadingPositiveSign = true;
+  }
+
   public void ignoreAllOccurrencesOfChar(final char ch) {
     ignoreCharactersSubsetBuilder.includeChar(ch);
   }
@@ -294,10 +333,16 @@ final class IntegralNumericTypeParserBuilderImpl {
 
   public void ignoreAllDashesAndHyphens() {
     ignoreCharactersSubsetBuilder.includeUnicodeCategory(Category.DASH_PUNCTUATION);
+    // including the minus sign (U+2212) and the heavy minus sign (U+2796) in the ignore set
+    ignoreCharactersSubsetBuilder.includeChars('\u2212', '\u2796');
+    ignoreLeadingNegativeSign();
   }
 
-  public void ignoreAllDashesAndHyphensExceptLeadingMinusSign() {
+  public void ignoreAllDashesAndHyphensExceptLeadingNegativeSign() {
     ignoreCharactersSubsetBuilder.includeUnicodeCategory(Category.DASH_PUNCTUATION);
+    // excluding the minus sign (U+2212) and the heavy minus sign (U+2796) from the ignore set
+    ignoreCharactersSubsetBuilder.excludeChars('\u2212', '\u2796');
+    allowLeadingNegativeSign();
   }
 
 }

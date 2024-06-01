@@ -81,28 +81,28 @@ public interface BigIntegerTypeParser extends TypeParser {
     /**
      * Set a minimum value that will be used to validate values that are parsed to a BigInteger value.
      * @param minValue the minimum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      */
     TypeParserBuilder minValueInclusive(BigInteger minValue);
 
     /**
      * Set a maximum value that will be used to validate values that are parsed to a BigInteger value.
      * @param maxValue the maximum inclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      */
     TypeParserBuilder maxValueInclusive(BigInteger maxValue);
 
     /**
      * Set a minimum value that will be used to validate values that are parsed to a BigInteger value.
      * @param minValue the minimum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      */
     TypeParserBuilder minValueExclusive(BigInteger minValue);
 
     /**
      * Set a maximum value that will be used to validate values that are parsed to a BigInteger value.
      * @param maxValue the maximum exclusive value allowed.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      */
     TypeParserBuilder maxValueExclusive(BigInteger maxValue);
   }

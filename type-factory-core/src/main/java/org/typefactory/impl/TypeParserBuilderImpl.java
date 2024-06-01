@@ -196,7 +196,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
    * I think it would generally be better to be explicit about what you will accept by calling the existing public methods.</p>
    *
    * @param charSequence the character sequence containing the code-points you wish to accept.
-   * @return this {@code TypeParserBuilder}.
+   * @return this builder.
    */
   private TypeParserBuilder acceptCodePointsInCharSequence(CharSequence charSequence) {
     if (charSequence == null) {
