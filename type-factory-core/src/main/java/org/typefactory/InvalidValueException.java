@@ -449,9 +449,6 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
         "invalid_value_must_be_less_than_or_equal_to",
         "Invalid value - must be less than or equal to {0}.");
-    ParserMessageCode INVALID_VALUE_MUST_BE_NUMERICALLY_COMPARABLE = Factory.parserMessageCode(
-        "invalid_value_must_be_numerically_comparable",
-        "Invalid value - must be numerically comparable, invalid character ''{0}''.");
   }
 
 }
