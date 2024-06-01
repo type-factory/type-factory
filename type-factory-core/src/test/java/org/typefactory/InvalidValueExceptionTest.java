@@ -46,7 +46,6 @@ class InvalidValueExceptionTest {
   @Mock
   Exception cause;
 
-
   @Test
   void constructor_constructsExceptionWithoutParserErrorArgs() {
 

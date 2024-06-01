@@ -1,5 +1,7 @@
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.HEAVY_MINUS;
+import static org.typefactory.impl.Constants.MATH_MINUS;
 import static org.typefactory.impl.Constants.MINUS_CODEPOINTS;
 import static org.typefactory.impl.Constants.PLUS_CODEPOINTS;
 
@@ -323,15 +325,15 @@ final class IntegralNumericTypeParserBuilderImpl {
 
   public void ignoreAllDashesAndHyphens() {
     ignoreCharactersSubsetBuilder.includeUnicodeCategory(Category.DASH_PUNCTUATION);
-    // including the minus sign (U+2212) and the heavy minus sign (U+2796) in the ignore set
-    ignoreCharactersSubsetBuilder.includeChars('\u2212', '\u2796');
+    // including the math minus sign (U+2212) and the heavy minus sign (U+2796) in the ignore set
+    ignoreCharactersSubsetBuilder.includeCodePoints(MATH_MINUS, HEAVY_MINUS);
     ignoreLeadingNegativeSign();
   }
 
   public void ignoreAllDashesAndHyphensExceptLeadingNegativeSign() {
     ignoreCharactersSubsetBuilder.includeUnicodeCategory(Category.DASH_PUNCTUATION);
     // excluding the minus sign (U+2212) and the heavy minus sign (U+2796) from the ignore set
-    ignoreCharactersSubsetBuilder.excludeChars('\u2212', '\u2796');
+    ignoreCharactersSubsetBuilder.excludeCodePoints(MATH_MINUS, HEAVY_MINUS);
     allowLeadingNegativeSign();
   }
 

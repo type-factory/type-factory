@@ -48,17 +48,61 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
        +ΑΒΓΔΕΖ0  |   180150000 | A number utilising all non-numeric radix digits
        7ΖΖΖΖΖΖΕ  |  2147483646 | Integer.MAX_VALUE - 1
        7ΖΖΖΖΖΖΖ  |  2147483647 | Integer.MAX_VALUE
-      +7ζζζζζζζ  |  2147483647 | Plus Integer.MAX_VALUE
+      +7ΖΖΖΖΖΖΖ  |  2147483647 | Plus Integer.MAX_VALUE
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowCustomBaseNumbersForRadix16UsingGreekLetters(
+  void parseToInteger_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
+        .caseSensitive()
+        .ignoreAllWhitespace()
+        .build();
+
+    final var actual = integerTypeParser.parseToInteger(value);
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+          VALUE  |    EXPECTED | COMMENTS
+      -80000000  | -2147483648 | Integer.MIN_VALUE
+      -7ΖΖζζζΖΖ  | -2147483647 | Integer.MIN_VALUE + 1
+       -ΑΒγδΕΖ0  |  -180150000 | A number utilising all non-numeric radix digits
+       \u221220  |         -32 | Math-minus thirty-two
+            -1Ζ  |         -31 | Hyphen-minus thirty-one
+            -10  |         -16 | Hyphen-minus sixteen
+             -Ζ  |         -15 | Hyphen-minus fifteen
+             -9  |          -9 | Hyphen-minus nine
+        \u22121  |          -1 | Math-minus One
+              0  |           0 | Zero
+              1  |           1 | One
+             +1  |           1 | Plus One
+              9  |           9 | Nine
+              Ζ  |          15 | Fifteen
+             10  |          16 | Sixteen
+            +10  |          16 | Plus sixteen
+             1Ζ  |          31 | Thirty-one
+          '  1Ζ' |          31 | Whitespace thirty-one
+             20  |          32 | Thirty-two
+       +αβΓΔΕΖ0  |   180150000 | A number utilising all non-numeric radix digits
+       7ΖΖΖΖΖΖΕ  |  2147483646 | Integer.MAX_VALUE - 1
+       7ΖΖζζζΖΖ  |  2147483647 | Integer.MAX_VALUE
+      +7ζζΖΖΖζζ  |  2147483647 | Plus Integer.MAX_VALUE
+      """,
+      delimiter = '|',
+      useHeadersInDisplayName = true)
+  void parseToInteger_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
+      final String value, final int expected, final String ignoredComments) {
+
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .minValueInclusive(Integer.MIN_VALUE)
+        .maxValueInclusive(Integer.MAX_VALUE)
+        .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','β','Γ','δ','Ε','ζ')
         .caseInsensitive()
         .ignoreAllWhitespace()
         .build();

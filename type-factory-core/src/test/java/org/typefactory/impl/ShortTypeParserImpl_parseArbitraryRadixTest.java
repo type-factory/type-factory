@@ -48,17 +48,61 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
           +ΓΔΖ  |     3295 | A number utilising non-numeric radix digits
           7ΖΖΕ  |    32766 | Short.MAX_VALUE - 1
           7ΖΖΖ  |    32767 | Short.MAX_VALUE
-         +7ζζζ  |    32767 | Plus Short.MAX_VALUE
+         +7ΖΖΖ  |    32767 | Plus Short.MAX_VALUE
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowCustomBaseNumbersForRadix16UsingGreekLetters(
+  void parseToShort_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
         .minValueInclusive(Short.MIN_VALUE)
         .maxValueInclusive(Short.MAX_VALUE)
         .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
+        .caseSensitive()
+        .ignoreAllWhitespace()
+        .build();
+
+    final var actual = shortTypeParser.parseToShort(value);
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+         VALUE  | EXPECTED | COMMENTS
+         -8000  |   -32768 | Short.MIN_VALUE
+         -7ΖζΖ  |   -32767 | Short.MIN_VALUE + 1
+          -γΔΖ  |    -3295 | A number utilising non-numeric radix digits
+      \u221220  |      -32 | Math-minus thirty-two
+           -1Ζ  |      -31 | Hyphen-minus thirty-one
+           -10  |      -16 | Hyphen-minus sixteen
+            -Ζ  |      -15 | Hyphen-minus fifteen
+            -9  |       -9 | Hyphen-minus nine
+       \u22121  |       -1 | Math-minus One
+             0  |        0 | Zero
+             1  |        1 | One
+            +1  |        1 | Plus One
+             9  |        9 | Nine
+             Ζ  |       15 | Fifteen
+            10  |       16 | Sixteen
+           +10  |       16 | Plus sixteen
+            1Ζ  |       31 | Thirty-one
+         '  1Ζ' |       31 | Whitespace thirty-one
+            20  |       32 | Thirty-two
+          +ΓδΖ  |     3295 | A number utilising non-numeric radix digits
+          7ΖΖΕ  |    32766 | Short.MAX_VALUE - 1
+          7ΖζΖ  |    32767 | Short.MAX_VALUE
+         +7ζΖζ  |    32767 | Plus Short.MAX_VALUE
+      """,
+      delimiter = '|',
+      useHeadersInDisplayName = true)
+  void parseToShort_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
+      final String value, final short expected, final String ignoredComments) {
+
+    final var shortTypeParser = ShortTypeParser.builder()
+        .minValueInclusive(Short.MIN_VALUE)
+        .maxValueInclusive(Short.MAX_VALUE)
+        .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','β','Γ','δ','Ε','ζ')
         .caseInsensitive()
         .ignoreAllWhitespace()
         .build();
