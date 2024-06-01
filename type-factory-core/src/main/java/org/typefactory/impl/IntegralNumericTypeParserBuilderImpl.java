@@ -1,7 +1,7 @@
 package org.typefactory.impl;
 
-import static org.typefactory.impl.IntegralNumericTypeParserImpl.MINUS_CODEPOINTS;
-import static org.typefactory.impl.IntegralNumericTypeParserImpl.PLUS_CODEPOINTS;
+import static org.typefactory.impl.Constants.MINUS_CODEPOINTS;
+import static org.typefactory.impl.Constants.PLUS_CODEPOINTS;
 
 import java.math.BigInteger;
 import java.util.Locale;

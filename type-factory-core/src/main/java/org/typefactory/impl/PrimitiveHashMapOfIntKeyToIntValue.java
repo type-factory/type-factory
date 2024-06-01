@@ -15,6 +15,8 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+
 import java.util.Arrays;
 
 /**
@@ -182,4 +184,27 @@ final class PrimitiveHashMapOfIntKeyToIntValue {
     }
     this.hashTable = newHashTable;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder s = new StringBuilder();
+    int value;
+    for (int key : keySet()) {
+      value = get(key);
+      s.append("0x")
+          .append(Integer.toString(key, 16))
+          .append(" [")
+          .appendCodePoint(key)
+          .append("] ⟶ ");
+      if (value > Integer.MIN_VALUE) {
+        s.appendCodePoint(value);
+      }
+      s.append(LINE_SEPARATOR);
+    }
+    if (s.length() >= LINE_SEPARATOR.length()) {
+      s.setLength(s.length() - LINE_SEPARATOR.length());
+    }
+    return s.toString();
+  }
+
 }

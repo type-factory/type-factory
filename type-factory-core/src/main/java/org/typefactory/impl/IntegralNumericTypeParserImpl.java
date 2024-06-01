@@ -29,15 +29,6 @@ import org.typefactory.Subset;
 
 final class IntegralNumericTypeParserImpl {
 
-  static final int HYPHEN_MINUS = '-';
-  static final int MATH_MINUS = '\u2212';
-  static final int HEAVY_MINUS = '\u2796';
-  static final int PLUS = '+';
-  static final int HEAVY_PLUS = '\u2795';
-
-  static final int [] MINUS_CODEPOINTS = new int [] {HYPHEN_MINUS, MATH_MINUS, HEAVY_MINUS};
-  static final int [] PLUS_CODEPOINTS = new int [] {PLUS, HEAVY_PLUS};
-
   private enum Sign {
     NEGATIVE,
     POSITIVE
@@ -196,14 +187,14 @@ final class IntegralNumericTypeParserImpl {
       }
 
       // Check for negative
-      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == MATH_MINUS || codePoint == HEAVY_MINUS) && !intoDigits) {
+      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == Constants.MATH_MINUS || codePoint == Constants.HEAVY_MINUS) && !intoDigits) {
         sign = Sign.NEGATIVE;
         ++sourceIndex;
         continue;
       }
 
       // Check for positive
-      if (sign == null && !ignoreLeadingPositiveSign && (codePoint == '+' || codePoint == HEAVY_PLUS) && !intoDigits) {
+      if (sign == null && !ignoreLeadingPositiveSign && (codePoint == '+' || codePoint == Constants.HEAVY_PLUS) && !intoDigits) {
         sign = Sign.POSITIVE;
         ++sourceIndex;
         continue;

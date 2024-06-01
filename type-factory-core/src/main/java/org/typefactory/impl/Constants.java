@@ -31,4 +31,13 @@ final class Constants {
 
   static final String LINE_SEPARATOR = System.lineSeparator();
 
+  static final int HYPHEN_MINUS = '-';
+  static final int MATH_MINUS = '\u2212';
+  static final int HEAVY_MINUS = '\u2796';
+  static final int [] MINUS_CODEPOINTS = new int [] {HYPHEN_MINUS, MATH_MINUS, HEAVY_MINUS};
+
+  static final int PLUS = '+';
+  static final int HEAVY_PLUS = '\u2795';
+  static final int [] PLUS_CODEPOINTS = new int [] {PLUS, HEAVY_PLUS};
+
 }
