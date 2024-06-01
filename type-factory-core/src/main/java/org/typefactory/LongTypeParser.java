@@ -162,30 +162,11 @@ public interface LongTypeParser {
     LongTypeParserBuilder defaultLocale(Locale locale);
 
     /**
-     * Will clear any previously set minimum value.
-     *
-     * @return this builder
-     * @see #minValueInclusive(long)
-     * @see #minValueExclusive(long)
-     */
-    LongTypeParserBuilder clearMinValue();
-
-    /**
-     * Will clear any previously set maximum value.
-     *
-     * @return this builder
-     * @see #maxValueInclusive(long)
-     * @see #maxValueExclusive(long)
-     */
-    LongTypeParserBuilder clearMaxValue();
-
-    /**
      * Set a minimum value that will be used to validate values that are parsed to a Long value. Calling this will replace any previously set
      * inclusive or exclusive minimum value.
      *
      * @param minValue the minimum inclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      * @see #minValueExclusive(long)
      */
     LongTypeParserBuilder minValueInclusive(long minValue);
@@ -196,7 +177,6 @@ public interface LongTypeParser {
      *
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      * @see #maxValueExclusive(long)
      */
     LongTypeParserBuilder maxValueInclusive(long maxValue);
@@ -207,7 +187,6 @@ public interface LongTypeParser {
      *
      * @param minValue the minimum exclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      * @see #minValueInclusive(long)
      */
     LongTypeParserBuilder minValueExclusive(long minValue);
@@ -218,7 +197,6 @@ public interface LongTypeParser {
      *
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      * @see #maxValueInclusive(long)
      */
     LongTypeParserBuilder maxValueExclusive(long maxValue);
@@ -450,8 +428,8 @@ public interface LongTypeParser {
      * @param codePoints the code-points you want the type-parser to ignore when parsing the value
      * @return this builder.
      * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
      * @see #ignoreAllOccurrencesOfCodePoint(int)
-     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     LongTypeParserBuilder ignoreAllOccurrencesOfCodePoints(int... codePoints);
 

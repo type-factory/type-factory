@@ -346,5 +346,4 @@ class LongTypeParserImpl_parseToLongTest {
         .isThrownBy(() -> longTypeParser.parseToLong(value))
         .withMessageStartingWith(expectedMessage);
   }
-
 }

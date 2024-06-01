@@ -19,7 +19,6 @@ import static org.typefactory.impl.Constants.EMPTY_STRING;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.Category;

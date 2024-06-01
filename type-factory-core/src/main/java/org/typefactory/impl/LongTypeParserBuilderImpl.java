@@ -39,18 +39,6 @@ class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   @Override
-  public LongTypeParserBuilder clearMinValue() {
-    wrapperBuilder.clearMinValue();
-    return this;
-  }
-
-  @Override
-  public LongTypeParserBuilder clearMaxValue() {
-    wrapperBuilder.clearMaxValue();
-    return this;
-  }
-
-  @Override
   public LongTypeParserBuilder minValueInclusive(long minValue) {
     wrapperBuilder.minValueInclusive(minValue);
     return this;

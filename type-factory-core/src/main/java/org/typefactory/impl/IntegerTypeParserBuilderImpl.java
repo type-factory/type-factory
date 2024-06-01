@@ -19,18 +19,6 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
-  public IntegerTypeParserBuilder clearMinValue() {
-    wrapperBuilder.clearMinValue();
-    return this;
-  }
-
-  @Override
-  public IntegerTypeParserBuilder clearMaxValue() {
-    wrapperBuilder.clearMaxValue();
-    return this;
-  }
-
-  @Override
   public IntegerTypeParserBuilder minValueInclusive(int minValue) {
     wrapperBuilder.minValueInclusive(minValue);
     return this;

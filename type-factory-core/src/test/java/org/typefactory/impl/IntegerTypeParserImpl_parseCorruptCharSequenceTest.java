@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.typefactory.InvalidValueException;
 import org.typefactory.IntegerTypeParser;
+import org.typefactory.InvalidValueException;
 
 class IntegerTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParserTest {
 

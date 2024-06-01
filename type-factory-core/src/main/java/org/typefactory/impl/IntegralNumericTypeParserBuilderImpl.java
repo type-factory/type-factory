@@ -134,14 +134,6 @@ final class IntegralNumericTypeParserBuilderImpl {
     defaultLocale = locale;
   }
 
-  public void clearMinValue() {
-    minValue = defaultMinValue;
-  }
-
-  public void clearMaxValue() {
-    maxValue = defaultMaxValue;
-  }
-
   private void minValue(final long minValue, final boolean inclusive) {
     this.minValue = minValue;
     this.minValueComparisonInclusive = inclusive;

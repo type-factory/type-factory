@@ -16,16 +16,10 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 
-import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.ShortType;
-import org.typefactory.TypeParser;
 import org.typefactory.testutils.CodePointSequenceConverter;
 
 class TypeParserImpl_Test {

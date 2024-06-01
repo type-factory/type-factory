@@ -26,18 +26,6 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
   }
 
   @Override
-  public ShortTypeParserBuilder clearMinValue() {
-    wrapperBuilder.clearMinValue();
-    return this;
-  }
-
-  @Override
-  public ShortTypeParserBuilder clearMaxValue() {
-    wrapperBuilder.clearMaxValue();
-    return this;
-  }
-
-  @Override
   public ShortTypeParserBuilder minValueInclusive(short minValue) {
     wrapperBuilder.minValueInclusive(minValue);
     return this;

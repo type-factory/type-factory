@@ -88,15 +88,10 @@ public interface ShortTypeParser {
 
     ShortTypeParserBuilder defaultLocale(Locale locale);
 
-    ShortTypeParserBuilder clearMinValue();
-
-    ShortTypeParserBuilder clearMaxValue();
-
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Short value.
      * @param minValue the minimum inclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      */
     ShortTypeParserBuilder minValueInclusive(short minValue);
 
@@ -104,7 +99,6 @@ public interface ShortTypeParser {
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      */
     ShortTypeParserBuilder maxValueInclusive(short maxValue);
 
@@ -112,7 +106,6 @@ public interface ShortTypeParser {
      * Set a minimum value that will be used to validate values that are parsed to a Short value.
      * @param minValue the minimum exclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      */
     ShortTypeParserBuilder minValueExclusive(short minValue);
 
@@ -120,7 +113,6 @@ public interface ShortTypeParser {
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      */
     ShortTypeParserBuilder maxValueExclusive(short maxValue);
 
@@ -168,9 +160,9 @@ public interface ShortTypeParser {
      *
      * @param ch the character you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char...)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     ShortTypeParserBuilder ignoreAllOccurrencesOfChar(char ch);
 
@@ -198,9 +190,9 @@ public interface ShortTypeParser {
      *
      * @param chars the characters you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     ShortTypeParserBuilder ignoreAllOccurrencesOfChars(char... chars);
 
@@ -228,9 +220,9 @@ public interface ShortTypeParser {
      *
      * @param codePoint the code-point you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char...)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     ShortTypeParserBuilder ignoreAllOccurrencesOfCodePoint(int codePoint);
 
@@ -258,9 +250,9 @@ public interface ShortTypeParser {
      *
      * @param codePoints the code-points you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
      */
     ShortTypeParserBuilder ignoreAllOccurrencesOfCodePoints(int... codePoints);
 
@@ -293,14 +285,44 @@ public interface ShortTypeParser {
      * }</pre>
      *
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
      */
     ShortTypeParserBuilder ignoreAllDashesAndHyphens();
 
+    /**
+     * <p>This will configure the type-parser to ignore all occurrences, excepting a single leading negative sign, of any dashes and hyphens
+     * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a> from the parsed
+     * value.</p>
+     *
+     * <p>For more information about categories refer to the <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode
+     * General Character Categories</a> documentation.</p>
+     *
+     * <pre>{@code
+     * TypeParser.builder()
+     *   .messageCode("must be an 8-character product code")
+     *   .minValueInclusive(1000_0000L)
+     *   .maxValueInclusive(9999_9999L)
+     *   .acceptDigitsForBase10()
+     *   .ignoreAllDashesAndHyphens()
+     *   .removeAllWhitespace()
+     *   .build();
+     * }</pre>
+     *
+     * @return this builder.
+     * @see #ignoreAllDashesAndHyphens()
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
+     * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
+     * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
+     */
     ShortTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
   }
 

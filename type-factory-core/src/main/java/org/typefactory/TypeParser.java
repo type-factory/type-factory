@@ -15,11 +15,7 @@
 */
 package org.typefactory;
 
-import java.math.BigInteger;
-import java.util.Comparator;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.impl.Factory;

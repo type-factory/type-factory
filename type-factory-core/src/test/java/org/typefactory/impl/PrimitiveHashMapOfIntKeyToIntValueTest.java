@@ -90,7 +90,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
     actual.put(key, value);
 
-    assertThat(actual.get(key)).isNotNull().isEqualTo(value);
+    assertThat(actual.get(key)).isEqualTo(value);
 
     for (int i = -1001; i <= 1001; ++i) {
       if (i != key) {
@@ -108,11 +108,11 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
 
     actual.put(key, expected1);
     assertThat(actual.keySet()).containsExactly(key);
-    assertThat(actual.get(key)).isNotNull().isEqualTo(expected1);
+    assertThat(actual.get(key)).isEqualTo(expected1);
 
     actual.put(key, expected2);
     assertThat(actual.keySet()).containsExactly(key);
-    assertThat(actual.get(key)).isNotNull().isEqualTo(expected2);
+    assertThat(actual.get(key)).isEqualTo(expected2);
 
     actual.put(key, 0);
     assertThat(actual.keySet()).containsExactly(key);
@@ -160,9 +160,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
 
     for (Entry<Integer, Integer> entry : testSource.map.entrySet()) {
       assertThat(actual.contains(entry.getKey())).isTrue();
-      assertThat(actual.get(entry.getKey()))
-          .isNotNull()
-          .isEqualTo(entry.getValue());
+      assertThat(actual.get(entry.getKey())).isEqualTo(entry.getValue());
     }
   }
 

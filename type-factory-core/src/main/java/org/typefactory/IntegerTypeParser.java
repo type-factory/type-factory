@@ -87,15 +87,10 @@ public interface IntegerTypeParser {
 
     IntegerTypeParserBuilder defaultLocale(Locale locale);
 
-    IntegerTypeParserBuilder clearMinValue();
-
-    IntegerTypeParserBuilder clearMaxValue();
-
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Integer value.
      * @param minValue the minimum inclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      */
     IntegerTypeParserBuilder minValueInclusive(int minValue);
 
@@ -103,7 +98,6 @@ public interface IntegerTypeParser {
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      */
     IntegerTypeParserBuilder maxValueInclusive(int maxValue);
 
@@ -111,7 +105,6 @@ public interface IntegerTypeParser {
      * Set a minimum value that will be used to validate values that are parsed to a Integer value.
      * @param minValue the minimum exclusive value allowed.
      * @return this builder
-     * @see #clearMinValue()
      */
     IntegerTypeParserBuilder minValueExclusive(int minValue);
 
@@ -119,7 +112,6 @@ public interface IntegerTypeParser {
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
-     * @see #clearMaxValue()
      */
     IntegerTypeParserBuilder maxValueExclusive(int maxValue);
 
@@ -167,9 +159,9 @@ public interface IntegerTypeParser {
      *
      * @param ch the character you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char...)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     IntegerTypeParserBuilder ignoreAllOccurrencesOfChar(char ch);
 
@@ -197,9 +189,9 @@ public interface IntegerTypeParser {
      *
      * @param chars the characters you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     IntegerTypeParserBuilder ignoreAllOccurrencesOfChars(char... chars);
 
@@ -227,9 +219,9 @@ public interface IntegerTypeParser {
      *
      * @param codePoint the code-point you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char...)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      */
     IntegerTypeParserBuilder ignoreAllOccurrencesOfCodePoint(int codePoint);
 
@@ -257,9 +249,9 @@ public interface IntegerTypeParser {
      *
      * @param codePoints the code-points you want the type-parser to ignore from the parsed value
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
      */
     IntegerTypeParserBuilder ignoreAllOccurrencesOfCodePoints(int... codePoints);
 
@@ -292,9 +284,11 @@ public interface IntegerTypeParser {
      * }</pre>
      *
      * @return this builder.
-     * @see #removeAllChars(char)
-     * @see #removeAllCodePoints(int)
-     * @see #removeAllCodePoints(int...)
+     * @see #ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
+     * @see #ignoreAllOccurrencesOfChar(char)
+     * @see #ignoreAllOccurrencesOfChars(char...)
+     * @see #ignoreAllOccurrencesOfCodePoint(int)
+     * @see #ignoreAllOccurrencesOfCodePoints(int...)
      * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
      */
