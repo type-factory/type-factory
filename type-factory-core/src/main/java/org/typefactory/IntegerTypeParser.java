@@ -85,6 +85,35 @@ public interface IntegerTypeParser {
 
     IntegerTypeParser build();
 
+    IntegerTypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
+
+    /**
+     * <p>Set a {@link MessageCode} containing a message code and default message to be returned in the {@link InvalidValueException} if the
+     * type-parser cannot parse a provided value.</p>
+     *
+     * <p>Error messages can be localized by providing one or more Java resource bundles with a base name
+     * of {@code 'org.typefactory.Messages'}. The resource bundles can be either:</p>
+     * <ul>
+     *   <li>Java properties files.</li>
+     *   <li>Java classes that implement {@link java.util.ResourceBundle}.</li>
+     * </ul>
+     *
+     * <p>For example, the following are valid examples of localization properties files and classes for providing localized error messages:</p>
+     * <pre>
+     *   org/typefactory/Messages.properties
+     *   org/typefactory/Messages_en.properties
+     *   org/typefactory/Messages_en_US.properties
+     *   class org.typefactory.Messages_fr extends java.util.ListResourceBundle
+     *   class org.typefactory.Messages_fr_CA extends java.util.ListResourceBundle
+     * </pre>
+     *
+     * @param messageCode a {@link MessageCode} containing a message code and default message to be.
+     * @return this builder
+     * @see java.util.ListResourceBundle
+     * @see java.util.ResourceBundle
+     */
+    IntegerTypeParserBuilder messageCode(final MessageCode messageCode);
+
     IntegerTypeParserBuilder defaultLocale(Locale locale);
 
     /**

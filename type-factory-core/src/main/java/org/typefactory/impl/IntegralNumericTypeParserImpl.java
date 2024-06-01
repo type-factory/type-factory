@@ -243,6 +243,10 @@ final class IntegralNumericTypeParserImpl {
       ++sourceIndex;
     }
 
+    if (!intoDigits) {
+      return null;
+    }
+
     if (minValueComparisonInclusive) {
       if (targetValue < minValue) {
         throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);

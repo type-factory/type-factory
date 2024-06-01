@@ -2,6 +2,7 @@ package org.typefactory.impl;
 
 import java.util.Locale;
 import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
+import org.typefactory.MessageCode;
 
 class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
@@ -10,6 +11,18 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   public IntegerTypeParserImpl build() {
     return new IntegerTypeParserImpl(wrapperBuilder.build());
+  }
+
+  @Override
+  public IntegerTypeParserBuilder targetTypeClass(Class<?> targetTypeClass) {
+    wrapperBuilder.targetTypeClass(targetTypeClass);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder messageCode(MessageCode messageCode) {
+    wrapperBuilder.messageCode(messageCode);
+    return this;
   }
 
   @Override

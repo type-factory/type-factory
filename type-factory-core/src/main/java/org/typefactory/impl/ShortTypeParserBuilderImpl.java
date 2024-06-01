@@ -1,6 +1,7 @@
 package org.typefactory.impl;
 
 import java.util.Locale;
+import org.typefactory.MessageCode;
 import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
 
 class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
@@ -17,6 +18,18 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   public ShortTypeParserImpl build() {
     return new ShortTypeParserImpl(wrapperBuilder.build());
+  }
+
+  @Override
+  public ShortTypeParserBuilder targetTypeClass(Class<?> targetTypeClass) {
+    wrapperBuilder.targetTypeClass(targetTypeClass);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder messageCode(MessageCode messageCode) {
+    wrapperBuilder.messageCode(messageCode);
+    return this;
   }
 
   @Override

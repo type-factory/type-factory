@@ -3,7 +3,6 @@ package org.typefactory.impl;
 import static org.typefactory.impl.Constants.MINUS_CODEPOINTS;
 import static org.typefactory.impl.Constants.PLUS_CODEPOINTS;
 
-import java.math.BigInteger;
 import java.util.Locale;
 import org.typefactory.Category;
 import org.typefactory.MessageCode;
@@ -13,8 +12,6 @@ import org.typefactory.TypeParserBuilderException;
 
 final class IntegralNumericTypeParserBuilderImpl {
 
-  private static final BigInteger MIN_INT_128 = new BigInteger("-170141183460469231731687303715884105728", 10);
-  private static final BigInteger MAX_INT_128 = new BigInteger("170141183460469231731687303715884105727", 10);
   private static final int[] DEFAULT_BASE_8_CODE_POINTS = new int[]{
       '0', '1', '2', '3', '4', '5', '6', '7'};
   private static final int[] DEFAULT_BASE_10_CODE_POINTS = new int[]{
@@ -40,7 +37,7 @@ final class IntegralNumericTypeParserBuilderImpl {
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
   private boolean caseSensitive = true;
-  private WhiteSpace whiteSpace = WhiteSpace.REMOVE_WHITESPACE;
+  private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints;
   private final long defaultMinValue;

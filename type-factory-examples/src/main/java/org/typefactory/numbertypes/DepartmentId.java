@@ -15,22 +15,26 @@
 */
 package org.typefactory.numbertypes;
 
+import java.io.Serial;
 import org.typefactory.MessageCode;
 import org.typefactory.ShortType;
-import org.typefactory.TypeParser;
+import org.typefactory.ShortTypeParser;
 
 public final class DepartmentId extends ShortType {
+
+  @Serial
+  private static final long serialVersionUID = -7190016498116228650L;
 
   private static final MessageCode ERROR_MESSAGE =
       MessageCode.of("invalid.department.id", "must be a 4-digit department-id");
 
-  private static final TypeParser TYPE_PARSER =
-      TypeParser.builder()
+  private static final ShortTypeParser TYPE_PARSER =
+      ShortTypeParser.builder()
           .messageCode(ERROR_MESSAGE)
-          .removeAllWhitespace()
-          .convertEmptyToNull()
-          .acceptDigits0to9()
-          .fixedSize(4)
+          .minValueInclusive((short)1000)
+          .maxValueInclusive((short)9999)
+          .allowBase10Numbers()
+          .ignoreAllWhitespace()
           .build();
 
   private DepartmentId(final Short value) {

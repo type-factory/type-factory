@@ -17,13 +17,41 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_parseToLongTest {
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {" ", "  ", "   "})
+  void of_shouldReturnNull(final String value) {
+    final var longTypeParser = LongTypeParser.builder()
+        .allowBase10Numbers()
+        .ignoreAllWhitespace()
+        .build();
+
+    final var actual = longTypeParser.parseToLong(value);
+    assertThatObject(actual).isNull();
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {" ", "  ", "   "})
+  void of_whitespaceShouldThrowException(final String value) {
+    final var longTypeParser = LongTypeParser.builder()
+        .allowBase10Numbers()
+        .build();
+
+    assertThatExceptionOfType(InvalidValueException.class)
+        .isThrownBy(() -> longTypeParser.parseToLong(value))
+        .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """

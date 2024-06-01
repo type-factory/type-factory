@@ -17,13 +17,41 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
 
 class IntegerTypeParserImpl_parseToIntegerTest {
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {" ", "  ", "   "})
+  void of_shouldReturnNull(final String value) {
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .allowBase10Numbers()
+        .ignoreAllWhitespace()
+        .build();
+
+    final var actual = integerTypeParser.parseToInteger(value);
+    assertThatObject(actual).isNull();
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {" ", "  ", "   "})
+  void of_whitespaceShouldThrowException(final String value) {
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .allowBase10Numbers()
+        .build();
+
+    assertThatExceptionOfType(InvalidValueException.class)
+        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
+        .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
