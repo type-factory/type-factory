@@ -163,4 +163,28 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
     wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
     return this;
   }
+
+  @Override
+  public ShortTypeParserBuilder allowLeadingNegativeSign() {
+    wrapperBuilder.allowLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder ignoreLeadingNegativeSign() {
+    wrapperBuilder.ignoreLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder allowLeadingPositiveSign() {
+    wrapperBuilder.allowLeadingPositiveSign();
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder ignoreLeadingPositiveSign() {
+    wrapperBuilder.ignoreLeadingPositiveSign();
+    return this;
+  }
 }

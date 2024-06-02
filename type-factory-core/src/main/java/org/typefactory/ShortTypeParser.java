@@ -353,6 +353,14 @@ public interface ShortTypeParser {
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
      */
     ShortTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
+
+    ShortTypeParserBuilder allowLeadingNegativeSign();
+
+    ShortTypeParserBuilder ignoreLeadingNegativeSign();
+
+    ShortTypeParserBuilder allowLeadingPositiveSign();
+
+    ShortTypeParserBuilder ignoreLeadingPositiveSign();
   }
 
 }

@@ -324,6 +324,14 @@ public interface IntegerTypeParser {
     IntegerTypeParserBuilder ignoreAllDashesAndHyphens();
 
     IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
+
+    IntegerTypeParserBuilder allowLeadingNegativeSign();
+
+    IntegerTypeParserBuilder ignoreLeadingNegativeSign();
+
+    IntegerTypeParserBuilder allowLeadingPositiveSign();
+
+    IntegerTypeParserBuilder ignoreLeadingPositiveSign();
   }
 
 }

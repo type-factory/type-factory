@@ -156,4 +156,27 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
     wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
     return this;
   }
+
+  @Override
+  public IntegerTypeParserBuilder allowLeadingNegativeSign() {
+    wrapperBuilder.allowLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder ignoreLeadingNegativeSign() {
+    wrapperBuilder.ignoreLeadingNegativeSign();
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder allowLeadingPositiveSign() {
+    wrapperBuilder.allowLeadingPositiveSign();
+    return this;
+  }
+  @Override
+  public IntegerTypeParserBuilder ignoreLeadingPositiveSign() {
+    wrapperBuilder.ignoreLeadingPositiveSign();
+    return this;
+  }
 }
