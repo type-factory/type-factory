@@ -85,7 +85,7 @@ class ShortTypeParserImpl_parseToShortTypeTest {
         .build();
 
     static SomeShortType of(final String value) {
-      return new SomeShortType(TYPE_PARSER.parseToShort(value));
+      return TYPE_PARSER.parseToShortType(value, SomeShortType::new);
     }
   }
 }

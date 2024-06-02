@@ -85,7 +85,7 @@ class IntegerTypeParserImpl_parseToIntegerTypeTest {
         .build();
 
     static SomeIntegerType of(final String value) {
-      return new SomeIntegerType(TYPE_PARSER.parseToInteger(value));
+      return TYPE_PARSER.parseToIntegerType(value, SomeIntegerType::new);
     }
   }
 }

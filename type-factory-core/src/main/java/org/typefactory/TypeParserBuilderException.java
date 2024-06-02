@@ -218,15 +218,19 @@ public class TypeParserBuilderException extends RuntimeException  {
   /**
    * <p>Message codes are used internally by the {@link TypeParserBuilder}.</p>
    */
-  public interface MessageCodes {
+  public static final class MessageCodes {
 
-    MessageCode NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE = Factory.messageCode(
+    private MessageCodes() {
+      // don't instantiate me
+    }
+
+    public static final MessageCode NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE = Factory.messageCode(
         "no_radix_configured",
         "No numeric-base has been configured for the numeric type parser.");
 
-    MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
+    public static final MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
         "duplicate_custom_radix_character",
-        "Custom numeric-base character-set must not contain duplicates – check both your base character-set and case-sensitivity.");
+        "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity.");
   }
 
 }
