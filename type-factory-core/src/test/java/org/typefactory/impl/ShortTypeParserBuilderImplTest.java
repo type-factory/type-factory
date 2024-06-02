@@ -29,10 +29,11 @@ class ShortTypeParserBuilderImplTest {
       @ConvertWith(CodePointArrayConverter.class) final int [] customBaseCodePoints,
       final String expectedMessage) {
 
+    final var builder = ShortTypeParser.builder()
+        .allowCustomBaseNumbers(customBaseCodePoints);
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> ShortTypeParser.builder()
-                .allowCustomBaseNumbers(customBaseCodePoints)
-                .build())
+        .isThrownBy(builder::build)
         .withMessageStartingWith(expectedMessage);
   }
 

@@ -130,7 +130,8 @@ final class LongTypeParserImpl implements LongTypeParser {
   // Suppress SonarCloud issues:
   // - "java:S3776 Cognitive Complexity of methods should not be too high"
   // - "java:S6541 Methods should not perform too many tasks (aka Brain method)"
-  @SuppressWarnings({"java:S3776", "java:S6541"})
+  // - "java:S135  Loops should not contain more than a single "break" or "continue" statement"
+  @SuppressWarnings({"java:S3776", "java:S6541", "java:S135"})
   private Long parse(final CharSequence source, final DecimalFormatSymbols decimalFormatSymbols) throws InvalidValueException {
     if (source == null || source.isEmpty()) {
       return null;

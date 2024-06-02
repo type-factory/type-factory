@@ -29,10 +29,11 @@ class IntegerTypeParserBuilderImplTest {
       @ConvertWith(CodePointArrayConverter.class) final int [] customBaseCodePoints,
       final String expectedMessage) {
 
+    final var builder = IntegerTypeParser.builder()
+        .allowCustomBaseNumbers(customBaseCodePoints);
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder()
-                .allowCustomBaseNumbers(customBaseCodePoints)
-                .build())
+        .isThrownBy(builder::build)
         .withMessageStartingWith(expectedMessage);
   }
 

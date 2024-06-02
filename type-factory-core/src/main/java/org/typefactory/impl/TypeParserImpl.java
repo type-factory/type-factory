@@ -84,59 +84,6 @@ final class TypeParserImpl implements TypeParser {
         : constructorOrFactoryMethod.apply(parseToString(value));
   }
 
-//  @Override
-//  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
-//      throws InvalidValueException {
-//    final Short parsedValue = parseToShort(value);
-//    return parsedValue == null
-//        ? null
-//        : constructorOrFactoryMethod.apply(parsedValue);
-//  }
-//
-//  @Override
-//  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
-//      throws InvalidValueException {
-//    final Integer parsedValue = parseToInteger(value);
-//    return parsedValue == null
-//        ? null
-//        : constructorOrFactoryMethod.apply(parsedValue);
-//  }
-//
-//  @Override
-//  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
-//    final Long parsedValue = parseToLong(value);
-//    return parsedValue == null
-//        ? null
-//        : constructorOrFactoryMethod.apply(parsedValue);
-//  }
-//
-//  @Override
-//  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-//    final String parsedValue = parseToString(originalValue);
-//    if (parsedValue == null || parsedValue.isBlank()) {
-//      return null;
-//    }
-//    return Short.valueOf(parsedValue);
-//  }
-//
-//  @Override
-//  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-//    final String parsedValue = parseToString(originalValue);
-//    if (parsedValue == null || parsedValue.isBlank()) {
-//      return null;
-//    }
-//    return Integer.valueOf(parsedValue);
-//  }
-//
-//  @Override
-//  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-//    final String parsedValue = parseToString(originalValue);
-//    if (parsedValue == null || parsedValue.isBlank()) {
-//      return null;
-//    }
-//    return Long.valueOf(parsedValue);
-//  }
-
   // Suppress SonarCloud "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
   // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".

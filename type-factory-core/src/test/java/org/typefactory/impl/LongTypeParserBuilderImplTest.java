@@ -29,10 +29,11 @@ class LongTypeParserBuilderImplTest {
       @ConvertWith(CodePointArrayConverter.class) final int [] customBaseCodePoints,
       final String expectedMessage) {
 
+    final var builder = LongTypeParser.builder()
+        .allowCustomBaseNumbers(customBaseCodePoints);
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> LongTypeParser.builder()
-                .allowCustomBaseNumbers(customBaseCodePoints)
-                .build())
+        .isThrownBy(builder::build)
         .withMessageStartingWith(expectedMessage);
   }
 
