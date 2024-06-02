@@ -127,9 +127,10 @@ final class LongTypeParserImpl implements LongTypeParser {
     return parse(source, DecimalFormatSymbols.getInstance(locale));
   }
 
-
-  // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
-  @SuppressWarnings({"java:S3776"})
+  // Suppress SonarCloud issues:
+  // - "java:S3776 Cognitive Complexity of methods should not be too high"
+  // - "java:S6541 Methods should not perform too many tasks (aka Brain method)"
+  @SuppressWarnings({"java:S3776", "java:S6541"})
   private Long parse(final CharSequence source, final DecimalFormatSymbols decimalFormatSymbols) throws InvalidValueException {
     if (source == null || source.isEmpty()) {
       return null;

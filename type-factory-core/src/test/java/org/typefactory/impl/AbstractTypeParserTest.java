@@ -20,7 +20,7 @@ import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VA
 
 import org.typefactory.StringType;
 
-public abstract class AbstractTypeParserTest {
+abstract class AbstractTypeParserTest {
 
   /**
    * A concrete custom {@link StringType} type that can be used in unit tests.

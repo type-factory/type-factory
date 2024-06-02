@@ -1,5 +1,6 @@
 package org.typefactory.impl;
 
+import static java.util.Objects.requireNonNullElse;
 import static org.typefactory.impl.Constants.HEAVY_MINUS;
 import static org.typefactory.impl.Constants.MATH_MINUS;
 import static org.typefactory.impl.Constants.MINUS_CODEPOINTS;
@@ -42,8 +43,6 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints;
-  private final long defaultMinValue;
-  private final long defaultMaxValue;
   private long minValue;
   private long maxValue;
   private boolean minValueComparisonInclusive;
@@ -56,8 +55,8 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   LongTypeParserBuilderImpl(final long defaultMinValue, final long defaultMaxValue) {
-    this.minValue = (this.defaultMinValue = defaultMinValue);
-    this.maxValue = (this.defaultMaxValue = defaultMaxValue);
+    this.minValue = defaultMinValue;
+    this.maxValue = defaultMaxValue;
   }
 
   public LongTypeParserImpl build() {
@@ -222,11 +221,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   public LongTypeParserBuilderImpl allowCustomBaseNumbers(final int... codePointsForCustomNumericBase) {
-    if (codePointsForCustomNumericBase == null) {
-      numericRadixCodePoints = Constants.EMPTY_INT_ARRAY;
-    } else {
-      numericRadixCodePoints = codePointsForCustomNumericBase;
-    }
+    numericRadixCodePoints = requireNonNullElse(codePointsForCustomNumericBase, Constants.EMPTY_INT_ARRAY);
     return this;
   }
 

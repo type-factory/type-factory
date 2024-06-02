@@ -9,7 +9,7 @@ import org.typefactory.ShortTypeParser;
 import org.typefactory.TypeParserBuilderException;
 import org.typefactory.testutils.CodePointArrayConverter;
 
-public class ShortTypeParserBuilderImplTest {
+class ShortTypeParserBuilderImplTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """

@@ -9,7 +9,7 @@ import org.typefactory.LongTypeParser;
 import org.typefactory.TypeParserBuilderException;
 import org.typefactory.testutils.CodePointArrayConverter;
 
-public class LongTypeParserBuilderImplTest {
+class LongTypeParserBuilderImplTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """

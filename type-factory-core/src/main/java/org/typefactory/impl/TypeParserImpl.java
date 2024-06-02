@@ -137,7 +137,7 @@ final class TypeParserImpl implements TypeParser {
 //    return Long.valueOf(parsedValue);
 //  }
 
-  // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
+  // Suppress SonarCloud "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
   // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
   @SuppressWarnings({"java:S3776"})

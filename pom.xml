@@ -53,12 +53,12 @@
 
     <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
 
-    <!-- SonarQube - Constructors should not have too many parameters -
+    <!-- SonarCloud - Constructors should not have too many parameters -
          We employ builders to create classed which results in constructors with many parameters -->
     <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
 
-    <!-- SonarQube - Cognitive Complexity of methods should not be too high -
+    <!-- SonarCloud - Cognitive Complexity of methods should not be too high -
          Where there is "cognitive complexity", I believe it is justified.
          I have take care to ensure that the code is readable and understandable. -->
     <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S3776</sonar.issue.ignore.multicriteria.e2.ruleKey>

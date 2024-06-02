@@ -9,7 +9,7 @@ import org.typefactory.IntegerTypeParser;
 import org.typefactory.TypeParserBuilderException;
 import org.typefactory.testutils.CodePointArrayConverter;
 
-public class IntegerTypeParserBuilderImplTest {
+class IntegerTypeParserBuilderImplTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
