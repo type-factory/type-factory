@@ -38,7 +38,7 @@ class IntegerTypeParserImpl_messageCodeTest {
         GGG | msg_code_a   | null            | msg_code_a            | msg_code_a. Invalid value - invalid character 'G'.
         HHH | msg_code_b   | Another message | msg_code_b            | Another message. Invalid value - invalid character 'H'.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void constructor_instantiatesAsExpected(
+  void parseToInteger_throwsException(
       final String value,
       final String messageCode, final String defaultMessage,
       final String expectedMessageCode, final String expectedDefaultMessage) {

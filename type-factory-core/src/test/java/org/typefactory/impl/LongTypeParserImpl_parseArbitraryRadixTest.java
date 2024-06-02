@@ -16,12 +16,53 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.typefactory.TypeParserBuilderException.MessageCodes.NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.LongTypeParser;
+import org.typefactory.TypeParserBuilderException;
 
 class LongTypeParserImpl_parseArbitraryRadixTest {
+
+  @Test
+  void build_allowCustomBaseNumbersForNoBaseSpecified() {
+
+    final TypeParserBuilderException exception = catchThrowableOfType(
+        TypeParserBuilderException.class,
+        () -> LongTypeParser.builder().build());
+
+    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
+    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+  }
+
+  @Test
+  void build_allowCustomBaseNumbersForNullCharacterArray() {
+
+    final TypeParserBuilderException exception = catchThrowableOfType(
+        TypeParserBuilderException.class,
+        () -> LongTypeParser.builder()
+            .allowCustomBaseNumbers((char[]) null)
+            .build());
+
+    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
+    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+  }
+
+  @Test
+  void build_allowCustomBaseNumbersForNullCodepointArray() {
+
+    final TypeParserBuilderException exception = catchThrowableOfType(
+        TypeParserBuilderException.class,
+        () -> LongTypeParser.builder()
+            .allowCustomBaseNumbers((int[]) null)
+            .build());
+
+    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
+    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """

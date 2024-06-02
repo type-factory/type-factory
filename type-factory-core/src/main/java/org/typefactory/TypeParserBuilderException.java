@@ -220,9 +220,13 @@ public class TypeParserBuilderException extends RuntimeException  {
    */
   public interface MessageCodes {
 
-    MessageCode DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
-        "duplicate_radix_character",
-        "Custom numeric-base character-set must not contain duplicates – check both your character-set and case-sensitivity.");
+    MessageCode NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE = Factory.messageCode(
+        "no_radix_configured",
+        "No numeric-base has been configured for the numeric type parser.");
+
+    MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
+        "duplicate_custom_radix_character",
+        "Custom numeric-base character-set must not contain duplicates – check both your base character-set and case-sensitivity.");
   }
 
 }

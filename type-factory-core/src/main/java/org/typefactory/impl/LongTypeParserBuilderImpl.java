@@ -62,6 +62,12 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
   public LongTypeParserImpl build() {
 
+    if (numericRadixCodePoints == null || numericRadixCodePoints.length == 0) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(MessageCodes.NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE)
+          .build();
+    }
+
     final var numericRadixCodePointsMap = createNumericRadixCodePointsMap();
 
     return new LongTypeParserImpl(
@@ -120,7 +126,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
     if (numericRadixCodePointsMap.contains(codepoint)) {
       throw TypeParserBuilderException.builder()
-          .messageCode(MessageCodes.DUPLICATE_RADIX_CHARACTER_EXCEPTION_MESSAGE)
+          .messageCode(MessageCodes.DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE)
           .build();
     }
     numericRadixCodePointsMap.put(codepoint, numericValue);
