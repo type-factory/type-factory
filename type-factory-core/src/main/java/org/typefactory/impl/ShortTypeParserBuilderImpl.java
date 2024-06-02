@@ -6,15 +6,7 @@ import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
 
 class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
-  private final IntegralNumericTypeParserBuilderImpl wrapperBuilder;
-
-  ShortTypeParserBuilderImpl() {
-    this.wrapperBuilder = new IntegralNumericTypeParserBuilderImpl(Short.MIN_VALUE, Short.MAX_VALUE);
-  }
-
-  ShortTypeParserBuilderImpl(final short defaultMinValue, final short defaultMaxValue) {
-    this.wrapperBuilder = new IntegralNumericTypeParserBuilderImpl(defaultMinValue, defaultMaxValue);
-  }
+  private final LongTypeParserBuilderImpl wrapperBuilder = new LongTypeParserBuilderImpl(Short.MIN_VALUE, Short.MAX_VALUE);
 
   public ShortTypeParserImpl build() {
     return new ShortTypeParserImpl(wrapperBuilder.build());

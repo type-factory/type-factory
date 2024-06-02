@@ -7,9 +7,9 @@ import org.typefactory.ShortTypeParser;
 
 final class ShortTypeParserImpl implements ShortTypeParser {
 
-  private final IntegralNumericTypeParserImpl wrappedParser;
+  private final LongTypeParserImpl wrappedParser;
 
-  ShortTypeParserImpl(final IntegralNumericTypeParserImpl wrappedParser) {
+  ShortTypeParserImpl(final LongTypeParserImpl wrappedParser) {
     this.wrappedParser = wrappedParser;
   }
 
