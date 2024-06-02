@@ -24,13 +24,14 @@ final class Constants {
 
   static final int BYTE_MASK = 0xFF;
 
-  static final String[] EMPTY_STRING_ARRAY = new String[0];
   static final char[] EMPTY_CHAR_ARRAY = new char[0];
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
   static final String LINE_SEPARATOR = System.lineSeparator();
 
+  static final int APOSTROPHE_SINGLE_QUOTATION_MARK = '\'';
+  static final int RIGHT_SINGLE_QUOTATION_MARK = '\u2019';
   static final int HYPHEN_MINUS = '-';
   static final int MATH_MINUS = '\u2212';
   static final int HEAVY_MINUS = '\u2796';

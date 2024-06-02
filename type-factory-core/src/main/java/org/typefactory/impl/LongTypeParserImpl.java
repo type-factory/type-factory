@@ -15,6 +15,9 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.APOSTROPHE_SINGLE_QUOTATION_MARK;
+import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
+
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
@@ -82,7 +85,7 @@ final class LongTypeParserImpl implements LongTypeParser {
     this.ignoreLeadingPositiveSign = ignoreLeadingPositiveSign;
   }
 
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
+  <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
       throws InvalidValueException {
     final Short parsedValue = parseToShort(value);
     return parsedValue == null
@@ -90,7 +93,7 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
+  <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
       throws InvalidValueException {
     final Integer parsedValue = parseToInteger(value);
     return parsedValue == null
@@ -105,14 +108,14 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
+  Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
     return parsedValue == null
         ? null
         : parsedValue.shortValue();
   }
 
-  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
+  Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
     return parsedValue == null
         ? null
@@ -123,6 +126,7 @@ final class LongTypeParserImpl implements LongTypeParser {
     return parse(originalValue, defaultDecimalFormatSymbols);
   }
 
+  // TODO writes tests for this
   public Long parseToLong(final CharSequence source, final Locale locale) throws InvalidValueException {
     return parse(source, DecimalFormatSymbols.getInstance(locale));
   }
@@ -138,12 +142,13 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
 
     final int groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
-    final int altGroupingSeparator = groupingSeparator == '\u2019' ? '\'' : -1;
+    // Locales that use a "right single quotation mark" (U+2019) as the grouping separator often simply use an apostrophe/single-quote (U+0027)
+    final int altGroupingSeparator = groupingSeparator == RIGHT_SINGLE_QUOTATION_MARK ? APOSTROPHE_SINGLE_QUOTATION_MARK : -1;
 
     final int length = source.length();
     int sourceIndex = 0;
     long targetValue = 0;
-    long newTargetValue = 0;
+    long newTargetValue;
     char ch;
     int codePoint;
     boolean intoDigits = false;
