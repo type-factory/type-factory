@@ -82,6 +82,12 @@ public interface ShortTypeParser {
    */
   <T extends ShortType> T parseToShortType(CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
 
+  /**
+   * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
+   * @return the radix (numeric-base) of the type-parser.
+   */
+  int getRadix();
+
   interface ShortTypeParserBuilder {
 
     ShortTypeParser build();

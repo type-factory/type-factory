@@ -62,7 +62,6 @@ public class TypeParserBuilderException extends RuntimeException  {
     return new TypeParserBuilderExceptionBuilder();
   }
 
-
   /**
    * Protected constructor – use the {@link #builder()} to create an {@code TypeParserBuilderException}.
    *
@@ -76,7 +75,10 @@ public class TypeParserBuilderException extends RuntimeException  {
       final Throwable cause,
       final MessageCode messageCode,
       final LinkedHashMap<String, Serializable> messageCodeArgs) {
-    super(messageCode == null ? null : messageCode.message(), cause);
+    super(messageCode == null ? null : messageCode.message(
+        messageCodeArgs == null
+            ? EMPTY_MESSAGE_ARGS_ARRAY
+            : messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY)), cause);
     this.messageCode = messageCode == null ? EMPTY_MESSAGE_CODE : messageCode;
     this.messageCodeArgs = messageCodeArgs == null
         ? EMPTY_MESSAGE_ARGS_MAP
@@ -109,7 +111,7 @@ public class TypeParserBuilderException extends RuntimeException  {
    * @see #getMessage()
    */
   public String getLocalizedMessage(final Locale locale) {
-    return messageCode.message(locale);
+    return messageCode.message(locale, messageCodeArgsValues);
   }
 
 
@@ -224,13 +226,13 @@ public class TypeParserBuilderException extends RuntimeException  {
       // don't instantiate me
     }
 
-    public static final MessageCode NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE = Factory.messageCode(
-        "no_radix_configured",
-        "No numeric-base has been configured for the numeric type parser.");
+    public static final MessageCode INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_custom_radix",
+        "An invalid numeric-base has been configured for the numeric type parser – provide at least two characters for a radix of two or greater in your parser.");
 
     public static final MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
         "duplicate_custom_radix_character",
-        "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity.");
+        "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity of the parser.");
   }
 
 }

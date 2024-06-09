@@ -14,6 +14,11 @@ final class ShortTypeParserImpl implements ShortTypeParser {
   }
 
   @Override
+  public int getRadix() {
+    return wrappedParser.getRadix();
+  }
+
+  @Override
   public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
     return wrappedParser.parseToShortType(value, constructorOrFactoryMethod);
   }

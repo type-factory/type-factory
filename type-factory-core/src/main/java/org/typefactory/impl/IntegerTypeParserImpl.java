@@ -14,6 +14,11 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
+  public int getRadix() {
+    return wrappedParser.getRadix();
+  }
+
+  @Override
   public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
     return wrappedParser.parseToIntegerType(value, constructorOrFactoryMethod);
   }

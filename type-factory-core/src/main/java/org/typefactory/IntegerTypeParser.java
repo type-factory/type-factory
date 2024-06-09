@@ -81,6 +81,12 @@ public interface IntegerTypeParser {
    */
   <T extends IntegerType> T parseToIntegerType(CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
 
+  /**
+   * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
+   * @return the radix (numeric-base) of the type-parser.
+   */
+  int getRadix();
+
   interface IntegerTypeParserBuilder {
 
     IntegerTypeParser build();

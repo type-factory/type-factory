@@ -85,6 +85,11 @@ final class LongTypeParserImpl implements LongTypeParser {
     this.ignoreLeadingPositiveSign = ignoreLeadingPositiveSign;
   }
 
+  @Override
+  public int getRadix() {
+    return radix;
+  }
+
   <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
       throws InvalidValueException {
     final Short parsedValue = parseToShort(value);

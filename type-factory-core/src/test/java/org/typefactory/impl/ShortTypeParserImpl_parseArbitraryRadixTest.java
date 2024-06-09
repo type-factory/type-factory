@@ -17,7 +17,7 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
-import static org.typefactory.TypeParserBuilderException.MessageCodes.NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE;
+import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,14 +28,11 @@ import org.typefactory.TypeParserBuilderException;
 class ShortTypeParserImpl_parseArbitraryRadixTest {
 
   @Test
-  void build_allowCustomBaseNumbersForNoBaseSpecified() {
+  void build_expectBase10WhenNoBaseSpecified() {
 
-    final TypeParserBuilderException exception = catchThrowableOfType(
-        TypeParserBuilderException.class,
-        () -> ShortTypeParser.builder().build());
+    final var shortTypeParser = ShortTypeParser.builder().build();
 
-    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
-    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+    assertThat(shortTypeParser.getRadix()).isEqualTo(10);
   }
 
   @Test
@@ -47,8 +44,8 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
             .allowCustomBaseNumbers((char[]) null)
             .build());
 
-    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
-    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+    assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
+    assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
   }
 
   @Test
@@ -60,8 +57,8 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
             .allowCustomBaseNumbers((int[]) null)
             .build());
 
-    assertThat(exception.getMessageCode()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.code());
-    assertThat(exception.getMessage()).isEqualTo(NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE.message());
+    assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
+    assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
   }
 
   @ParameterizedTest

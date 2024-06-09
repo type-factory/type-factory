@@ -329,11 +329,11 @@ class InvalidValueExceptionTest {
   }
 
 
-  static final class SomeClass {
+  private static final class SomeClass {
 
   }
 
-  static final class SomeCharSequence implements CharSequence {
+  private static final class SomeCharSequence implements CharSequence {
 
     private final char[] chars;
 

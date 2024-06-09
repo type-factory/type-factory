@@ -52,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        # Dependabot doesn't have access to GitHub secrets so we can't run SonarCloud analysis for PRs from dependabot
+        # Dependabot doesn't have access to GitHub secrets, so we can't run SonarCloud analysis for PRs from dependabot
         run: |
           if [ ${{ github.actor }} == 'dependabot[bot]' ] ; then
             mvn --batch-mode verify

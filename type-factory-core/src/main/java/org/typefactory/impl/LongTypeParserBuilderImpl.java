@@ -42,7 +42,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private boolean caseSensitive = true;
   private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
-  private int[] numericRadixCodePoints;
+  private int[] numericRadixCodePoints = DEFAULT_BASE_10_CODE_POINTS;
   private long minValue;
   private long maxValue;
   private boolean minValueComparisonInclusive;
@@ -60,12 +60,6 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   public LongTypeParserImpl build() {
-
-    if (numericRadixCodePoints == null || numericRadixCodePoints.length == 0) {
-      throw TypeParserBuilderException.builder()
-          .messageCode(MessageCodes.NO_RADIX_CONFIGURED_EXCEPTION_MESSAGE)
-          .build();
-    }
 
     final var numericRadixCodePointsMap = createNumericRadixCodePointsMap();
 
@@ -212,15 +206,22 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   public LongTypeParserBuilderImpl allowCustomBaseNumbers(final char... charactersForCustomNumericBase) {
-    if (charactersForCustomNumericBase == null) {
-      allowCustomBaseNumbers((int[]) null);
-    } else {
-      allowCustomBaseNumbers(convertCharArrayToCodePointArray(charactersForCustomNumericBase));
+    if (charactersForCustomNumericBase == null || charactersForCustomNumericBase.length < 2) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE)
+          .build();
     }
+    allowCustomBaseNumbers(convertCharArrayToCodePointArray(charactersForCustomNumericBase));
     return this;
   }
 
   public LongTypeParserBuilderImpl allowCustomBaseNumbers(final int... codePointsForCustomNumericBase) {
+    if (codePointsForCustomNumericBase == null || codePointsForCustomNumericBase.length < 2) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE)
+          .build();
+    }
+
     numericRadixCodePoints = requireNonNullElse(codePointsForCustomNumericBase, Constants.EMPTY_INT_ARRAY);
     return this;
   }
