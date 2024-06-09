@@ -47,9 +47,15 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - id: build-with-maven
-        name: Build with Maven
+      - name: Build with Maven
+        id: build-with-maven
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=type-factory_type-factory -Dsonar.organization=type-factory
+        # Dependabot doesn't have access to GitHub secrets so we can't run SonarCloud analysis for PRs from dependabot
+        run: |
+          if [ ${{ github.actor }} == 'dependabot[bot]' ] ; then
+            mvn --batch-mode verify
+          else
+            mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=type-factory_type-factory -Dsonar.organization=type-factory
+          fi
