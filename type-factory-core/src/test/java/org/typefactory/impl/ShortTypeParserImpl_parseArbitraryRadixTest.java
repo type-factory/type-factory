@@ -90,7 +90,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
+  void parse_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -101,7 +101,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -134,7 +134,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
+  void parse_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -145,7 +145,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -164,7 +164,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowCustomBaseNumbersForRadix2UsingEmoji(
+  void parse_allowCustomBaseNumbersForRadix2UsingEmoji(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -174,7 +174,7 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 }

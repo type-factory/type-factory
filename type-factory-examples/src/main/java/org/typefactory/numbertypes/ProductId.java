@@ -43,6 +43,6 @@ public final class ProductId extends LongType {
   }
 
   public static ProductId of(final CharSequence value) {
-    return TYPE_PARSER.parseToLongType(value, ProductId::new);
+    return TYPE_PARSER.parse(value, ProductId::new);
   }
 }

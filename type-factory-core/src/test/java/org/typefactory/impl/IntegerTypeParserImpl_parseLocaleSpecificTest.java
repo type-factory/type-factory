@@ -91,7 +91,7 @@ class IntegerTypeParserImpl_parseLocaleSpecificTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_acceptsLocaleSpecificGroupingSeparator(
+  void parse_acceptsLocaleSpecificGroupingSeparator(
       final String localeTag, final String value, final int expected) {
 
     final var locale = Locale.forLanguageTag(localeTag);
@@ -104,7 +104,7 @@ class IntegerTypeParserImpl_parseLocaleSpecificTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 }

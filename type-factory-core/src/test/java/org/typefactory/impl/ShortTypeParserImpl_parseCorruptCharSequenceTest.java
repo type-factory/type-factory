@@ -26,7 +26,7 @@ class ShortTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParse
 
   @ParameterizedTest
   @EnumSource(CorruptCharSequence.class)
-  void parseToShort_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
+  void parse_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
 
     final var shortTypeParser = ShortTypeParser.builder()
         .minValueExclusive(Short.MIN_VALUE)
@@ -38,7 +38,7 @@ class ShortTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParse
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parseToShort(corruptCharSequence))
+        .isThrownBy(() -> shortTypeParser.parse(corruptCharSequence))
         .withMessage(corruptCharSequence.getExpectedErrorMessage());
   }
 }

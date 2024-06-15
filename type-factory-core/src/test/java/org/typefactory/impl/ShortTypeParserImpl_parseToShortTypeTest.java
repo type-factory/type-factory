@@ -25,7 +25,7 @@ import org.typefactory.MessageCode;
 import org.typefactory.ShortType;
 import org.typefactory.ShortTypeParser;
 
-class ShortTypeParserImpl_parseToShortTypeTest {
+class ShortTypeParserImpl_parseTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -85,7 +85,7 @@ class ShortTypeParserImpl_parseToShortTypeTest {
         .build();
 
     static SomeShortType of(final String value) {
-      return TYPE_PARSER.parseToShortType(value, SomeShortType::new);
+      return TYPE_PARSER.parse(value, SomeShortType::new);
     }
   }
 }

@@ -75,10 +75,7 @@ public class TypeParserBuilderException extends RuntimeException  {
       final Throwable cause,
       final MessageCode messageCode,
       final LinkedHashMap<String, Serializable> messageCodeArgs) {
-    super(messageCode == null ? null : messageCode.message(
-        messageCodeArgs == null
-            ? EMPTY_MESSAGE_ARGS_ARRAY
-            : messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY)), cause);
+    super(createMessage(messageCode, messageCodeArgs), cause);
     this.messageCode = messageCode == null ? EMPTY_MESSAGE_CODE : messageCode;
     this.messageCodeArgs = messageCodeArgs == null
         ? EMPTY_MESSAGE_ARGS_MAP
@@ -86,6 +83,16 @@ public class TypeParserBuilderException extends RuntimeException  {
     this.messageCodeArgsValues = messageCodeArgs == null
         ? EMPTY_MESSAGE_ARGS_ARRAY
         : messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY);
+  }
+
+  private static String createMessage(final MessageCode messageCode, final Map<String, Serializable> messageCodeArgs) {
+    if (messageCode == null) {
+      return null;
+    }
+    if (messageCodeArgs == null) {
+      return messageCode.message();
+    }
+    return messageCode.message(messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY));
   }
 
   /**

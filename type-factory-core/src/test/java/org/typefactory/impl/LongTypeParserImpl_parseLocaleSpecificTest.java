@@ -91,7 +91,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToLong_acceptsLocaleSpecificGroupingSeparator(
+  void parseToLong_whenTypeParserConfiguredWithDefaultLocaleHandlesGroupingSeparator(
       final String localeTag, final String value, final long expected) {
 
     final var locale = Locale.forLanguageTag(localeTag);
@@ -104,7 +104,90 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      LOCALE |      VALUE | EXPECTED
+      en-US  | -3,111,222 | -3111222
+      en-US  |     -3,111 |    -3111
+      en-US  |    -3,,222 |    -3222
+      en-US  |     -0,111 |     -111
+      en-US  |      -,222 |     -222
+      en-US  |        -,0 |        0
+      en-US  |       ,333 |      333
+      en-US  |      +,333 |      333
+      en-US  |      0,444 |      444
+      en-US  |     +1,444 |     1444
+      en-US  |  1,444,555 |  1444555
+
+      en-AU  | -3,111,222 | -3111222
+      en-AU  |     -3,111 |    -3111
+      en-AU  |    -3,,222 |    -3222
+      en-AU  |     -0,111 |     -111
+      en-AU  |      -,222 |     -222
+      en-AU  |        -,0 |        0
+      en-AU  |       ,333 |      333
+      en-AU  |      +,333 |      333
+      en-AU  |      0,444 |      444
+      en-AU  |     +1,444 |     1444
+      en-AU  |  1,444,555 |  1444555
+
+      de-DE  | -3.111.222 | -3111222
+      de-DE  |     -3.111 |    -3111
+      de-DE  |    -3..222 |    -3222
+      de-DE  |     -0.111 |     -111
+      de-DE  |      -.222 |     -222
+      de-DE  |        -.0 |        0
+      de-DE  |       .333 |      333
+      de-DE  |      +.333 |      333
+      de-DE  |      0.444 |      444
+      de-DE  |     +1.444 |     1444
+      de-DE  |  1.444.555 |  1444555
+
+      de-CH  | -3'111'222 | -3111222
+      de-CH  | -3’111’222 | -3111222
+      de-CH  | -3'111’222 | -3111222
+      de-CH  |     -3'111 |    -3111
+      de-CH  |    -3'’222 |    -3222
+      de-CH  |     -0’111 |     -111
+      de-CH  |      -'222 |     -222
+      de-CH  |        -'0 |        0
+      de-CH  |       ’333 |      333
+      de-CH  |      +'333 |      333
+      de-CH  |      0'444 |      444
+      de-CH  |     +1'444 |     1444
+      de-CH  |  1’444'555 |  1444555
+
+      fr-CH  | -3 111 222 | -3111222
+      fr-CH  |     -3 111 |    -3111
+      fr-CH  |    -3  222 |    -3222
+      fr-CH  |     -0 111 |     -111
+      fr-CH  |      - 222 |     -222
+      fr-CH  |        - 0 |        0
+      fr-CH  |        333 |      333
+      fr-CH  |      + 333 |      333
+      fr-CH  |      0 444 |      444
+      fr-CH  |     +1 444 |     1444
+      fr-CH  |  1 444 555 |  1444555
+      """,
+      delimiter = '|',
+      useHeadersInDisplayName = true)
+  void parseToLong_localePassedToParseMethodHandlesGroupingSeparator(
+      final String localeTag, final String value, final long expected) {
+
+    final var locale = Locale.forLanguageTag(localeTag);
+
+    final var longTypeParser = LongTypeParser.builder()
+        .minValueInclusive(Long.MIN_VALUE)
+        .maxValueInclusive(Long.MAX_VALUE)
+        .allowBase10Numbers()
+        .ignoreAllWhitespace()
+        .build();
+
+    final var actual = longTypeParser.parse(value, locale);
     assertThat(actual).isEqualTo(expected);
   }
 }

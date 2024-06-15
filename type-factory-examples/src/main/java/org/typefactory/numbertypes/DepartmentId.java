@@ -42,6 +42,6 @@ public final class DepartmentId extends ShortType {
   }
 
   public static DepartmentId of(final CharSequence value) {
-    return TYPE_PARSER.parseToShortType(value, DepartmentId::new);
+    return TYPE_PARSER.parse(value, DepartmentId::new);
   }
 }

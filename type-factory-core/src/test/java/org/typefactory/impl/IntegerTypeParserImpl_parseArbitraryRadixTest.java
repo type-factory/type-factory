@@ -90,7 +90,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
+  void parse_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseSensitive(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -101,7 +101,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -134,7 +134,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
+  void parse_allowCustomBaseNumbersForRadix16UsingGreekLettersCaseInsensitive(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -145,7 +145,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -164,7 +164,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowCustomBaseNumbersForRadix2UsingEmoji(
+  void parse_allowCustomBaseNumbersForRadix2UsingEmoji(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -174,7 +174,7 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 }

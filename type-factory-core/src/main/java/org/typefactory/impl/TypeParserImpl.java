@@ -33,6 +33,15 @@ import org.typefactory.impl.Converter.ConverterResults;
 
 final class TypeParserImpl implements TypeParser {
 
+  enum WhiteSpace {
+    FORBID_WHITESPACE,
+    PRESERVE_WHITESPACE,
+    PRESERVE_AND_CONVERT_WHITESPACE,
+    NORMALIZE_WHITESPACE,
+    NORMALIZE_AND_CONVERT_WHITESPACE,
+    REMOVE_WHITESPACE,
+  }
+
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
   private final TargetCase targetCase;

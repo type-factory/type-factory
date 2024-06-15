@@ -37,7 +37,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThatObject(actual).isNull();
   }
 
@@ -49,7 +49,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
+        .isThrownBy(() -> integerTypeParser.parse(value))
         .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
   }
 
@@ -79,7 +79,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base8NumbersParseAsExpected(
+  void parse_base8NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -89,7 +89,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -121,7 +121,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base10NumbersParseAsExpected(
+  void parse_base10NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -131,7 +131,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -162,7 +162,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base16NumbersParseAsExpected(
+  void parse_base16NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -173,7 +173,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -204,7 +204,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base32NumbersParseAsExpected(
+  void parse_base32NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -215,7 +215,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -246,7 +246,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base36NumbersParseAsExpected(
+  void parse_base36NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -257,7 +257,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -288,7 +288,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_base62NumbersParseAsExpected(
+  void parse_base62NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -299,7 +299,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseSensitive()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -319,7 +319,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_outsideInclusiveMinMaxThrowsException(
+  void parse_outsideInclusiveMinMaxThrowsException(
       final int min, final int max,
       final String value, final String expectedMessage) {
 
@@ -331,7 +331,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
+        .isThrownBy(() -> integerTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -358,7 +358,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_outsideExclusiveMinMaxThrowsException(
+  void parse_outsideExclusiveMinMaxThrowsException(
       final int min, final int max,
       final String value, final String expectedMessage) {
 
@@ -370,7 +370,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parseToInteger(value))
+        .isThrownBy(() -> integerTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 

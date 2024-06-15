@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class TypeParserBuilderExceptionTest {
+class TypeParserBuilderExceptionTest {
 
   static final MessageCode ERROR_MESSAGE_CODE_NO_ARGS = MessageCode.of("some.error.code", "some default error message");
 

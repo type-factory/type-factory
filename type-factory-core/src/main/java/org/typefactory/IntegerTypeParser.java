@@ -1,14 +1,29 @@
 package org.typefactory;
 
 import java.util.Locale;
-import java.util.function.IntFunction;
+import java.util.function.Function;
 import org.typefactory.impl.Factory;
 
-public interface IntegerTypeParser {
+public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerType> {
 
   static IntegerTypeParserBuilder builder() {
     return Factory.integerTypeParserBuilder();
   }
+
+  @Override
+  Integer of(Short value) throws InvalidValueException;
+
+  @Override
+  Integer of(Integer value) throws InvalidValueException;
+
+  @Override
+  Integer of(Long value) throws InvalidValueException;
+
+  int of(final short value) throws InvalidValueException;
+
+  int of(final int value) throws InvalidValueException;
+
+  int of(final long value) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link Integer} value.</p>
@@ -16,7 +31,7 @@ public interface IntegerTypeParser {
    * <p><b>Example 1 – parse to a {@code Integer} variable</b></p>
    *
    * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
+   * Integer someVariable = TYPE_PARSER.parse(value);
    * }</pre>
    *
    * <p><b>Example 2 – parse to a custom type</b></p>
@@ -30,29 +45,29 @@ public interface IntegerTypeParser {
    *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
    *
    *   public ProductId(final Integer value) {
-   *     super(TYPE_PARSER.parseToIntegerType(value));
+   *     super(TYPE_PARSER.parse(value));
    *   }
    * }
    * }</pre>
    *
    * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
    * a null internal value. The instantiated object can be interrogated for a null internal value using {@link IntegerType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
+   * alternative is to use a factory method using the example shown in {@link #parse(CharSequence, Function)} instead.</p>
    *
    * @param value the value to parse into a {@link Integer}.
    * @return parses the provided {@code value} into a {@link Integer} value. May return {@code null} if the {@link TypeParser} was configured to
    * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Integer}.
-   * @see #parseToIntegerType(CharSequence, IntegerFunction)
+   * @see #parse(CharSequence, java.util.function.Function)
    */
-  Integer parseToInteger(CharSequence value) throws InvalidValueException;
+  Integer parse(CharSequence value) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a custom type that extends {@link IntegerType} using the provided
    * {@code constructorOrFactoryMethod}.</p>
    *
    * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToIntegerType} method:</p>
+   * {@code of(CharSequence value)}, to create instances using the {@code parse} method:</p>
    *
    * <pre>{@code
    * public final class ProductId extends IntegerType {
@@ -64,12 +79,12 @@ public interface IntegerTypeParser {
    *   }
    *
    *   public static ProductId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToIntegerType(value, ProductId::new);
+   *     return TYPE_PARSER.parse(value, ProductId::new);
    *   }
    * }
    * }</pre>
    *
-   * <p><b>Note:</b> use the {@link #parseToInteger(CharSequence)} method to simply parse into a {@link Integer} value.</p>
+   * <p><b>Note:</b> use the {@link #parse(CharSequence)} method to simply parse into a {@link Integer} value.</p>
    *
    * @param value                      the value to parse into a custom type.
    * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
@@ -79,14 +94,14 @@ public interface IntegerTypeParser {
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
    * @see #parseToString(CharSequence)
    */
-  <T extends IntegerType> T parseToIntegerType(CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
+  <T extends IntegerType> T parse(CharSequence value, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
    * @return the radix (numeric-base) of the type-parser.
    */
   int getRadix();
-
+  
   interface IntegerTypeParserBuilder {
 
     IntegerTypeParser build();

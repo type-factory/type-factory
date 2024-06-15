@@ -38,7 +38,7 @@ class LongTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParser
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToLong(corruptCharSequence))
+        .isThrownBy(() -> longTypeParser.parse(corruptCharSequence))
         .withMessage(corruptCharSequence.getExpectedErrorMessage());
   }
 }

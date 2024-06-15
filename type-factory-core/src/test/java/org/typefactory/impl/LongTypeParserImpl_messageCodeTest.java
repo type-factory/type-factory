@@ -52,7 +52,7 @@ class LongTypeParserImpl_messageCodeTest {
 
     final InvalidValueException exception = catchThrowableOfType(
         InvalidValueException.class,
-        () -> longTypeParser.parseToLong(value));
+        () -> longTypeParser.parse(value));
 
     assertThat(exception.getMessageCode()).isEqualTo(expectedMessageCode);
     assertThat(exception.getMessage()).isEqualTo(expectedDefaultMessage);

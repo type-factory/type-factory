@@ -26,7 +26,7 @@ class IntegerTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypePar
 
   @ParameterizedTest
   @EnumSource(CorruptCharSequence.class)
-  void parseToInteger_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
+  void parse_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
         .minValueExclusive(Integer.MIN_VALUE)
@@ -38,7 +38,7 @@ class IntegerTypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypePar
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parseToInteger(corruptCharSequence))
+        .isThrownBy(() -> integerTypeParser.parse(corruptCharSequence))
         .withMessage(corruptCharSequence.getExpectedErrorMessage());
   }
 }

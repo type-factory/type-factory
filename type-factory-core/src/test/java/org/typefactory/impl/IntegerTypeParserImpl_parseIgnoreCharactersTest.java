@@ -35,7 +35,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowLeadingNegativeSignParseAsExpected(
+  void parse_allowLeadingNegativeSignParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -46,7 +46,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -62,7 +62,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreLeadingNegativeSignParseAsExpected(
+  void parse_ignoreLeadingNegativeSignParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -73,7 +73,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -89,7 +89,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_allowLeadingPositiveSignParseAsExpected(
+  void parse_allowLeadingPositiveSignParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -100,7 +100,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -116,7 +116,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreLeadingPositiveSignParseAsExpected(
+  void parse_ignoreLeadingPositiveSignParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -127,7 +127,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -156,7 +156,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllDashesAndHyphensParseAsExpected(
+  void parse_ignoreAllDashesAndHyphensParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -167,7 +167,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -196,7 +196,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
+  void parse_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -207,7 +207,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -229,7 +229,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllOccurrencesOfCharParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCharParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -240,7 +240,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -259,7 +259,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllOccurrencesOfCharsParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCharsParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -270,7 +270,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -292,7 +292,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllOccurrencesOfCodePointParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCodePointParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -303,7 +303,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -322,7 +322,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToInteger_ignoreAllOccurrencesOfCodePointsParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCodePointsParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
     final var integerTypeParser = IntegerTypeParser.builder()
@@ -333,7 +333,7 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parseToInteger(value);
+    final var actual = integerTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 

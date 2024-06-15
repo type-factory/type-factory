@@ -38,7 +38,7 @@ class IntegerTypeParserImpl_messageCodeTest {
         GGG | msg_code_a   | null            | msg_code_a            | msg_code_a. Invalid value - invalid character 'G'.
         HHH | msg_code_b   | Another message | msg_code_b            | Another message. Invalid value - invalid character 'H'.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void parseToInteger_throwsException(
+  void parse_throwsException(
       final String value,
       final String messageCode, final String defaultMessage,
       final String expectedMessageCode, final String expectedDefaultMessage) {
@@ -52,7 +52,7 @@ class IntegerTypeParserImpl_messageCodeTest {
 
     final InvalidValueException exception = catchThrowableOfType(
         InvalidValueException.class,
-        () -> integerTypeParser.parseToInteger(value));
+        () -> integerTypeParser.parse(value));
 
     assertThat(exception.getMessageCode()).isEqualTo(expectedMessageCode);
     assertThat(exception.getMessage()).isEqualTo(expectedDefaultMessage);

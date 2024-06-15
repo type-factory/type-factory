@@ -43,6 +43,6 @@ public final class InvoiceNumber extends IntegerType {
   }
 
   public static InvoiceNumber of(final CharSequence value) {
-    return TYPE_PARSER.parseToIntegerType(value, InvoiceNumber::new);
+    return TYPE_PARSER.parse(value, InvoiceNumber::new);
   }
 }

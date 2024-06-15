@@ -5,11 +5,26 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import org.typefactory.impl.Factory;
 
-public interface ShortTypeParser {
+public interface ShortTypeParser extends NumericTypeParser<Short, ShortType> {
 
   static ShortTypeParserBuilder builder() {
     return Factory.shortTypeParserBuilder();
   }
+
+  @Override
+  Short of(Short value);
+
+  @Override
+  Short of(Integer value);
+
+  @Override
+  Short of(Long value);
+
+  short of(final short value) throws InvalidValueException;
+
+  short of(final int value) throws InvalidValueException;
+
+  short of(final long value) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link Short} value.</p>
@@ -17,7 +32,7 @@ public interface ShortTypeParser {
    * <p><b>Example 1 – parse to a {@code Short} variable</b></p>
    *
    * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
+   * Integer someVariable = TYPE_PARSER.parse(value);
    * }</pre>
    *
    * <p><b>Example 2 – parse to a custom type</b></p>
@@ -31,29 +46,33 @@ public interface ShortTypeParser {
    *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
    *
    *   public ProductId(final Short value) {
-   *     super(TYPE_PARSER.parseToShortType(value));
+   *     super(TYPE_PARSER.parse(value));
    *   }
    * }
    * }</pre>
    *
    * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
    * a null internal value. The instantiated object can be interrogated for a null internal value using {@link ShortType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
+   * alternative is to use a factory method using the example shown in {@link #parse(CharSequence, IntFunction)} instead.</p>
    *
    * @param value the value to parse into a {@link Short}.
    * @return parses the provided {@code value} into a {@link Short} value. May return {@code null} if the {@link TypeParser} was configured to
    * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Short}.
-   * @see #parseToShortType(CharSequence, ShortFunction)
+   * @see #parse(CharSequence, Function)
    */
-  Short parseToShort(CharSequence value) throws InvalidValueException;
+  @Override
+  Short parse(CharSequence value) throws InvalidValueException;
+
+  @Override
+  Short parse(CharSequence value, Locale locale) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a custom type that extends {@link ShortType} using the provided
    * {@code constructorOrFactoryMethod}.</p>
    *
    * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToShortType} method:</p>
+   * {@code of(CharSequence value)}, to create instances using the {@code parse} method:</p>
    *
    * <pre>{@code
    * public final class ProductId extends ShortType {
@@ -65,12 +84,12 @@ public interface ShortTypeParser {
    *   }
    *
    *   public static ProductId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToShortType(value, ProductId::new);
+   *     return TYPE_PARSER.parse(value, ProductId::new);
    *   }
    * }
    * }</pre>
    *
-   * <p><b>Note:</b> use the {@link #parseToShort(CharSequence)} method to simply parse into a {@link Short} value.</p>
+   * <p><b>Note:</b> use the {@link #parse(CharSequence)} method to simply parse into a {@link Short} value.</p>
    *
    * @param value                      the value to parse into a custom type.
    * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
@@ -80,12 +99,17 @@ public interface ShortTypeParser {
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
    * @see #parseToString(CharSequence)
    */
-  <T extends ShortType> T parseToShortType(CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
+  @Override
+  <T extends ShortType> T parse(CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
+
+  @Override
+  <T extends ShortType> T parse(CharSequence value, Locale locale, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
    * @return the radix (numeric-base) of the type-parser.
    */
+  @Override
   int getRadix();
 
   interface ShortTypeParserBuilder {

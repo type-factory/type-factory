@@ -5,6 +5,8 @@ import static org.typefactory.impl.Constants.HEAVY_MINUS;
 import static org.typefactory.impl.Constants.MATH_MINUS;
 import static org.typefactory.impl.Constants.MINUS_CODEPOINTS;
 import static org.typefactory.impl.Constants.PLUS_CODEPOINTS;
+import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.FORBID_WHITESPACE;
+import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.IGNORE_WHITESPACE;
 
 import java.util.Locale;
 import org.typefactory.Category;
@@ -14,6 +16,7 @@ import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParserBuilderException;
 import org.typefactory.TypeParserBuilderException.MessageCodes;
+import org.typefactory.impl.LongTypeParserImpl.WhiteSpace;
 
 final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
@@ -40,7 +43,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
   private boolean caseSensitive = true;
-  private WhiteSpace whiteSpace = WhiteSpace.FORBID_WHITESPACE;
+  private WhiteSpace whiteSpace = FORBID_WHITESPACE;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints = DEFAULT_BASE_10_CODE_POINTS;
   private long minValue;
@@ -343,7 +346,12 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   public LongTypeParserBuilderImpl ignoreAllWhitespace() {
-    whiteSpace = WhiteSpace.REMOVE_WHITESPACE;
+    whiteSpace = IGNORE_WHITESPACE;
+    return this;
+  }
+
+  public LongTypeParserBuilderImpl forbidWhitespace() {
+    whiteSpace = FORBID_WHITESPACE;
     return this;
   }
 

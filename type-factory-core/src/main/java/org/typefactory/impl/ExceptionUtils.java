@@ -61,14 +61,14 @@ class ExceptionUtils {
         .build();
   }
 
-  static InvalidValueException forValueMustBeGreaterThanMinValue(
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
-      final CharSequence value,
+      final T invalidValue,
       final long minExclusiveValue) {
 
     return InvalidValueException.builder()
-        .invalidValue(value)
+        .invalidValue(invalidValue)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN)
@@ -78,14 +78,14 @@ class ExceptionUtils {
         .build();
   }
 
-  static InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
-      final CharSequence value,
+      final T invalidValue,
       final long minInclusiveValue) {
 
     return InvalidValueException.builder()
-        .invalidValue(value)
+        .invalidValue(invalidValue)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
@@ -95,14 +95,14 @@ class ExceptionUtils {
         .build();
   }
 
-  static InvalidValueException forValueMustBeLessThanMaxValue(
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
-      final CharSequence value,
+      final T invalidValue,
       final long maxExclusiveValue) {
 
     return InvalidValueException.builder()
-        .invalidValue(value)
+        .invalidValue(invalidValue)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN)
@@ -112,14 +112,14 @@ class ExceptionUtils {
         .build();
   }
 
-  static InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
-      final CharSequence value,
+      final T invalidValue,
       final long maxInclusiveValue) {
 
     return InvalidValueException.builder()
-        .invalidValue(value)
+        .invalidValue(invalidValue)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)

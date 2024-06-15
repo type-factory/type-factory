@@ -35,7 +35,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowLeadingNegativeSignParseAsExpected(
+  void parse_allowLeadingNegativeSignParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -46,7 +46,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -62,7 +62,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreLeadingNegativeSignParseAsExpected(
+  void parse_ignoreLeadingNegativeSignParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -73,7 +73,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -90,7 +90,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_allowLeadingPositiveSignParseAsExpected(
+  void parse_allowLeadingPositiveSignParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -101,7 +101,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -118,7 +118,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreLeadingPositiveSignParseAsExpected(
+  void parse_ignoreLeadingPositiveSignParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -129,7 +129,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -159,7 +159,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllDashesAndHyphensParseAsExpected(
+  void parse_ignoreAllDashesAndHyphensParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -170,7 +170,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -200,7 +200,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
+  void parse_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -211,7 +211,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -233,7 +233,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllOccurrencesOfCharParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCharParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -244,7 +244,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -263,7 +263,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllOccurrencesOfCharsParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCharsParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -274,7 +274,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -296,7 +296,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllOccurrencesOfCodePointParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCodePointParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -307,7 +307,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -326,7 +326,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_ignoreAllOccurrencesOfCodePointsParseAsExpected(
+  void parse_ignoreAllOccurrencesOfCodePointsParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -337,7 +337,7 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 

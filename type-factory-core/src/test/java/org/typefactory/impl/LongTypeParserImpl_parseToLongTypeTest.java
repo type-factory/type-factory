@@ -85,7 +85,7 @@ class LongTypeParserImpl_parseToLongTypeTest {
         .build();
 
     static SomeLongType of(final String value) {
-      return TYPE_PARSER.parseToLongType(value, SomeLongType::new);
+      return TYPE_PARSER.parse(value, SomeLongType::new);
     }
   }
 }

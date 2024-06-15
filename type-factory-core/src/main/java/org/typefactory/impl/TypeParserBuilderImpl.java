@@ -26,6 +26,7 @@ import org.typefactory.MessageCode;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser.TypeParserBuilder;
+import org.typefactory.impl.TypeParserImpl.WhiteSpace;
 
 final class TypeParserBuilderImpl implements TypeParserBuilder {
 

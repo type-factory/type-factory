@@ -1,7 +1,7 @@
 package org.typefactory;
 
 import java.util.Locale;
-import java.util.function.LongFunction;
+import java.util.function.Function;
 import org.typefactory.impl.Factory;
 
 /**
@@ -29,7 +29,7 @@ import org.typefactory.impl.Factory;
  *
  * @see #builder()
  */
-public interface LongTypeParser {
+public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
 
   /**
    * <p>Creates a builder with which to create a type-parser for long numeric values.</p>>
@@ -40,6 +40,15 @@ public interface LongTypeParser {
     return Factory.longTypeParserBuilder();
   }
 
+  @Override
+  Long of(Long value) throws InvalidValueException;
+
+  long of(final short value) throws InvalidValueException;
+
+  long of(final int value) throws InvalidValueException;
+
+  long of(final long value) throws InvalidValueException;
+
   /**
    * <p>Parse the provided {@code value} into a {@link Long} value. This method is null-safe,
    * returning {@code null} if the provided {@code value} was null.</p>
@@ -49,7 +58,7 @@ public interface LongTypeParser {
    * <pre>{@code
    * static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
    *
-   * Long someVariable = TYPE_PARSER.parseToLong(value);
+   * Long someVariable = TYPE_PARSER.parse(value);
    * }</pre>
    *
    * <p><b>Example 2 – parse to a custom type extending {@link LongType} using the constructor</b></p>
@@ -62,29 +71,72 @@ public interface LongTypeParser {
    *
    *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
    *
-   *   public ProductId(final Long value) {
-   *     super(TYPE_PARSER.parseToLong(value));
+   *   public ProductId(final CharSequence value) {
+   *     super(TYPE_PARSER.parse(value));
    *   }
    * }
    * }</pre>
    *
    * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
    * a null internal value. The instantiated object can be interrogated for a null internal value using {@link LongType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToLongType(CharSequence, LongFunction)} instead.</p>
+   * alternative is to use a factory method using the example shown in {@link #parse(CharSequence, Function)} instead.</p>
    *
    * @param value the value to parse into a {@link Long}.
    * @return parses the provided {@code value} into a {@link Long} value. Will return {@code null} if the provided {@code value} was null.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
-   * @see #parseToLongType(CharSequence, LongFunction)
+   * @see #parse(CharSequence, Function)
    */
-  Long parseToLong(CharSequence value) throws InvalidValueException;
+  @Override
+  Long parse(CharSequence value) throws InvalidValueException;
+
+  /**
+   * <p>Parse the provided {@code value} into a {@link Long} value. This method is null-safe,
+   * returning {@code null} if the provided {@code value} was null.</p>
+   *
+   * <p><b>Example 1 – parse to a {@code Long} instance</b></p>
+   *
+   * <pre>{@code
+   * static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   * static final Locale someLocale = ...;
+   *
+   * Long someVariable = TYPE_PARSER.parse(value, someLocale);
+   * }</pre>
+   *
+   * <p><b>Example 2 – parse to a custom type extending {@link LongType} using the constructor</b></p>
+   *
+   * <p>For example, the {@code ProductId} custom type below uses the type-parser directly in its
+   * constructor to parse the provided {@code value} to create the {@code ProductId} instance:</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   public ProductId(final CharSequence value, final Locale locale) {
+   *     super(TYPE_PARSER.parse(value, locale));
+   *   }
+   * }
+   * }</pre>
+   *
+   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
+   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link LongType#isNull() isNull()}. An
+   * alternative is to use a factory method using the example shown in {@link #parse(CharSequence, Function)} instead.</p>
+   *
+   * @param value the value to parse into a {@link Long}.
+   * @param locale the locale to use when parsing the value. This allows the parser to cater for locale specific grouping separators (e.g. thousands separators).
+   * @return parses the provided {@code value} into a {@link Long} value. Will return {@code null} if the provided {@code value} was null.
+   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
+   * @see #parse(CharSequence, Function)
+   */
+  @Override
+  Long parse(CharSequence value, final Locale locale) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a custom type that extends {@link LongType} using the provided
    * {@code constructorOrFactoryMethod}. This method is null-safe, returning {@code null} if the provided {@code value} was null.</p>
    *
    * <p>For example, the {@code ProductId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToLongType} method:</p>
+   * {@code of(CharSequence value)}, to create instances using the {@code parseType} method:</p>
    *
    * <pre>{@code
    * public final class ProductId extends LongType {
@@ -96,7 +148,7 @@ public interface LongTypeParser {
    *   }
    *
    *   public static ProductId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToLongType(value, ProductId::new);
+   *     return TYPE_PARSER.parseType(value, ProductId::new);
    *   }
    * }
    * }</pre>
@@ -105,7 +157,7 @@ public interface LongTypeParser {
    * <ul>
    *   <li>The above {@code of(CharSequence)} factory method will return {@code null} if the provided {@code value} was null.
    *   It will not instantiate a {@code ProductId} object with a null internal value.</li>
-   *   <li>Use the {@link #parseToLong(CharSequence)} method to simply parse into a {@link Long} value.</li>
+   *   <li>Use the {@link #parse(CharSequence)} method to simply parse into a {@link Long} value.</li>
    * </ul>
    *
    * @param value                      the value to parse into a custom type.
@@ -113,14 +165,19 @@ public interface LongTypeParser {
    * @param <T>                        a custom type that extends {@link LongType}
    * @return a custom type instance that extends {@link LongType}. Will return {@code null} if the provided {@code value} was null.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   * @see #parseToLong(CharSequence)
+   * @see #parse(CharSequence)
    */
-  <T extends LongType> T parseToLongType(CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
+  @Override
+  <T extends LongType> T parse(CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException;
+
+  @Override
+  <T extends LongType> T parse(CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
    * @return the radix (numeric-base) of the type-parser.
    */
+  @Override
   int getRadix();
 
   interface LongTypeParserBuilder {
@@ -441,6 +498,9 @@ public interface LongTypeParser {
 
     // TODO add javadoc
     LongTypeParserBuilder ignoreAllWhitespace();
+
+    // TODO add javadoc
+    LongTypeParserBuilder forbidWhitespace();
 
     /**
      * <p>This will configure the type-parser to ignore all occurrences of any dashes and hyphens

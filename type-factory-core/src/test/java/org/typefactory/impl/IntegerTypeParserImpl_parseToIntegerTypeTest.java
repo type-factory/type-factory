@@ -25,7 +25,7 @@ import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
 import org.typefactory.MessageCode;
 
-class IntegerTypeParserImpl_parseToIntegerTypeTest {
+class IntegerTypeParserImpl_parseTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -85,7 +85,7 @@ class IntegerTypeParserImpl_parseToIntegerTypeTest {
         .build();
 
     static SomeIntegerType of(final String value) {
-      return TYPE_PARSER.parseToIntegerType(value, SomeIntegerType::new);
+      return TYPE_PARSER.parse(value, SomeIntegerType::new);
     }
   }
 }

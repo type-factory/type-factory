@@ -90,7 +90,7 @@ class ShortTypeParserImpl_parseLocaleSpecificTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_acceptsLocaleSpecificGroupingSeparator(
+  void parse_acceptsLocaleSpecificGroupingSeparator(
       final String localeTag, final String value, final short expected) {
 
     final var locale = Locale.forLanguageTag(localeTag);
@@ -103,7 +103,7 @@ class ShortTypeParserImpl_parseLocaleSpecificTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 }

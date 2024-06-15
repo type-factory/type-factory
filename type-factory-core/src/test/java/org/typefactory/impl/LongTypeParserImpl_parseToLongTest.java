@@ -37,7 +37,7 @@ class LongTypeParserImpl_parseToLongTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThatObject(actual).isNull();
   }
 
@@ -49,7 +49,7 @@ class LongTypeParserImpl_parseToLongTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToLong(value))
+        .isThrownBy(() -> longTypeParser.parse(value))
         .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
   }
 
@@ -89,7 +89,7 @@ class LongTypeParserImpl_parseToLongTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -132,7 +132,7 @@ class LongTypeParserImpl_parseToLongTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -174,7 +174,7 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -216,7 +216,7 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -258,7 +258,7 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -300,7 +300,7 @@ class LongTypeParserImpl_parseToLongTest {
         .caseSensitive()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -332,7 +332,7 @@ class LongTypeParserImpl_parseToLongTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToLong(value))
+        .isThrownBy(() -> longTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -371,7 +371,7 @@ class LongTypeParserImpl_parseToLongTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parseToLong(value))
+        .isThrownBy(() -> longTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 }

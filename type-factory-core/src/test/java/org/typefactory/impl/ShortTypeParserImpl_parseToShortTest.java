@@ -37,7 +37,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThatObject(actual).isNull();
   }
 
@@ -49,7 +49,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parseToShort(value))
+        .isThrownBy(() -> shortTypeParser.parse(value))
         .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
   }
 
@@ -79,7 +79,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base8NumbersParseAsExpected(
+  void parse_base8NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -89,7 +89,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -121,7 +121,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base10NumbersParseAsExpected(
+  void parse_base10NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -131,7 +131,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -162,7 +162,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base16NumbersParseAsExpected(
+  void parse_base16NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -173,7 +173,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -204,7 +204,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base32NumbersParseAsExpected(
+  void parse_base32NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -215,7 +215,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -246,7 +246,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base36NumbersParseAsExpected(
+  void parse_base36NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -257,7 +257,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -288,7 +288,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_base62NumbersParseAsExpected(
+  void parse_base62NumbersParseAsExpected(
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
@@ -299,7 +299,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseSensitive()
         .build();
 
-    final var actual = shortTypeParser.parseToShort(value);
+    final var actual = shortTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -319,7 +319,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_outsideInclusiveMinMaxThrowsException(
+  void parse_outsideInclusiveMinMaxThrowsException(
       final short min, final short max,
       final String value, final String expectedMessage) {
 
@@ -331,7 +331,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parseToShort(value))
+        .isThrownBy(() -> shortTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -358,7 +358,7 @@ class ShortTypeParserImpl_parseToShortTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToShort_outsideExclusiveMinMaxThrowsException(
+  void parse_outsideExclusiveMinMaxThrowsException(
       final short min, final short max,
       final String value, final String expectedMessage) {
 
@@ -370,7 +370,7 @@ class ShortTypeParserImpl_parseToShortTest {
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parseToShort(value))
+        .isThrownBy(() -> shortTypeParser.parse(value))
         .withMessageStartingWith(expectedMessage);
   }
 

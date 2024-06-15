@@ -46,7 +46,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -73,7 +73,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -100,7 +100,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -127,7 +127,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -169,7 +169,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -212,7 +212,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -244,7 +244,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -274,7 +274,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -306,7 +306,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -336,7 +336,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parseToLong(value);
+    final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
   }
 

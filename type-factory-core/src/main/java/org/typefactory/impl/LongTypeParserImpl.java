@@ -21,8 +21,6 @@ import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
@@ -32,6 +30,11 @@ import org.typefactory.ShortType;
 import org.typefactory.Subset;
 
 final class LongTypeParserImpl implements LongTypeParser {
+
+  enum WhiteSpace {
+    FORBID_WHITESPACE,
+    IGNORE_WHITESPACE
+  }
 
   private enum Sign {
     NEGATIVE,
@@ -90,6 +93,52 @@ final class LongTypeParserImpl implements LongTypeParser {
     return radix;
   }
 
+  @Override
+  public Long of(final Short value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    checkValueIsWithinBounds(value);
+    return value.longValue();
+  }
+
+  @Override
+  public Long of(final Integer value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    checkValueIsWithinBounds(value);
+    return value.longValue();
+  }
+
+  @Override
+  public Long of(final Long value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    checkValueIsWithinBounds(value);
+    return value;
+  }
+
+  @Override
+  public long of(final short value) throws InvalidValueException {
+    checkValueIsWithinBounds(value);
+    return value;
+  }
+
+  @Override
+  public long of(final int value) throws InvalidValueException {
+    checkValueIsWithinBounds(value);
+    return value;
+  }
+
+  @Override
+  public long of(final long value) throws InvalidValueException {
+    checkValueIsWithinBounds(value);
+    return value;
+  }
+
+
   <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
       throws InvalidValueException {
     final Short parsedValue = parseToShort(value);
@@ -98,16 +147,9 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
+  <T extends ShortType> T parseToShortType(final CharSequence value, final Locale locale, Function<Short, T> constructorOrFactoryMethod)
       throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = parseToLong(value);
+    final Short parsedValue = parseToShort(value, locale);
     return parsedValue == null
         ? null
         : constructorOrFactoryMethod.apply(parsedValue);
@@ -120,6 +162,29 @@ final class LongTypeParserImpl implements LongTypeParser {
         : parsedValue.shortValue();
   }
 
+  Short parseToShort(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
+    final Long parsedValue = parse(originalValue, DecimalFormatSymbols.getInstance(locale));
+    return parsedValue == null
+        ? null
+        : parsedValue.shortValue();
+  }
+
+  <T extends IntegerType> T parseToIntegerType(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
+    final Integer parsedValue = parseToInteger(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  <T extends IntegerType> T parseToIntegerType(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
+    final Integer parsedValue = parseToInteger(value, locale);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
   Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
     return parsedValue == null
@@ -127,12 +192,33 @@ final class LongTypeParserImpl implements LongTypeParser {
         : parsedValue.intValue();
   }
 
-  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
+  Integer parseToInteger(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
+    final Long parsedValue = parse(originalValue, DecimalFormatSymbols.getInstance(locale));
+    return parsedValue == null
+        ? null
+        : parsedValue.intValue();
+  }
+
+  public <T extends LongType> T parse(final CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = parse(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  public <T extends LongType> T parse(final CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = parse(value, locale);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue);
+  }
+
+  public Long parse(final CharSequence originalValue) throws InvalidValueException {
     return parse(originalValue, defaultDecimalFormatSymbols);
   }
 
   // TODO writes tests for this
-  public Long parseToLong(final CharSequence source, final Locale locale) throws InvalidValueException {
+  public Long parse(final CharSequence source, final Locale locale) throws InvalidValueException {
     return parse(source, DecimalFormatSymbols.getInstance(locale));
   }
 
@@ -180,9 +266,10 @@ final class LongTypeParserImpl implements LongTypeParser {
 
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
-          case REMOVE_WHITESPACE:
+          case IGNORE_WHITESPACE:
             ++sourceIndex;
             continue;
+          case FORBID_WHITESPACE:
           default:
             throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
         }
@@ -249,26 +336,77 @@ final class LongTypeParserImpl implements LongTypeParser {
       return null;
     }
 
+    checkValueIsWithinBounds(targetValue, source);
+
+    return targetValue;
+  }
+
+  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  void checkValueIsWithinBounds(final long value) throws InvalidValueException {
+    if (minValueComparisonInclusive) {
+      if (value < minValue) {
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value <= minValue) {
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    }
+
+    if (maxValueComparisonInclusive) {
+      if (value > maxValue) {
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value >= maxValue) {
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    }
+  }
+
+  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  <N extends Number> void checkValueIsWithinBounds(final N value) throws InvalidValueException {
+    if (minValueComparisonInclusive) {
+      if (value.longValue() < minValue) {
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value.longValue() <= minValue) {
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    }
+
+    if (maxValueComparisonInclusive) {
+      if (value.longValue() > maxValue) {
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value.longValue() >= maxValue) {
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    }
+  }
+
+  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  <T extends CharSequence> void checkValueIsWithinBounds(final long targetValue, final T sourceValue) throws InvalidValueException {
     if (minValueComparisonInclusive) {
       if (targetValue < minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, sourceValue, minValue);
       }
     } else /* exclusive comparison */ {
       if (targetValue <= minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, sourceValue, minValue);
       }
     }
 
     if (maxValueComparisonInclusive) {
       if (targetValue > maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, source, maxValue);
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, sourceValue, maxValue);
       }
     } else /* exclusive comparison */ {
       if (targetValue >= maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, source, maxValue);
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, sourceValue, maxValue);
       }
     }
-
-    return targetValue;
   }
 }
