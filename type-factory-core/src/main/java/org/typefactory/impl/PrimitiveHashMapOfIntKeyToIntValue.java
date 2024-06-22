@@ -138,6 +138,7 @@ final class PrimitiveHashMapOfIntKeyToIntValue {
         }
       }
     }
+    // We use Integer.MIN_VALUE as a sentinel value to indicate that no value exists for the key.
     return Integer.MIN_VALUE;
   }
 
@@ -196,6 +197,7 @@ final class PrimitiveHashMapOfIntKeyToIntValue {
           .append(" [")
           .appendCodePoint(key)
           .append("] ⟶ ");
+      // We use Integer.MIN_VALUE as a sentinel value to indicate that no value exists for the key.
       if (value > Integer.MIN_VALUE) {
         s.appendCodePoint(value);
       }
