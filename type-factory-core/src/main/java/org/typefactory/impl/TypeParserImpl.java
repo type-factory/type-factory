@@ -22,21 +22,25 @@ import static org.typefactory.impl.NullHandling.PRESERVE_NULL_AND_EMPTY;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import org.typefactory.MessageCode;
-import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
-import org.typefactory.LongType;
-import org.typefactory.ShortType;
+import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
 import org.typefactory.TypeParser;
 import org.typefactory.impl.Converter.ConverterResults;
 
 final class TypeParserImpl implements TypeParser {
+
+  enum WhiteSpace {
+    FORBID_WHITESPACE,
+    PRESERVE_WHITESPACE,
+    PRESERVE_AND_CONVERT_WHITESPACE,
+    NORMALIZE_WHITESPACE,
+    NORMALIZE_AND_CONVERT_WHITESPACE,
+    REMOVE_WHITESPACE,
+  }
 
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
@@ -46,12 +50,10 @@ final class TypeParserImpl implements TypeParser {
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
-
-  private final Pattern regex;
-
-  private final Predicate<String> validationFunction;
   private final Subset acceptedCodePoints;
   private final Converter converter;
+  private final Pattern regex;
+  private final Predicate<String> validationFunction;
 
   @SuppressWarnings("java:S107")
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
@@ -64,10 +66,10 @@ final class TypeParserImpl implements TypeParser {
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
-      final Pattern regex,
-      final Predicate<String> validationFunction,
       final Subset acceptedCodePoints,
-      final Converter converter) {
+      final Converter converter,
+      final Pattern regex,
+      final Predicate<String> validationFunction) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
     this.targetCase = targetCase;
@@ -76,10 +78,10 @@ final class TypeParserImpl implements TypeParser {
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
-    this.regex = regex;
-    this.validationFunction = validationFunction;
     this.acceptedCodePoints = acceptedCodePoints;
     this.converter = converter;
+    this.regex = regex;
+    this.validationFunction = validationFunction;
   }
 
   @Override
@@ -91,60 +93,7 @@ final class TypeParserImpl implements TypeParser {
         : constructorOrFactoryMethod.apply(parseToString(value));
   }
 
-  @Override
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Short parsedValue = parseToShort(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = parseToLong(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Short.valueOf(parsedValue);
-  }
-
-  @Override
-  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Integer.valueOf(parsedValue);
-  }
-
-  @Override
-  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Long.valueOf(parsedValue);
-  }
-
-  // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
+  // Suppress SonarCloud "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
   // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
   @SuppressWarnings({"java:S3776"})
@@ -306,6 +255,7 @@ final class TypeParserImpl implements TypeParser {
     validateThatParsedValueConformToTheRegex(parsedValue, source);
 
     validationUsingCustomValidationFunction(parsedValue, source);
+
 
     return parsedValue;
   }

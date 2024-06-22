@@ -46,7 +46,6 @@ class InvalidValueExceptionTest {
   @Mock
   Exception cause;
 
-
   @Test
   void constructor_constructsExceptionWithoutParserErrorArgs() {
 
@@ -330,11 +329,11 @@ class InvalidValueExceptionTest {
   }
 
 
-  static final class SomeClass {
+  private static final class SomeClass {
 
   }
 
-  static final class SomeCharSequence implements CharSequence {
+  private static final class SomeCharSequence implements CharSequence {
 
     private final char[] chars;
 

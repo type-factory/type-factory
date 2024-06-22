@@ -21,7 +21,8 @@ import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.MessageCode;
 import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
 
-public class ExceptionUtils {
+class ExceptionUtils {
+
   private ExceptionUtils() {
     // don't instantiate me
   }
@@ -57,6 +58,74 @@ public class ExceptionUtils {
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.MAX_LENGTH,
             maxLength)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            minExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            minInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            maxExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            maxInclusiveValue)
         .build();
   }
 

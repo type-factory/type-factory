@@ -287,12 +287,25 @@ public class InvalidValueException extends IllegalArgumentException {
      * @param invalidValue the value that was considered invalid by the {@link TypeParser}.
      * @return this builder
      */
-    public InvalidValueExceptionBuilder invalidValue(final CharSequence invalidValue) {
+    public <T> InvalidValueExceptionBuilder invalidValue(final T invalidValue) {
       if (invalidValue instanceof String invalidValueString) {
         this.invalidValue = invalidValueString;
       } else {
         this.invalidValue = invalidValue == null ? null : invalidValue.toString();
       }
+      return this;
+    }
+
+    /**
+     * Set the value that was considered invalid by the {@link TypeParser}. This value is not presented in the {@link InvalidValueException} message
+     * as it may contain sensitive, secret or personal information. It is captured solely to enable any exception handlers meaningful access to the
+     * invalid value.
+     *
+     * @param invalidValue the value that was considered invalid by the {@link TypeParser}.
+     * @return this builder
+     */
+    public InvalidValueExceptionBuilder invalidValue(final Number invalidValue) {
+      this.invalidValue = invalidValue == null ? null : invalidValue.toString();
       return this;
     }
   }
@@ -436,6 +449,19 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");
+
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than",
+        "Invalid value - must be greater than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than_or_equal_to",
+        "Invalid value - must be greater than or equal to {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than",
+        "Invalid value - must be less than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than_or_equal_to",
+        "Invalid value - must be less than or equal to {0}.");
   }
 
 }
