@@ -240,6 +240,22 @@ public class TypeParserBuilderException extends RuntimeException  {
     public static final MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
         "duplicate_custom_radix_character",
         "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity of the parser.");
+
+    public static final MessageCode INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_short_min_value",
+        "An invalid minimum value has been configured for the ShortTypeParser – minimum value must greater-than or equal to Short.MIN_VALUE.");
+
+    public static final MessageCode INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_short_max_value",
+        "An invalid maximum value has been configured for the ShortTypeParser – maximum value must be less-than or equal to Short.MAX_VALUE.");
+
+    public static final MessageCode INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_integer_min_value",
+        "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.");
+
+    public static final MessageCode INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_integer_max_value",
+        "An invalid maximum value has been configured for the IntegerTypeParser – maximum value must be less-than or equal to Integer.MAX_VALUE.");
   }
 
 }

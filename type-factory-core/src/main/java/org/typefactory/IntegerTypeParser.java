@@ -145,11 +145,25 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
     IntegerTypeParserBuilder minValueInclusive(int minValue);
 
     /**
+     * Set a minimum value that will be used to validate values that are parsed to a Integer value.
+     * @param minValue the minimum inclusive value allowed.
+     * @return this builder
+     */
+    IntegerTypeParserBuilder minValueInclusive(long minValue) throws TypeParserBuilderException;
+
+    /**
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
      */
     IntegerTypeParserBuilder maxValueInclusive(int maxValue);
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Integer value.
+     * @param maxValue the maximum inclusive value allowed.
+     * @return this builder
+     */
+    IntegerTypeParserBuilder maxValueInclusive(long maxValue) throws TypeParserBuilderException;
 
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Integer value.
@@ -159,11 +173,25 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
     IntegerTypeParserBuilder minValueExclusive(int minValue);
 
     /**
+     * Set a minimum value that will be used to validate values that are parsed to a Integer value.
+     * @param minValue the minimum exclusive value allowed.
+     * @return this builder
+     */
+    IntegerTypeParserBuilder minValueExclusive(long minValue) throws TypeParserBuilderException;
+
+    /**
      * Set a maximum value that will be used to validate values that are parsed to a Integer value.
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
      */
     IntegerTypeParserBuilder maxValueExclusive(int maxValue);
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Integer value.
+     * @param maxValue the maximum exclusive value allowed.
+     * @return this builder
+     */
+    IntegerTypeParserBuilder maxValueExclusive(long maxValue) throws TypeParserBuilderException;
 
     IntegerTypeParserBuilder caseSensitive();
 

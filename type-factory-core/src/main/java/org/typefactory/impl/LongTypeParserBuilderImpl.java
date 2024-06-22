@@ -48,8 +48,8 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private int[] numericRadixCodePoints = DEFAULT_BASE_10_CODE_POINTS;
   private long minValue;
   private long maxValue;
-  private boolean minValueComparisonInclusive;
-  private boolean maxValueComparisonInclusive;
+  private boolean minValueComparisonInclusive = true;
+  private boolean maxValueComparisonInclusive = true;
   private boolean ignoreLeadingNegativeSign = false;
   private boolean ignoreLeadingPositiveSign = false;
 

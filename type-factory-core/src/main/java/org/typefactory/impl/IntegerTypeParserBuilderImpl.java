@@ -1,8 +1,12 @@
 package org.typefactory.impl;
 
+import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE;
+import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE;
+
 import java.util.Locale;
 import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.MessageCode;
+import org.typefactory.TypeParserBuilderException;
 
 class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
@@ -38,7 +42,29 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
+  public IntegerTypeParserBuilder minValueInclusive(long minValue) throws TypeParserBuilderException {
+    if (minValue < Integer.MIN_VALUE) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE)
+          .build();
+    }
+    wrapperBuilder.minValueInclusive(minValue);
+    return this;
+  }
+
+  @Override
   public IntegerTypeParserBuilder maxValueInclusive(int maxValue) {
+    wrapperBuilder.maxValueInclusive(maxValue);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder maxValueInclusive(long maxValue) throws TypeParserBuilderException {
+    if (maxValue > Integer.MAX_VALUE) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE)
+          .build();
+    }
     wrapperBuilder.maxValueInclusive(maxValue);
     return this;
   }
@@ -50,7 +76,29 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
+  public IntegerTypeParserBuilder minValueExclusive(long minValue) throws TypeParserBuilderException {
+    if (minValue < Integer.MIN_VALUE) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE)
+          .build();
+    }
+    wrapperBuilder.minValueExclusive(minValue);
+    return this;
+  }
+
+  @Override
   public IntegerTypeParserBuilder maxValueExclusive(int maxValue) {
+    wrapperBuilder.maxValueExclusive(maxValue);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder maxValueExclusive(long maxValue) throws TypeParserBuilderException {
+    if (maxValue > Integer.MAX_VALUE) {
+      throw TypeParserBuilderException.builder()
+          .messageCode(INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE)
+          .build();
+    }
     wrapperBuilder.maxValueExclusive(maxValue);
     return this;
   }

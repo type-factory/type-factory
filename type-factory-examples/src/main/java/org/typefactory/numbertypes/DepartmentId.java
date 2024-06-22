@@ -31,8 +31,8 @@ public final class DepartmentId extends ShortType {
   private static final ShortTypeParser TYPE_PARSER =
       ShortTypeParser.builder()
           .messageCode(ERROR_MESSAGE)
-          .minValueInclusive((short)1000)
-          .maxValueInclusive((short)9999)
+          .minValueInclusive(1000)
+          .maxValueInclusive(9999)
           .allowBase10Numbers()
           .ignoreAllWhitespace()
           .build();

@@ -155,11 +155,39 @@ public interface ShortTypeParser extends NumericTypeParser<Short, ShortType> {
     ShortTypeParserBuilder minValueInclusive(short minValue);
 
     /**
+     * Set a minimum value that will be used to validate values that are parsed to a Short value.
+     * @param minValue the minimum inclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder minValueInclusive(int minValue) throws TypeParserBuilderException;
+
+    /**
+     * Set a minimum value that will be used to validate values that are parsed to a Short value.
+     * @param minValue the minimum inclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder minValueInclusive(long minValue) throws TypeParserBuilderException;
+
+    /**
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
      */
     ShortTypeParserBuilder maxValueInclusive(short maxValue);
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Short value.
+     * @param maxValue the maximum inclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder maxValueInclusive(int maxValue) throws TypeParserBuilderException;
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Short value.
+     * @param maxValue the maximum inclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder maxValueInclusive(long maxValue) throws TypeParserBuilderException;
 
     /**
      * Set a minimum value that will be used to validate values that are parsed to a Short value.
@@ -169,11 +197,39 @@ public interface ShortTypeParser extends NumericTypeParser<Short, ShortType> {
     ShortTypeParserBuilder minValueExclusive(short minValue);
 
     /**
+     * Set a minimum value that will be used to validate values that are parsed to a Short value.
+     * @param minValue the minimum exclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder minValueExclusive(int minValue) throws TypeParserBuilderException;
+
+    /**
+     * Set a minimum value that will be used to validate values that are parsed to a Short value.
+     * @param minValue the minimum exclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder minValueExclusive(long minValue) throws TypeParserBuilderException;
+
+    /**
      * Set a maximum value that will be used to validate values that are parsed to a Short value.
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
      */
     ShortTypeParserBuilder maxValueExclusive(short maxValue);
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Short value.
+     * @param maxValue the maximum exclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder maxValueExclusive(int maxValue) throws TypeParserBuilderException;
+
+    /**
+     * Set a maximum value that will be used to validate values that are parsed to a Short value.
+     * @param maxValue the maximum exclusive value allowed.
+     * @return this builder
+     */
+    ShortTypeParserBuilder maxValueExclusive(long maxValue) throws TypeParserBuilderException;
 
     ShortTypeParserBuilder caseSensitive();
 

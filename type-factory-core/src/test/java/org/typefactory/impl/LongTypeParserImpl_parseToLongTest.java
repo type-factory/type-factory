@@ -31,7 +31,7 @@ class LongTypeParserImpl_parseToLongTest {
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = {" ", "  ", "   "})
-  void of_shouldReturnNull(final String value) {
+  void parse_shouldReturnNull(final String value) {
     final var longTypeParser = LongTypeParser.builder()
         .allowBase10Numbers()
         .ignoreAllWhitespace()
@@ -43,7 +43,7 @@ class LongTypeParserImpl_parseToLongTest {
 
   @ParameterizedTest
   @ValueSource(strings = {" ", "  ", "   "})
-  void of_whitespaceShouldThrowException(final String value) {
+  void parse_whitespaceShouldThrowException(final String value) {
     final var longTypeParser = LongTypeParser.builder()
         .allowBase10Numbers()
         .build();

@@ -168,8 +168,8 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
       final String value, final short expected, final String ignoredComments) {
 
     final var shortTypeParser = ShortTypeParser.builder()
-        .minValueInclusive((short) -4)
-        .maxValueInclusive((short) 4)
+        .minValueInclusive(-4)
+        .maxValueInclusive(4)
         .allowCustomBaseNumbers(0x01F600, 0x01F61E) // 😀😞
         .ignoreAllWhitespace()
         .build();

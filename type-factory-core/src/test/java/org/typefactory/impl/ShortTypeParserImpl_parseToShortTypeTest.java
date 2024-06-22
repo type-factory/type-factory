@@ -79,8 +79,8 @@ class ShortTypeParserImpl_parseTest {
         .messageCode(MESSAGE_CODE)
         .targetTypeClass(SomeShortType.class)
         .allowBase10Numbers()
-        .minValueInclusive((short)1000)
-        .maxValueInclusive((short)9999)
+        .minValueInclusive(1000)
+        .maxValueInclusive(9999)
         .ignoreAllWhitespace()
         .build();
 

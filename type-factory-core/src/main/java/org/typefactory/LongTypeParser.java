@@ -41,6 +41,12 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   }
 
   @Override
+  Long of(Short value) throws InvalidValueException;
+
+  @Override
+  Long of(Integer value) throws InvalidValueException;
+
+  @Override
   Long of(Long value) throws InvalidValueException;
 
   long of(final short value) throws InvalidValueException;
