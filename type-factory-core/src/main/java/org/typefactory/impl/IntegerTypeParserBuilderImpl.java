@@ -43,7 +43,7 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   @Override
   public IntegerTypeParserBuilder minValueInclusive(long minValue) throws TypeParserBuilderException {
-    if (minValue < Integer.MIN_VALUE) {
+    if (minValue < Integer.MIN_VALUE || minValue > Integer.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -60,7 +60,7 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   @Override
   public IntegerTypeParserBuilder maxValueInclusive(long maxValue) throws TypeParserBuilderException {
-    if (maxValue > Integer.MAX_VALUE) {
+    if (maxValue > Integer.MAX_VALUE || maxValue < Integer.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -77,7 +77,7 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   @Override
   public IntegerTypeParserBuilder minValueExclusive(long minValue) throws TypeParserBuilderException {
-    if (minValue < Integer.MIN_VALUE) {
+    if (minValue < Integer.MIN_VALUE || minValue > Integer.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -94,7 +94,7 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   @Override
   public IntegerTypeParserBuilder maxValueExclusive(long maxValue) throws TypeParserBuilderException {
-    if (maxValue > Integer.MAX_VALUE) {
+    if (maxValue > Integer.MAX_VALUE || maxValue < Integer.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();

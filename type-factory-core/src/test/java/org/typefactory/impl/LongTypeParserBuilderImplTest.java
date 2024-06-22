@@ -26,7 +26,7 @@ class LongTypeParserBuilderImplTest {
       delimiter = '|',
       useHeadersInDisplayName = true)
   void allowCustomBaseNumbers_duplicateBaseCharactersThrowsException(
-      @ConvertWith(CodePointArrayConverter.class) final int [] customBaseCodePoints,
+      @ConvertWith(CodePointArrayConverter.class) final int[] customBaseCodePoints,
       final String expectedMessage) {
 
     final var builder = LongTypeParser.builder()

@@ -52,28 +52,21 @@ class ShortTypeParserImpl_ofNumericTest {
   void of_valueShouldSucceed(
       final String type, final short value, final short expected) {
 
-    final short shortPrimitiveValue = value;
-    final Short shortObjectValue = value;
-    final int integerPrimitiveValue = value;
-    final Integer integerObjectValue = (int) value;
-    final long longPrimitiveValue = value;
-    final Long longObjectValue = (long) value;
-
     final var shortTypeParser = ShortTypeParser.builder().build();
 
     switch (type) {
       case "Short":
-        assertThat(shortTypeParser.of(shortPrimitiveValue)).isEqualTo(expected);
-        assertThat(shortTypeParser.of(shortObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Short.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(shortTypeParser.of(integerPrimitiveValue)).isEqualTo(expected);
-        assertThat(shortTypeParser.of(integerObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of((int)value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "Long":
       default:
-        assertThat(shortTypeParser.of(longPrimitiveValue)).isEqualTo(expected);
-        assertThat(shortTypeParser.of(longObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of((long)value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         break;
     }
   }

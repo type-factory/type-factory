@@ -52,28 +52,21 @@ class LongTypeParserImpl_ofNumericTest {
   void of_valueShouldSucceed(
       final String type, final long value, final long expected) {
 
-    final short shortPrimitiveValue = (short) value;
-    final Short shortObjectValue = (short) value;
-    final int integerPrimitiveValue = (int) value;
-    final Integer integerObjectValue = (int) value;
-    final long longPrimitiveValue = value;
-    final Long longObjectValue = value;
-
     final var longTypeParser = LongTypeParser.builder().build();
 
     switch (type) {
       case "Short":
-        assertThat(longTypeParser.of(shortPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(shortObjectValue)).isEqualTo(expected);
+        assertThat(longTypeParser.of((short)value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Short.valueOf((short)value))).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(longTypeParser.of(integerPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(integerObjectValue)).isEqualTo(expected);
+        assertThat(longTypeParser.of((int)value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Integer.valueOf((int)value))).isEqualTo(expected);
         // fall-thru
       case "Long":
       default:
-        assertThat(longTypeParser.of(longPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(longObjectValue)).isEqualTo(expected);
+        assertThat(longTypeParser.of(value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         break;
     }
   }
@@ -81,19 +74,19 @@ class LongTypeParserImpl_ofNumericTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
       TYPE    |                VALUE |  EXPECTED_MESSAGE
-      Short   |                 -128 |  Invalid value - must be greater than or equal to -127.
-      Short   |                  127 |  Invalid value - must be less than or equal to 126.
-      Integer |               -32768 |  Invalid value - must be greater than or equal to -127.
-      Integer |                32767 |  Invalid value - must be less than or equal to 126.
-      Long    | -9223372036854775808 |  Invalid value - must be greater than or equal to -127.
-      Long    |  9223372036854775807 |  Invalid value - must be less than or equal to 126.
+      Short   |               -32768 |  Invalid value - must be greater than or equal to -32,767.
+      Short   |                32767 |  Invalid value - must be less than or equal to 32,766.
+      Integer |          -2147483648 |  Invalid value - must be greater than or equal to -32,767.
+      Integer |           2147483647 |  Invalid value - must be less than or equal to 32,766.
+      Long    | -9223372036854775808 |  Invalid value - must be greater than or equal to -32,767.
+      Long    |  9223372036854775807 |  Invalid value - must be less than or equal to 32,766.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void of_valueShouldThrowException(
       final String type, final long value, final String expectedMessage) {
 
     final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(-127)
-        .maxValueInclusive(126)
+        .minValueInclusive(Short.MIN_VALUE + 1)
+        .maxValueInclusive(Short.MAX_VALUE - 1)
         .build();
 
     switch (type) {

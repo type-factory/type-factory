@@ -42,7 +42,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder minValueInclusive(int minValue) throws TypeParserBuilderException {
-    if (minValue < Short.MIN_VALUE) {
+    if (minValue < Short.MIN_VALUE || minValue > Short.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -53,7 +53,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder minValueInclusive(long minValue) throws TypeParserBuilderException {
-    if (minValue < Short.MIN_VALUE) {
+    if (minValue < Short.MIN_VALUE || minValue > Short.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -70,7 +70,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder maxValueInclusive(int maxValue) throws TypeParserBuilderException {
-    if (maxValue > Short.MAX_VALUE) {
+    if (maxValue > Short.MAX_VALUE || maxValue < Short.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -81,7 +81,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder maxValueInclusive(long maxValue) throws TypeParserBuilderException {
-    if (maxValue > Short.MAX_VALUE) {
+    if (maxValue > Short.MAX_VALUE || maxValue < Short.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -98,7 +98,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder minValueExclusive(int minValue) throws TypeParserBuilderException {
-    if (minValue < Short.MIN_VALUE) {
+    if (minValue < Short.MIN_VALUE || minValue > Short.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -109,7 +109,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder minValueExclusive(long minValue) throws TypeParserBuilderException {
-    if (minValue < Short.MIN_VALUE) {
+    if (minValue < Short.MIN_VALUE || minValue > Short.MAX_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -126,7 +126,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder maxValueExclusive(int maxValue) throws TypeParserBuilderException {
-    if (maxValue > Short.MAX_VALUE) {
+    if (maxValue > Short.MAX_VALUE || maxValue < Short.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();
@@ -137,7 +137,7 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder maxValueExclusive(long maxValue) throws TypeParserBuilderException {
-    if (maxValue > Short.MAX_VALUE) {
+    if (maxValue > Short.MAX_VALUE || maxValue < Short.MIN_VALUE) {
       throw TypeParserBuilderException.builder()
           .messageCode(INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE)
           .build();
