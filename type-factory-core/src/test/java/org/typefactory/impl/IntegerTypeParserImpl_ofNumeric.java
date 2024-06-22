@@ -31,9 +31,9 @@ class IntegerTypeParserImpl_ofNumeric {
   void of_nullShouldReturnNull() {
     final var integerTypeParser = IntegerTypeParser.builder().build();
 
-    assertThatObject(integerTypeParser.of((Short)null)).isNull();
-    assertThatObject(integerTypeParser.of((Integer)null)).isNull();
-    assertThatObject(integerTypeParser.of((Long)null)).isNull();
+    assertThatObject(integerTypeParser.of((Short) null)).isNull();
+    assertThatObject(integerTypeParser.of((Integer) null)).isNull();
+    assertThatObject(integerTypeParser.of((Long) null)).isNull();
   }
 
   @ParameterizedTest
@@ -52,21 +52,28 @@ class IntegerTypeParserImpl_ofNumeric {
   void of_valueShouldSucceed(
       final String type, final int value, final int expected) {
 
+    final Short shortPrimitiveValue = (short) value;
+    final Short shortObjectValue = (short) value;
+    final Integer integerPrimitiveValue = value;
+    final Integer integerObjectValue = value;
+    final Long longPrimitiveValue = (long) value;
+    final Long longObjectValue = (long) value;
+
     final var integerTypeParser = IntegerTypeParser.builder().build();
 
     switch (type) {
       case "Short":
-        assertThat(integerTypeParser.of((short)value)).isEqualTo(expected);
-        assertThat(integerTypeParser.of(Short.valueOf((short)value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(shortPrimitiveValue)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(shortObjectValue)).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(integerTypeParser.of(value)).isEqualTo(expected);
-        assertThat(integerTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(integerPrimitiveValue)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(integerObjectValue)).isEqualTo(expected);
         // fall-thru
       case "Long":
       default:
-        assertThat(integerTypeParser.of((long)value)).isEqualTo(expected);
-        assertThat(integerTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(longPrimitiveValue)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(longObjectValue)).isEqualTo(expected);
         break;
     }
   }
@@ -92,18 +99,18 @@ class IntegerTypeParserImpl_ofNumeric {
     switch (type) {
       case "Short":
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> integerTypeParser.of((short)value))
+            .isThrownBy(() -> integerTypeParser.of((short) value))
             .withMessageStartingWith(expectedMessage);
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> integerTypeParser.of(Short.valueOf((short)value)))
+            .isThrownBy(() -> integerTypeParser.of(Short.valueOf((short) value)))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> integerTypeParser.of((int)value))
+            .isThrownBy(() -> integerTypeParser.of((int) value))
             .withMessageStartingWith(expectedMessage);
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> integerTypeParser.of(Integer.valueOf((int)value)))
+            .isThrownBy(() -> integerTypeParser.of(Integer.valueOf((int) value)))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
