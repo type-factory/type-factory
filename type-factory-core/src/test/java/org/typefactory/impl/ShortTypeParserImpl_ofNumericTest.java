@@ -54,9 +54,9 @@ class ShortTypeParserImpl_ofNumericTest {
 
     final short shortPrimitiveValue = value;
     final Short shortObjectValue = value;
-    final int integerPrimitiveValue = (int) value;
+    final int integerPrimitiveValue = value;
     final Integer integerObjectValue = (int) value;
-    final long longPrimitiveValue = (long) value;
+    final long longPrimitiveValue = value;
     final Long longObjectValue = (long) value;
 
     final var shortTypeParser = ShortTypeParser.builder().build();

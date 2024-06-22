@@ -56,7 +56,7 @@ class IntegerTypeParserImpl_ofNumericTest {
     final Short shortObjectValue = (short) value;
     final int integerPrimitiveValue = value;
     final Integer integerObjectValue = value;
-    final long longPrimitiveValue = (long) value;
+    final long longPrimitiveValue = value;
     final Long longObjectValue = (long) value;
 
     final var integerTypeParser = IntegerTypeParser.builder().build();
