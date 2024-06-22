@@ -52,11 +52,11 @@ class ShortTypeParserImpl_ofNumericTest {
   void of_valueShouldSucceed(
       final String type, final short value, final short expected) {
 
-    final Short shortPrimitiveValue = value;
+    final short shortPrimitiveValue = value;
     final Short shortObjectValue = value;
-    final Integer integerPrimitiveValue = (int) value;
+    final int integerPrimitiveValue = (int) value;
     final Integer integerObjectValue = (int) value;
-    final Long longPrimitiveValue = (long) value;
+    final long longPrimitiveValue = (long) value;
     final Long longObjectValue = (long) value;
 
     final var shortTypeParser = ShortTypeParser.builder().build();

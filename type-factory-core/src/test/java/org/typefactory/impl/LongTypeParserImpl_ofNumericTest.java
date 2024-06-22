@@ -52,11 +52,11 @@ class LongTypeParserImpl_ofNumericTest {
   void of_valueShouldSucceed(
       final String type, final long value, final long expected) {
 
-    final Short shortPrimitiveValue = (short) value;
+    final short shortPrimitiveValue = (short) value;
     final Short shortObjectValue = (short) value;
-    final Integer integerPrimitiveValue = (int) value;
+    final int integerPrimitiveValue = (int) value;
     final Integer integerObjectValue = (int) value;
-    final Long longPrimitiveValue = value;
+    final long longPrimitiveValue = value;
     final Long longObjectValue = value;
 
     final var longTypeParser = LongTypeParser.builder().build();
