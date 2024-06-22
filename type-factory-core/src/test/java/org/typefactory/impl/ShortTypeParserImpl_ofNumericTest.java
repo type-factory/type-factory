@@ -23,17 +23,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.InvalidValueException;
-import org.typefactory.LongTypeParser;
+import org.typefactory.ShortTypeParser;
 
-class LongTypeParserImpl_ofNumeric {
+class ShortTypeParserImpl_ofNumericTest {
 
   @Test
   void of_nullShouldReturnNull() {
-    final var longTypeParser = LongTypeParser.builder().build();
+    final var shortTypeParser = ShortTypeParser.builder().build();
 
-    assertThatObject(longTypeParser.of((Short) null)).isNull();
-    assertThatObject(longTypeParser.of((Integer) null)).isNull();
-    assertThatObject(longTypeParser.of((Long) null)).isNull();
+    assertThatObject(shortTypeParser.of((Short) null)).isNull();
+    assertThatObject(shortTypeParser.of((Integer) null)).isNull();
+    assertThatObject(shortTypeParser.of((Long) null)).isNull();
   }
 
   @ParameterizedTest
@@ -42,38 +42,38 @@ class LongTypeParserImpl_ofNumeric {
       Short   |               -32768 |               -32768
       Short   |                32767 |                32767
       Short   |                    0 |                    0
-      Integer |          -2147483648 |          -2147483648
-      Integer |           2147483647 |           2147483647
+      Integer |               -32768 |               -32768
+      Integer |                32767 |                32767
       Integer |                    0 |                    0
-      Long    | -9223372036854775808 | -9223372036854775808
-      Long    |  9223372036854775807 |  9223372036854775807
+      Long    |               -32768 |               -32768
+      Long    |                32767 |                32767
       Long    |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void of_valueShouldSucceed(
-      final String type, final long value, final long expected) {
+      final String type, final short value, final short expected) {
 
-    final Short shortPrimitiveValue = (short) value;
-    final Short shortObjectValue = (short) value;
+    final Short shortPrimitiveValue = value;
+    final Short shortObjectValue = value;
     final Integer integerPrimitiveValue = (int) value;
     final Integer integerObjectValue = (int) value;
-    final Long longPrimitiveValue = value;
-    final Long longObjectValue = value;
+    final Long longPrimitiveValue = (long) value;
+    final Long longObjectValue = (long) value;
 
-    final var longTypeParser = LongTypeParser.builder().build();
+    final var shortTypeParser = ShortTypeParser.builder().build();
 
     switch (type) {
       case "Short":
-        assertThat(longTypeParser.of(shortPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(shortObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(shortPrimitiveValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(shortObjectValue)).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(longTypeParser.of(integerPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(integerObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(integerPrimitiveValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(integerObjectValue)).isEqualTo(expected);
         // fall-thru
       case "Long":
       default:
-        assertThat(longTypeParser.of(longPrimitiveValue)).isEqualTo(expected);
-        assertThat(longTypeParser.of(longObjectValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(longPrimitiveValue)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(longObjectValue)).isEqualTo(expected);
         break;
     }
   }
@@ -81,45 +81,45 @@ class LongTypeParserImpl_ofNumeric {
   @ParameterizedTest
   @CsvSource(textBlock = """
       TYPE    |                VALUE |  EXPECTED_MESSAGE
-      Short   |                 -128 |  Invalid value - must be greater than or equal to -127.
-      Short   |                  127 |  Invalid value - must be less than or equal to 126.
-      Integer |               -32768 |  Invalid value - must be greater than or equal to -127.
-      Integer |                32767 |  Invalid value - must be less than or equal to 126.
-      Long    | -9223372036854775808 |  Invalid value - must be greater than or equal to -127.
-      Long    |  9223372036854775807 |  Invalid value - must be less than or equal to 126.
+      Short   |               -32768 |  Invalid value - must be greater than or equal to -32,767.
+      Short   |                32767 |  Invalid value - must be less than or equal to 32,766.
+      Integer |          -2147483648 |  Invalid value - must be greater than or equal to -32,767.
+      Integer |           2147483647 |  Invalid value - must be less than or equal to 32,766.
+      Long    | -9223372036854775808 |  Invalid value - must be greater than or equal to -32,767.
+      Long    |  9223372036854775807 |  Invalid value - must be less than or equal to 32,766.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void of_valueShouldThrowException(
       final String type, final long value, final String expectedMessage) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(-127)
-        .maxValueInclusive(126)
+    final var shortTypeParser = ShortTypeParser.builder()
+        .minValueInclusive(Short.MIN_VALUE + 1)
+        .maxValueInclusive(Short.MAX_VALUE - 1)
         .build();
 
     switch (type) {
       case "Short":
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of((short) value))
+            .isThrownBy(() -> shortTypeParser.of((short) value))
             .withMessageStartingWith(expectedMessage);
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(Short.valueOf((short) value)))
+            .isThrownBy(() -> shortTypeParser.of(Short.valueOf((short) value)))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of((int) value))
+            .isThrownBy(() -> shortTypeParser.of((int) value))
             .withMessageStartingWith(expectedMessage);
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(Integer.valueOf((int) value)))
+            .isThrownBy(() -> shortTypeParser.of(Integer.valueOf((int) value)))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
       default:
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
+            .isThrownBy(() -> shortTypeParser.of(value))
             .withMessageStartingWith(expectedMessage);
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(Long.valueOf(value)))
+            .isThrownBy(() -> shortTypeParser.of(Long.valueOf(value)))
             .withMessageStartingWith(expectedMessage);
         break;
     }

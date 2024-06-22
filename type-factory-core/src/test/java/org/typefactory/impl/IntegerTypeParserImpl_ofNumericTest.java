@@ -25,7 +25,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
 
-class IntegerTypeParserImpl_ofNumeric {
+class IntegerTypeParserImpl_ofNumericTest {
 
   @Test
   void of_nullShouldReturnNull() {
