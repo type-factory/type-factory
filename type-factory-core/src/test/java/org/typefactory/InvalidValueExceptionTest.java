@@ -168,6 +168,16 @@ class InvalidValueExceptionTest {
   }
 
   @Test
+  void builder_constructsExceptionWithEmptyInvalidValue() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue("")
+        .build();
+
+    assertThat(actual.getInvalidValue()).isEmpty();
+  }
+
+  @Test
   void builder_constructsExceptionWithStringInvalidValue() {
 
     final var actual = InvalidValueException.builder()
@@ -185,6 +195,27 @@ class InvalidValueExceptionTest {
         .build();
 
     assertThat(actual.getInvalidValue()).isNotNull().isEqualTo("AZ");
+  }
+
+  @Test
+  void builder_constructsExceptionWithNumberInvalidValue() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue(Integer.valueOf("112244"))
+        .build();
+
+    assertThat(actual.getInvalidValue()).isNotNull().isEqualTo("112244");
+  }
+
+  @Test
+  void builder_constructsExceptionWithNullNumberInvalidValue() {
+
+    final Number invalidValue = null;
+    final var actual = InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .build();
+
+    assertThat(actual.getInvalidValue()).isNull();
   }
 
   @ParameterizedTest
@@ -326,6 +357,20 @@ class InvalidValueExceptionTest {
 
     assertThat(actual).hasToString("""
         InvalidValueException{message='some default error message. some default parser error message.', messageCode='some.error.code', defaultErrorMessage='some default error message.', parserMessageCode='some.parser.error.code', defaultParserErrorMessage='some default parser error message.', invalidCodePoint='A', targetTypeClass='class org.typefactory.InvalidValueExceptionTest$SomeClass', cause='Exception - some exception message'}""");
+  }
+
+  @Test
+  void toString_createsExpectedStringWithNoCauseNorTargetTypeClass() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue(INVALID_VALUE)
+        .messageCode(ERROR_MESSAGE)
+        .parserMessageCode(PARSER_ERROR_MESSAGE)
+        .addParserMessageCodeArg("invalidCodePoint", "A")
+        .build();
+
+    assertThat(actual).hasToString("""
+        InvalidValueException{message='some default error message. some default parser error message.', messageCode='some.error.code', defaultErrorMessage='some default error message.', parserMessageCode='some.parser.error.code', defaultParserErrorMessage='some default parser error message.', invalidCodePoint='A'}""");
   }
 
 
