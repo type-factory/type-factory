@@ -292,7 +292,7 @@ class UnsignedIntegerSortTest {
   }
 
   @Test
-  void sort_AtLeastThirtyElements_ArraySortedCorrectly() {
+  void sort_exerciseEqualElementsPortionOfSort() {
     // Given an array with at least 30 elements in random order
     int[] values = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
