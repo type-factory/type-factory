@@ -16,6 +16,7 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE;
 
@@ -60,6 +61,27 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
     assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
     assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
   }
+
+  @Test
+  void allowCustomBaseNumbers_singleCharacterArrayForBaseCharactersThrowsException() {
+    assertThatExceptionOfType(TypeParserBuilderException.class)
+        .isThrownBy(() -> ShortTypeParser.builder().allowCustomBaseNumbers(new char[]{'0'}))
+        .satisfies(exception -> {
+          assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
+          assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
+        });
+  }
+
+  @Test
+  void allowCustomBaseNumbers_singleCodePointArrayForBaseCharactersThrowsException() {
+    assertThatExceptionOfType(TypeParserBuilderException.class)
+        .isThrownBy(() -> ShortTypeParser.builder().allowCustomBaseNumbers(new int[]{'0'}))
+        .satisfies(exception -> {
+          assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
+          assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
+        });
+  }
+
 
   @ParameterizedTest
   @CsvSource(textBlock = """

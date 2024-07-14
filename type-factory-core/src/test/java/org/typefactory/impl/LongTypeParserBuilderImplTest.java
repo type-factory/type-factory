@@ -17,7 +17,6 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -52,20 +51,5 @@ class LongTypeParserBuilderImplTest {
         .isThrownBy(builder::build)
         .withMessageStartingWith(expectedMessage);
   }
-
-  @Test
-  void allowCustomBaseNumbers_nullBaseCharactersThrowsException() {
-    assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> LongTypeParser.builder().allowCustomBaseNumbers((int[]) null))
-        .withMessageStartingWith("An invalid numeric-base has been configured for the numeric type parser – provide at least two characters for a radix of two or greater in your parser.");
-  }
-
-  @Test
-  void allowCustomBaseNumbers_singleCharacterArrayForBaseCharactersThrowsException() {
-    assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> LongTypeParser.builder().allowCustomBaseNumbers(new int[]{'0'}))
-        .withMessageStartingWith("An invalid numeric-base has been configured for the numeric type parser – provide at least two characters for a radix of two or greater in your parser.");
-  }
-
 
 }
