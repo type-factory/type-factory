@@ -1,5 +1,6 @@
 package org.typefactory.impl;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.InvalidValueException;
@@ -39,6 +40,15 @@ final class ShortTypeParserImpl implements ShortTypeParser {
 
   @Override
   public Short of(final Long value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    wrappedParser.checkValueIsWithinBounds(value);
+    return value.shortValue();
+  }
+
+  @Override
+  public Short of(final BigInteger value) throws InvalidValueException {
     if (value == null) {
       return null;
     }

@@ -1,5 +1,6 @@
 package org.typefactory;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.impl.Factory;
@@ -48,6 +49,9 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
 
   @Override
   Long of(Long value) throws InvalidValueException;
+
+  @Override
+  Long of(BigInteger value) throws InvalidValueException;
 
   long of(final short value) throws InvalidValueException;
 

@@ -20,6 +20,7 @@ import static org.typefactory.impl.Constants.NARROW_NO_BREAK_SPACE;
 import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
 import static org.typefactory.impl.Constants.SPACE;
 
+import java.math.BigInteger;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
@@ -67,7 +68,7 @@ final class LongTypeParserImpl implements LongTypeParser {
       final WhiteSpace whiteSpace,
       final Subset ignoreCharactersSubset,
       final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
-      final int [] numericRadixCodePoints,
+      final int[] numericRadixCodePoints,
       final long minValue,
       final long maxValue,
       final boolean minValueComparisonInclusive,
@@ -120,6 +121,15 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
     checkValueIsWithinBounds(value);
     return value;
+  }
+
+  @Override
+  public Long of(final BigInteger value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    checkValueIsWithinBounds(value);
+    return value.longValue();
   }
 
   @Override
@@ -208,7 +218,8 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  public <T extends LongType> T parse(final CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+  public <T extends LongType> T parse(final CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
     final Long parsedValue = parse(value, locale);
     return parsedValue == null
         ? null
@@ -287,7 +298,8 @@ final class LongTypeParserImpl implements LongTypeParser {
       }
 
       // Check for negative
-      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == Constants.MATH_MINUS || codePoint == Constants.HEAVY_MINUS) && !intoDigits) {
+      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == Constants.MATH_MINUS || codePoint == Constants.HEAVY_MINUS)
+          && !intoDigits) {
         sign = Sign.NEGATIVE;
         ++sourceIndex;
         continue;
@@ -371,6 +383,7 @@ final class LongTypeParserImpl implements LongTypeParser {
 
   @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
   <N extends Number> void checkValueIsWithinBounds(final N value) throws InvalidValueException {
+
     if (minValueComparisonInclusive) {
       if (value.longValue() < minValue) {
         throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, value, minValue);
@@ -387,6 +400,30 @@ final class LongTypeParserImpl implements LongTypeParser {
       }
     } else /* exclusive comparison */ {
       if (value.longValue() >= maxValue) {
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    }
+  }
+
+  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  void checkValueIsWithinBounds(final BigInteger value) throws InvalidValueException {
+
+    if (minValueComparisonInclusive) {
+      if (value.compareTo(BigInteger.valueOf(minValue)) < 0) {
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value.compareTo(BigInteger.valueOf(minValue)) <= 0) {
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, value, minValue);
+      }
+    }
+
+    if (maxValueComparisonInclusive) {
+      if (value.compareTo(BigInteger.valueOf(maxValue)) > 0) {
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, value, maxValue);
+      }
+    } else /* exclusive comparison */ {
+      if (value.compareTo(BigInteger.valueOf(maxValue)) >= 0) {
         throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, value, maxValue);
       }
     }

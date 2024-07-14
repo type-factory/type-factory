@@ -1,5 +1,6 @@
 package org.typefactory;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -16,6 +17,8 @@ public interface NumericTypeParser<V extends Number & Comparable<V>, T extends N
   V of(Integer value) throws InvalidValueException;
 
   V of(Long value) throws InvalidValueException;
+
+  V of(BigInteger value) throws InvalidValueException;
 
   V parse(CharSequence value) throws InvalidValueException;
 

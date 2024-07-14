@@ -1,5 +1,6 @@
 package org.typefactory.impl;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.IntegerType;
@@ -39,6 +40,15 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
 
   @Override
   public Integer of(final Long value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    wrappedParser.checkValueIsWithinBounds(value);
+    return value.intValue();
+  }
+
+  @Override
+  public Integer of(final BigInteger value) throws InvalidValueException {
     if (value == null) {
       return null;
     }
