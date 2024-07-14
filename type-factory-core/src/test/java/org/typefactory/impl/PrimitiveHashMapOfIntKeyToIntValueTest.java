@@ -120,6 +120,51 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
   }
 
   @Test
+  void remove_ExistingKey_ReturnsValueAndRemovesEntry() {
+    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    int key = 10;
+    int value = 20;
+    map.put(key, value);
+
+    int removedValue = map.remove(key);
+
+    assertThat(removedValue).isEqualTo(value);
+    assertThat(map.contains(key)).isFalse();
+  }
+
+  @Test
+  void remove_NonExistingKey_ReturnsMinValue() {
+    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    int nonExistingKey = 15;
+
+    int result = map.remove(nonExistingKey);
+
+    assertThat(result).isEqualTo(Integer.MIN_VALUE);
+  }
+
+  @Test
+  void remove_ExistingKey_DecreasesSize() {
+    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    map.put(1, 100);
+    map.put(2, 200);
+
+    map.remove(1);
+
+    assertThat(map.size()).isEqualTo(1);
+  }
+
+  @Test
+  void remove_ExistingKey_AffectsContainsMethod() {
+    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    int key = 5;
+    map.put(key, 50);
+
+    map.remove(key);
+
+    assertThat(map.contains(key)).isFalse();
+  }
+
+  @Test
   void toString_returnsEmptyForEmptyMap() {
     final var map = new PrimitiveHashMapOfIntKeyToIntValue();
     final var actual = map.toString();
