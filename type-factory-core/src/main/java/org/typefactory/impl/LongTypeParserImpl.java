@@ -272,8 +272,14 @@ final class LongTypeParserImpl implements LongTypeParser {
         codePoint = ch;
       }
 
+      // Check for grouping separator (a.k.a thousands separator)
+      if (codePoint == groupingSeparator || codePoint == altGroupingSeparator) {
+        ++sourceIndex;
+        continue;
+      }
+
       if (Character.isWhitespace(codePoint)) {
-        if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE || codePoint == groupingSeparator || codePoint == altGroupingSeparator) {
+        if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE) {
           ++sourceIndex;
           continue;
         }
@@ -290,12 +296,6 @@ final class LongTypeParserImpl implements LongTypeParser {
       // Check for positive
       if (sign == null && !ignoreLeadingPositiveSign && (codePoint == '+' || codePoint == Constants.HEAVY_PLUS) && !intoDigits) {
         sign = Sign.POSITIVE;
-        ++sourceIndex;
-        continue;
-      }
-
-      // Check for grouping separator (a.k.a thousands separator)
-      if (codePoint == groupingSeparator || codePoint == altGroupingSeparator) {
         ++sourceIndex;
         continue;
       }
