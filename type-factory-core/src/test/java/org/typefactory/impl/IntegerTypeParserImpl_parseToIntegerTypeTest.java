@@ -18,14 +18,37 @@ package org.typefactory.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
+import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.IntegerType;
 import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
 import org.typefactory.MessageCode;
 
-class IntegerTypeParserImpl_parseTest {
+class IntegerTypeParserImpl_parseToIntegerTypeTest {
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {" ", "  ", "   "})
+  void nullEmptyAndBlankResultInNull(final String value) {
+
+    final var actual = SomeIntegerType.of(value);
+
+    assertThat(actual).isNull();
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {" ", "  ", "   "})
+  void localeSpecificNullEmptyAndBlankResultInNull(final String value) {
+
+    final var actual = SomeIntegerType.of(value, Locale.US);
+
+    assertThat(actual).isNull();
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -86,6 +109,10 @@ class IntegerTypeParserImpl_parseTest {
 
     static SomeIntegerType of(final String value) {
       return TYPE_PARSER.parse(value, SomeIntegerType::new);
+    }
+
+    static SomeIntegerType of(final String value, final Locale locale) {
+      return TYPE_PARSER.parse(value, locale, SomeIntegerType::new);
     }
   }
 }
