@@ -54,10 +54,56 @@ class LongTypeParserImpl_ofNumericTest {
       BigInteger |  9223372036854775807 |  9223372036854775807
       BigInteger |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void of_valueShouldSucceed(
+  void of_valueShouldSucceedWithInclusiveMinMax(
       final String type, final long value, final long expected) {
 
-    final var longTypeParser = LongTypeParser.builder().build();
+    final var longTypeParser = LongTypeParser.builder()
+        .minValueInclusive(Long.MIN_VALUE)
+        .maxValueInclusive(Long.MAX_VALUE)
+        .build();
+
+    switch (type) {
+      case "Short":
+        assertThat(longTypeParser.of((short) value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
+        // fall-thru
+      case "Integer":
+        assertThat(longTypeParser.of((int) value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Integer.valueOf((int) value))).isEqualTo(expected);
+        // fall-thru
+      case "Long":
+        assertThat(longTypeParser.of(value)).isEqualTo(expected);
+        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "BigInteger":
+        assertThat(longTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
+        break;
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      TYPE       |                VALUE |             EXPECTED
+      Short      |               -32767 |               -32767
+      Short      |                32766 |                32766
+      Short      |                    0 |                    0
+      Integer    |          -2147483647 |          -2147483647
+      Integer    |           2147483646 |           2147483646
+      Integer    |                    0 |                    0
+      Long       | -9223372036854775807 | -9223372036854775807
+      Long       |  9223372036854775806 |  9223372036854775806
+      Long       |                    0 |                    0
+      BigInteger | -9223372036854775807 | -9223372036854775807
+      BigInteger |  9223372036854775806 |  9223372036854775806
+      BigInteger |                    0 |                    0
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  void of_valueShouldSucceedWithExclusiveMinMax(
+      final String type, final long value, final long expected) {
+
+    final var longTypeParser = LongTypeParser.builder()
+        .minValueExclusive(Long.MIN_VALUE)
+        .maxValueExclusive(Long.MAX_VALUE)
+        .build();
 
     switch (type) {
       case "Short":

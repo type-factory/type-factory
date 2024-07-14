@@ -54,22 +54,68 @@ class IntegerTypeParserImpl_ofNumericTest {
       BigInteger |           2147483647 |           2147483647
       BigInteger |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void of_valueShouldSucceed(
+  void of_valueShouldSucceedWithInclusiveMinMax(
       final String type, final int value, final int expected) {
 
-    final var integerTypeParser = IntegerTypeParser.builder().build();
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .minValueInclusive(Integer.MIN_VALUE)
+        .maxValueInclusive(Integer.MAX_VALUE)
+        .build();
 
     switch (type) {
       case "Short":
-        assertThat(integerTypeParser.of((short)value)).isEqualTo(expected);
-        assertThat(integerTypeParser.of(Short.valueOf((short)value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of((short) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
         // fall-thru
       case "Integer":
         assertThat(integerTypeParser.of(value)).isEqualTo(expected);
         assertThat(integerTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "Long":
-        assertThat(integerTypeParser.of((long)value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of((long) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "BigInteger":
+        assertThat(integerTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
+        break;
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      TYPE       |                VALUE |             EXPECTED
+      Short      |               -32767 |               -32767
+      Short      |                32766 |                32766
+      Short      |                    0 |                    0
+      Integer    |          -2147483647 |          -2147483647
+      Integer    |           2147483646 |           2147483646
+      Integer    |                    0 |                    0
+      Long       |          -2147483647 |          -2147483647
+      Long       |           2147483646 |           2147483646
+      Long       |                    0 |                    0
+      BigInteger |          -2147483647 |          -2147483647
+      BigInteger |           2147483646 |           2147483646
+      BigInteger |                    0 |                    0
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  void of_valueShouldSucceedWithExclusiveMinMax(
+      final String type, final int value, final int expected) {
+
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .minValueExclusive(Integer.MIN_VALUE)
+        .maxValueExclusive(Integer.MAX_VALUE)
+        .build();
+
+    switch (type) {
+      case "Short":
+        assertThat(integerTypeParser.of((short) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
+        // fall-thru
+      case "Integer":
+        assertThat(integerTypeParser.of(value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "Long":
+        assertThat(integerTypeParser.of((long) value)).isEqualTo(expected);
         assertThat(integerTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "BigInteger":

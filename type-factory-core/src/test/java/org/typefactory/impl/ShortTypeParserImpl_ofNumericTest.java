@@ -54,10 +54,56 @@ class ShortTypeParserImpl_ofNumericTest {
       BigInteger |                32767 |                32767
       BigInteger |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void of_valueShouldSucceed(
+  void of_valueShouldSucceedWithInclusiveMinMax(
       final String type, final short value, final short expected) {
 
-    final var shortTypeParser = ShortTypeParser.builder().build();
+    final var shortTypeParser = ShortTypeParser.builder()
+        .minValueInclusive(Short.MIN_VALUE)
+        .maxValueInclusive(Short.MAX_VALUE)
+        .build();
+
+    switch (type) {
+      case "Short":
+        assertThat(shortTypeParser.of(value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Short.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "Integer":
+        assertThat(shortTypeParser.of((int)value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "Long":
+        assertThat(shortTypeParser.of((long)value)).isEqualTo(expected);
+        assertThat(shortTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        // fall-thru
+      case "BigInteger":
+        assertThat(shortTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
+        break;
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      TYPE       |                VALUE |             EXPECTED
+      Short      |               -32767 |               -32767
+      Short      |                32766 |                32766
+      Short      |                    0 |                    0
+      Integer    |               -32767 |               -32767
+      Integer    |                32766 |                32766
+      Integer    |                    0 |                    0
+      Long       |               -32767 |               -32767
+      Long       |                32766 |                32766
+      Long       |                    0 |                    0
+      BigInteger |               -32767 |               -32767
+      BigInteger |                32766 |                32766
+      BigInteger |                    0 |                    0
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  void of_valueShouldSucceedWithExclusiveMinMax(
+      final String type, final short value, final short expected) {
+
+    final var shortTypeParser = ShortTypeParser.builder()
+        .minValueExclusive(Short.MIN_VALUE)
+        .maxValueExclusive(Short.MAX_VALUE)
+        .build();
 
     switch (type) {
       case "Short":
