@@ -70,6 +70,7 @@ public final class UnsignedIntegerSort {
   private static void unsignedIntegerDualPivotQuicksort(final int[] a, final int left, final int right, int div) {
 
     final int len = right - left;
+
     if (len < 27) { // insertion sort for tiny array
       for (int i = left + 1; i <= right; i++) {
         for (int j = i;
