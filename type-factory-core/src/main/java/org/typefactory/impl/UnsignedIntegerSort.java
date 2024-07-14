@@ -81,15 +81,21 @@ public final class UnsignedIntegerSort {
       return;
     }
     final int third = len / div;
+
     // "medians"
     int m1 = left + third;
     int m2 = right - third;
+
+    // Cannot happen with insertion sort above for tiny array because a 'third' will never be zero – left here for completeness
     if (m1 <= left) {
       m1 = left + 1;
     }
+
+    // Cannot happen with insertion sort above for tiny array because a 'third' will never be zero – left here for completeness
     if (m2 >= right) {
       m2 = right - 1;
     }
+
     if ((0x00000000_ffffffffL & a[m1]) < (0x00000000_ffffffffL & a[m2])) {
       swap(a, m1, left);
       swap(a, m2, right);
