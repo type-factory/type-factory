@@ -57,24 +57,59 @@ class PrimitiveSortedSetOfIntTest {
     for (int value : values) {
       primitiveSortedSetOfInt.add(value);
     }
-    final var actual = primitiveSortedSetOfInt.toArray();
-    assertThat(actual)
+
+    assertThat(primitiveSortedSetOfInt.size()).isEqualTo(expected.length);
+
+    assertThat(primitiveSortedSetOfInt.toArray())
         .hasSize(expected.length)
         .containsExactly(expected);
   }
 
-  @Test
-  void remove_ExistingValue_RemovesValueAndDecreasesSize() {
-    final var set = new PrimitiveSortedSetOfInt();
-    set.add(1);
-    set.add(2);
-    set.add(3);
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      INITIAL_VALUES                     | VALUES_TO_REMOVE | EXPECTED
+      [3]                                | [3]              | []
+      [3,  3]                            | [3]              | []
+      [2,  3]                            | [2]              | [3]
+      [3,  2]                            | [3]              | [2]
+      [2,  2,  3]                        | [2]              | [3]
+      [2,  3,  3]                        | [3]              | [2]
+      [2,  3, 90]                        | [3]              | [2, 90]
+      [3,  2, 90]                        | [3]              | [2, 90]
+      [3, 90,  2]                        | [3]              | [2, 90]
+      [90, 2,  3]                        | [3]              | [2, 90]
+      [90, 3,  2]                        | [3]              | [2, 90]
+      [3, 88,  2, 90]                    | [90]             | [2, 3, 88]
+      [3, 88, 44,  2, 90]                | [44]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90,  3]            | [44]             | [2, 3, 88, 90]
+      [3, 88, 44, 88,  2, 90]            | [44]             | [2, 3, 88, 90]
+      [3, 88, 44,  2,  2, 90]            | [44]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90, 90]            | [44]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90,  4]            | [44]             | [2, 3,  4, 88, 90]
+      [3, 88, 44, 45,  2, 90,  4]        | [44, 88]         | [2, 3,  4, 45, 90]
+      [3, 88, 44, 45, 55,  2, 90,  4]    | [44, 55]         | [2, 3,  4, 45, 88, 90]
+      [3, 88, 44, 45, 55, 54,  2, 90, 4] | [44, 55]         | [2, 3,  4, 45, 54, 88, 90]
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void removeContainsAllRemainingValuesSorted(
+      @ConvertWith(IntArrayConverter.class) final int [] values,
+      @ConvertWith(IntArrayConverter.class) final int [] valuesToRemove,
+      @ConvertWith(IntArrayConverter.class) final int [] expected) {
 
-    boolean result = set.remove(2);
+    final var primitiveSortedSetOfInt = new PrimitiveSortedSetOfInt();
+    for (int value : values) {
+      primitiveSortedSetOfInt.add(value);
+    }
+    for (int valueToRemove : valuesToRemove) {
+      final boolean removeResult = primitiveSortedSetOfInt.remove(valueToRemove);
+      assertThat(removeResult).isTrue();
+    }
 
-    assertThat(result).isTrue();
-    assertThat(set.toArray()).doesNotContain(2);
-    assertThat(set.toArray()).hasSize(2);
+    assertThat(primitiveSortedSetOfInt.size()).isEqualTo(expected.length);
+
+    assertThat(primitiveSortedSetOfInt.toArray())
+        .hasSize(expected.length)
+        .containsExactly(expected)
+        .doesNotContain(valuesToRemove);
   }
 
   @Test
