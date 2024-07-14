@@ -17,81 +17,98 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.Serial;
 import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_parseLocaleSpecificTest {
 
+  static final String LOCALE_SPECIFIC_LONG_TEST_CASES = """
+      LOCALE |                      VALUE |             EXPECTED
+      en-US  | -9,223,372,036,854,775,808 | -9223372036854775808
+      en-US  |                 -3,111,222 |             -3111222
+      en-US  |                     -3,111 |                -3111
+      en-US  |                    -3,,222 |                -3222
+      en-US  |                     -0,111 |                 -111
+      en-US  |                      -,222 |                 -222
+      en-US  |                        -,0 |                    0
+      en-US  |                       ,333 |                  333
+      en-US  |                      +,333 |                  333
+      en-US  |                      0,444 |                  444
+      en-US  |                     +1,444 |                 1444
+      en-US  |                  1,444,555 |              1444555
+      en-US  |  9,223,372,036,854,775,807 |  9223372036854775807
+
+      en-AU  | -9,223,372,036,854,775,808 | -9223372036854775808
+      en-AU  |                 -3,111,222 |             -3111222
+      en-AU  |                     -3,111 |                -3111
+      en-AU  |                    -3,,222 |                -3222
+      en-AU  |                     -0,111 |                 -111
+      en-AU  |                      -,222 |                 -222
+      en-AU  |                        -,0 |                    0
+      en-AU  |                       ,333 |                  333
+      en-AU  |                      +,333 |                  333
+      en-AU  |                      0,444 |                  444
+      en-AU  |                     +1,444 |                 1444
+      en-AU  |                  1,444,555 |              1444555
+      en-AU  |  9,223,372,036,854,775,807 |  9223372036854775807
+
+      de-DE  | -9.223.372.036.854.775.808 | -9223372036854775808
+      de-DE  |                 -3.111.222 |             -3111222
+      de-DE  |                     -3.111 |                -3111
+      de-DE  |                    -3..222 |                -3222
+      de-DE  |                     -0.111 |                 -111
+      de-DE  |                      -.222 |                 -222
+      de-DE  |                        -.0 |                    0
+      de-DE  |                       .333 |                  333
+      de-DE  |                      +.333 |                  333
+      de-DE  |                      0.444 |                  444
+      de-DE  |                     +1.444 |                 1444
+      de-DE  |                  1.444.555 |              1444555
+      de-DE  |  9.223.372.036.854.775.807 |  9223372036854775807
+
+      # contains mixture of ordinary apostrophes as well as right single quotation marks
+      de-CH  | -9’223’372’036’854’775’808 | -9223372036854775808
+      de-CH  |                 -3'111'222 |             -3111222
+      de-CH  |                 -3’111’222 |             -3111222
+      de-CH  |                 -3'111’222 |             -3111222
+      de-CH  |                     -3’111 |                -3111
+      de-CH  |                    -3'’222 |                -3222
+      de-CH  |                     -0’111 |                 -111
+      de-CH  |                      -'222 |                 -222
+      de-CH  |                        -'0 |                    0
+      de-CH  |                       ’333 |                  333
+      de-CH  |                      +'333 |                  333
+      de-CH  |                      0'444 |                  444
+      de-CH  |                     +1’444 |                 1444
+      de-CH  |                  1’444'555 |              1444555
+      de-CH  |  9’223’372’036’854’775’807 |  9223372036854775807
+
+      # contains mixture of ordinary spaces as well as narrow no-break spaces
+      fr-CH  | -9 223 372 036 854 775 808 | -9223372036854775808
+      fr-CH  |            -3\u202F111 222 |             -3111222
+      fr-CH  |                -3\u202F111 |                -3111
+      fr-CH  |                    -3  222 |                -3222
+      fr-CH  |                     -0 111 |                 -111
+      fr-CH  |                      - 222 |                 -222
+      fr-CH  |                        - 0 |                    0
+      fr-CH  |                        333 |                  333
+      fr-CH  |                      + 333 |                  333
+      fr-CH  |                      0 444 |                  444
+      fr-CH  |                +1\u202F444 |                 1444
+      fr-CH  |             1\u202F444 555 |              1444555
+      fr-CH  |  9 223 372 036 854 775 807 |  9223372036854775807
+      """;
+
   @ParameterizedTest
-  @CsvSource(textBlock = """
-      LOCALE |      VALUE | EXPECTED
-      en-US  | -3,111,222 | -3111222
-      en-US  |     -3,111 |    -3111
-      en-US  |    -3,,222 |    -3222
-      en-US  |     -0,111 |     -111
-      en-US  |      -,222 |     -222
-      en-US  |        -,0 |        0
-      en-US  |       ,333 |      333
-      en-US  |      +,333 |      333
-      en-US  |      0,444 |      444
-      en-US  |     +1,444 |     1444
-      en-US  |  1,444,555 |  1444555
-
-      en-AU  | -3,111,222 | -3111222
-      en-AU  |     -3,111 |    -3111
-      en-AU  |    -3,,222 |    -3222
-      en-AU  |     -0,111 |     -111
-      en-AU  |      -,222 |     -222
-      en-AU  |        -,0 |        0
-      en-AU  |       ,333 |      333
-      en-AU  |      +,333 |      333
-      en-AU  |      0,444 |      444
-      en-AU  |     +1,444 |     1444
-      en-AU  |  1,444,555 |  1444555
-
-      de-DE  | -3.111.222 | -3111222
-      de-DE  |     -3.111 |    -3111
-      de-DE  |    -3..222 |    -3222
-      de-DE  |     -0.111 |     -111
-      de-DE  |      -.222 |     -222
-      de-DE  |        -.0 |        0
-      de-DE  |       .333 |      333
-      de-DE  |      +.333 |      333
-      de-DE  |      0.444 |      444
-      de-DE  |     +1.444 |     1444
-      de-DE  |  1.444.555 |  1444555
-
-      de-CH  | -3'111'222 | -3111222
-      de-CH  | -3’111’222 | -3111222
-      de-CH  | -3'111’222 | -3111222
-      de-CH  |     -3'111 |    -3111
-      de-CH  |    -3'’222 |    -3222
-      de-CH  |     -0’111 |     -111
-      de-CH  |      -'222 |     -222
-      de-CH  |        -'0 |        0
-      de-CH  |       ’333 |      333
-      de-CH  |      +'333 |      333
-      de-CH  |      0'444 |      444
-      de-CH  |     +1'444 |     1444
-      de-CH  |  1’444'555 |  1444555
-
-      fr-CH  | -3 111 222 | -3111222
-      fr-CH  |     -3 111 |    -3111
-      fr-CH  |    -3  222 |    -3222
-      fr-CH  |     -0 111 |     -111
-      fr-CH  |      - 222 |     -222
-      fr-CH  |        - 0 |        0
-      fr-CH  |        333 |      333
-      fr-CH  |      + 333 |      333
-      fr-CH  |      0 444 |      444
-      fr-CH  |     +1 444 |     1444
-      fr-CH  |  1 444 555 |  1444555
-      """,
+  @CsvSource(
+      textBlock = LOCALE_SPECIFIC_LONG_TEST_CASES,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToLong_whenTypeParserConfiguredWithDefaultLocaleHandlesGroupingSeparator(
+  void parse_localeSpecifiedInTypeParser(
       final String localeTag, final String value, final long expected) {
 
     final var locale = Locale.forLanguageTag(localeTag);
@@ -101,7 +118,6 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase10Numbers()
-        .ignoreAllWhitespace()
         .build();
 
     final var actual = longTypeParser.parse(value);
@@ -109,73 +125,34 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-      LOCALE |      VALUE | EXPECTED
-      en-US  | -3,111,222 | -3111222
-      en-US  |     -3,111 |    -3111
-      en-US  |    -3,,222 |    -3222
-      en-US  |     -0,111 |     -111
-      en-US  |      -,222 |     -222
-      en-US  |        -,0 |        0
-      en-US  |       ,333 |      333
-      en-US  |      +,333 |      333
-      en-US  |      0,444 |      444
-      en-US  |     +1,444 |     1444
-      en-US  |  1,444,555 |  1444555
-
-      en-AU  | -3,111,222 | -3111222
-      en-AU  |     -3,111 |    -3111
-      en-AU  |    -3,,222 |    -3222
-      en-AU  |     -0,111 |     -111
-      en-AU  |      -,222 |     -222
-      en-AU  |        -,0 |        0
-      en-AU  |       ,333 |      333
-      en-AU  |      +,333 |      333
-      en-AU  |      0,444 |      444
-      en-AU  |     +1,444 |     1444
-      en-AU  |  1,444,555 |  1444555
-
-      de-DE  | -3.111.222 | -3111222
-      de-DE  |     -3.111 |    -3111
-      de-DE  |    -3..222 |    -3222
-      de-DE  |     -0.111 |     -111
-      de-DE  |      -.222 |     -222
-      de-DE  |        -.0 |        0
-      de-DE  |       .333 |      333
-      de-DE  |      +.333 |      333
-      de-DE  |      0.444 |      444
-      de-DE  |     +1.444 |     1444
-      de-DE  |  1.444.555 |  1444555
-
-      de-CH  | -3'111'222 | -3111222
-      de-CH  | -3’111’222 | -3111222
-      de-CH  | -3'111’222 | -3111222
-      de-CH  |     -3'111 |    -3111
-      de-CH  |    -3'’222 |    -3222
-      de-CH  |     -0’111 |     -111
-      de-CH  |      -'222 |     -222
-      de-CH  |        -'0 |        0
-      de-CH  |       ’333 |      333
-      de-CH  |      +'333 |      333
-      de-CH  |      0'444 |      444
-      de-CH  |     +1'444 |     1444
-      de-CH  |  1’444'555 |  1444555
-
-      fr-CH  | -3 111 222 | -3111222
-      fr-CH  |     -3 111 |    -3111
-      fr-CH  |    -3  222 |    -3222
-      fr-CH  |     -0 111 |     -111
-      fr-CH  |      - 222 |     -222
-      fr-CH  |        - 0 |        0
-      fr-CH  |        333 |      333
-      fr-CH  |      + 333 |      333
-      fr-CH  |      0 444 |      444
-      fr-CH  |     +1 444 |     1444
-      fr-CH  |  1 444 555 |  1444555
-      """,
+  @CsvSource(
+      textBlock = LOCALE_SPECIFIC_LONG_TEST_CASES,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void parseToLong_localePassedToParseMethodHandlesGroupingSeparator(
+  void parseToType_localeSpecifiedInTypeParser(
+      final String localeTag, final String value, final long expected) {
+
+    final var locale = Locale.forLanguageTag(localeTag);
+
+    final var longTypeParser = LongTypeParser.builder()
+        .defaultLocale(locale)
+        .minValueInclusive(Long.MIN_VALUE)
+        .maxValueInclusive(Long.MAX_VALUE)
+        .allowBase10Numbers()
+        .build();
+
+    final var actual = longTypeParser.parse(value, LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType::new);
+    assertThat(actual)
+        .isInstanceOf(LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType.class)
+        .isEqualTo(new LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType(expected));
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+      textBlock = LOCALE_SPECIFIC_LONG_TEST_CASES,
+      delimiter = '|',
+      useHeadersInDisplayName = true)
+  void parse_localeSpecifiedInParseMethod(
       final String localeTag, final String value, final long expected) {
 
     final var locale = Locale.forLanguageTag(localeTag);
@@ -184,10 +161,41 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase10Numbers()
-        .ignoreAllWhitespace()
         .build();
 
     final var actual = longTypeParser.parse(value, locale);
     assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+      textBlock = LOCALE_SPECIFIC_LONG_TEST_CASES,
+      delimiter = '|',
+      useHeadersInDisplayName = true)
+  void parseToType_localeSpecifiedInParseMethod(
+      final String localeTag, final String value, final long expected) {
+
+    final var locale = Locale.forLanguageTag(localeTag);
+
+    final var longTypeParser = LongTypeParser.builder()
+        .minValueInclusive(Long.MIN_VALUE)
+        .maxValueInclusive(Long.MAX_VALUE)
+        .allowBase10Numbers()
+        .build();
+
+    final var actual = longTypeParser.parse(value, locale, LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType::new);
+    assertThat(actual)
+        .isInstanceOf(LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType.class)
+        .isEqualTo(new LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType(expected));
+  }
+
+  static class SomeLongType extends LongType {
+
+    @Serial
+    private static final long serialVersionUID = 689906374498730311L;
+
+    SomeLongType(final long value) {
+      super(value);
+    }
   }
 }

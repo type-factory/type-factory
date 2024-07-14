@@ -16,7 +16,9 @@
 package org.typefactory.impl;
 
 import static org.typefactory.impl.Constants.APOSTROPHE_SINGLE_QUOTATION_MARK;
+import static org.typefactory.impl.Constants.NARROW_NO_BREAK_SPACE;
 import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
+import static org.typefactory.impl.Constants.SPACE;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -233,8 +235,14 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
 
     final int groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
-    // Locales that use a "right single quotation mark" (U+2019) as the grouping separator often simply use an apostrophe/single-quote (U+0027)
-    final int altGroupingSeparator = groupingSeparator == RIGHT_SINGLE_QUOTATION_MARK ? APOSTROPHE_SINGLE_QUOTATION_MARK : -1;
+
+    final int altGroupingSeparator = switch (groupingSeparator) {
+      // Locales that use a "right single quotation mark" (U+2019) as the grouping separator often simply use an apostrophe/single-quote (U+0027)
+      case RIGHT_SINGLE_QUOTATION_MARK -> APOSTROPHE_SINGLE_QUOTATION_MARK;
+      // Locales that use a "narrow no-break space" (U+202F) as the grouping separator often simply use an ordinary space (U+0020)
+      case NARROW_NO_BREAK_SPACE -> SPACE;
+      default -> -1;
+    };
 
     final int length = source.length();
     int sourceIndex = 0;
@@ -265,14 +273,11 @@ final class LongTypeParserImpl implements LongTypeParser {
       }
 
       if (Character.isWhitespace(codePoint)) {
-        switch (whiteSpace) {
-          case IGNORE_WHITESPACE:
-            ++sourceIndex;
-            continue;
-          case FORBID_WHITESPACE:
-          default:
-            throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
+        if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE || codePoint == groupingSeparator || codePoint == altGroupingSeparator) {
+          ++sourceIndex;
+          continue;
         }
+        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
       }
 
       // Check for negative
