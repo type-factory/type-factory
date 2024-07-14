@@ -293,7 +293,7 @@ class UnsignedIntegerSortTest {
 
   @Test
   void sort_exerciseEqualElementsPortionOfSort() {
-    // Given an array with at least 30 elements in random order
+    // Given an array with a lot of equal elements
     int[] values = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -324,10 +324,9 @@ class UnsignedIntegerSortTest {
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     };
 
-    // When sorting the array
-    UnsignedIntegerSort.sort(values);
+    assertThat(values).containsExactlyInAnyOrder(expected);
 
-    // Then the array should be sorted correctly
+    UnsignedIntegerSort.sort(values);
     assertThat(values).containsExactly(expected);
   }
 }
