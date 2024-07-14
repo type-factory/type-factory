@@ -22,7 +22,7 @@ package org.typefactory.impl;
  * <p>This implementation is only slightly modified from the Dual-Pivot Quicksort by Vladimir Yaroslavskiy and documented in his original research
  * paper:</p>
  * <ul>
- *   <li><a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a></li>
+ *   <li><a href="https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a></li>
  * </ul>
  *
  * <blockquote>
@@ -33,7 +33,7 @@ package org.typefactory.impl;
  * @author Vladimir Yaroslavskiy
  * @author Evan Toliopoulos
  *
- * @see <a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a>
+ * @see <a href="https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a>
  */
 public final class UnsignedIntegerSort {
 
@@ -80,6 +80,7 @@ public final class UnsignedIntegerSort {
       }
       return;
     }
+
     final int third = len / div;
 
     // "medians"
