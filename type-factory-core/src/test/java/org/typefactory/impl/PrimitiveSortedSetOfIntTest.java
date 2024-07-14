@@ -17,6 +17,7 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -61,4 +62,31 @@ class PrimitiveSortedSetOfIntTest {
         .hasSize(expected.length)
         .containsExactly(expected);
   }
+
+  @Test
+  void remove_ExistingValue_RemovesValueAndDecreasesSize() {
+    final var set = new PrimitiveSortedSetOfInt();
+    set.add(1);
+    set.add(2);
+    set.add(3);
+
+    boolean result = set.remove(2);
+
+    assertThat(result).isTrue();
+    assertThat(set.toArray()).doesNotContain(2);
+    assertThat(set.toArray()).hasSize(2);
+  }
+
+  @Test
+  void remove_NonExistingValue_ReturnsFalse() {
+    final var set = new PrimitiveSortedSetOfInt();
+    set.add(1);
+    set.add(3);
+
+    boolean result = set.remove(2);
+
+    assertThat(result).isFalse();
+    assertThat(set.toArray()).containsExactly(1, 3);
+  }
+
 }

@@ -142,13 +142,58 @@ final class PrimitiveHashMapOfIntKeyToIntValue {
     return Integer.MIN_VALUE;
   }
 
+  /**
+   * Removes the entry for the specified {@code key} from this hash map if it is present.
+   * @param key the key identifying the entry in the map.
+   * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
+   * @see Integer#MIN_VALUE
+   */
+  int remove(final int key) {
+    final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
+    final int[] bucketKeys = hashTable.keys[hashIndex];
+    final int[] bucketValues = hashTable.values[hashIndex];
+    if (bucketKeys != null) {
+      for (int i = 0; i < bucketKeys.length; i++) {
+        if (bucketKeys[i] == key) {
+          final int valueToRemove = bucketValues[i];
+          final int[] newBucketKeys = new int[bucketKeys.length - 1];
+          final int[] newBucketValues = new int[bucketValues.length - 1];
+          System.arraycopy(bucketKeys, 0, newBucketKeys, 0, i);
+          System.arraycopy(bucketKeys, i + 1, newBucketKeys, i, bucketKeys.length - i - 1);
+          System.arraycopy(bucketValues, 0, newBucketValues, 0, i);
+          System.arraycopy(bucketValues, i + 1, newBucketValues, i, bucketValues.length - i - 1);
+          hashTable.keys[hashIndex] = newBucketKeys;
+          hashTable.values[hashIndex] = newBucketValues;
+          keySet.remove(key);
+          return valueToRemove;
+        }
+      }
+    }
+    return Integer.MIN_VALUE; // Key not found
+  }
+
+  /**
+   * Associates the specified {@code key} with the specified {@code value} in this hash map.
+   * @param key the key identifying the entry in the map.
+   * @param value the value to associate with the specified {@code key}.
+   */
   void put(final int key, final int value) {
+    if (value == Integer.MIN_VALUE) {
+      remove(key);
+      return;
+    }
     if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
     put(key, value, hashTable);
   }
 
+  /**
+   * Associates the specified {@code key} with the specified {@code value} in the specified {@code hashTable}.
+   * @param key the key identifying the entry in the map.
+   * @param value the value to associate with the specified {@code key}.
+   * @param hashTable the internal hash table data structure to use.
+   */
   private void put(final int key, final int value, final HashTable hashTable) {
     final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     final int[] bucket = hashTable.keys[hashIndex];
@@ -196,10 +241,10 @@ final class PrimitiveHashMapOfIntKeyToIntValue {
           .append(Integer.toString(key, 16))
           .append(" [")
           .appendCodePoint(key)
-          .append("] ⟶ ");
+          .append("] ⟶");
       // We use Integer.MIN_VALUE as a sentinel value to indicate that no value exists for the key.
       if (value > Integer.MIN_VALUE) {
-        s.appendCodePoint(value);
+        s.append(' ').appendCodePoint(value);
       }
       s.append(LINE_SEPARATOR);
     }

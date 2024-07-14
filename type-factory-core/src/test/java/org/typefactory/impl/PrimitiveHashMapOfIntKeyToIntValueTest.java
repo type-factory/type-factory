@@ -137,12 +137,47 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
   @Test
   void toString_returnsStringForTwoEntries() {
     final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put('a', 'z');
-    map.put('b', 'y');
+    map.put('a', 'w');
+    map.put('b', 'x');
+    map.put('c', 'y');
+    map.put('c', Integer.MIN_VALUE);
+    map.put('d', 'z');
     final var actual = map.toString();
     assertThat(actual).isEqualTo("""
-        0x61 [a] ⟶ z
-        0x62 [b] ⟶ y""");
+        0x61 [a] ⟶ w
+        0x62 [b] ⟶ x
+        0x64 [d] ⟶ z""");
+  }
+
+  @Test
+  void toString_returnsStringForMultipleEntriesWithAnExplicitRemove() {
+    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
+    map.put('a', 'w');
+    map.put('b', 'x');
+    map.put('c', 'y');
+    map.remove('c');
+    map.put('d', 'z');
+    final var actual = map.toString();
+    assertThat(actual).isEqualTo("""
+        0x61 [a] ⟶ w
+        0x62 [b] ⟶ x
+        0x64 [d] ⟶ z""");
+  }
+
+  @Test
+  void toString_returnsStringForMultipleEntriesWithAnImpliedRemove() {
+    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
+    map.put('a', 'w');
+    map.put('b', 'x');
+    map.put('c', 'y');
+    // Set value to Integer.MIN_VALUE implies a remove because Integer.MIN_VALUE is a sentinel value for no-value
+    map.put('c', Integer.MIN_VALUE);
+    map.put('d', 'z');
+    final var actual = map.toString();
+    assertThat(actual).isEqualTo("""
+        0x61 [a] ⟶ w
+        0x62 [b] ⟶ x
+        0x64 [d] ⟶ z""");
   }
 
   @ParameterizedTest
