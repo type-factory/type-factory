@@ -75,22 +75,62 @@ final class ShortTypeParserImpl implements ShortTypeParser {
   }
 
   @Override
-  public <T extends ShortType> T parse(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
-    return wrappedParser.parseToShortType(value, constructorOrFactoryMethod);
+  public <S extends ShortType> S of(Short value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <T extends ShortType> T parse(final CharSequence value, final Locale locale, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
-    return wrappedParser.parseToShortType(value, locale, constructorOrFactoryMethod);
+  public <S extends ShortType> S of(Integer value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  public <S extends ShortType> S of(Long value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  public <S extends ShortType> S of(BigInteger value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
   public Short parse(final CharSequence originalValue) throws InvalidValueException {
-    return wrappedParser.parseToShort(originalValue);
+    final Long parsedValue = wrappedParser.parse(originalValue);
+    return parsedValue == null
+        ? null
+        : parsedValue.shortValue();
   }
 
   @Override
   public Short parse(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    return wrappedParser.parseToShort(originalValue, locale);
+    final Long parsedValue = wrappedParser.parse(originalValue, locale);
+    return parsedValue == null
+        ? null
+        : parsedValue.shortValue();
+  }
+
+  @Override
+  public <T extends ShortType> T parse(final CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.shortValue());
+  }
+
+  @Override
+  public <T extends ShortType> T parse(final CharSequence value, final Locale locale, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(value, locale);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.shortValue());
   }
 }

@@ -43,7 +43,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
   private boolean caseSensitive = true;
-  private WhiteSpace whiteSpace = FORBID_WHITESPACE;
+  private WhiteSpace whiteSpace = IGNORE_WHITESPACE;
   private final SubsetBuilder ignoreCharactersSubsetBuilder = Subset.builder();
   private int[] numericRadixCodePoints = DEFAULT_BASE_10_CODE_POINTS;
   private long minValue;
@@ -259,7 +259,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   public LongTypeParserBuilderImpl allowBase16Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_16_CODE_POINTS);
+    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_16_CODE_POINTS);
   }
 
   /**
@@ -271,7 +271,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   public LongTypeParserBuilderImpl allowBase32Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_32_CODE_POINTS);
+    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_32_CODE_POINTS);
   }
 
   /**
@@ -284,7 +284,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   public LongTypeParserBuilderImpl allowBase36Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_36_CODE_POINTS);
+    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_36_CODE_POINTS);
   }
 
   /**
@@ -298,7 +298,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   public LongTypeParserBuilderImpl allowBase62Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_62_CODE_POINTS);
+    return caseSensitive().allowCustomBaseNumbers(DEFAULT_BASE_62_CODE_POINTS);
   }
 
   public LongTypeParserBuilderImpl allowLeadingNegativeSign() {

@@ -45,7 +45,7 @@ class ShortTypeParserImpl_parseToShortTest {
   @ValueSource(strings = {" ", "  ", "   "})
   void parse_whitespaceShouldThrowException(final String value) {
     final var shortTypeParser = ShortTypeParser.builder()
-        .allowBase10Numbers()
+        .forbidWhitespace()
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)

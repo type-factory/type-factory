@@ -45,7 +45,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   @ValueSource(strings = {" ", "  ", "   "})
   void parse_whitespaceShouldThrowException(final String value) {
     final var integerTypeParser = IntegerTypeParser.builder()
-        .allowBase10Numbers()
+        .forbidWhitespace()
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)

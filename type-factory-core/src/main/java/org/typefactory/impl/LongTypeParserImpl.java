@@ -24,12 +24,10 @@ import java.math.BigInteger;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
-import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 import org.typefactory.MessageCode;
-import org.typefactory.ShortType;
 import org.typefactory.Subset;
 
 final class LongTypeParserImpl implements LongTypeParser {
@@ -150,65 +148,32 @@ final class LongTypeParserImpl implements LongTypeParser {
     return value;
   }
 
-
-  <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Short parsedValue = parseToShort(value);
-    return parsedValue == null
+  @Override
+  public <S extends LongType> S of(Short value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
         ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
-  <T extends ShortType> T parseToShortType(final CharSequence value, final Locale locale, Function<Short, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Short parsedValue = parseToShort(value, locale);
-    return parsedValue == null
+  @Override
+  public <S extends LongType> S of(Integer value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
         ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
-  Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
-    return parsedValue == null
+  @Override
+  public <S extends LongType> S of(Long value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
         ? null
-        : parsedValue.shortValue();
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
-  Short parseToShort(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue, DecimalFormatSymbols.getInstance(locale));
-    return parsedValue == null
+  @Override
+  public <S extends LongType> S of(BigInteger value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
         ? null
-        : parsedValue.shortValue();
-  }
-
-  <T extends IntegerType> T parseToIntegerType(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  <T extends IntegerType> T parseToIntegerType(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value, locale);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue, defaultDecimalFormatSymbols);
-    return parsedValue == null
-        ? null
-        : parsedValue.intValue();
-  }
-
-  Integer parseToInteger(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    final Long parsedValue = parse(originalValue, DecimalFormatSymbols.getInstance(locale));
-    return parsedValue == null
-        ? null
-        : parsedValue.intValue();
+        : constructorOrFactoryMethod.apply(of(value));
   }
 
   public <T extends LongType> T parse(final CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {

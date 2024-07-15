@@ -75,23 +75,63 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
+  public <S extends IntegerType> S of(Short value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  public <S extends IntegerType> S of(Integer value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  public <S extends IntegerType> S of(Long value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  public <S extends IntegerType> S of(BigInteger value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
   public <T extends IntegerType> T parse(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
-    return wrappedParser.parseToIntegerType(value, constructorOrFactoryMethod);
+    final Long parsedValue = wrappedParser.parse(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.intValue());
   }
 
   @Override
   public <T extends IntegerType> T parse(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
-    return wrappedParser.parseToIntegerType(value, locale, constructorOrFactoryMethod);
+    final Long parsedValue = wrappedParser.parse(value, locale);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.intValue());
   }
 
   @Override
   public Integer parse(final CharSequence originalValue) throws InvalidValueException {
-    return wrappedParser.parseToInteger(originalValue);
+    final Long parsedValue = wrappedParser.parse(originalValue);
+    return parsedValue == null
+        ? null
+        : parsedValue.intValue();
   }
 
   @Override
   public Integer parse(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    return wrappedParser.parseToInteger(originalValue, locale);
+    final Long parsedValue = wrappedParser.parse(originalValue, locale);
+    return parsedValue == null
+        ? null
+        : parsedValue.intValue();
   }
 
 }

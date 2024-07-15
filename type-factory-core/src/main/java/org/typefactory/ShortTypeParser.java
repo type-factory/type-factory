@@ -374,6 +374,8 @@ public interface ShortTypeParser extends NumericTypeParser<Short, ShortType> {
     // TODO add javadoc
     ShortTypeParserBuilder ignoreAllWhitespace();
 
+    ShortTypeParserBuilder forbidWhitespace();
+
     /**
      * <p>This will configure the type-parser to ignore all occurrences of any dashes and hyphens
      * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a> from the parsed

@@ -194,6 +194,12 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
+  public IntegerTypeParserBuilder forbidWhitespace() {
+    wrapperBuilder.forbidWhitespace();
+    return this;
+  }
+
+  @Override
   public IntegerTypeParserBuilder ignoreAllDashesAndHyphens() {
     wrapperBuilder.ignoreAllDashesAndHyphens();
     return this;

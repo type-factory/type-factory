@@ -45,7 +45,7 @@ class LongTypeParserImpl_parseToLongTest {
   @ValueSource(strings = {" ", "  ", "   "})
   void parse_whitespaceShouldThrowException(final String value) {
     final var longTypeParser = LongTypeParser.builder()
-        .allowBase10Numbers()
+        .forbidWhitespace()
         .build();
 
     assertThatExceptionOfType(InvalidValueException.class)

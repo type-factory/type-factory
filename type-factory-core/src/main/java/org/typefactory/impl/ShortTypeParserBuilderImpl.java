@@ -237,6 +237,12 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
   }
 
   @Override
+  public ShortTypeParserBuilder forbidWhitespace() {
+    wrapperBuilder.forbidWhitespace();
+    return this;
+  }
+
+  @Override
   public ShortTypeParserBuilder ignoreAllDashesAndHyphens() {
     wrapperBuilder.ignoreAllDashesAndHyphens();
     return this;
