@@ -8,6 +8,7 @@ import static org.typefactory.impl.Constants.PLUS_CODEPOINTS;
 import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.FORBID_WHITESPACE;
 import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.IGNORE_WHITESPACE;
 
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import org.typefactory.Category;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
@@ -67,7 +68,8 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
     final var numericRadixCodePointsMap = createNumericRadixCodePointsMap();
 
     return new LongTypeParserImpl(
-        targetTypeClass, messageCode, defaultLocale,
+        targetTypeClass, messageCode,
+        DecimalFormatSymbols.getInstance(defaultLocale),
         whiteSpace,
         ignoreCharactersSubsetBuilder.build(),
         numericRadixCodePointsMap, numericRadixCodePoints,
@@ -139,7 +141,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   public LongTypeParserBuilderImpl defaultLocale(final Locale locale) {
-    defaultLocale = locale;
+    defaultLocale = locale == null ? Locale.getDefault() : locale;
     return this;
   }
 

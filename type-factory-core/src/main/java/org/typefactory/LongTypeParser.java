@@ -299,7 +299,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * <p>Provide a default {@link Locale} which will be used when parsing {@link CharSequence} values to
      * correctly interpret grouping separators, also known as thousands separators or ten-of-thousands separators depending on the locale.</p>
      *
-     * @param locale a default {@link Locale} which will be used when parsing {@link CharSequence} values.
+     * @param locale a default {@link Locale} which will be used when parsing {@link CharSequence} values. If a null {@code locale} value is provided
+     *               then the locale will be set to {@link Locale#getDefault()}.
      * @return this builder
      */
     LongTypeParserBuilder defaultLocale(Locale locale);
@@ -779,21 +780,25 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
     LongTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
 
     /**
-     * <p>This will configure the type-parser to allow a leading negative sign while parsing numbers. This is the default configuration for a type parser.</p>
+     * <p>This will configure the type-parser to allow a leading negative sign while parsing numbers. This is the default configuration for a type
+     * parser.</p>
      *
-     * <p>Consider configuring your type parser with {@link #ignoreAllDashesAndHyphens()} or {@link #ignoreLeadingNegativeSign()} if your custom type has no negative values and you wish to remove noise from the incoming value.</p>
+     * <p>Consider configuring your type parser with {@link #ignoreAllDashesAndHyphens()} or {@link #ignoreLeadingNegativeSign()} if your custom type
+     * has no negative values and you wish to remove noise from the incoming value.</p>
      */
     LongTypeParserBuilder allowLeadingNegativeSign();
 
     /**
      * <p>This will configure the type-parser to ignore any leading negative sign while parsing numbers.</p>
      *
-     * <p>Consider configuring your type parser with {@link #allowLeadingNegativeSign()} if your custom type has negative values and you wish to allow them.</p>
+     * <p>Consider configuring your type parser with {@link #allowLeadingNegativeSign()} if your custom type has negative values and you wish to allow
+     * them.</p>
      */
     LongTypeParserBuilder ignoreLeadingNegativeSign();
 
     /**
-     * <p>This will configure the type-parser to allow a leading positive sign while parsing numbers. This is the default configuration for a type parser.</p>
+     * <p>This will configure the type-parser to allow a leading positive sign while parsing numbers. This is the default configuration for a type
+     * parser.</p>
      *
      * <p>Consider configuring your type parser with {@link #ignoreLeadingPositiveSign()} if you wish to remove noise from the incoming value.</p>
      */
@@ -802,7 +807,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
     /**
      * <p>This will configure the type-parser to ignore any leading positive sign while parsing numbers.</p>
      *
-     * <p>Consider configuring your type parser with {@link #allowLeadingPositiveSign()} if you wish to allow positive signs in the incoming value.</p>
+     * <p>Consider configuring your type parser with {@link #allowLeadingPositiveSign()} if you wish to allow positive signs in the incoming
+     * value.</p>
      */
     LongTypeParserBuilder ignoreLeadingPositiveSign();
   }

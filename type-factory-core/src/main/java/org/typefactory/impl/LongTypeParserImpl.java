@@ -44,8 +44,7 @@ final class LongTypeParserImpl implements LongTypeParser {
 
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
-  private final Locale defaultLocale;
-  private final DecimalFormatSymbols defaultDecimalFormatSymbols;
+  private final DecimalFormatSymbols defaultLocaleDecimalFormatSymbols;
   private final WhiteSpace whiteSpace;
   private final Subset ignoreCharactersSubset;
   private final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap;
@@ -62,7 +61,7 @@ final class LongTypeParserImpl implements LongTypeParser {
   LongTypeParserImpl(
       final Class<?> targetTypeClass,
       final MessageCode messageCode,
-      final Locale defaultLocale,
+      final DecimalFormatSymbols defaultLocaleDecimalFormatSymbols,
       final WhiteSpace whiteSpace,
       final Subset ignoreCharactersSubset,
       final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
@@ -75,8 +74,7 @@ final class LongTypeParserImpl implements LongTypeParser {
       final boolean ignoreLeadingPositiveSign) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
-    this.defaultLocale = defaultLocale == null ? Locale.getDefault() : defaultLocale;
-    this.defaultDecimalFormatSymbols = DecimalFormatSymbols.getInstance(this.defaultLocale);
+    this.defaultLocaleDecimalFormatSymbols = defaultLocaleDecimalFormatSymbols;
     this.whiteSpace = whiteSpace;
     this.ignoreCharactersSubset = ignoreCharactersSubset;
     this.numericRadixCodePointsMap = numericRadixCodePointsMap;
@@ -192,12 +190,12 @@ final class LongTypeParserImpl implements LongTypeParser {
   }
 
   public Long parse(final CharSequence originalValue) throws InvalidValueException {
-    return parse(originalValue, defaultDecimalFormatSymbols);
+    return parse(originalValue, defaultLocaleDecimalFormatSymbols);
   }
 
   // TODO writes tests for this
   public Long parse(final CharSequence source, final Locale locale) throws InvalidValueException {
-    return parse(source, DecimalFormatSymbols.getInstance(locale));
+    return parse(source, locale == null ? defaultLocaleDecimalFormatSymbols : DecimalFormatSymbols.getInstance(locale));
   }
 
   // Suppress SonarCloud issues:
