@@ -95,29 +95,29 @@ class ShortTypeParserImpl_parseToShortTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-        VALUE   | EXPECTED | COMMENTS
-       -32768   |   -32768 | Short.MIN_VALUE
-       -32767   |   -32767 | Short.MIN_VALUE + 1
-          -20   |      -20 | Hyphen-minus twenty
-     \u221219   |      -19 | Math-minus nineteen
-      '   -18 ' |      -18 | Whitespace Hyphen-minus eighteen
-      '  - 17 ' |      -17 | Whitespace Hyphen-minus seventeen
-          -10   |      -10 | Hyphen-minus ten
-      \u22129   |       -9 | Math-minus nine
-           -1   |       -1 | Hyphen-minus One
-            0   |        0 | Zero
-            1   |        1 | One
-           +1   |        1 | Plus One
-            9   |        9 | Nine
-           10   |       10 | Ten
-          +10   |       10 | Plus ten
-      '  + 17 ' |       17 | Whitespace plus seventeen
-      '    18 ' |       18 | Whitespace eighteen
-           19   |       19 | Nineteen
-           20   |       20 | Twenty
-        32766   |  32766 | Short.MAX_VALUE -1
-        32767   |  32767 | Short.MAX_VALUE
-       +32767   |  32767 | Plus Short.MAX_VALUE
+         VALUE   | EXPECTED | COMMENTS
+        -32768   |   -32768 | Short.MIN_VALUE
+        -32767   |   -32767 | Short.MIN_VALUE + 1
+           -20   |      -20 | Hyphen-minus twenty
+      \u221219   |      -19 | Math-minus nineteen
+       '   -18 ' |      -18 | Whitespace Hyphen-minus eighteen
+       '  - 17 ' |      -17 | Whitespace Hyphen-minus seventeen
+           -10   |      -10 | Hyphen-minus ten
+       \u22129   |       -9 | Math-minus nine
+            -1   |       -1 | Hyphen-minus One
+             0   |        0 | Zero
+             1   |        1 | One
+            +1   |        1 | Plus One
+             9   |        9 | Nine
+            10   |       10 | Ten
+           +10   |       10 | Plus ten
+       '  + 17 ' |       17 | Whitespace plus seventeen
+       '    18 ' |       18 | Whitespace eighteen
+            19   |       19 | Nineteen
+            20   |       20 | Twenty
+         32766   |  32766 | Short.MAX_VALUE -1
+         32767   |  32767 | Short.MAX_VALUE
+        +32767   |  32767 | Plus Short.MAX_VALUE
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)

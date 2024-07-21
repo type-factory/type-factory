@@ -10,7 +10,7 @@ import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTr
 
 class CodePointSequenceToCodePointSequenceConverterTest {
 
-  private static Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
+  private static final Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
 
   @Test
   void nAryTreeIsFormedCorrectly() {

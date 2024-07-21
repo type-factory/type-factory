@@ -66,7 +66,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
   private HashTable<T> hashTable;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private final PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
 
   PrimitiveHashMapOfIntKeyToObjectValue() {
     this.hashTable = new HashTable<>();

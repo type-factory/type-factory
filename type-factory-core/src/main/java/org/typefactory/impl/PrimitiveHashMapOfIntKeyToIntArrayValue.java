@@ -71,7 +71,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   private int maxValueArrayLength = 0;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private final PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
 
   PrimitiveHashMapOfIntKeyToIntArrayValue() {
     this.hashTable = new HashTable();

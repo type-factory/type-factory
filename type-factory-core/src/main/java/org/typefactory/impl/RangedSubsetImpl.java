@@ -214,7 +214,7 @@ class RangedSubsetImpl implements RangedSubset {
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;
     private int tripleByteIndex = 0;
-    private CodePointRange result = new CodePointRange(0, 0);
+    private final CodePointRange result = new CodePointRange(0, 0);
 
     @Override
     public boolean hasNext() {
