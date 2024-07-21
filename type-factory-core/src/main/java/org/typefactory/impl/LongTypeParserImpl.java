@@ -224,6 +224,11 @@ final class LongTypeParserImpl implements LongTypeParser {
       codePoint = (int) (indexAndCodePoint >> 32);
       sourceIndex = (int) indexAndCodePoint;
 
+      if (numberFormat.isGroupingSeparator(codePoint)) {
+        ++sourceIndex;
+        continue;
+      }
+
       if (Character.isWhitespace(codePoint) || Character.isSpaceChar(codePoint)) {
         if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE) {
           ++sourceIndex;
@@ -277,11 +282,6 @@ final class LongTypeParserImpl implements LongTypeParser {
           sourceIndex = tempIndex;
           continue;
         }
-      }
-
-      if (numberFormat.isGroupingSeparator(codePoint)) {
-        ++sourceIndex;
-        continue;
       }
 
       if (numberFormat.isDecimalSeparator(codePoint)) {

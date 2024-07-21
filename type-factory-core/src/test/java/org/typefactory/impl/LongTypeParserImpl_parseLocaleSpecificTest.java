@@ -24,7 +24,6 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,6 +33,7 @@ import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_parseLocaleSpecificTest {
+
 
   static final long[] LONG_VALUES = new long[]{
       Long.MIN_VALUE,
@@ -149,8 +149,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
                 final var formatted = numberFormat.format(value);
                 return Arguments.of(locale, formatted, value);
               });
-        })
-        .filter(not(Objects::isNull));
+        });
   }
 
   private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaLongToString() {
@@ -159,14 +158,12 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
     return Arrays.stream(locales)
         .filter(not(locale -> locale.getCountry().isEmpty()))
         .filter(locale -> NumberFormat.getNumberInstance(locale) instanceof DecimalFormat)
-        .flatMap(locale -> {
-          return Arrays.stream(LONG_VALUES)
-              .mapToObj(value -> {
-                final var formatted = Long.toString(value);
-                return Arguments.of(locale, formatted, value);
-              });
-        })
-        .filter(not(Objects::isNull));
+        .flatMap(locale ->
+            Arrays.stream(LONG_VALUES)
+                .mapToObj(value -> {
+                  final var formatted = Long.toString(value);
+                  return Arguments.of(locale, formatted, value);
+                }));
   }
 
   private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaStringFormat() {
@@ -175,55 +172,27 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
     return Arrays.stream(locales)
         .filter(not(locale -> locale.getCountry().isEmpty()))
         .filter(locale -> NumberFormat.getNumberInstance(locale) instanceof DecimalFormat)
-        .flatMap(locale -> {
-          return Arrays.stream(LONG_VALUES)
-              .mapToObj(value -> {
-                final var formatted = String.format(locale, "%d", value);
-                return Arguments.of(locale, formatted, value);
-              });
-        })
-        .filter(not(Objects::isNull));
+        .flatMap(locale ->
+            Arrays.stream(LONG_VALUES)
+                .mapToObj(value -> {
+                  final var formatted = String.format(locale, "%d", value);
+                  return Arguments.of(locale, formatted, value);
+                }));
   }
 
   @ParameterizedTest
-  @MethodSource("provideLocaleSpecificValuesCreatedByJavaNumberFormat")
-  void parse_localeInParser_provideLocaleSpecificValuesCreatedByJavaNumberFormat(final Locale locale, final String value, final long expected) {
+  @MethodSource({
+      "provideLocaleSpecificValuesCreatedByJavaNumberFormat",
+      "provideLocaleSpecificValuesCreatedByJavaLongToString",
+      "provideLocaleSpecificValuesCreatedByJavaStringFormat"})
+  void parse_localeInParser(final Locale locale, final String value, final long expected) {
 
     final var longTypeParser = LongTypeParser.builder()
         .defaultLocale(locale)
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase10Numbers()
-        .build();
-
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @MethodSource("provideLocaleSpecificValuesCreatedByJavaLongToString")
-  void parse_localeInParser_provideLocaleSpecificValuesCreatedByJavaLongToString(final Locale locale, final String value, final long expected) {
-
-    final var longTypeParser = LongTypeParser.builder()
-        .defaultLocale(locale)
-        .minValueInclusive(Long.MIN_VALUE)
-        .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
-        .build();
-
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @MethodSource("provideLocaleSpecificValuesCreatedByJavaStringFormat")
-  void parse_localeInParser_provideLocaleSpecificValuesCreatedByJavaStringFormat(final Locale locale, final String value, final long expected) {
-
-    final var longTypeParser = LongTypeParser.builder()
-        .defaultLocale(locale)
-        .minValueInclusive(Long.MIN_VALUE)
-        .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .forbidWhitespace()
         .build();
 
     final var actual = longTypeParser.parse(value);
