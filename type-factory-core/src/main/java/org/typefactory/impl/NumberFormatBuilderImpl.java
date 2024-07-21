@@ -136,9 +136,13 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
 
   @Override
   public NumberFormatBuilder decimalSeparator(int decimalSeparator, int... additionalDecimalSeparators) {
-    this.decimalSeparators = new int[1 + (additionalDecimalSeparators == null ? 0 : additionalDecimalSeparators.length)];
-    this.decimalSeparators[0] = decimalSeparator;
-    System.arraycopy(additionalDecimalSeparators, 0, this.decimalSeparators, 1, additionalDecimalSeparators.length);
+    if (additionalDecimalSeparators == null || additionalDecimalSeparators.length == 0) {
+      this.decimalSeparators = new int[]{decimalSeparator};
+    } else {
+      this.decimalSeparators = new int[1 + additionalDecimalSeparators.length];
+      this.decimalSeparators[0] = decimalSeparator;
+      System.arraycopy(additionalDecimalSeparators, 0, this.decimalSeparators, 1, additionalDecimalSeparators.length);
+    }
     return this;
   }
 
@@ -158,9 +162,13 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
 
   @Override
   public NumberFormatBuilder groupingSeparator(int groupingSeparator, int... additionalGroupingSeparators) {
-    this.groupingSeparators = new int[1 + (additionalGroupingSeparators == null ? 0 : additionalGroupingSeparators.length)];
-    this.groupingSeparators[0] = groupingSeparator;
-    System.arraycopy(additionalGroupingSeparators, 0, this.groupingSeparators, 1, additionalGroupingSeparators.length);
+    if (additionalGroupingSeparators == null || additionalGroupingSeparators.length == 0) {
+      this.groupingSeparators = new int[]{groupingSeparator};
+    } else {
+      this.groupingSeparators = new int[1 + additionalGroupingSeparators.length];
+      this.groupingSeparators[0] = groupingSeparator;
+      System.arraycopy(additionalGroupingSeparators, 0, this.groupingSeparators, 1, additionalGroupingSeparators.length);
+    }
     return this;
   }
 

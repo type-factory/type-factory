@@ -76,6 +76,7 @@ class ShortTypeParserImpl_ofNumericTest {
         assertThat(shortTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "BigInteger":
+      default:
         assertThat(shortTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
         break;
     }
@@ -119,6 +120,7 @@ class ShortTypeParserImpl_ofNumericTest {
         assertThat(shortTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "BigInteger":
+      default:
         assertThat(shortTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
         break;
     }
@@ -154,45 +156,55 @@ class ShortTypeParserImpl_ofNumericTest {
 
     switch (valueType) {
       case "Short":
+        final var shortPrimitive = value.shortValue();
+        final var shortObject = Integer.valueOf(shortPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.shortValue()))
+            .isThrownBy(() -> shortTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Short.valueOf(value.shortValue())))
+            .isThrownBy(() -> shortTypeParser.of(shortObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.shortValue()))
+            .isThrownBy(() -> shortTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
+        final var integerPrimitive = value.intValue();
+        final var integerObject = Integer.valueOf(integerPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.intValue()))
+            .isThrownBy(() -> shortTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Integer.valueOf(value.intValue())))
+            .isThrownBy(() -> shortTypeParser.of(integerObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.intValue()))
+            .isThrownBy(() -> shortTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
+        final var longPrimitive = value.longValue();
+        final var longObject = Long.valueOf(longPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.longValue()))
+            .isThrownBy(() -> shortTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Long.valueOf(value.longValue())))
+            .isThrownBy(() -> shortTypeParser.of(longObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.longValue()))
+            .isThrownBy(() -> shortTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "BigInteger":
+      default:
         assertThatExceptionOfType(InvalidValueException.class)
             .isThrownBy(() -> shortTypeParser.of(value))
             .withMessageStartingWith(expectedMessage);
@@ -230,33 +242,43 @@ class ShortTypeParserImpl_ofNumericTest {
 
     switch (valueType) {
       case "Short":
+        final var shortPrimitive = value.shortValue();
+        final var shortObject = Integer.valueOf(shortPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.shortValue()))
+            .isThrownBy(() -> shortTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Short.valueOf(value.shortValue())))
+            .isThrownBy(() -> shortTypeParser.of(shortObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
+        final var integerPrimitive = value.intValue();
+        final var integerObject = Integer.valueOf(integerPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.intValue()))
+            .isThrownBy(() -> shortTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Integer.valueOf(value.intValue())))
+            .isThrownBy(() -> shortTypeParser.of(integerObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
+        final var longPrimitive = value.longValue();
+        final var longObject = Long.valueOf(longPrimitive);
+
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(value.longValue()))
+            .isThrownBy(() -> shortTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> shortTypeParser.of(Long.valueOf(value.longValue())))
+            .isThrownBy(() -> shortTypeParser.of(longObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "BigInteger":
+      default:
         assertThatExceptionOfType(InvalidValueException.class)
             .isThrownBy(() -> shortTypeParser.of(value))
             .withMessageStartingWith(expectedMessage);
