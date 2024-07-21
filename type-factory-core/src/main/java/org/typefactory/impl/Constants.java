@@ -30,33 +30,73 @@ final class Constants {
 
   static final String LINE_SEPARATOR = System.lineSeparator();
 
+  static final int ARABIC_LETTER_MARK = '\u061c';
+  static final int LEFT_TO_RIGHT_INDICATOR = '\u200e';
+  static final int RIGHT_TO_LEFT_INDICATOR = '\u200f';
+
   /**
-   * The Unicode code point for the right single quotation mark character.
-   * <p>
-   * It is used by the de-CH locale as a grouping separator. An alternative could be an ordinary APOSTROPHE_SINGLE_QUOTATION_MARK (U+0027).
+   * <p>The Unicode code point for a comma.</p>
    *
-   * @see #APOSTROPHE_SINGLE_QUOTATION_MARK
+   * <p>Used by some locales as a numeric grouping separator (thousands separator) and other locals as a decimal separator (decimal point).</p>
+   */
+  static final int COMMA = '\u002c';
+
+  /**
+   * <p>The Unicode code point for a full stop.</p>
+   *
+   * <p>Used by some locales as a numeric grouping separator (thousands separator) and other locals as a decimal separator (decimal point).</p>
+   */
+  static final int FULL_STOP = '\u002e';
+
+  /**
+   * <p>The Unicode code point for a no-break space.</p>
+   *
+   * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>
+   */
+  static final int NO_BREAK_SPACE = '\u00a0';
+
+  /**
+   * <p>The Unicode code point for an arabic comma.</p>
+   *
+   * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>
+   */
+  static final int ARABIC_COMMA = '\u060c';
+
+  /**
+   * <p>The Unicode code point for an arabic decimal separator.</p>
+   *
+   * <p>Used by some locales as a numeric decimal separator (decimal point).</p>
+   */
+  static final int ARABIC_DECIMAL_SEPARATOR = '\u066b';
+
+  /**
+   * <p>The Unicode code point for an arabic thousands separator.</p>
+   *
+   * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>
+   */
+  static final int ARABIC_THOUSANDS_SEPARATOR = '\u066c';
+
+  /**
+   * <p>The Unicode code point for a right single quotation mark.</p>
+   *
+   * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>
    */
   static final int RIGHT_SINGLE_QUOTATION_MARK = '\u2019';
 
   /**
-   * The Unicode code point for the ordinary apostrophe character.
-   * <p>
-   * We allow it as an alternative to the de-CH locale grouping separator of RIGHT_SINGLE_QUOTATION_MARK (U+2019).
+   * <p>The Unicode code point for a narrow no-break space.</p>
    *
-   * @see #RIGHT_SINGLE_QUOTATION_MARK
+   * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>
    */
-  static final int APOSTROPHE_SINGLE_QUOTATION_MARK = '\'';
+  static final int NARROW_NO_BREAK_SPACE = '\u202f';
 
 
   /**
-   * The Unicode code point for the narrow no-break space character.
-   * <p>
-   * It is used by the fr-CH locale as a grouping separator. An alternative could be an ordinary SPACE (U+0020).
+   * <p>The Unicode code point for a apostrophe / single quote character.</p>
    *
-   * @see #SPACE
+   * <p>Used by some locales as an alternative numeric grouping separator (thousands separator).</p>
    */
-  static final int NARROW_NO_BREAK_SPACE = '\u202F';
+  static final int APOSTROPHE_SINGLE_QUOTATION_MARK = '\'';
 
   /**
    * The Unicode code point for the ordinary space character.
@@ -75,5 +115,6 @@ final class Constants {
   static final int PLUS = '+';
   static final int HEAVY_PLUS = '\u2795';
   static final int[] PLUS_CODEPOINTS = new int[]{PLUS, HEAVY_PLUS};
+
 
 }

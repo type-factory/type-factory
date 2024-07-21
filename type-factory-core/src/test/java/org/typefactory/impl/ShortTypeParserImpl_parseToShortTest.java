@@ -50,7 +50,7 @@ class ShortTypeParserImpl_parseToShortTest {
 
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> shortTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
+        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
   }
 
   @ParameterizedTest

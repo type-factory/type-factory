@@ -13,16 +13,15 @@ import org.typefactory.impl.Factory;
  * <p>Type-parsers created with the {@link LongTypeParser#builder()} are immutable and thread-safe.</p>
  *
  * <p>It is recommended that you create a type-parser once and reuse it wherever required.
- * They are consider expensive to create but cheap to reuse. Type-parsers created with {@link LongTypeParser#builder()} method have been designed to
- * do their job efficiently with minimal object creation and without auto-boxing.</p>
+ * They are considered expensive to create but cheap to use and reuse. Type-parsers created with {@link LongTypeParser#builder()} method have been
+ * designed to do their job efficiently with minimal object creation.</p>
  *
- * <p><b>Example 1 – long type-parser for a 9-digit invoice-number that will ignore any whitespace, hyphens or dashes.</b></p>
+ * <p><b>Example 1 – type-parser for a 9-digit invoice-number that will ignore any whitespace, hyphens or dashes.</b></p>
  * <pre>{@code
  * static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()
  *     .messageCode(MessageCode.of("invalid.invoice.number", "must be a 9-digit invoice-number"))
  *     .minValueInclusive(100_000_000L)
  *     .maxValueInclusive(999_999_999L)
- *     .allowBase10Numbers()
  *     .ignoreAllDashesAndHyphens()
  *     .ignoreAllWhitespace()
  *     .build();
@@ -115,6 +114,162 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   long of(final long value) throws InvalidValueException;
 
   /**
+   * Returns the value of the given short value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms to all
+   * the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a short value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance. The second
+   * {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final Short value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the short value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given short value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  <S extends LongType> S of(Short value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given integer value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms to all
+   * the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes an integer value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance. The
+   * second {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final Integer value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the integer value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given int value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  <S extends LongType> S of(Integer value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given long value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms to all
+   * the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a long value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance. The second
+   * {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final Long value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the long value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given long value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  <S extends LongType> S of(Long value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given {@link BigInteger} value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it
+   * conforms to all the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a {@link BigInteger} value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId}
+   * instance. The second {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final BigInteger value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the {@link BigInteger} value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given {@link BigInteger} value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  <S extends LongType> S of(BigInteger value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
    * <p>Parse the provided {@code value} into a {@link Long} value. This method is null-safe,
    * returning {@code null} if the provided {@code value} was null.</p>
    *
@@ -136,10 +291,10 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   Long parse(CharSequence value) throws InvalidValueException;
 
   /**
-   * <p>Parse the provided {@code value} into a {@link Long} value. This method is null-safe,
+   * <p>Parse the provided {@code value} into a {@link Long} value using the provided {@code locale}. This method is null-safe,
    * returning {@code null} if the provided {@code value} was null.</p>
    *
-   * <p><b>Example – parse to a {@code Long} instance</b></p>
+   * <p><b>Example – parse to a {@code Long} instance using a specific {@code Locale}</b></p>
    * <pre>{@code
    * static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
    * static final Locale someLocale = ...;
@@ -148,8 +303,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * }</pre>
    *
    * @param value  the string or {@link CharSequence} value to parse into a {@link Long}.
-   * @param locale the locale to use when parsing the value. This allows the parser to cater for locale specific grouping separators (e.g. thousands
-   *               separators).
+   * @param locale the locale to use when parsing the provided {@code value}. This allows the parser to cater for locale specific grouping separators
+   *               (e.g. thousands separators).
    * @return the provided {@code value} parsed into a {@link Long} value, or {@code null} if the provided {@code value} was null.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
    * @see #parse(CharSequence)
@@ -159,9 +314,12 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   @Override
   Long parse(CharSequence value, final Locale locale) throws InvalidValueException;
 
+  @Override
+  Long parse(CharSequence value, final NumberFormat numberFormat) throws InvalidValueException;
+
   /**
-   * <p>Parse the provided {@code value} into a {@link Long} value using the provided {@code constructorOrFactoryMethod} to create the
-   * {@link LongType} instance.</p>
+   * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link LongType}. This method is null-safe,
+   * returning {@code null} if the provided {@code value} was null, empty or blank.</p>
    *
    * <p><b>Example – parse to a custom type extending {@link LongType}</b></p>
    * <p>The {@code ProductId} type below provides a factory {@code 'of'} method which uses the type-parser to parse the provided {@code value}
@@ -182,23 +340,25 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * }
    * }</pre>
    *
-   * @param value                      the string or {@link CharSequence} value to parse into a {@link Long}.
-   * @param constructorOrFactoryMethod a constructor or factory method that will be used to create the {@link LongType} instance.
-   * @param <T>                        the subclass type of the {@link LongType} instance that will be created.
-   * @return the provided {@code value} parsed into a {@link Long} value.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
+   * @param value                      the string or {@link CharSequence} value to parse into a {@link LongType}.
+   * @param constructorOrFactoryMethod a constructor or factory method that will be used to create the instance of the type {@code S}, a subclass of.
+   * @param <S>                        the subclass type of the {@link LongType} instance that will be created.
+   * @return the provided {@code value} parsed into an instance of the type {@code S}, a subclass of {@link LongType}, or {@code null} if the provided
+   * {@code value} was null, empty or blank.
+   * @throws InvalidValueException if the provided {@code value} cannot be parsed into an instance of the type {@code S}, a subclass of
+   *                               {@link LongType}.
    * @see #parse(CharSequence)
    * @see #parse(CharSequence, Locale)
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  <T extends LongType> T parse(CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException;
+  <S extends LongType> S parse(CharSequence value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
-   * <p>Parse the provided {@code value} into a {@link Long} value using the provided {@code constructorOrFactoryMethod} to create the
-   * {@link LongType} instance.</p>
+   * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link LongType}, using the provided {@code locale}.
+   * This method is null-safe, returning {@code null} if the provided {@code value} was null, empty or blank.</p>
    *
-   * <p><b>Example – parse to a custom type extending {@link LongType}</b></p>
+   * <p><b>Example – parse to a custom type extending {@link LongType} using a specific {@code Locale}</b></p>
    * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser to parse the provided
    * {@code value} and create the {@code ProductId} instance, with the second {@code 'of'} method accepting {@link Locale} to ensure that
    * locale-specific formats are considered when parsing:</p>
@@ -223,8 +383,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * }</pre>
    *
    * @param value                      the string or {@link CharSequence} value to parse into a {@link Long}.
-   * @param constructorOrFactoryMethod a constructor or factory method that will be used to create the {@link LongType} instance.
-   * @param <T>                        the subclass type of the {@link LongType} instance that will be created.
+   * @param locale                     the locale to use when parsing the provided {@code value}. This allows the parser to cater for locale specific
+   *                                   grouping separators (e.g. thousands separators).
+   * @param constructorOrFactoryMethod a constructor or factory method that will be used to create the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
    * @return the provided {@code value} parsed into a {@link Long} value.
    * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
    * @see #parse(CharSequence)
@@ -232,7 +395,9 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  <T extends LongType> T parse(CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException;
+  <S extends LongType> S parse(CharSequence value, final Locale locale, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  <S extends LongType> S parse(CharSequence value, final NumberFormat numberFormat, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
@@ -243,7 +408,7 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   int getRadix();
 
   /**
-   * The interface for a builder that can create a {@link LongTypeParser}.
+   * The interface for a builder that can create a {@link LongTypeParser} instance.
    */
   interface LongTypeParserBuilder {
 
@@ -306,41 +471,49 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
     LongTypeParserBuilder defaultLocale(Locale locale);
 
     /**
-     * Set a minimum value that will be used to validate values that are parsed to a Long value. Calling this will replace any previously set
-     * inclusive or exclusive minimum value.
+     * Set a minimum value that will be used to validate values are withing a range. Calling this will replace any previously set inclusive or
+     * exclusive minimum value.
      *
      * @param minValue the minimum inclusive value allowed.
      * @return this builder
+     * @see #maxValueInclusive(long)
      * @see #minValueExclusive(long)
+     * @see #maxValueExclusive(long)
      */
     LongTypeParserBuilder minValueInclusive(long minValue);
 
     /**
-     * Set a maximum value that will be used to validate values that are parsed to a Long value. Calling this will replace any previously set
-     * inclusive or exclusive maximum value.
+     * Set a maximum value that will be used to validate values are withing a range. Calling this will replace any previously set inclusive or
+     * exclusive maximum value.
      *
      * @param maxValue the maximum inclusive value allowed.
      * @return this builder
+     * @see #minValueInclusive(long)
+     * @see #minValueExclusive(long)
      * @see #maxValueExclusive(long)
      */
     LongTypeParserBuilder maxValueInclusive(long maxValue);
 
     /**
-     * Set a minimum value that will be used to validate values that are parsed to a Long value. Calling this will replace any previously set
-     * inclusive or exclusive minimum value.
+     * Set a minimum value that will be used to validate values are withing a range. Calling this will replace any previously set inclusive or
+     * exclusive minimum value.
      *
      * @param minValue the minimum exclusive value allowed.
      * @return this builder
+     * @see #minValueExclusive(long)
      * @see #minValueInclusive(long)
+     * @see #maxValueInclusive(long)
      */
     LongTypeParserBuilder minValueExclusive(long minValue);
 
     /**
-     * Set a maximum value that will be used to validate values that are parsed to a Long value. Calling this will replace any previously set
-     * inclusive or exclusive maximum value.
+     * Set a maximum value that will be used to validate values are withing a range. Calling this will replace any previously set inclusive or
+     * exclusive maximum value.
      *
      * @param maxValue the maximum exclusive value allowed.
      * @return this builder
+     * @see #minValueExclusive(long)
+     * @see #minValueInclusive(long)
      * @see #maxValueInclusive(long)
      */
     LongTypeParserBuilder maxValueExclusive(long maxValue);
@@ -738,7 +911,6 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * }</pre>
      *
      * @return this builder.
-     * @see #ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
      * @see #ignoreAllOccurrencesOfChar(char)
      * @see #ignoreAllOccurrencesOfChars(char...)
      * @see #ignoreAllOccurrencesOfCodePoint(int)
@@ -749,50 +921,23 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
     LongTypeParserBuilder ignoreAllDashesAndHyphens();
 
     /**
-     * <p>This will configure the type-parser to ignore all occurrences of, excepting a single leading negative sign, any dashes and hyphens
-     * that are found in the <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a> from the parsed
-     * value.</p>
-     *
-     * <p><b>Example – removing all dashes and hyphens from a parsed value</b></p>
-     *
-     * <p>On websites, statements or invoices you may print your product-codes with hyphens for readability but then wish to remove any hyphens from
-     * these product codes while parsing. So a product code supplied to you as {@code 112-333-789} would actually be parsed into your custom type as
-     * {@code 112333789}.</p>
-     *
-     * <pre>{@code
-     * TypeParser.builder()
-     *   .messageCode(MessageCode.of("invalid.product.code", "must be a 9-digit product code"))
-     *   .minValueInclusive(100_000_000L)
-     *   .maxValueInclusive(999_999_999L)
-     *   .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
-     *   .build();
-     * }</pre>
-     *
-     * @return this builder.
-     * @see #ignoreAllDashesAndHyphens()
-     * @see #ignoreAllOccurrencesOfChar(char)
-     * @see #ignoreAllOccurrencesOfChars(char...)
-     * @see #ignoreAllOccurrencesOfCodePoint(int)
-     * @see #ignoreAllOccurrencesOfCodePoints(int...)
-     * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
-     * @see <a href="https://www.compart.com/en/unicode/category/Pd">Unicode Dash_Punctuation (Pd) category</a>
-     */
-    LongTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
-
-    /**
      * <p>This will configure the type-parser to allow a leading negative sign while parsing numbers. This is the default configuration for a type
      * parser.</p>
      *
      * <p>Consider configuring your type parser with {@link #ignoreAllDashesAndHyphens()} or {@link #ignoreLeadingNegativeSign()} if your custom type
      * has no negative values and you wish to remove noise from the incoming value.</p>
+     *
+     * @return this builder.
      */
     LongTypeParserBuilder allowLeadingNegativeSign();
 
     /**
      * <p>This will configure the type-parser to ignore any leading negative sign while parsing numbers.</p>
      *
-     * <p>Consider configuring your type parser with {@link #allowLeadingNegativeSign()} if your custom type has negative values and you wish to allow
-     * them.</p>
+     * <p>Consider configuring your type parser with {@link #allowLeadingNegativeSign()} if your custom type has negative values and you wish to
+     * allow them.</p>
+     *
+     * @return this builder.
      */
     LongTypeParserBuilder ignoreLeadingNegativeSign();
 
@@ -801,6 +946,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * parser.</p>
      *
      * <p>Consider configuring your type parser with {@link #ignoreLeadingPositiveSign()} if you wish to remove noise from the incoming value.</p>
+     *
+     * @return this builder.
      */
     LongTypeParserBuilder allowLeadingPositiveSign();
 
@@ -809,6 +956,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *
      * <p>Consider configuring your type parser with {@link #allowLeadingPositiveSign()} if you wish to allow positive signs in the incoming
      * value.</p>
+     *
+     * @return this builder.
      */
     LongTypeParserBuilder ignoreLeadingPositiveSign();
   }

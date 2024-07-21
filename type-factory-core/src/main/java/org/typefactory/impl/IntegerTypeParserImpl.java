@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.typefactory.IntegerType;
 import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
+import org.typefactory.NumberFormat;
 
 final class IntegerTypeParserImpl implements IntegerTypeParser {
 
@@ -103,22 +104,6 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
-  public <T extends IntegerType> T parse(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = wrappedParser.parse(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue.intValue());
-  }
-
-  @Override
-  public <T extends IntegerType> T parse(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = wrappedParser.parse(value, locale);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue.intValue());
-  }
-
-  @Override
   public Integer parse(final CharSequence originalValue) throws InvalidValueException {
     final Long parsedValue = wrappedParser.parse(originalValue);
     return parsedValue == null
@@ -128,10 +113,36 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
 
   @Override
   public Integer parse(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    final Long parsedValue = wrappedParser.parse(originalValue, locale);
+    return parse(originalValue, NumberFormat.of(locale));
+  }
+
+  @Override
+  public Integer parse(final CharSequence originalValue, final NumberFormat numberFormat) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(originalValue, numberFormat);
     return parsedValue == null
         ? null
         : parsedValue.intValue();
+  }
+
+  @Override
+  public <T extends IntegerType> T parse(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(value);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.intValue());
+  }
+
+  @Override
+  public <T extends IntegerType> T parse(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+    return parse(value, NumberFormat.of(locale), constructorOrFactoryMethod);
+  }
+
+  @Override
+  public <T extends IntegerType> T parse(final CharSequence value, final NumberFormat numberFormat, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(value, numberFormat);
+    return parsedValue == null
+        ? null
+        : constructorOrFactoryMethod.apply(parsedValue.intValue());
   }
 
 }

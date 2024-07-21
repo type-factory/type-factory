@@ -393,16 +393,29 @@ public class InvalidValueException extends IllegalArgumentException {
         "Invalid value - does not pass custom validation criteria.");
     ParserMessageCode INVALID_VALUE_INVALID_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_character",
-        "Invalid value - invalid character ''{0}''.");
+        "Invalid value - invalid character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_CONTROL_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_control_character",
         "Invalid value - invalid control character {0}.");
+    ParserMessageCode INVALID_VALUE_INVALID_FORMAT_CHARACTER = Factory.parserMessageCode(
+        "invalid_value_invalid_format_character",
+        "Invalid value - invalid format character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_QUOTE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_quote_character",
-        "Invalid value - invalid quote character \"{0}\".");
+        "Invalid value - invalid quote character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_whitespace_character",
         "Invalid value - invalid white-space character {0}.");
+
+    ParserMessageCode INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS = Factory.parserMessageCode(
+        "invalid_value_decimal_point_not_permitted_for_non_base_ten_numbers",
+        "Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers ''{0}''.");
+    ParserMessageCode INVALID_VALUE_MULTIPLE_DECIMAL_POINTS = Factory.parserMessageCode(
+        "invalid_value_multiple_decimal_points",
+        "Invalid value - invalid character or unexpected multiple decimal points found ''{0}''.");
+    ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER = Factory.parserMessageCode(
+        "invalid_value_expecting_whole_number",
+        "Invalid value - expected a whole number with no fractional part - found ''{0}{1,number,integer}'' in the fractional part instead of zero.");
 
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:

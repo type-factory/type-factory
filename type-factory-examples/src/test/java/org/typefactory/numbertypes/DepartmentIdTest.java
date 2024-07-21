@@ -57,9 +57,9 @@ class DepartmentIdTest {
       00000 | Invalid value - must be greater than or equal to 1,000.
       10000 | Invalid value - must be less than or equal to 9,999.
       99999 | Invalid value - must be less than or equal to 9,999.
-      A     | Invalid value - invalid character 'A'.
-      AAAA  | Invalid value - invalid character 'A'.
-      111B  | Invalid value - invalid character 'B'.
+      A     | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      AAAA  | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      111B  | Invalid value - invalid character 'B' U+0042 LATIN CAPITAL LETTER B.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> DepartmentId.of(value))

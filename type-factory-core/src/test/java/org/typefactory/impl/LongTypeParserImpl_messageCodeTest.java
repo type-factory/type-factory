@@ -29,14 +29,15 @@ class LongTypeParserImpl_messageCodeTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
       VALUE | MESSAGE_CODE | DEFAULT_MESSAGE | EXPECTED_MESSAGE_CODE | EXPECTED_DEFAULT_MESSAGE
-        A11 | null         | null            | ''                    | Invalid value - invalid character 'A'.
-        22B | null         | ''              | ''                    | Invalid value - invalid character 'B'.
-        3C3 | null         | '  '            | ''                    | Invalid value - invalid character 'C'.
-        DDD | null         | Some message    | ''                    | Some message. Invalid value - invalid character 'D'.
-        EEE | ''           | null            | ''                    | Invalid value - invalid character 'E'.
-        FFF | '  '         | null            | ''                    | Invalid value - invalid character 'F'.
-        GGG | msg_code_a   | null            | msg_code_a            | msg_code_a. Invalid value - invalid character 'G'.
-        HHH | msg_code_b   | Another message | msg_code_b            | Another message. Invalid value - invalid character 'H'.
+        A11 | null         | null            | ''                    | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+        22B | null         | ''              | ''                    | Invalid value - invalid character 'B' U+0042 LATIN CAPITAL LETTER B.
+        3C3 | null         | '  '            | ''                    | Invalid value - invalid character 'C' U+0043 LATIN CAPITAL LETTER C.
+        ΕΕΕ | ''           | null            | ''                    | Invalid value - invalid character 'Ε' U+0395 GREEK CAPITAL LETTER EPSILON.
+        ΗΗΗ | '  '         | null            | ''                    | Invalid value - invalid character 'Η' U+0397 GREEK CAPITAL LETTER ETA.
+        ΔΔΔ | '  '         | null            | ''                    | Invalid value - invalid character 'Δ' U+0394 GREEK CAPITAL LETTER DELTA.
+        DDD | null         | Some message    | ''                    | Some message. Invalid value - invalid character 'D' U+0044 LATIN CAPITAL LETTER D.
+        GGG | msg_code_a   | null            | msg_code_a            | msg_code_a. Invalid value - invalid character 'G' U+0047 LATIN CAPITAL LETTER G.
+        HHH | msg_code_b   | Another message | msg_code_b            | Another message. Invalid value - invalid character 'H' U+0048 LATIN CAPITAL LETTER H.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parseToLong_throwsException(
       final String value,

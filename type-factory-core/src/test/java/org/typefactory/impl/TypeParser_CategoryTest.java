@@ -44,10 +44,10 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat    | Invalid value - invalid character 'a'.",
-      "Deer   | Invalid value - invalid character 'e'.",
-      "Τίγρη  | Invalid value - invalid character 'ί'.", // Greek
-      "Жирафа | Invalid value - invalid character 'и'.", // Russian
+      "Cat    | Invalid value - invalid character 'a' U+0061 LATIN SMALL LETTER A.",
+      "Deer   | Invalid value - invalid character 'e' U+0065 LATIN SMALL LETTER E.",
+      "Τίγρη  | Invalid value - invalid character 'ί' U+03AF GREEK SMALL LETTER IOTA WITH TONOS.", // Greek
+      "Жирафа | Invalid value - invalid character 'и' U+0438 CYRILLIC SMALL LETTER I.", // Russian
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_lowercase_letters(
       final String value, final String expectedParserErrorMessage) {
@@ -84,10 +84,10 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat|Invalid value - invalid character 'C'.",
-      "Deer|Invalid value - invalid character 'D'.",
-      "Τίγρη|Invalid value - invalid character 'Τ'.", // Greek
-      "Жирафа|Invalid value - invalid character 'Ж'.", // Russian
+      "Cat|Invalid value - invalid character 'C' U+0043 LATIN CAPITAL LETTER C.",
+      "Deer|Invalid value - invalid character 'D' U+0044 LATIN CAPITAL LETTER D.",
+      "Τίγρη|Invalid value - invalid character 'Τ' U+03A4 GREEK CAPITAL LETTER TAU.", // Greek
+      "Жирафа|Invalid value - invalid character 'Ж' U+0416 CYRILLIC CAPITAL LETTER ZHE.", // Russian
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_uppercase_letters(
       final String value, final String expectedParserErrorMessage) {
@@ -124,10 +124,10 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Cat\uD83D\uDC08|Invalid value - invalid character '\uD83D\uDC08'.", // 🐈 cat emoji
-      "Deer\uD83E\uDD8C|Invalid value - invalid character '\uD83E\uDD8C'.", // 🦌 deer emoji
-      "Τίγρη\uD83D\uDC05|Invalid value - invalid character '\uD83D\uDC05'.", // Greek with 🐅 tiger emoji
-      "Жирафа\uD83E\uDD92|Invalid value - invalid character '\uD83E\uDD92'.", // Russian with 🦒 giraffe emoji
+      "Cat\uD83D\uDC08|Invalid value - invalid character '\uD83D\uDC08' U+01F408 CAT.", // 🐈 cat emoji
+      "Deer\uD83E\uDD8C|Invalid value - invalid character '\uD83E\uDD8C' U+01F98C DEER.", // 🦌 deer emoji
+      "Τίγρη\uD83D\uDC05|Invalid value - invalid character '\uD83D\uDC05' U+01F405 TIGER.", // Greek with 🐅 tiger emoji
+      "Жирафа\uD83E\uDD92|Invalid value - invalid character '\uD83E\uDD92' U+01F992 GIRAFFE FACE.", // Russian with 🦒 giraffe emoji
   }, delimiter = '|')
   void should_throw_exception_when_value_contains_letters(
       final String value, final String expectedParserErrorMessage) {

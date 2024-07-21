@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -65,7 +64,7 @@ class CurrencyCodeTest {
       AU   | Invalid value - too short, minimum length is 3.
       AUSD | Invalid value - too long, maximum length is 3.
       USAD | Invalid value - too long, maximum length is 3.
-      61D  | Invalid value - invalid character '6'.
+      61D  | Invalid value - invalid character '6' U+0036 DIGIT SIX.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> new CurrencyCode(value))

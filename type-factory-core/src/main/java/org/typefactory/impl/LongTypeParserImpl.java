@@ -15,40 +15,27 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.APOSTROPHE_SINGLE_QUOTATION_MARK;
-import static org.typefactory.impl.Constants.NARROW_NO_BREAK_SPACE;
-import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
-import static org.typefactory.impl.Constants.SPACE;
-
 import java.math.BigInteger;
-import java.text.DecimalFormatSymbols;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 import org.typefactory.MessageCode;
+import org.typefactory.NumberFormat;
 import org.typefactory.Subset;
 
 final class LongTypeParserImpl implements LongTypeParser {
 
-  enum WhiteSpace {
-    FORBID_WHITESPACE,
-    IGNORE_WHITESPACE
-  }
-
-  private enum Sign {
-    NEGATIVE,
-    POSITIVE
-  }
-
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
-  private final DecimalFormatSymbols defaultLocaleDecimalFormatSymbols;
+  private final NumberFormat defaultNumberFormat;
   private final WhiteSpace whiteSpace;
   private final Subset ignoreCharactersSubset;
   private final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap;
   private final int radix;
+  private final boolean allowAllUnicodeDecimalDigits;
   private final long minValue;
   private final long maxValue;
   private final boolean minValueComparisonInclusive;
@@ -61,11 +48,12 @@ final class LongTypeParserImpl implements LongTypeParser {
   LongTypeParserImpl(
       final Class<?> targetTypeClass,
       final MessageCode messageCode,
-      final DecimalFormatSymbols defaultLocaleDecimalFormatSymbols,
+      final NumberFormat defaultNumberFormat,
       final WhiteSpace whiteSpace,
       final Subset ignoreCharactersSubset,
       final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
       final int[] numericRadixCodePoints,
+      final boolean allowAllUnicodeDecimalDigits,
       final long minValue,
       final long maxValue,
       final boolean minValueComparisonInclusive,
@@ -74,11 +62,12 @@ final class LongTypeParserImpl implements LongTypeParser {
       final boolean ignoreLeadingPositiveSign) {
     this.targetTypeClass = targetTypeClass;
     this.messageCode = messageCode;
-    this.defaultLocaleDecimalFormatSymbols = defaultLocaleDecimalFormatSymbols;
+    this.defaultNumberFormat = defaultNumberFormat;
     this.whiteSpace = whiteSpace;
     this.ignoreCharactersSubset = ignoreCharactersSubset;
     this.numericRadixCodePointsMap = numericRadixCodePointsMap;
     this.radix = numericRadixCodePoints.length;
+    this.allowAllUnicodeDecimalDigits = allowAllUnicodeDecimalDigits;
     this.minValue = minValue;
     this.maxValue = maxValue;
     this.minValueComparisonInclusive = minValueComparisonInclusive;
@@ -174,6 +163,18 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(of(value));
   }
 
+  public Long parse(final CharSequence originalValue) throws InvalidValueException {
+    return parseImpl(originalValue, defaultNumberFormat);
+  }
+
+  public Long parse(final CharSequence source, final Locale locale) throws InvalidValueException {
+    return parse(source, NumberFormat.of(locale));
+  }
+
+  public Long parse(final CharSequence source, final NumberFormat numberFormat) throws InvalidValueException {
+    return parseImpl(source, numberFormat == null ? defaultNumberFormat : numberFormat);
+  }
+
   public <T extends LongType> T parse(final CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
     final Long parsedValue = parse(value);
     return parsedValue == null
@@ -183,19 +184,15 @@ final class LongTypeParserImpl implements LongTypeParser {
 
   public <T extends LongType> T parse(final CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod)
       throws InvalidValueException {
-    final Long parsedValue = parse(value, locale);
+    return parse(value, NumberFormat.of(locale), constructorOrFactoryMethod);
+  }
+
+  public <T extends LongType> T parse(final CharSequence value, final NumberFormat numberFormat, Function<Long, T> constructorOrFactoryMethod)
+      throws InvalidValueException {
+    final Long parsedValue = parseImpl(value, numberFormat == null ? defaultNumberFormat : numberFormat);
     return parsedValue == null
         ? null
         : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  public Long parse(final CharSequence originalValue) throws InvalidValueException {
-    return parse(originalValue, defaultLocaleDecimalFormatSymbols);
-  }
-
-  // TODO writes tests for this
-  public Long parse(final CharSequence source, final Locale locale) throws InvalidValueException {
-    return parse(source, locale == null ? defaultLocaleDecimalFormatSymbols : DecimalFormatSymbols.getInstance(locale));
   }
 
   // Suppress SonarCloud issues:
@@ -203,56 +200,31 @@ final class LongTypeParserImpl implements LongTypeParser {
   // - "java:S6541 Methods should not perform too many tasks (aka Brain method)"
   // - "java:S135  Loops should not contain more than a single "break" or "continue" statement"
   @SuppressWarnings({"java:S3776", "java:S6541", "java:S135"})
-  private Long parse(final CharSequence source, final DecimalFormatSymbols decimalFormatSymbols) throws InvalidValueException {
+  private Long parseImpl(final CharSequence source, final NumberFormat numberFormat) throws InvalidValueException {
     if (source == null || source.isEmpty()) {
       return null;
     }
 
-    final int groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
-
-    final int altGroupingSeparator = switch (groupingSeparator) {
-      // Locales that use a "right single quotation mark" (U+2019) as the grouping separator often simply use an apostrophe/single-quote (U+0027)
-      case RIGHT_SINGLE_QUOTATION_MARK -> APOSTROPHE_SINGLE_QUOTATION_MARK;
-      // Locales that use a "narrow no-break space" (U+202F) as the grouping separator often simply use an ordinary space (U+0020)
-      case NARROW_NO_BREAK_SPACE -> SPACE;
-      default -> -1;
-    };
-
-    final int length = source.length();
+    final int sourceLength = source.length();
     int sourceIndex = 0;
     long targetValue = 0;
     long newTargetValue;
-    char ch;
-    int codePoint;
+    long fractionalValue = 0;
+    int firstFractionalDigit = -1;
     boolean intoDigits = false;
+    boolean intoFractional = false;
+    int firstNegativePrefixCodepoint = numberFormat.getNegativePrefixCodePointAt(0);
+    int firstPositivePrefixCodepoint = numberFormat.getPositivePrefixCodePointAt(0);
     Sign sign = null;
+    int codePoint;
+    long indexAndCodePoint;
 
-    while (sourceIndex < length) {
-      ch = source.charAt(sourceIndex);
-      if (Character.isHighSurrogate(ch)) {
-        if (++sourceIndex < length) {
-          final char lowCh = source.charAt(sourceIndex);
-          if (Character.isLowSurrogate(lowCh)) {
-            codePoint = Character.toCodePoint(ch, lowCh);
-          } else {
-            throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
-          }
-        } else {
-          throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
-        }
-      } else if (Character.isLowSurrogate(ch)) {
-        throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
-      } else {
-        codePoint = ch;
-      }
+    while (sourceIndex < sourceLength) {
+      indexAndCodePoint = nextCodePointAndSourceIndex(source, sourceIndex);
+      codePoint = (int) (indexAndCodePoint >> 32);
+      sourceIndex = (int) indexAndCodePoint;
 
-      // Check for grouping separator (a.k.a thousands separator)
-      if (codePoint == groupingSeparator || codePoint == altGroupingSeparator) {
-        ++sourceIndex;
-        continue;
-      }
-
-      if (Character.isWhitespace(codePoint)) {
+      if (Character.isWhitespace(codePoint) || Character.isSpaceChar(codePoint)) {
         if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE) {
           ++sourceIndex;
           continue;
@@ -260,55 +232,88 @@ final class LongTypeParserImpl implements LongTypeParser {
         throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
       }
 
-      // Check for negative
-      if (sign == null && !ignoreLeadingNegativeSign && (codePoint == '-' || codePoint == Constants.MATH_MINUS || codePoint == Constants.HEAVY_MINUS)
-          && !intoDigits) {
-        sign = Sign.NEGATIVE;
-        ++sourceIndex;
-        continue;
-      }
-
-      // Check for positive
-      if (sign == null && !ignoreLeadingPositiveSign && (codePoint == '+' || codePoint == Constants.HEAVY_PLUS) && !intoDigits) {
-        sign = Sign.POSITIVE;
-        ++sourceIndex;
-        continue;
-      }
-
       if (ignoreCharactersSubset.contains(codePoint)) {
         ++sourceIndex;
         continue;
       }
 
+      // Check for negative
+      if (sign == null && !ignoreLeadingNegativeSign && !intoDigits && isCodePointEqualToAnotherOrSimilar(codePoint, firstNegativePrefixCodepoint)) {
+        int j = 1;
+        int tempCodePoint;
+        int tempIndex = sourceIndex + 1;
+        for (; j < numberFormat.getNegativePrefixCodePointsLength() && tempIndex < sourceLength; ++j) {
+          indexAndCodePoint = nextCodePointAndSourceIndex(source, tempIndex);
+          tempCodePoint = (int) (indexAndCodePoint >> 32);
+          tempIndex = (int) indexAndCodePoint;
+          if (!isCodePointEqualToAnotherOrSimilar(tempCodePoint, numberFormat.getNegativePrefixCodePointAt(j))) {
+            break;
+          }
+          ++tempIndex;
+        }
+        if (j == numberFormat.getNegativePrefixCodePointsLength()) {
+          sign = Sign.NEGATIVE;
+          sourceIndex = tempIndex;
+          continue;
+        }
+      }
+
+      // Check for positive
+      if (sign == null && !ignoreLeadingPositiveSign && !intoDigits && isCodePointEqualToAnotherOrSimilar(codePoint, firstPositivePrefixCodepoint)) {
+        int j = 1;
+        int tempCodePoint;
+        int tempIndex = sourceIndex + 1;
+        for (; j < numberFormat.getPositivePrefixCodePointsLength() && tempIndex < sourceLength; ++j) {
+          indexAndCodePoint = nextCodePointAndSourceIndex(source, tempIndex);
+          tempCodePoint = (int) (indexAndCodePoint >> 32);
+          tempIndex = (int) indexAndCodePoint;
+          if (!isCodePointEqualToAnotherOrSimilar(tempCodePoint, numberFormat.getPositivePrefixCodePointAt(j))) {
+            break;
+          }
+          ++tempIndex;
+        }
+        if (j == numberFormat.getPositivePrefixCodePointsLength()) {
+          sign = Sign.POSITIVE;
+          sourceIndex = tempIndex;
+          continue;
+        }
+      }
+
+      if (numberFormat.isGroupingSeparator(codePoint)) {
+        ++sourceIndex;
+        continue;
+      }
+
+      if (numberFormat.isDecimalSeparator(codePoint)) {
+        if (radix != 10) {
+          throw ExceptionUtils.forDecimalPointNotPermittedForNonBaseTenNumbers(messageCode, targetTypeClass, source, codePoint);
+        }
+        if (intoFractional) {
+          throw ExceptionUtils.forMultipleDecimalPoints(messageCode, targetTypeClass, source, codePoint);
+        }
+        intoFractional = true;
+        continue;
+      }
+
       intoDigits = true;
 
-      int value = numericRadixCodePointsMap.get(codePoint);
-      if (value < 0) { // not found in map
+      int digitValue = numericRadixCodePointsMap.get(codePoint);
+      if (digitValue < 0 && allowAllUnicodeDecimalDigits) { // not found in map
+        digitValue = Character.digit(codePoint, radix);
+      }
+      if (digitValue < 0) {
         throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
       }
 
-      if (sign == Sign.NEGATIVE) {
-        newTargetValue = (targetValue * radix) - value;
-        if (newTargetValue > targetValue) {
-          // primitive overflow so number too small
-          if (minValueComparisonInclusive) {
-            throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
-          } else {
-            throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
-          }
+      if (intoFractional) {
+        if (firstFractionalDigit < 0) {
+          firstFractionalDigit = digitValue;
         }
-      } else {
-        newTargetValue = (targetValue * radix) + value;
-        if (newTargetValue < targetValue) {
-          // primitive overflow so number too large
-          if (maxValueComparisonInclusive) {
-            throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, source, maxValue);
-          } else {
-            throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, source, maxValue);
-          }
-        }
+        fractionalValue = (fractionalValue * radix) + digitValue;
+        continue;
       }
-      targetValue = newTargetValue;
+
+      targetValue = calculateNewTargetValue(source, sign, targetValue, digitValue);
       ++sourceIndex;
     }
 
@@ -316,12 +321,142 @@ final class LongTypeParserImpl implements LongTypeParser {
       return null;
     }
 
+    if (fractionalValue != 0) {
+      targetValue += getRoundingValue(source, sign, numberFormat.getRoundingMode(), numberFormat.getPrimaryDecimalSeparator(), targetValue,
+          firstFractionalDigit, fractionalValue);
+    }
     checkValueIsWithinBounds(targetValue, source);
 
     return targetValue;
   }
 
-  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  boolean isCodePointEqualToAnotherOrSimilar(final int codePoint, final int otherCodePoint) {
+    if (codePoint == otherCodePoint) {
+      return true;
+    }
+    return switch (codePoint) {
+      case Constants.HYPHEN_MINUS -> otherCodePoint == Constants.MATH_MINUS || otherCodePoint == Constants.HEAVY_MINUS;
+      case Constants.MATH_MINUS -> otherCodePoint == Constants.HYPHEN_MINUS || otherCodePoint == Constants.HEAVY_MINUS;
+      case Constants.HEAVY_MINUS -> otherCodePoint == Constants.HYPHEN_MINUS || otherCodePoint == Constants.MATH_MINUS;
+      case Constants.PLUS -> otherCodePoint == Constants.HEAVY_PLUS;
+      case Constants.HEAVY_PLUS -> otherCodePoint == Constants.PLUS;
+      default -> false;
+    };
+  }
+
+  /**
+   * Returns both the new sourceIndex and the next code point in the source CharSequence.
+   *
+   * @param source      the character sequence to get the next code point from
+   * @param sourceIndex the index of the current code point in the source CharSequence
+   * @return a long value where the upper 32 bits are the next code point and the lower 32 bits are the new sourceIndex
+   */
+  private long nextCodePointAndSourceIndex(final CharSequence source, int sourceIndex) {
+    final char ch = source.charAt(sourceIndex);
+    int codePoint;
+    if (Character.isHighSurrogate(ch)) {
+      if (++sourceIndex < source.length()) {
+        final char lowCh = source.charAt(sourceIndex);
+        if (Character.isLowSurrogate(lowCh)) {
+          codePoint = Character.toCodePoint(ch, lowCh);
+        } else {
+          throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+        }
+      } else {
+        throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+      }
+    } else if (Character.isLowSurrogate(ch)) {
+      throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
+    } else {
+      codePoint = ch;
+    }
+    return (long) codePoint << 32 | sourceIndex;
+  }
+
+  private long calculateNewTargetValue(final CharSequence source, final Sign sign, final long targetValue, final int digitValue) {
+    if (sign == Sign.NEGATIVE) {
+      long newTargetValue = (targetValue * radix) - digitValue;
+      if (newTargetValue > targetValue) {
+        // primitive overflow so number too small
+        if (minValueComparisonInclusive) {
+          throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
+        } else {
+          throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
+        }
+      }
+      return newTargetValue;
+    }
+
+    long newTargetValue = (targetValue * radix) + digitValue;
+    if (newTargetValue < targetValue) {
+      // primitive overflow so number too large
+      if (maxValueComparisonInclusive) {
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, source, maxValue);
+      } else {
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, source, maxValue);
+      }
+    }
+    return newTargetValue;
+  }
+
+  private long getRoundingValue(
+      final CharSequence source, final Sign sign, final RoundingMode roundingMode,
+      final int decimalSeparatorCodePoint, long targetValue,
+      final int firstFractionalDigit, final long fractionalValue) throws ArithmeticException {
+
+    if (sign == Sign.NEGATIVE) {
+      return switch (roundingMode) {
+        case CEILING -> 0;
+        case DOWN -> 0;
+        case FLOOR -> fractionalValue > 0 ? -1 : 0;
+        case HALF_DOWN -> firstFractionalDigit > 5 ? -1 : 0;
+        case HALF_EVEN -> {
+          if (firstFractionalDigit < 5) {
+            yield 0;
+          }
+          if (firstFractionalDigit > 5) {
+            yield -1;
+          }
+          yield targetValue % 2 == 0 ? 0 : -1;
+        }
+        case HALF_UP -> firstFractionalDigit >= 5 ? -1 : 0;
+        case UNNECESSARY -> {
+          if (fractionalValue != 0) {
+            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, decimalSeparatorCodePoint, fractionalValue);
+          }
+          yield 0;
+        }
+        case UP -> fractionalValue > 0 ? -1 : 0;
+      };
+    }
+
+    return switch (roundingMode) {
+      case CEILING -> fractionalValue > 0 ? 1 : 0;
+      case DOWN -> 0;
+      case FLOOR -> 0;
+      case HALF_DOWN -> firstFractionalDigit > 5 ? 1 : 0;
+      case HALF_EVEN -> {
+        if (firstFractionalDigit < 5) {
+          yield 0;
+        }
+        if (firstFractionalDigit > 5) {
+          yield 1;
+        }
+        yield targetValue % 2 == 0 ? 0 : 1;
+      }
+      case HALF_UP -> firstFractionalDigit >= 5 ? 1 : 0;
+      case UNNECESSARY -> {
+        if (fractionalValue != 0) {
+          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, decimalSeparatorCodePoint, fractionalValue);
+        }
+        yield 0;
+      }
+      case UP -> fractionalValue != 0 ? 1 : 0;
+    };
+  }
+
+  @SuppressWarnings("Duplicates")
+    // Duplicates are necessary to avoid boxing/unboxing
   void checkValueIsWithinBounds(final long value) throws InvalidValueException {
     if (minValueComparisonInclusive) {
       if (value < minValue) {
@@ -344,7 +479,8 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  @SuppressWarnings("Duplicates")
+    // Duplicates are necessary to avoid boxing/unboxing
   <N extends Number> void checkValueIsWithinBounds(final N value) throws InvalidValueException {
 
     if (minValueComparisonInclusive) {
@@ -368,7 +504,8 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  @SuppressWarnings("Duplicates")
+    // Duplicates are necessary to avoid boxing/unboxing
   void checkValueIsWithinBounds(final BigInteger value) throws InvalidValueException {
 
     if (minValueComparisonInclusive) {
@@ -392,7 +529,8 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  @SuppressWarnings("Duplicates") // Duplicates are necessary to avoid boxing/unboxing
+  @SuppressWarnings("Duplicates")
+    // Duplicates are necessary to avoid boxing/unboxing
   <T extends CharSequence> void checkValueIsWithinBounds(final long targetValue, final T sourceValue) throws InvalidValueException {
     if (minValueComparisonInclusive) {
       if (targetValue < minValue) {
@@ -413,5 +551,15 @@ final class LongTypeParserImpl implements LongTypeParser {
         throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, sourceValue, maxValue);
       }
     }
+  }
+
+  enum WhiteSpace {
+    FORBID_WHITESPACE,
+    IGNORE_WHITESPACE
+  }
+
+  private enum Sign {
+    NEGATIVE,
+    POSITIVE
   }
 }

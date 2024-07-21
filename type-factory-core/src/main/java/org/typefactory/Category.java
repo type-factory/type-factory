@@ -342,4 +342,29 @@ public enum Category {
   public int[] getCharacterCategories() {
     return Arrays.copyOf(characterCategories, characterCategories.length);
   }
+
+  /**
+   * <p>Returns the category bit flags in a {@code long} value where each bit represents one Unicode Category.</p>
+   * @param categories the categories to get the bit flags for.
+   * @return the category bit flags.
+   * @see #codePointIsInOneOfTheCategories(int, long)
+   */
+  public static long getCategoryBitFlags(final Category... categories) {
+    long categoryBitFlags = 0;
+    for (Category category : categories) {
+      categoryBitFlags |= category.bitMask;
+    }
+    return categoryBitFlags;
+  }
+
+  /**
+   * <p>Checks if the specified code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.</p>
+   * @param codePoint the code point to check.
+   * @param categoryBitFlags the category bit flags to check.
+   * @return {@code true} if the code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.
+   * @see #getCategoryBitFlags(Category...)
+   */
+  public static boolean codePointIsInOneOfTheCategories(final int codePoint, final long categoryBitFlags) {
+    return (categoryBitFlags & (0x1L << Character.getType(codePoint))) > 0;
+  }
 }

@@ -64,22 +64,22 @@ class LongTypeParserImpl_parseWhitespaceTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
                            VALUE   | EXPECTED_MESSAGE
-      -9 223 372 036 854 775 808   | Invalid value - invalid white-space character U+0020.
-      -9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020.
-                            -2 0   | Invalid value - invalid white-space character U+0020.
-                       \u22121 9   | Invalid value - invalid white-space character U+0020.
-                        '   -1 8 ' | Invalid value - invalid white-space character U+0020.
-                        '  - 1 7 ' | Invalid value - invalid white-space character U+0020.
-                            -1 0   | Invalid value - invalid white-space character U+0020.
-                             1 0   | Invalid value - invalid white-space character U+0020.
-                            +1 0   | Invalid value - invalid white-space character U+0020.
-                        '  + 1 7 ' | Invalid value - invalid white-space character U+0020.
-                        '    1 8 ' | Invalid value - invalid white-space character U+0020.
-                             1 9   | Invalid value - invalid white-space character U+0020.
-                             2 0   | Invalid value - invalid white-space character U+0020.
-       9 223 372 036 854 775 806   | Invalid value - invalid white-space character U+0020.
-       9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020.
-      +9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020.
+      -9 223 372 036 854 775 808   | Invalid value - invalid white-space character U+0020 SPACE.
+      -9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020 SPACE.
+                            -2 0   | Invalid value - invalid white-space character U+0020 SPACE.
+                       \u22121 9   | Invalid value - invalid white-space character U+0020 SPACE.
+                        '   -1 8 ' | Invalid value - invalid white-space character U+0020 SPACE.
+                        '  - 1 7 ' | Invalid value - invalid white-space character U+0020 SPACE.
+                            -1 0   | Invalid value - invalid white-space character U+0020 SPACE.
+                             1 0   | Invalid value - invalid white-space character U+0020 SPACE.
+                            +1 0   | Invalid value - invalid white-space character U+0020 SPACE.
+                        '  + 1 7 ' | Invalid value - invalid white-space character U+0020 SPACE.
+                        '    1 8 ' | Invalid value - invalid white-space character U+0020 SPACE.
+                             1 9   | Invalid value - invalid white-space character U+0020 SPACE.
+                             2 0   | Invalid value - invalid white-space character U+0020 SPACE.
+       9 223 372 036 854 775 806   | Invalid value - invalid white-space character U+0020 SPACE.
+       9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020 SPACE.
+      +9 223 372 036 854 775 807   | Invalid value - invalid white-space character U+0020 SPACE.
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)

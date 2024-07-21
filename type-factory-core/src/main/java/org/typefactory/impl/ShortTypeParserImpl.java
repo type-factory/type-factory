@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.InvalidValueException;
+import org.typefactory.NumberFormat;
 import org.typefactory.ShortType;
 import org.typefactory.ShortTypeParser;
 
@@ -112,7 +113,12 @@ final class ShortTypeParserImpl implements ShortTypeParser {
 
   @Override
   public Short parse(final CharSequence originalValue, final Locale locale) throws InvalidValueException {
-    final Long parsedValue = wrappedParser.parse(originalValue, locale);
+    return parse(originalValue, NumberFormat.of(locale));
+  }
+
+  @Override
+  public Short parse(final CharSequence originalValue, final NumberFormat numberFormat) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(originalValue, numberFormat);
     return parsedValue == null
         ? null
         : parsedValue.shortValue();
@@ -128,7 +134,12 @@ final class ShortTypeParserImpl implements ShortTypeParser {
 
   @Override
   public <T extends ShortType> T parse(final CharSequence value, final Locale locale, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = wrappedParser.parse(value, locale);
+    return parse(value, NumberFormat.of(locale), constructorOrFactoryMethod);
+  }
+
+  @Override
+  public <T extends ShortType> T parse(final CharSequence value, final NumberFormat numberFormat, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException {
+    final Long parsedValue = wrappedParser.parse(value, numberFormat);
     return parsedValue == null
         ? null
         : constructorOrFactoryMethod.apply(parsedValue.shortValue());

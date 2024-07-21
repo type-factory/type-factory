@@ -173,46 +173,6 @@ class IntegerTypeParserImpl_parseIgnoreCharactersTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-               VALUE   |    EXPECTED | COMMENTS
-      -2-147-483-648   | -2147483648 | hyphen-minus Integer.MIN_VALUE
-                 -20   |         -20 | Hyphen-minus twenty
-            \u221219   |         -19 | Math-minus nineteen
-             '   -18 ' |         -18 | Whitespace Hyphen-minus eighteen
-             '  - 17 ' |         -17 | Whitespace Hyphen-minus seventeen
-                 -10   |         -10 | Hyphen-minus ten
-             \u22129   |          -9 | Math-minus nine
-                  -1   |          -1 | Hyphen-minus One
-                   0   |           0 | Zero
-                   1   |           1 | One
-                  +1   |           1 | Plus One
-                   9   |           9 | Nine
-                  10   |          10 | Ten
-                 +10   |          10 | Plus ten
-             '  + 17 ' |          17 | Whitespace plus seventeen
-             '    18 ' |          18 | Whitespace eighteen
-                  19   |          19 | Nineteen
-                  20   |          20 | Twenty
-      +2-147-483-647   |  2147483647 | Plus Integer.MAX_VALUE
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
-      final String value, final int expected, final String ignoredComments) {
-
-    final var integerTypeParser = IntegerTypeParser.builder()
-        .minValueInclusive(Integer.MIN_VALUE)
-        .maxValueInclusive(Integer.MAX_VALUE)
-        .allowBase10Numbers()
-        .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
               VALUE    |    EXPECTED | COMMENTS
       -2_147_483_648   | -2147483648 | hyphen-minus Integer.MIN_VALUE
          __\u221219    |         -19 | Math-minus nineteen

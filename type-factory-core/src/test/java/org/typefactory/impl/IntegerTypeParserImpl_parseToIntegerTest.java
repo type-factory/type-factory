@@ -50,7 +50,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
 
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> integerTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
+        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
   }
 
   @ParameterizedTest

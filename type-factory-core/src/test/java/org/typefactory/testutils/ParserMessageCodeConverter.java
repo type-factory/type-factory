@@ -19,6 +19,7 @@ import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VA
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION;
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER;
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER;
+import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_FORMAT_CHARACTER;
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER;
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
 import static org.typefactory.InvalidValueException.ParserMessageCode.INVALID_VALUE_TOO_LONG;
@@ -39,6 +40,7 @@ public class ParserMessageCodeConverter implements ArgumentConverter {
         case "INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION" -> INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION;
         case "INVALID_VALUE_INVALID_CHARACTER" -> INVALID_VALUE_INVALID_CHARACTER;
         case "INVALID_VALUE_INVALID_CONTROL_CHARACTER" -> INVALID_VALUE_INVALID_CONTROL_CHARACTER;
+        case "INVALID_VALUE_INVALID_FORMAT_CHARACTER" -> INVALID_VALUE_INVALID_FORMAT_CHARACTER;
         case "INVALID_VALUE_INVALID_QUOTE_CHARACTER" -> INVALID_VALUE_INVALID_QUOTE_CHARACTER;
         case "INVALID_VALUE_INVALID_WHITESPACE_CHARACTER" -> INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
         case "INVALID_VALUE_TOO_LONG" -> INVALID_VALUE_TOO_LONG;

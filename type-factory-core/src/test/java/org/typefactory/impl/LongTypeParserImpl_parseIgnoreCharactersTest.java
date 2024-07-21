@@ -175,49 +175,6 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-                         VALUE   |             EXPECTED | COMMENTS
-      -922-3372-0368-5477-5808   | -9223372036854775808 | Hyphen-minus Long.MIN_VALUE
-      -922-3372-0368-5477-5807   | -9223372036854775807 | Hyphen-minus Long.MIN_VALUE + 1
-                           -20   |                  -20 | Hyphen-minus twenty
-                      \u221219   |                  -19 | Math-minus nineteen
-                       '   -18 ' |                  -18 | Whitespace Hyphen-minus eighteen
-                       '  - 17 ' |                  -17 | Whitespace Hyphen-minus seventeen
-                           -10   |                  -10 | Hyphen-minus ten
-                       \u22129   |                   -9 | Math-minus nine
-                            -1   |                   -1 | Hyphen-minus One
-                             0   |                    0 | Zero
-                             1   |                    1 | One
-                            +1   |                    1 | Plus One
-                             9   |                    9 | Nine
-                            10   |                   10 | Ten
-                           +10   |                   10 | Plus ten
-                       '  + 17 ' |                   17 | Whitespace plus seventeen
-                       '    18 ' |                   18 | Whitespace eighteen
-                            19   |                   19 | Nineteen
-                            20   |                   20 | Twenty
-       922-3372-0368-5477-5806   |  9223372036854775806 | Long.MAX_VALUE -1
-       922-3372-0368-5477-5807   |  9223372036854775807 | Long.MAX_VALUE
-      +922-3372-0368-5477-5807   |  9223372036854775807 | Plus Long.MAX_VALUE
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parseToLong_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
-      final String value, final long expected, final String ignoredComments) {
-
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(Long.MIN_VALUE)
-        .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
-        .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
                          VALUE    |             EXPECTED | COMMENTS
       -922_3372_0368_5477_5808    | -9223372036854775808 | Long.MIN_VALUE
                     __\u221219    |                  -19 | Math-minus nineteen

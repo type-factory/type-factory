@@ -19,9 +19,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
@@ -49,15 +50,17 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "l'hυître",     // French 'Oyster' with Greek 'υ' upsilon
-      "le pοrc-épic", // French 'Porcupine' with Greek 'ο' omicron
-      "le léoρard",   // French 'Leopard' with Greek 'ρ' rho
-  })
-  void should_throw_exception_with_non_french_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE        | ERROR_DESCRIPTION                      | COMMENT
+      l'hυître     | 'υ' U+03C5 GREEK SMALL LETTER UPSILON. | French 'Oyster' with Greek 'υ' upsilon
+      le pοrc-épic | 'ο' U+03BF GREEK SMALL LETTER OMICRON. | French 'Porcupine' with Greek 'ο' omicron
+      le léoρard   | 'ρ' U+03C1 GREEK SMALL LETTER RHO.     | French 'Leopard' with Greek 'ρ' rho
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_french_letters(final String value, final String expectedErrorDescription) {
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of characters in the French alphabet, hyphens, apostrophes or spaces only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of characters in the French alphabet, hyphens, apostrophes or spaces only. Invalid value - invalid character "
+            + expectedErrorDescription);
   }
 
 }

@@ -50,7 +50,7 @@ class LongTypeParserImpl_parseToLongTest {
 
     assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> longTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020.");
+        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
   }
 
   @ParameterizedTest
@@ -128,7 +128,6 @@ class LongTypeParserImpl_parseToLongTest {
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase10Numbers()
-        .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
         .ignoreAllWhitespace()
         .build();
 

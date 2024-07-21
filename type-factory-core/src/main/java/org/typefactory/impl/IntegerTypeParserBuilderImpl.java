@@ -206,12 +206,6 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   }
 
   @Override
-  public IntegerTypeParserBuilder ignoreAllDashesAndHyphensExceptLeadingNegativeSign() {
-    wrapperBuilder.ignoreAllDashesAndHyphensExceptLeadingNegativeSign();
-    return this;
-  }
-
-  @Override
   public IntegerTypeParserBuilder allowLeadingNegativeSign() {
     wrapperBuilder.allowLeadingNegativeSign();
     return this;

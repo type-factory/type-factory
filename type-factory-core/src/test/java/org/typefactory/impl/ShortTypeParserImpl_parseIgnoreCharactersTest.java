@@ -176,47 +176,6 @@ class ShortTypeParserImpl_parseIgnoreCharactersTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-         VALUE   | EXPECTED | COMMENTS
-      -3-27-68   |   -32768 | Short.MIN_VALUE
-           -20   |      -20 | Hyphen-minus twenty
-      \u221219   |      -19 | Math-minus nineteen
-       '   -18 ' |      -18 | Whitespace Hyphen-minus eighteen
-       '  - 17 ' |      -17 | Whitespace Hyphen-minus seventeen
-           -10   |      -10 | Hyphen-minus ten
-       \u22129   |       -9 | Math-minus nine
-            -1   |       -1 | Hyphen-minus One
-             0   |        0 | Zero
-             1   |        1 | One
-            +1   |        1 | Plus One
-             9   |        9 | Nine
-            10   |       10 | Ten
-           +10   |       10 | Plus ten
-       '  + 17 ' |       17 | Whitespace plus seventeen
-       '    18 ' |       18 | Whitespace eighteen
-            19   |       19 | Nineteen
-            20   |       20 | Twenty
-       3-27-67   |    32767 | Short.MAX_VALUE
-      +3-27-67   |    32767 | Plus Short.MAX_VALUE
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_ignoreAllDashesAndHyphensExceptLeadingNegativeSignParseAsExpected(
-      final String value, final short expected, final String ignoredComments) {
-
-    final var shortTypeParser = ShortTypeParser.builder()
-        .minValueInclusive(Short.MIN_VALUE)
-        .maxValueInclusive(Short.MAX_VALUE)
-        .allowBase10Numbers()
-        .ignoreAllDashesAndHyphensExceptLeadingNegativeSign()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
            VALUE    | EXPECTED | COMMENTS
         -3_27_68    |   -32768 | Short.MIN_VALUE
       __\u221219    |      -19 | Math-minus nineteen
