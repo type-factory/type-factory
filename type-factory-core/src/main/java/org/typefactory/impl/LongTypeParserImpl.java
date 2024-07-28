@@ -16,7 +16,6 @@
 package org.typefactory.impl;
 
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.InvalidValueException;
@@ -208,11 +207,10 @@ final class LongTypeParserImpl implements LongTypeParser {
     final int sourceLength = source.length();
     int sourceIndex = 0;
     long targetValue = 0;
-    long newTargetValue;
-    long fractionalValue = 0;
-    int firstFractionalDigit = -1;
+    int fractionalDigitCount = 0;
     boolean intoDigits = false;
     boolean intoFractional = false;
+    FractionalPart fractionalPart = FractionalPart.ZERO;
     int firstNegativePrefixCodepoint = numberFormat.getNegativePrefixCodePointAt(0);
     int firstPositivePrefixCodepoint = numberFormat.getPositivePrefixCodePointAt(0);
     Sign sign = null;
@@ -292,6 +290,7 @@ final class LongTypeParserImpl implements LongTypeParser {
           throw ExceptionUtils.forMultipleDecimalPoints(messageCode, targetTypeClass, source, codePoint);
         }
         intoFractional = true;
+        ++sourceIndex;
         continue;
       }
 
@@ -306,14 +305,13 @@ final class LongTypeParserImpl implements LongTypeParser {
       }
 
       if (intoFractional) {
-        if (firstFractionalDigit < 0) {
-          firstFractionalDigit = digitValue;
-        }
-        fractionalValue = (fractionalValue * radix) + digitValue;
+        ++fractionalDigitCount;
+        fractionalPart = calculateNewFractionalPart(fractionalDigitCount, digitValue, fractionalPart);
+        ++sourceIndex;
         continue;
       }
 
-      targetValue = calculateNewTargetValue(source, sign, targetValue, digitValue);
+      targetValue = calculateNewTargetValueProvidedNextDigitValue(source, sign, targetValue, digitValue);
       ++sourceIndex;
     }
 
@@ -321,9 +319,11 @@ final class LongTypeParserImpl implements LongTypeParser {
       return null;
     }
 
-    if (fractionalValue != 0) {
-      targetValue += getRoundingValue(source, sign, numberFormat.getRoundingMode(), numberFormat.getPrimaryDecimalSeparator(), targetValue,
-          firstFractionalDigit, fractionalValue);
+    if (fractionalPart != FractionalPart.ZERO) {
+      final long roundingValue = getRoundingValue(source, sign, numberFormat, targetValue, fractionalPart);
+      if (roundingValue != 0) {
+        targetValue = calculateNewTargetValueApplyingRoundingValue(source, sign, targetValue, roundingValue);
+      }
     }
     checkValueIsWithinBounds(targetValue, source);
 
@@ -373,21 +373,28 @@ final class LongTypeParserImpl implements LongTypeParser {
     return (long) codePoint << 32 | sourceIndex;
   }
 
-  private long calculateNewTargetValue(final CharSequence source, final Sign sign, final long targetValue, final int digitValue) {
+  private long calculateNewTargetValueProvidedNextDigitValue(final CharSequence source, final Sign sign, final long targetValue,
+      final int nextDigitValue) {
     if (sign == Sign.NEGATIVE) {
-      long newTargetValue = (targetValue * radix) - digitValue;
-      if (newTargetValue > targetValue) {
-        // primitive overflow so number too small
-        if (minValueComparisonInclusive) {
-          throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
-        } else {
-          throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
-        }
-      }
-      return newTargetValue;
+      long newTargetValue = (targetValue * radix) - nextDigitValue;
+      return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
+    } else {
+      long newTargetValue = (targetValue * radix) + nextDigitValue;
+      return validateNewPositiveTargetValue(source, targetValue, newTargetValue);
     }
+  }
 
-    long newTargetValue = (targetValue * radix) + digitValue;
+  private long calculateNewTargetValueApplyingRoundingValue(final CharSequence source, final Sign sign, final long targetValue,
+      final long roundingValue) {
+    long newTargetValue = targetValue + roundingValue;
+    if (sign == Sign.NEGATIVE) {
+      return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
+    } else {
+      return validateNewPositiveTargetValue(source, targetValue, newTargetValue);
+    }
+  }
+
+  private long validateNewPositiveTargetValue(final CharSequence source, final long targetValue, final long newTargetValue) {
     if (newTargetValue < targetValue) {
       // primitive overflow so number too large
       if (maxValueComparisonInclusive) {
@@ -399,59 +406,87 @@ final class LongTypeParserImpl implements LongTypeParser {
     return newTargetValue;
   }
 
+  private long validateNewNegativeTargetValue(final CharSequence source, final long targetValue, final long newTargetValue) {
+    if (newTargetValue > targetValue) {
+      // primitive overflow so number too small
+      if (minValueComparisonInclusive) {
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
+      } else {
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
+      }
+    }
+    return newTargetValue;
+  }
+
+  private static FractionalPart calculateNewFractionalPart(
+      final int fractionalDigitCount, final int fractionalDigitValue, final FractionalPart fractionalPart) {
+
+    if (fractionalDigitCount == 1) {
+      if (fractionalDigitValue == 5) {
+        return FractionalPart.EQUIDISTANT;
+      } else if (fractionalDigitValue > 5) {
+        return FractionalPart.UPPER;
+      } else if (fractionalDigitValue > 0) {
+        return FractionalPart.LOWER;
+      }
+    } else if (fractionalDigitValue > 0) {
+      if (fractionalPart == FractionalPart.ZERO) {
+        return FractionalPart.LOWER;
+      } else if (fractionalPart == FractionalPart.EQUIDISTANT) {
+        return FractionalPart.UPPER;
+      }
+    }
+    return fractionalPart;
+  }
+
   private long getRoundingValue(
-      final CharSequence source, final Sign sign, final RoundingMode roundingMode,
-      final int decimalSeparatorCodePoint, long targetValue,
-      final int firstFractionalDigit, final long fractionalValue) throws ArithmeticException {
+      final CharSequence source, final Sign sign, final NumberFormat numberFormat, long targetValue,
+      final FractionalPart fractionalPart) throws ArithmeticException {
 
     if (sign == Sign.NEGATIVE) {
-      return switch (roundingMode) {
-        case CEILING -> 0;
-        case DOWN -> 0;
-        case FLOOR -> fractionalValue > 0 ? -1 : 0;
-        case HALF_DOWN -> firstFractionalDigit > 5 ? -1 : 0;
+      return switch (numberFormat.getRoundingMode()) {
+        case CEILING, DOWN -> 0;
+        case FLOOR, UP -> fractionalPart == FractionalPart.ZERO ? 0 : -1;
+        case HALF_DOWN -> fractionalPart == FractionalPart.UPPER ? -1 : 0;
         case HALF_EVEN -> {
-          if (firstFractionalDigit < 5) {
+          if (fractionalPart == FractionalPart.LOWER) {
             yield 0;
           }
-          if (firstFractionalDigit > 5) {
+          if (fractionalPart == FractionalPart.UPPER) {
             yield -1;
           }
           yield targetValue % 2 == 0 ? 0 : -1;
         }
-        case HALF_UP -> firstFractionalDigit >= 5 ? -1 : 0;
+        case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : -1;
         case UNNECESSARY -> {
-          if (fractionalValue != 0) {
-            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, decimalSeparatorCodePoint, fractionalValue);
+          if (fractionalPart != FractionalPart.ZERO) {
+            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getPrimaryDecimalSeparator());
           }
           yield 0;
         }
-        case UP -> fractionalValue > 0 ? -1 : 0;
       };
     }
 
-    return switch (roundingMode) {
-      case CEILING -> fractionalValue > 0 ? 1 : 0;
-      case DOWN -> 0;
-      case FLOOR -> 0;
-      case HALF_DOWN -> firstFractionalDigit > 5 ? 1 : 0;
+    return switch (numberFormat.getRoundingMode()) {
+      case CEILING, UP -> fractionalPart == FractionalPart.ZERO ? 0 : 1;
+      case DOWN, FLOOR -> 0;
+      case HALF_DOWN -> fractionalPart == FractionalPart.UPPER ? 1 : 0;
       case HALF_EVEN -> {
-        if (firstFractionalDigit < 5) {
+        if (fractionalPart == FractionalPart.LOWER) {
           yield 0;
         }
-        if (firstFractionalDigit > 5) {
+        if (fractionalPart == FractionalPart.UPPER) {
           yield 1;
         }
         yield targetValue % 2 == 0 ? 0 : 1;
       }
-      case HALF_UP -> firstFractionalDigit >= 5 ? 1 : 0;
+      case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : 1;
       case UNNECESSARY -> {
-        if (fractionalValue != 0) {
-          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, decimalSeparatorCodePoint, fractionalValue);
+        if (fractionalPart != FractionalPart.ZERO) {
+          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getPrimaryDecimalSeparator());
         }
         yield 0;
       }
-      case UP -> fractionalValue != 0 ? 1 : 0;
     };
   }
 
@@ -561,5 +596,12 @@ final class LongTypeParserImpl implements LongTypeParser {
   private enum Sign {
     NEGATIVE,
     POSITIVE
+  }
+
+  enum FractionalPart {
+    ZERO,
+    LOWER,
+    EQUIDISTANT,
+    UPPER
   }
 }

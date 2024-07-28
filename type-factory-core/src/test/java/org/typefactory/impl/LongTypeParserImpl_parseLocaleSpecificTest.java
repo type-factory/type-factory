@@ -17,18 +17,26 @@ package org.typefactory.impl;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.Serial;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 
@@ -136,12 +144,52 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
       fr-CH  |  9 223 372 036 854 775 807 |  9223372036854775807
       """;
 
-  private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaNumberFormat() {
+  private static final Comparator<DecimalFormatSymbols> DECIMAL_FORMAT_SYMBOLS_COMPARATOR = Comparator
+      .comparing(DecimalFormatSymbols::getGroupingSeparator)
+      .thenComparing(DecimalFormatSymbols::getDecimalSeparator)
+      .thenComparing(DecimalFormatSymbols::getZeroDigit)
+      .thenComparing(DecimalFormatSymbols::getMinusSign)
+      .thenComparing(DecimalFormatSymbols::getPercent)
+      .thenComparing(DecimalFormatSymbols::getPerMill);
+
+  private static final Comparator<DecimalFormat> DECIMAL_FORMAT_COMPARATOR = Comparator
+      .comparing(DecimalFormat::getNegativePrefix)
+      .thenComparing(DecimalFormat::getNegativeSuffix)
+      .thenComparing(DecimalFormat::getPositivePrefix)
+      .thenComparing(DecimalFormat::getPositiveSuffix)
+      .thenComparing(DecimalFormat::getGroupingSize)
+      .thenComparing(DecimalFormat::getMaximumFractionDigits)
+      .thenComparing(DecimalFormat::getMinimumFractionDigits)
+      .thenComparing(DecimalFormat::getMaximumIntegerDigits)
+      .thenComparing(DecimalFormat::getMinimumIntegerDigits);
+
+
+  private static Stream<Locale> minimalSetOfLocalesRepresentingAllDistinctNumberFormats() {
+
+    final Comparator<Locale> localeByUniqueNumberFormatComparator = (locale1, locale2) -> {
+      final var f1 = (DecimalFormat) NumberFormat.getNumberInstance(locale1);
+      final var f2 = (DecimalFormat) NumberFormat.getNumberInstance(locale2);
+      int result = DECIMAL_FORMAT_COMPARATOR.compare(f1, f2);
+      if (result != 0) {
+        return result;
+      }
+      final var s1 = f1.getDecimalFormatSymbols();
+      final var s2 = f2.getDecimalFormatSymbols();
+      result = DECIMAL_FORMAT_SYMBOLS_COMPARATOR.compare(s1, s2);
+      return result;
+    };
+
     final Locale[] locales = NumberFormat.getAvailableLocales();
-    Arrays.sort(locales, Comparator.comparing(Locale::toString));
     return Arrays.stream(locales)
         .filter(not(locale -> locale.getCountry().isEmpty()))
         .filter(locale -> NumberFormat.getNumberInstance(locale) instanceof DecimalFormat)
+        .collect(Collectors.toCollection(() -> new TreeSet<>(localeByUniqueNumberFormatComparator)))
+        .stream()
+        .sorted(Comparator.comparing(Locale::toString));
+  }
+
+  private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaNumberFormat() {
+    return minimalSetOfLocalesRepresentingAllDistinctNumberFormats()
         .flatMap(locale -> {
           final NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
           return Arrays.stream(LONG_VALUES)
@@ -152,12 +200,33 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         });
   }
 
+  private static Stream<Arguments> provideLocaleSpecificDecimalValuesCreatedByJavaNumberFormat() {
+    final double[] allDeltas = new double[]{-0.501, -0.5, -0.499, -0.001, 0, 0.001, 0.499, 0.5, 0.501};
+    final double[] negativeDeltas = new double[]{-0.6, -0.501, -0.5, -0.499, 0.001, 0};
+    final double[] positiveDeltas = new double[]{0, 0.001, 0.499, 0.5, 0.501, 0.6};
+    return minimalSetOfLocalesRepresentingAllDistinctNumberFormats()
+        .flatMap(locale ->
+            Arrays.stream(RoundingMode.values())
+                .filter(roundingMode -> roundingMode != RoundingMode.UNNECESSARY)
+                .flatMap(roundingMode -> {
+                  final NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+                  numberFormat.setMinimumFractionDigits(4);
+                  numberFormat.setRoundingMode(roundingMode);
+                  return Arrays.stream(LONG_VALUES)
+                      .mapToObj(value ->
+                          Arrays.stream(value == 0D ? allDeltas : value < 0D ? negativeDeltas : positiveDeltas)
+                              .mapToObj(delta -> {
+                                final BigDecimal decimalValue = BigDecimal.valueOf(value).add(BigDecimal.valueOf(delta));
+                                final BigInteger expectedRoundedValue = decimalValue.setScale(0, roundingMode).toBigIntegerExact();
+                                final var formatted = numberFormat.format(decimalValue);
+                                return Arguments.of(locale, formatted, roundingMode, expectedRoundedValue);
+                              }))
+                      .flatMap(stream -> stream);
+                }));
+  }
+
   private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaLongToString() {
-    final Locale[] locales = NumberFormat.getAvailableLocales();
-    Arrays.sort(locales, Comparator.comparing(Locale::toString));
-    return Arrays.stream(locales)
-        .filter(not(locale -> locale.getCountry().isEmpty()))
-        .filter(locale -> NumberFormat.getNumberInstance(locale) instanceof DecimalFormat)
+    return minimalSetOfLocalesRepresentingAllDistinctNumberFormats()
         .flatMap(locale ->
             Arrays.stream(LONG_VALUES)
                 .mapToObj(value -> {
@@ -167,11 +236,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
   }
 
   private static Stream<Arguments> provideLocaleSpecificValuesCreatedByJavaStringFormat() {
-    final Locale[] locales = NumberFormat.getAvailableLocales();
-    Arrays.sort(locales, Comparator.comparing(Locale::toString));
-    return Arrays.stream(locales)
-        .filter(not(locale -> locale.getCountry().isEmpty()))
-        .filter(locale -> NumberFormat.getNumberInstance(locale) instanceof DecimalFormat)
+    return minimalSetOfLocalesRepresentingAllDistinctNumberFormats()
         .flatMap(locale ->
             Arrays.stream(LONG_VALUES)
                 .mapToObj(value -> {
@@ -197,6 +262,33 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
 
     final var actual = longTypeParser.parse(value);
     assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "provideLocaleSpecificDecimalValuesCreatedByJavaNumberFormat"})
+  void parse_localeInParser(final Locale locale, final String value, final RoundingMode roundingMode, final BigInteger expectedRoundedValue) {
+
+    final var longTypeParser = LongTypeParser.builder()
+        .forbidWhitespace()
+        .build();
+
+    final var numberFormat = org.typefactory.NumberFormat.builder(locale)
+        .roundingMode(roundingMode)
+        .build();
+
+    if (expectedRoundedValue.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0) {
+      assertThatExceptionOfType(InvalidValueException.class)
+          .isThrownBy(() -> longTypeParser.parse(value, numberFormat))
+          .withMessageContaining("Invalid value - must be greater than or equal to -9,223,372,036,854,775,808.");
+    } else if (expectedRoundedValue.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+      assertThatExceptionOfType(InvalidValueException.class)
+          .isThrownBy(() -> longTypeParser.parse(value, numberFormat))
+          .withMessageContaining("Invalid value - must be less than or equal to 9,223,372,036,854,775,807.");
+    } else {
+      final var actual = longTypeParser.parse(value, numberFormat);
+      assertThat(actual).isEqualTo(expectedRoundedValue.longValue());
+    }
   }
 
   @ParameterizedTest

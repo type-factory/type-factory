@@ -276,8 +276,7 @@ class ExceptionUtils {
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int decimalSeparatorCodePoint,
-      final long fractionalValue) {
+      final int decimalSeparatorCodePoint) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
@@ -287,9 +286,6 @@ class ExceptionUtils {
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
             new String(new int[]{decimalSeparatorCodePoint}, 0, 1))
-        .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.FRACTIONAL_VALUE,
-            fractionalValue)
         .build();
   }
 

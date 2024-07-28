@@ -415,7 +415,7 @@ public class InvalidValueException extends IllegalArgumentException {
         "Invalid value - invalid character or unexpected multiple decimal points found ''{0}''.");
     ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER = Factory.parserMessageCode(
         "invalid_value_expecting_whole_number",
-        "Invalid value - expected a whole number with no fractional part - found ''{0}{1,number,integer}'' in the fractional part instead of zero.");
+        "Invalid value - expected a whole number with either no decimal places, or decimal places of zero, after the decimal point character ''{0}''.");
 
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
