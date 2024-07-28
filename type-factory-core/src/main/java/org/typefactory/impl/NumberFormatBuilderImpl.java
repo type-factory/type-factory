@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 import org.typefactory.NumberFormat;
 import org.typefactory.NumberFormat.NumberFormatBuilder;
+import org.typefactory.TypeParserBuilderException;
+import org.typefactory.TypeParserBuilderException.MessageCodes;
 
 class NumberFormatBuilderImpl implements NumberFormatBuilder {
 
@@ -60,6 +62,7 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
       if (decimalFormatSymbols != null) {
         this.groupingSeparators = determineGroupingSeparatorsAndAlternatives(decimalFormatSymbols.getGroupingSeparator());
         this.decimalSeparators = determineDecimalSeparatorsAndAlternatives(decimalFormatSymbols.getDecimalSeparator());
+        this.zeroDigit = decimalFormatSymbols.getZeroDigit();
       }
     }
   }
@@ -233,25 +236,19 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
   }
 
   @Override
-  public NumberFormatBuilder thousandsSeparator(char thousandsSeparator, char... additionalThousandsSeparators) {
-    return groupingSeparator(thousandsSeparator, additionalThousandsSeparators);
-  }
-
-  @Override
-  public NumberFormatBuilder thousandsSeparator(int thousandsSeparator, int... additionalThousandsSeparators) {
-    return groupingSeparator(thousandsSeparator, additionalThousandsSeparators);
-  }
-
-  @Override
   public NumberFormatBuilder zeroDigit(char zeroDigit) {
-    this.zeroDigit = zeroDigit;
-    return this;
+    return zeroDigit((int) zeroDigit);
   }
 
   @Override
   public NumberFormatBuilder zeroDigit(int zeroDigit) {
-    this.zeroDigit = zeroDigit;
-    return this;
+    if (Character.digit(zeroDigit, 10) == 0) {
+      this.zeroDigit = zeroDigit;
+      return this;
+    }
+    throw TypeParserBuilderException.builder()
+        .messageCode(MessageCodes.INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE)
+        .build();
   }
 
 

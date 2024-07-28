@@ -111,17 +111,6 @@ public interface NumberFormat {
      */
     NumberFormatBuilder roundingMode(RoundingMode roundingMode);
 
-    /**
-     * <p>This will set the grouping separator (also known as thousands separator) by calling {@link #groupingSeparator(char, char...)}.</p>
-     *
-     * @param thousandsSeparator            the grouping separator (also known as thousands separator)
-     * @param additionalThousandsSeparators
-     * @return
-     */
-    NumberFormatBuilder thousandsSeparator(char thousandsSeparator, char... additionalThousandsSeparators);
-
-    NumberFormatBuilder thousandsSeparator(int thousandsSeparator, int... additionalThousandsSeparators);
-
     NumberFormatBuilder zeroDigit(char zeroDigit);
 
     NumberFormatBuilder zeroDigit(int zeroDigit);

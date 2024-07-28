@@ -28,7 +28,7 @@ final class Constants {
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
-  static final String LINE_SEPARATOR = System.lineSeparator();
+  static final String SYSTEM_LINE_SEPARATOR = System.lineSeparator();
 
   static final int ARABIC_LETTER_MARK = '\u061c';
   static final int LEFT_TO_RIGHT_INDICATOR = '\u200e';
@@ -97,6 +97,16 @@ final class Constants {
    * <p>Used by some locales as an alternative numeric grouping separator (thousands separator).</p>
    */
   static final int APOSTROPHE_SINGLE_QUOTATION_MARK = '\'';
+
+  /**
+   * <p>The Unicode code point for a line separator.</p>
+   */
+  static final int UNICODE_LINE_SEPARATOR = '\u2028';
+
+  /**
+   * <p>The Unicode code point for a paragraph separator.</p>
+   */
+  static final int UNICODE_PARAGRAPH_SEPARATOR = '\u2029';
 
   /**
    * The Unicode code point for the ordinary space character.

@@ -11,12 +11,14 @@ import static org.typefactory.impl.Constants.RIGHT_TO_LEFT_INDICATOR;
 import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.FORBID_WHITESPACE;
 import static org.typefactory.impl.LongTypeParserImpl.WhiteSpace.IGNORE_WHITESPACE;
 
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Locale;
 import org.typefactory.Category;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 import org.typefactory.MessageCode;
 import org.typefactory.NumberFormat;
+import org.typefactory.NumberFormat.NumberFormatBuilder;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParserBuilderException;
@@ -47,15 +49,17 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   private Class<?> targetTypeClass;
   private MessageCode messageCode;
   private Locale defaultLocale = Locale.getDefault();
+  private NumberFormatBuilder defaultNumberFormatBuilder = NumberFormat.builder(defaultLocale);
   private boolean caseSensitive = true;
   private WhiteSpace whiteSpace = IGNORE_WHITESPACE;
-  private int[] numericRadixCodePoints = DEFAULT_BASE_10_CODE_POINTS;
+  private int[] numericRadixCodePoints = null;
   private long minValue;
   private long maxValue;
   private boolean minValueComparisonInclusive = true;
   private boolean maxValueComparisonInclusive = true;
   private boolean ignoreLeadingNegativeSign = false;
   private boolean ignoreLeadingPositiveSign = false;
+  private boolean enableGrouping = true;
 
   LongTypeParserBuilderImpl() {
     this(Long.MIN_VALUE, Long.MAX_VALUE);
@@ -90,10 +94,12 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
   public LongTypeParserImpl build() {
 
+    final var numberFormat = defaultNumberFormatBuilder.build();
+
+    initialiseNumericRadixCodePointsIfNotSupplied(numberFormat);
+
     final var numericRadixCodePointsMap = createNumericRadixCodePointsMap();
     final boolean allowAllUnicodeDecimalDigits = canAllowAllUnicodeDecimalDigits();
-
-    final var numberFormat = NumberFormat.of(defaultLocale);
 
     ignoreCharactersSubsetBuilder.includeCodePoints(ARABIC_LETTER_MARK, LEFT_TO_RIGHT_INDICATOR, RIGHT_TO_LEFT_INDICATOR);
 
@@ -107,6 +113,16 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
         minValue, maxValue,
         minValueComparisonInclusive, maxValueComparisonInclusive,
         ignoreLeadingNegativeSign, ignoreLeadingPositiveSign);
+  }
+
+  private void initialiseNumericRadixCodePointsIfNotSupplied(NumberFormat numberFormat) {
+    if (numericRadixCodePoints == null) {
+      final int zeroDigitCodePoint = numberFormat.getZeroDigit();
+      numericRadixCodePoints = new int[10];
+      for (int i = 0; i < 10; ++i) {
+        numericRadixCodePoints[i] = zeroDigitCodePoint + i;
+      }
+    }
   }
 
   /**
@@ -146,9 +162,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * @return a hashmap of letters to their corresponding number for a numeric base of arbitrary radix.
    */
   private PrimitiveHashMapOfIntKeyToIntValue createNumericRadixCodePointsMap() {
-
     final var numericRadixCodePointsMap = new PrimitiveHashMapOfIntKeyToIntValue();
-
     for (int i = 0; i < numericRadixCodePoints.length; ++i) {
       final int codepoint = numericRadixCodePoints[i];
       addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, codepoint, i);
@@ -182,6 +196,61 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   @Override
   public LongTypeParserBuilderImpl defaultLocale(final Locale locale) {
     defaultLocale = locale == null ? Locale.getDefault() : locale;
+    defaultNumberFormatBuilder = NumberFormat.builder(defaultLocale);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder roundingMode(final RoundingMode roundingMode) {
+    defaultNumberFormatBuilder.roundingMode(roundingMode);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder decimalSeparator(final char decimalSeparator, final char... alternativeDecimalSeparators) {
+    defaultNumberFormatBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder decimalSeparator(final int decimalSeparator, final int... alternativeDecimalSeparators ) {
+    defaultNumberFormatBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder groupingSeparator(final char groupingSeparator, final char... alternativeGroupingSeparators) {
+    defaultNumberFormatBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder groupingSeparator(final int groupingSeparator, final int... alternativeGroupingSeparators ) {
+    defaultNumberFormatBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder enableGrouping() {
+    enableGrouping = true;
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder disableGrouping() {
+    enableGrouping = false;
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder zeroDigit(final char zeroDigit) {
+    defaultNumberFormatBuilder.zeroDigit(zeroDigit);
+    return this;
+  }
+
+  @Override
+  public LongTypeParserBuilder zeroDigit(final int zeroDigit) {
+    defaultNumberFormatBuilder.zeroDigit(zeroDigit);
     return this;
   }
 

@@ -1,6 +1,7 @@
 package org.typefactory;
 
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.impl.Factory;
@@ -397,7 +398,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   @Override
   <S extends LongType> S parse(CharSequence value, final Locale locale, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
-  <S extends LongType> S parse(CharSequence value, final NumberFormat numberFormat, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  <S extends LongType> S parse(CharSequence value, final NumberFormat numberFormat, Function<Long, S> constructorOrFactoryMethod)
+      throws InvalidValueException;
 
   /**
    * Returns the radix (numeric-base) of the type-parser which will be greater-than or equal to 2.
@@ -464,11 +466,84 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * <p>Provide a default {@link Locale} which will be used when parsing {@link CharSequence} values to
      * correctly interpret grouping separators, also known as thousands separators or ten-of-thousands separators depending on the locale.</p>
      *
+     * <p>Setting this will override any values previously set by:</p>
+     * <ul>
+     *   <li></li>
+     * </ul>
+     *
      * @param locale a default {@link Locale} which will be used when parsing {@link CharSequence} values. If a null {@code locale} value is provided
      *               then the locale will be set to {@link Locale#getDefault()}.
      * @return this builder
      */
     LongTypeParserBuilder defaultLocale(Locale locale);
+
+    LongTypeParserBuilder roundingMode(final RoundingMode roundingMode);
+
+    LongTypeParserBuilder decimalSeparator(final char decimalSeparator, char... alternativeDecimalSeparators);
+
+    LongTypeParserBuilder decimalSeparator(final int decimalSeparator, int... alternativeDecimalSeparators);
+
+    LongTypeParserBuilder groupingSeparator(final char groupingSeparator, char... alternativeGroupingSeparators);
+
+    LongTypeParserBuilder groupingSeparator(final int groupingSeparator, int... alternativeGroupingSeparators);
+
+    /**
+     * <p>Only used when formating value – determines whether grouping separators will be added to formatted numbers.</p>
+     *
+     * <p>Ignored when parsing values from a char-sequence – grouping separators will always be parsed if present.</p>
+     *
+     * @return this builder
+     */
+    LongTypeParserBuilder enableGrouping();
+
+    /**
+     * <p>Only used when formating value – determines whether grouping separators will be added to formatted numbers.</p>
+     *
+     * <p>Ignored when parsing values from a char-sequence – grouping separators will always be parsed if present.</p>
+     *
+     * @return this builder
+     */
+    LongTypeParserBuilder disableGrouping();
+
+    /**
+     * <p>Set the character used for zero. Can be different for different scripts. For example, the Arabic numeral system uses the Arabic-Indic digits
+     * ٠١٢٣٤٥٦٧٨٩.</p>
+     *
+     * <p>This value is only considered if custom-radix characters have not been supplied with {@link #allowCustomBaseNumbers(char...)}.</p>
+     *
+     * <p>This value will override any zero digit previously set by calling {@link #defaultLocale(Locale)}.</p>
+     *
+     * <p>The zero-digit character and subsequent nine characters must be in the Unicode decimal digit category. These return {@code true} when tested
+     * with {@link Character#isDigit(char)}.</p>
+     *
+     * @param zeroDigit the character used for zero
+     * @return this builder
+     * @see #allowCustomBaseNumbers(char...)
+     * @see #allowCustomBaseNumbers(int...)
+     * @see Character#isDigit(char)
+     * @see Character#isDigit(int)
+     */
+    LongTypeParserBuilder zeroDigit(final char zeroDigit) throws TypeParserBuilderException;
+
+    /**
+     * <p>Set the code-point used for zero. Can be different for different scripts. For example, the Arabic numeral system uses the Arabic-Indic digits
+     * ٠١٢٣٤٥٦٧٨٩.</p>
+     *
+     * <p>This value is only considered if custom radix code-points have not been supplied with {@link #allowCustomBaseNumbers(int...)}.</p>
+     *
+     * <p>This value will override any zero digit previously set by calling {@link #defaultLocale(Locale)}.</p>
+     *
+     * <p>The zero-digit code-point and subsequent nine code-points must be in the Unicode decimal digit category. These return {@code true} when tested
+     * with {@link Character#isDigit(int)}.</p>
+     *
+     * @param zeroDigit the character used for zero
+     * @return this builder
+     * @see #allowCustomBaseNumbers(char...)
+     * @see #allowCustomBaseNumbers(int...)
+     * @see Character#isDigit(char)
+     * @see Character#isDigit(int)
+     */
+    LongTypeParserBuilder zeroDigit(final int zeroDigit) throws TypeParserBuilderException;
 
     /**
      * Set a minimum value that will be used to validate values are withing a range. Calling this will replace any previously set inclusive or

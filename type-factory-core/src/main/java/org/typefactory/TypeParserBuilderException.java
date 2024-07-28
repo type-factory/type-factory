@@ -241,6 +241,10 @@ public class TypeParserBuilderException extends RuntimeException  {
         "duplicate_custom_radix_character",
         "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity of the parser.");
 
+    public static final MessageCode INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_zero_digit",
+        "An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
+
     public static final MessageCode INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
         "invalid_short_min_value",
         "An invalid minimum value has been configured for the ShortTypeParser – minimum value must greater-than or equal to Short.MIN_VALUE.");

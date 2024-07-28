@@ -32,14 +32,14 @@ class LongTypeParserImpl_parseWhitespaceTest {
       -9 223 372 036 854 775 807   | -9223372036854775807 | Long.MIN_VALUE + 1
                             -2 0   |                  -20 | Hyphen-minus twenty
                        \u22121 9   |                  -19 | Math-minus nineteen
-                        '   -1 8 ' |                  -18 | Whitespace Hyphen-minus eighteen
-                        '  - 1 7 ' |                  -17 | Whitespace Hyphen-minus seventeen
+                          ' -1 8 ' |                  -18 | Whitespace Hyphen-minus eighteen
+                        '   -1 7 ' |                  -17 | Whitespace Hyphen-minus seventeen
                             -1 0   |                  -10 | Hyphen-minus ten
                              1 0   |                   10 | Ten
                             +1 0   |                   10 | Plus ten
                         '  + 1 7 ' |                   17 | Whitespace plus seventeen
-                        '    1 8 ' |                   18 | Whitespace eighteen
-                             1 9   |                   19 | Nineteen
+                      '\u20281 8 ' |                   18 | Line-separator whitespace eighteen
+                      '\u20291 9 ' |                   19 | Paragraph-separator whitespace nineteen
                              2 0   |                   20 | Twenty
        9 223 372 036 854 775 806   |  9223372036854775806 | Long.MAX_VALUE -1
        9 223 372 036 854 775 807   |  9223372036854775807 | Long.MAX_VALUE
