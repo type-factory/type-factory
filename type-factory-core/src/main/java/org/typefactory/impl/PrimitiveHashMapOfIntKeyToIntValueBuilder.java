@@ -265,28 +265,28 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
   @Override
   public String toDataStructureString() {
     final StringBuilder s = new StringBuilder();
-    s.append("int[][] keys = new int[][]{");
+    s.append("int[][] keys = new int[][]{").append(SYSTEM_LINE_SEPARATOR);
     for (int[] key : hashTable.keys) {
       if (key == null) {
-        s.append("null, ");
+        s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
       } else {
-        s.append("new int[]{");
+        s.append("    new int[]{");
         for (int i = 0; i < key.length; ++i) {
           appendHexWithZeroPadding(s, key[i]);
           if (i < key.length - 1) {
             s.append(", ");
           }
         }
-        s.append("},");
+        s.append("},").append(SYSTEM_LINE_SEPARATOR);
       }
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    s.append("int[][] values = new int[][]{");
+    s.append("int[][] values = new int[][]{").append(SYSTEM_LINE_SEPARATOR);
     for (int[] value : hashTable.values) {
       if (value == null) {
-        s.append("null,").append(SYSTEM_LINE_SEPARATOR);
+        s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
       } else {
-        s.append("new int[]{");
+        s.append("    new int[]{");
         for (int i = 0; i < value.length; ++i) {
           appendHexWithZeroPadding(s, value[i]);
           if (i < value.length - 1) {
