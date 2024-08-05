@@ -16,6 +16,7 @@
 package org.typefactory.impl;
 
 import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
+import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
 
 import java.util.Arrays;
 
@@ -115,8 +116,8 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
       if (i % 8 == 0) {
         s.append(SYSTEM_LINE_SEPARATOR).append("    ");
       }
-      zeroPad(keys[i], s);
-      s.append(Integer.toHexString(keys[i])).append(", ");
+      appendHexWithZeroPadding(s, keys[i]);
+      s.append(", ");
     }
     if (s.charAt(s.length() - 2) == ',') {
         s.setLength(s.length() - 2);
@@ -127,35 +128,13 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
       if (i % 8 == 0) {
         s.append(SYSTEM_LINE_SEPARATOR).append("    ");
       }
-      zeroPad(values[i], s);
-      s.append(Integer.toHexString(values[i])).append(", ");
+      appendHexWithZeroPadding(s, values[i]);
+      s.append(", ");
     }
     if (s.charAt(s.length() - 2) == ',') {
       s.setLength(s.length() - 2);
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
     return s.toString();
-  }
-
-  private static void zeroPad(int value, StringBuilder s) {
-    if (value < 0) {
-      s.append("0x");
-    } else if (value < 0x0000_0010) {
-      s.append("0x0000000");
-    } else if (value < 0x0000_0100) {
-      s.append("0x000000");
-    } else if (value < 0x0000_1000) {
-      s.append("0x00000");
-    } else if (value < 0x0001_0000) {
-      s.append("0x0000");
-    } else if (value < 0x0010_0000) {
-      s.append("0x000");
-    } else if (value < 0x0100_0000) {
-      s.append("0x00");
-    } else if (value < 0x1000_0000) {
-      s.append("0x0");
-    } else {
-      s.append("0x");
-    }
   }
 }
