@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -296,12 +296,12 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
             s.append(new String(treeNode.toSequence, 0, treeNode.toSequence.length));
             s.append('"');
             if (i == codePoints.length - 1) {
-              s.append(LINE_SEPARATOR);
+              s.append(SYSTEM_LINE_SEPARATOR);
             }
           }
           if (!treeNode.isLeafNode()) {
             ++j;
-            s.append(LINE_SEPARATOR);
+            s.append(SYSTEM_LINE_SEPARATOR);
             treeNodeStack.push(currentTreeNode);
             indexStack.push(i);
             currentTreeNode = treeNode;

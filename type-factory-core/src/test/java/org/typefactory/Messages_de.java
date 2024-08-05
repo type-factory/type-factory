@@ -31,6 +31,11 @@ public class Messages_de extends ListResourceBundle {
         {"gggg", "einige Fehlermeldung-G."},
         {"hhhh", "einige Fehlermeldung-H."},
 
+        {"ee-e1", "einige Fehlermeldung-E mit Wert {0}."},
+        {"ff_f1", "einige Fehlermeldung-F mit Wert {0}."},
+        {"gggg1", "einige Fehlermeldung-G mit Wert {0}."},
+        {"hhhh1", "einige Fehlermeldung-H mit Wert {0}."},
+
         {"ss"  , "einige Parser-Fehlermeldungen-S."},
         {"tt"  , "einige Parser-Fehlermeldungen-T."},
         {"uu.u", "einige Parser-Fehlermeldungen-U."},

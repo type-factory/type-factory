@@ -25,10 +25,7 @@ import java.util.logging.Logger;
 
 class MessageUtils {
 
-  private MessageUtils() {
-    // don't instantiate me
-  }
-
+  static final String TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "org.typefactory.Messages";
   private static final Logger logger = Logger.getLogger(MessageUtils.class.getName());
 
   private static final Control DEFAULT_RESOURCE_BUNDLE_CONTROL = Control.getControl(Control.FORMAT_DEFAULT);
@@ -37,7 +34,9 @@ class MessageUtils {
 
   private static final String EMPTY_STRING = "";
 
-  static final String TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "org.typefactory.Messages";
+  private MessageUtils() {
+    // don't instantiate me
+  }
 
   static String getMessage(
       final String resourceBundleBaseName,
@@ -128,16 +127,18 @@ class MessageUtils {
           return ResourceBundle.getBundle(
               resourceBundleBaseName, locale, MessageUtils.class.getClassLoader(), DEFAULT_RESOURCE_BUNDLE_CONTROL);
         } catch (final Exception e3) {
-          logger.log(Level.FINE, e1, () ->
-              String.format("""
-                      Can't load resource bundle for base name %s, locale %s – caused by:
-                      - %s: %s,
-                      - %s: %s,
-                      - %s: %s""",
-                  resourceBundleBaseName, locale.toLanguageTag(),
-                  e1.getClass().getName(), e1.getMessage(),
-                  e2.getClass().getName(), e2.getMessage(),
-                  e3.getClass().getName(), e3.getMessage()));
+          if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, e1, () ->
+                String.format("""
+                        Can't load resource bundle for base name %s, locale %s – caused by:
+                        - %s: %s,
+                        - %s: %s,
+                        - %s: %s""",
+                    resourceBundleBaseName, locale.toLanguageTag(),
+                    e1.getClass().getName(), e1.getMessage(),
+                    e2.getClass().getName(), e2.getMessage(),
+                    e3.getClass().getName(), e3.getMessage()));
+          }
         }
       }
     }

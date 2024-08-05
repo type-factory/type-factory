@@ -61,11 +61,11 @@ class ExceptionUtilsTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      ` `  | some value                          | U+0020 | Some default message. Invalid value - invalid white-space character U+0020.
-      `\b` | some value \b with backspace        | U+0008 | Some default message. Invalid value - invalid control character U+0008.
-      '    | some 'value' with single quotes     | '      | Some default message. Invalid value - invalid quote character "'".
-      e    | some value                          | e      | Some default message. Invalid value - invalid character 'e'.
-      🈂    | some value 🈂 triple byte codepoint | 🈂      | Some default message. Invalid value - invalid character '🈂'.
+      ` `  | some value                          | U+0020 SPACE                      | Some default message. Invalid value - invalid white-space character U+0020 SPACE.
+      `\b` | some value \b with backspace        | U+0008 BACKSPACE                  | Some default message. Invalid value - invalid control character U+0008 BACKSPACE.
+      '    | some 'value' with single quotes     | ' U+0027 APOSTROPHE              | Some default message. Invalid value - invalid quote character ' U+0027 APOSTROPHE.
+      e    | some value                          | 'e' U+0065 LATIN SMALL LETTER E   | Some default message. Invalid value - invalid character 'e' U+0065 LATIN SMALL LETTER E.
+      🈂    | some value 🈂 triple byte codepoint | '🈂' U+01F202 SQUARED KATAKANA SA | Some default message. Invalid value - invalid character '🈂' U+01F202 SQUARED KATAKANA SA.
       """, delimiter = '|', quoteCharacter = '`')
   void forInvalidCodePoint(
       final String invalidCodePointAsString,
@@ -81,7 +81,7 @@ class ExceptionUtilsTest {
           assertThat(exception.getMessage()).
               isEqualTo(expectedErrorMessage);
           assertThat(exception.getParserErrorProperties())
-              .containsEntry(ParserMessageCodeArgKeys.INVALID_CODE_POINT, expectedPropertyValue);
+              .containsEntry(ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION, expectedPropertyValue);
         });
   }
 
@@ -113,11 +113,11 @@ class ExceptionUtilsTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      ` `  | U+0020
-      `\b` | U+0008
-      '    | U+0027
-      e    | U+0065
-      🈂    | U+01F202
+      ` `  | U+0020 SPACE
+      `\b` | U+0008 BACKSPACE
+      '    | ' U+0027 APOSTROPHE
+      e    | 'e' U+0065 LATIN SMALL LETTER E
+      🈂    | '🈂' U+01F202 SQUARED KATAKANA SA
       """, delimiter = '|', quoteCharacter = '`')
   void unicodeHexCode(
       final String codePointAsString,

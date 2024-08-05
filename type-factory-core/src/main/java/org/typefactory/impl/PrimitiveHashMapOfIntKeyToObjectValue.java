@@ -18,12 +18,12 @@ package org.typefactory.impl;
 import java.util.Arrays;
 
 /**
- * <p>This is a hash-map of integer keys mapped to integer-array values.</p>
+ * <p>This is a hash-map of integer keys mapped to object values.</p>
  *
  * <p>We can use it to map:</p>
  * <ul>
- *   <li>a single code point to a sequence of code points.</li>
- *   <li>a unicode category identified by an integer to a sequence of code points.</li>
+ *   <li>a single code point to an object.</li>
+ *   <li>a unicode category identified by an integer to an object.</li>
  * </ul>
  */
 final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
@@ -50,8 +50,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     private int[][] keys;
 
     /**
-     * 2-dimensional array for the values which is aligned with the key array. It appears to be 3-dimensional but that is because the map-values are
-     * actually int-arrays:
+     * 2-dimensional array for the values which is aligned with the key array:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map values.</li>
      *   <li>second index/dimension to get the value objects which are objects of type T.</li>
@@ -67,7 +66,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
   private HashTable<T> hashTable;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private final PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
 
   PrimitiveHashMapOfIntKeyToObjectValue() {
     this.hashTable = new HashTable<>();

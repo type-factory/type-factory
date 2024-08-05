@@ -19,8 +19,13 @@ import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
+import java.util.Locale;
+import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.InvalidValueException.ParserMessageCode;
+import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 import org.typefactory.MessageCode;
+import org.typefactory.NumberFormat.NumberFormatBuilder;
+import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser;
@@ -51,6 +56,26 @@ public class Factory {
 
   public static TypeParserBuilder typeParserBuilder() {
     return new TypeParserBuilderImpl();
+  }
+
+  public static LongTypeParserBuilder longTypeParserBuilder() {
+    return new LongTypeParserBuilderImpl();
+  }
+
+  public static IntegerTypeParserBuilder integerTypeParserBuilder() {
+    return new IntegerTypeParserBuilderImpl();
+  }
+
+  public static ShortTypeParserBuilder shortTypeParserBuilder() {
+    return new ShortTypeParserBuilderImpl();
+  }
+
+  public static NumberFormatBuilder numberFormatBuilder() {
+    return new NumberFormatBuilderImpl();
+  }
+
+  public static NumberFormatBuilder numberFormatBuilder(final Locale locale) {
+    return new NumberFormatBuilderImpl(locale);
   }
 
   public static Subset rangedSubset(

@@ -1,7 +1,7 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTr
 
 class CodePointSequenceToCodePointSequenceConverterTest {
 
-  private static Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
+  private static final Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
 
   @Test
   void nAryTreeIsFormedCorrectly() {
@@ -23,7 +23,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     rootNode.add("l".codePoints().toArray(), "n".codePoints().toArray());
 
     logger.fine(() -> "N-Ary tree size = " + rootNode.size());
-    logger.fine(() -> "N-Ary tree" + LINE_SEPARATOR + rootNode);
+    logger.fine(() -> "N-Ary tree" + SYSTEM_LINE_SEPARATOR + rootNode);
 
     assertThat(rootNode.isEmpty()).isFalse();
     assertThat(rootNode.codePoints()).contains('a', 'f', 'l');

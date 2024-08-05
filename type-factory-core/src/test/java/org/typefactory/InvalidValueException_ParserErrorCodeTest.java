@@ -16,24 +16,11 @@
 package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.typefactory.InvalidValueException.ParserMessageCode;
-import org.typefactory.impl.ExceptionUtils;
-import org.typefactory.impl.Factory;
 import org.typefactory.testutils.ParserMessageCodeConverter;
 
 class InvalidValueException_ParserMessageCodeTest {
@@ -42,9 +29,10 @@ class InvalidValueException_ParserMessageCodeTest {
   @CsvSource(textBlock = """
       INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN    | invalid_value_does_not_match_regex_pattern    | Invalid value - does not match regular-expression pattern {0}
       INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION | invalid_value_does_not_pass_custom_validation | Invalid value - does not pass custom validation criteria.
-      INVALID_VALUE_INVALID_CHARACTER               | invalid_value_invalid_character               | Invalid value - invalid character ''{0}''.
+      INVALID_VALUE_INVALID_CHARACTER               | invalid_value_invalid_character               | Invalid value - invalid character {0}.
       INVALID_VALUE_INVALID_CONTROL_CHARACTER       | invalid_value_invalid_control_character       | Invalid value - invalid control character {0}.
-      INVALID_VALUE_INVALID_QUOTE_CHARACTER         | invalid_value_invalid_quote_character         | Invalid value - invalid quote character "{0}".
+      INVALID_VALUE_INVALID_FORMAT_CHARACTER        | invalid_value_invalid_format_character        | Invalid value - invalid format character {0}.
+      INVALID_VALUE_INVALID_QUOTE_CHARACTER         | invalid_value_invalid_quote_character         | Invalid value - invalid quote character {0}.
       INVALID_VALUE_INVALID_WHITESPACE_CHARACTER    | invalid_value_invalid_whitespace_character    | Invalid value - invalid white-space character {0}.
       INVALID_VALUE_TOO_LONG                        | invalid_value_too_long                        | Invalid value - too long, maximum length is {0,number,integer}.
       INVALID_VALUE_TOO_SHORT                       | invalid_value_too_short                       | Invalid value - too short, minimum length is {0,number,integer}.

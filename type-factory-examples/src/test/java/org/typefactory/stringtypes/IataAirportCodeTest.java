@@ -54,7 +54,7 @@ class IataAirportCodeTest {
   @CsvSource(textBlock = """
       SY   | Invalid value - too short, minimum length is 3.
       SYDA | Invalid value - too long, maximum length is 3.
-      611  | Invalid value - invalid character '6'.
+      611  | Invalid value - invalid character '6' U+0036 DIGIT SIX.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> IataAirportCode.of(value))
