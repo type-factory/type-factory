@@ -48,9 +48,19 @@ final class PrimitiveListOfInt {
     return result;
   }
 
-  public int get(final int index) {
+  int get(final int index) {
     Objects.checkIndex(index, size);
     return integers[index];
+  }
+
+  void sort() {
+    Arrays.sort(integers, 0, size);
+  }
+
+  int [] toArray() {
+    final int [] result = new int[size];
+    System.arraycopy(integers, 0, result, 0, size);
+    return result;
   }
 
 }

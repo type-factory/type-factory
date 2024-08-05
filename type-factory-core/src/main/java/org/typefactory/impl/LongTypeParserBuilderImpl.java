@@ -27,6 +27,8 @@ import org.typefactory.impl.LongTypeParserImpl.WhiteSpace;
 
 final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
 
+  private static final int[] DEFAULT_BASE_2_CODE_POINTS = new int[]{
+      '0', '1'};
   private static final int[] DEFAULT_BASE_8_CODE_POINTS = new int[]{
       '0', '1', '2', '3', '4', '5', '6', '7'};
   private static final int[] DEFAULT_BASE_10_CODE_POINTS = new int[]{
@@ -71,16 +73,16 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   private static void addCodePointToRadixCodePointsMap(
-      final PrimitiveHashMapOfIntKeyToIntValue numericRadixCodePointsMap,
+      final PrimitiveHashMapOfIntKeyToIntValueBuilder numericRadixCodePointsMapBuilder,
       final int codepoint,
       final int numericValue) {
 
-    if (numericRadixCodePointsMap.contains(codepoint)) {
+    if (numericRadixCodePointsMapBuilder.contains(codepoint)) {
       throw TypeParserBuilderException.builder()
           .messageCode(MessageCodes.DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE)
           .build();
     }
-    numericRadixCodePointsMap.put(codepoint, numericValue);
+    numericRadixCodePointsMapBuilder.put(codepoint, numericValue);
   }
 
   @SuppressWarnings({"java:S3012"}) // The suggested SonarCloud fixes all copy arrays of the same primitive type – this method does not.
@@ -162,23 +164,23 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * @return a hashmap of letters to their corresponding number for a numeric base of arbitrary radix.
    */
   private PrimitiveHashMapOfIntKeyToIntValue createNumericRadixCodePointsMap() {
-    final var numericRadixCodePointsMap = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var numericRadixCodePointsMapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     for (int i = 0; i < numericRadixCodePoints.length; ++i) {
       final int codepoint = numericRadixCodePoints[i];
-      addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, codepoint, i);
+      addCodePointToRadixCodePointsMap(numericRadixCodePointsMapBuilder, codepoint, i);
       if (!caseSensitive) { // case-insensitive
         // Upper and lower case characters in Unicode are not always symmetric, so we will consider each separately and individually
         final int lowerCaseCodepoint = Character.toLowerCase(codepoint);
         if (lowerCaseCodepoint != codepoint) {
-          addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, lowerCaseCodepoint, i);
+          addCodePointToRadixCodePointsMap(numericRadixCodePointsMapBuilder, lowerCaseCodepoint, i);
         }
         final int upperCaseCodepoint = Character.toUpperCase(codepoint);
         if (upperCaseCodepoint != codepoint) {
-          addCodePointToRadixCodePointsMap(numericRadixCodePointsMap, upperCaseCodepoint, i);
+          addCodePointToRadixCodePointsMap(numericRadixCodePointsMapBuilder, upperCaseCodepoint, i);
         }
       }
     }
-    return numericRadixCodePointsMap;
+    return numericRadixCodePointsMapBuilder.build();
   }
 
   @Override
@@ -299,7 +301,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    *
    * <p>Note that upper and lower case characters in Unicode are not always symmetric. Keep this in mind if you choose
    * to define a type parser for an arbitrary radix and specify your own set of digits/letters using one of the
-   * {@link #allowCustomBaseNumbers(int...)} methods. In this situation, the type parser will always consider the letters you specified as they were
+   * {@link #setCustomRadix(int...)} methods. In this situation, the type parser will always consider the letters you specified as they were
    * provided. It will then also consider the lowercase version and uppercase version of that letter if case-insensitivity has been configured.</p>
    *
    * <p>One example of letter case asymmetry occurs in the Greek alphabet where:</p>
@@ -316,18 +318,18 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   @Override
-  public LongTypeParserBuilderImpl allowCustomBaseNumbers(final char... charactersForCustomNumericBase) {
+  public LongTypeParserBuilderImpl setCustomRadix(final char... charactersForCustomNumericBase) {
     if (charactersForCustomNumericBase == null || charactersForCustomNumericBase.length < 2) {
       throw TypeParserBuilderException.builder()
           .messageCode(MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE)
           .build();
     }
-    allowCustomBaseNumbers(convertCharArrayToCodePointArray(charactersForCustomNumericBase));
+    setCustomRadix(convertCharArrayToCodePointArray(charactersForCustomNumericBase));
     return this;
   }
 
   @Override
-  public LongTypeParserBuilderImpl allowCustomBaseNumbers(final int... codePointsForCustomNumericBase) {
+  public LongTypeParserBuilderImpl setCustomRadix(final int... codePointsForCustomNumericBase) {
     if (codePointsForCustomNumericBase == null || codePointsForCustomNumericBase.length < 2) {
       throw TypeParserBuilderException.builder()
           .messageCode(MessageCodes.INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE)
@@ -338,6 +340,11 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
     return this;
   }
 
+  @Override
+  public LongTypeParserBuilder setRadixBinary() {
+      return setCustomRadix(DEFAULT_BASE_2_CODE_POINTS);
+  }
+
   /**
    * <p>Will accept the following digits for base-8 numbers:</p>
    *
@@ -346,8 +353,8 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   @Override
-  public LongTypeParserBuilderImpl allowBase8Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_8_CODE_POINTS);
+  public LongTypeParserBuilderImpl setRadixOctal() {
+    return setCustomRadix(DEFAULT_BASE_8_CODE_POINTS);
   }
 
   /**
@@ -358,8 +365,8 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    * }</pre>
    */
   @Override
-  public LongTypeParserBuilderImpl allowBase10Numbers() {
-    return allowCustomBaseNumbers(DEFAULT_BASE_10_CODE_POINTS);
+  public LongTypeParserBuilderImpl setRadixDecimal() {
+    return setCustomRadix(DEFAULT_BASE_10_CODE_POINTS);
   }
 
   /**
@@ -371,7 +378,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    */
   @Override
   public LongTypeParserBuilderImpl allowBase16Numbers() {
-    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_16_CODE_POINTS);
+    return caseInsensitive().setCustomRadix(DEFAULT_BASE_16_CODE_POINTS);
   }
 
   /**
@@ -384,7 +391,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    */
   @Override
   public LongTypeParserBuilderImpl allowBase32Numbers() {
-    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_32_CODE_POINTS);
+    return caseInsensitive().setCustomRadix(DEFAULT_BASE_32_CODE_POINTS);
   }
 
   /**
@@ -398,7 +405,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    */
   @Override
   public LongTypeParserBuilderImpl allowBase36Numbers() {
-    return caseInsensitive().allowCustomBaseNumbers(DEFAULT_BASE_36_CODE_POINTS);
+    return caseInsensitive().setCustomRadix(DEFAULT_BASE_36_CODE_POINTS);
   }
 
   /**
@@ -413,7 +420,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
    */
   @Override
   public LongTypeParserBuilderImpl allowBase62Numbers() {
-    return caseSensitive().allowCustomBaseNumbers(DEFAULT_BASE_62_CODE_POINTS);
+    return caseSensitive().setCustomRadix(DEFAULT_BASE_62_CODE_POINTS);
   }
 
   @Override

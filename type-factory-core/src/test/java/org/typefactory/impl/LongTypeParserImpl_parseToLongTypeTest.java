@@ -101,7 +101,7 @@ class LongTypeParserImpl_parseToLongTypeTest {
     static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()
         .messageCode(MESSAGE_CODE)
         .targetTypeClass(SomeLongType.class)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .minValueInclusive(1000)
         .maxValueInclusive(9999)
         .ignoreAllWhitespace()

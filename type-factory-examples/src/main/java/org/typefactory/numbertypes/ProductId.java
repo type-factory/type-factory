@@ -33,7 +33,7 @@ public final class ProductId extends LongType {
           .messageCode(ERROR_MESSAGE)
           .minValueInclusive(1_000_000_000_000_000L)
           .maxValueInclusive(9_999_999_999_999_999L)
-          .allowBase10Numbers()
+          .setRadixDecimal()
           .ignoreAllWhitespace()
           .ignoreAllDashesAndHyphens()
           .build();

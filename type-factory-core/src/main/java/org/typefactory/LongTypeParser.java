@@ -509,7 +509,7 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * <p>Set the character used for zero. Can be different for different scripts. For example, the Arabic numeral system uses the Arabic-Indic digits
      * ٠١٢٣٤٥٦٧٨٩.</p>
      *
-     * <p>This value is only considered if custom-radix characters have not been supplied with {@link #allowCustomBaseNumbers(char...)}.</p>
+     * <p>This value is only considered if custom-radix characters have not been supplied with {@link #setCustomRadix(char...)}.</p>
      *
      * <p>This value will override any zero digit previously set by calling {@link #defaultLocale(Locale)}.</p>
      *
@@ -518,8 +518,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *
      * @param zeroDigit the character used for zero
      * @return this builder
-     * @see #allowCustomBaseNumbers(char...)
-     * @see #allowCustomBaseNumbers(int...)
+     * @see #setCustomRadix(char...)
+     * @see #setCustomRadix(int...)
      * @see Character#isDigit(char)
      * @see Character#isDigit(int)
      */
@@ -529,7 +529,7 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * <p>Set the code-point used for zero. Can be different for different scripts. For example, the Arabic numeral system uses the Arabic-Indic digits
      * ٠١٢٣٤٥٦٧٨٩.</p>
      *
-     * <p>This value is only considered if custom radix code-points have not been supplied with {@link #allowCustomBaseNumbers(int...)}.</p>
+     * <p>This value is only considered if custom radix code-points have not been supplied with {@link #setCustomRadix(int...)}.</p>
      *
      * <p>This value will override any zero digit previously set by calling {@link #defaultLocale(Locale)}.</p>
      *
@@ -538,8 +538,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *
      * @param zeroDigit the character used for zero
      * @return this builder
-     * @see #allowCustomBaseNumbers(char...)
-     * @see #allowCustomBaseNumbers(int...)
+     * @see #setCustomRadix(char...)
+     * @see #setCustomRadix(int...)
      * @see Character#isDigit(char)
      * @see Character#isDigit(int)
      */
@@ -651,9 +651,9 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *                                       map to zero and all the subsequent characters to the numeric values that follow.
      * @return this builder
      * @throws TypeParserBuilderException if less than two characters are provided.
-     * @see #allowCustomBaseNumbers(int...)
+     * @see #setCustomRadix(int...)
      */
-    LongTypeParserBuilder allowCustomBaseNumbers(char... charactersForCustomNumericBase) throws TypeParserBuilderException;
+    LongTypeParserBuilder setCustomRadix(char... charactersForCustomNumericBase) throws TypeParserBuilderException;
 
     /**
      * <p>Configures the type-parser to parse a number using the provided code-points as the ‘digits’.
@@ -693,12 +693,25 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *                                       map to zero and all the subsequent code-points to the numeric values that follow.
      * @return this builder
      * @throws TypeParserBuilderException if less than two characters are provided.
-     * @see #allowCustomBaseNumbers(int...)
+     * @see #setCustomRadix(int...)
      */
-    LongTypeParserBuilder allowCustomBaseNumbers(int... codePointsForCustomNumericBase) throws TypeParserBuilderException;
+    LongTypeParserBuilder setCustomRadix(int... codePointsForCustomNumericBase) throws TypeParserBuilderException;
 
     /**
-     * Configures the type-parser to accept only the default base-8 digits {@code 0..7}.
+     * Configures the type-parser to accept only the default binary (base-2) digits {@code 0..1}.
+     *
+     * <p><b>Allowed digits</b></p>
+     * <pre>{@code
+     * 0, 1
+     * }</pre>
+     *
+     * @return this builder
+     */
+    LongTypeParserBuilder setRadixBinary();
+
+    /**
+     * <p>Configures the type-parser to accept only the default octal (base-8) digits {@code 0..7} from any Unicode decimal digit in the
+     * <a href="https://www.compart.com/en/unicode/category/Nd">Unicode "Decimal Number" category.</a></p>.
      *
      * <p><b>Allowed digits</b></p>
      * <pre>{@code
@@ -707,10 +720,10 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *
      * @return this builder
      */
-    LongTypeParserBuilder allowBase8Numbers();
+    LongTypeParserBuilder setRadixOctal();
 
     /**
-     * Configures the type-parser to accept only the default base-10 digits {@code 0..9}.
+     * Configures the type-parser to accept only the default decimal (base-10) digits {@code 0..9}.
      *
      * <p><b>Allowed digits</b></p>
      * <pre>{@code
@@ -719,7 +732,7 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      *
      * @return this builder
      */
-    LongTypeParserBuilder allowBase10Numbers();
+    LongTypeParserBuilder setRadixDecimal();
 
     /**
      * Configures the type-parser to accept only the default base-16 digits and letters {@code 0..9A..F}. This method will automatically set the

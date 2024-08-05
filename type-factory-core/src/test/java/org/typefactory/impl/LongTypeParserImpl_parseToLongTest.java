@@ -33,7 +33,7 @@ class LongTypeParserImpl_parseToLongTest {
   @ValueSource(strings = {" ", "  ", "   "})
   void parse_shouldReturnNull(final String value) {
     final var longTypeParser = LongTypeParser.builder()
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 
@@ -85,7 +85,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase8Numbers()
+        .setRadixOctal()
         .ignoreAllWhitespace()
         .build();
 
@@ -127,7 +127,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 
@@ -326,7 +326,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(min)
         .maxValueInclusive(max)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 
@@ -365,7 +365,7 @@ class LongTypeParserImpl_parseToLongTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueExclusive(min)
         .maxValueExclusive(max)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 

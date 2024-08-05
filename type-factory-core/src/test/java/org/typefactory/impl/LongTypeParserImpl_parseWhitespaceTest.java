@@ -53,7 +53,7 @@ class LongTypeParserImpl_parseWhitespaceTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 
@@ -89,7 +89,7 @@ class LongTypeParserImpl_parseWhitespaceTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .forbidWhitespace()
         .build();
 

@@ -256,7 +256,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .defaultLocale(locale)
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .forbidWhitespace()
         .build();
 
@@ -305,7 +305,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .defaultLocale(locale)
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .build();
 
     final var actual = longTypeParser.parse(value);
@@ -326,7 +326,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
         .defaultLocale(locale)
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .build();
 
     final var actual = longTypeParser.parse(value, LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType::new);
@@ -348,7 +348,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .build();
 
     final var actual = longTypeParser.parse(value, locale);
@@ -368,7 +368,7 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .build();
 
     final var actual = longTypeParser.parse(value, locale, LongTypeParserImpl_parseLocaleSpecificTest.SomeLongType::new);

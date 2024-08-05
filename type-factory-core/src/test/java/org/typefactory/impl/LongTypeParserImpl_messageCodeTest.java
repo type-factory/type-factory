@@ -47,7 +47,7 @@ class LongTypeParserImpl_messageCodeTest {
     final var longTypeParser = LongTypeParser.builder()
         .messageCode(MessageCode.of(messageCode, defaultMessage))
         .targetTypeClass(SomeClass.class)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 

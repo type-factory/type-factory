@@ -41,7 +41,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .allowLeadingNegativeSign()
         .ignoreAllWhitespace()
         .build();
@@ -68,7 +68,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreLeadingNegativeSign()
         .ignoreAllWhitespace()
         .build();
@@ -95,7 +95,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .allowLeadingPositiveSign()
         .ignoreAllWhitespace()
         .build();
@@ -122,7 +122,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreLeadingPositiveSign()
         .ignoreAllWhitespace()
         .build();
@@ -164,7 +164,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllDashesAndHyphens()
         .ignoreAllWhitespace()
         .build();
@@ -196,7 +196,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllOccurrencesOfChar('_')
         .ignoreAllWhitespace()
         .build();
@@ -226,7 +226,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllOccurrencesOfChars('_', '~', '*')
         .ignoreAllWhitespace()
         .build();
@@ -258,7 +258,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllOccurrencesOfCodePoint('_')
         .ignoreAllWhitespace()
         .build();
@@ -288,7 +288,7 @@ class LongTypeParserImpl_parseIgnoreCharactersTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowBase10Numbers()
+        .setRadixDecimal()
         .ignoreAllOccurrencesOfCodePoints('_', '~', '*')
         .ignoreAllWhitespace()
         .build();

@@ -17,11 +17,12 @@ package org.typefactory.impl;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValue.INITIAL_CAPACITY;
+import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValueBuilder.DEFAULT_INITIAL_CAPACITY;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -29,10 +30,15 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 class PrimitiveHashMapOfIntKeyToIntValueTest {
 
+  private static final Logger logger = Logger.getLogger(PrimitiveHashMapOfIntKeyToIntValueTest.class.getName());
+
   @Test
   void isEmpty_returnsTrue() {
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
-    assertThat(actual.isEmpty()).isTrue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    assertThat(mapBuilder.isEmpty()).isTrue();
+
+    final var map = mapBuilder.build();
+    assertThat(map.isEmpty()).isTrue();
   }
 
   @ParameterizedTest
@@ -46,11 +52,15 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
        1000 |    99
       """, delimiter = '|', useHeadersInDisplayName = true)
   void isEmpty_returnsFalse(final int key, final int value) {
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
-    actual.put(key, value);
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put(key, value);
 
-    assertThat(actual.isEmpty()).isFalse();
-    assertThat(actual.size()).isEqualTo(1);
+    assertThat(mapBuilder.isEmpty()).isFalse();
+    assertThat(mapBuilder.size()).isEqualTo(1);
+
+    final var map = mapBuilder.build();
+    assertThat(map.isEmpty()).isFalse();
+    assertThat(map.size()).isEqualTo(1);
   }
 
   @ParameterizedTest
@@ -64,14 +74,21 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
        1000 |    99
       """, delimiter = '|', useHeadersInDisplayName = true)
   void contains_returnsAsExpected(final int key, final int value) {
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
-    actual.put(key, value);
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put(key, value);
 
-    assertThat(actual.contains(key)).isTrue();
-
+    assertThat(mapBuilder.contains(key)).isTrue();
     for (int i = -1001; i <= 1001; ++i) {
       if (i != key) {
-        assertThat(actual.contains(i)).isFalse();
+        assertThat(mapBuilder.contains(i)).isFalse();
+      }
+    }
+
+    final var map = mapBuilder.build();
+    assertThat(map.contains(key)).isTrue();
+    for (int i = -1001; i <= 1001; ++i) {
+      if (i != key) {
+        assertThat(map.contains(i)).isFalse();
       }
     }
   }
@@ -87,14 +104,21 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
        1000 |    99
       """, delimiter = '|', useHeadersInDisplayName = true)
   void get_returnsAsExpected(final int key, final int value) {
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
-    actual.put(key, value);
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put(key, value);
 
-    assertThat(actual.get(key)).isEqualTo(value);
-
+    assertThat(mapBuilder.get(key)).isEqualTo(value);
     for (int i = -1001; i <= 1001; ++i) {
       if (i != key) {
-        assertThat(actual.get(i)).isEqualTo(Integer.MIN_VALUE);
+        assertThat(mapBuilder.get(i)).isEqualTo(Integer.MIN_VALUE);
+      }
+    }
+
+    final var map = mapBuilder.build();
+    assertThat(map.get(key)).isEqualTo(value);
+    for (int i = -1001; i <= 1001; ++i) {
+      if (i != key) {
+        assertThat(map.get(i)).isEqualTo(Integer.MIN_VALUE);
       }
     }
   }
@@ -104,143 +128,179 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     final var key = 131;
     final var expected1 = 333;
     final var expected2 = 444;
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
 
-    actual.put(key, expected1);
-    assertThat(actual.keySet()).containsExactly(key);
-    assertThat(actual.get(key)).isEqualTo(expected1);
+    mapBuilder.put(key, expected1);
+    assertThat(mapBuilder.keySet()).containsExactly(key);
+    assertThat(mapBuilder.get(key)).isEqualTo(expected1);
 
-    actual.put(key, expected2);
-    assertThat(actual.keySet()).containsExactly(key);
-    assertThat(actual.get(key)).isEqualTo(expected2);
+    mapBuilder.put(key, expected2);
+    assertThat(mapBuilder.keySet()).containsExactly(key);
+    assertThat(mapBuilder.get(key)).isEqualTo(expected2);
 
-    actual.put(key, 0);
-    assertThat(actual.keySet()).containsExactly(key);
-    assertThat(actual.get(key)).isZero();
+    mapBuilder.put(key, 0);
+    assertThat(mapBuilder.keySet()).containsExactly(key);
+    assertThat(mapBuilder.get(key)).isZero();
   }
 
   @Test
   void remove_ExistingKey_ReturnsValueAndRemovesEntry() {
-    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     int key = 10;
     int value = 20;
-    map.put(key, value);
+    mapBuilder.put(key, value);
 
-    int removedValue = map.remove(key);
+    int removedValue = mapBuilder.remove(key);
 
     assertThat(removedValue).isEqualTo(value);
+    assertThat(mapBuilder.contains(key)).isFalse();
+
+    final var map = mapBuilder.build();
     assertThat(map.contains(key)).isFalse();
   }
 
   @Test
   void remove_NonExistingKey_ReturnsMinValue() {
-    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     int nonExistingKey = 15;
 
-    int result = map.remove(nonExistingKey);
+    int result = mapBuilder.remove(nonExistingKey);
 
     assertThat(result).isEqualTo(Integer.MIN_VALUE);
   }
 
   @Test
   void remove_ExistingKey_DecreasesSize() {
-    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put(1, 100);
-    map.put(2, 200);
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put(1, 100);
+    mapBuilder.put(2, 200);
 
-    map.remove(1);
+    mapBuilder.remove(1);
 
+    assertThat(mapBuilder.size()).isEqualTo(1);
+
+    final var map = mapBuilder.build();
     assertThat(map.size()).isEqualTo(1);
   }
 
   @Test
   void remove_ExistingKey_AffectsContainsMethod() {
-    PrimitiveHashMapOfIntKeyToIntValue map = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     int key = 5;
-    map.put(key, 50);
+    mapBuilder.put(key, 50);
 
-    map.remove(key);
+    mapBuilder.remove(key);
 
+    assertThat(mapBuilder.contains(key)).isFalse();
+
+    final var map = mapBuilder.build();
     assertThat(map.contains(key)).isFalse();
   }
 
   @Test
   void toString_returnsEmptyForEmptyMap() {
-    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    final var actual = map.toString();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    final var actual = mapBuilder.toString();
     assertThat(actual).isEmpty();
   }
 
   @Test
   void toString_returnsStringForOneEntry() {
-    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put('a', 'z');
-    final var actual = map.toString();
-    assertThat(actual).isEqualTo("0x61 [a] ⟶ z");
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put('a', 'z');
+    final var actual1 = mapBuilder.toString();
+    assertThat(actual1).isEqualTo("0x00000061 ⟶ 0x0000007a, a ⟶ z");
+
+    final var map = mapBuilder.build();
+    final var actual2 = map.toString();
+    assertThat(actual2).isEqualTo(actual1);
   }
 
   @Test
   void toString_returnsStringForTwoEntries() {
-    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put('a', 'w');
-    map.put('b', 'x');
-    map.put('c', 'y');
-    map.put('c', Integer.MIN_VALUE);
-    map.put('d', 'z');
-    final var actual = map.toString();
-    assertThat(actual).isEqualTo("""
-        0x61 [a] ⟶ w
-        0x62 [b] ⟶ x
-        0x64 [d] ⟶ z""");
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put('a', 'w');
+    mapBuilder.put('b', 'x');
+    mapBuilder.put('c', 'y');
+    mapBuilder.put('c', Integer.MIN_VALUE);
+    mapBuilder.put('d', 'z');
+    final var actual1 = mapBuilder.toString();
+    assertThat(actual1).isEqualTo("""
+        0x00000061 ⟶ 0x00000077, a ⟶ w
+        0x00000062 ⟶ 0x00000078, b ⟶ x
+        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+
+    final var map = mapBuilder.build();
+    final var actual2 = map.toString();
+    assertThat(actual2).isEqualTo(actual1);
   }
 
   @Test
   void toString_returnsStringForMultipleEntriesWithAnExplicitRemove() {
-    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put('a', 'w');
-    map.put('b', 'x');
-    map.put('c', 'y');
-    map.remove('c');
-    map.put('d', 'z');
-    final var actual = map.toString();
-    assertThat(actual).isEqualTo("""
-        0x61 [a] ⟶ w
-        0x62 [b] ⟶ x
-        0x64 [d] ⟶ z""");
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put('a', 'w');
+    mapBuilder.put('b', 'x');
+    mapBuilder.put('c', 'y');
+    mapBuilder.remove('c');
+    mapBuilder.put('d', 'z');
+    final var actual1 = mapBuilder.toString();
+    assertThat(actual1).isEqualTo("""
+        0x00000061 ⟶ 0x00000077, a ⟶ w
+        0x00000062 ⟶ 0x00000078, b ⟶ x
+        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+
+    final var map = mapBuilder.build();
+    final var actual2 = map.toString();
+    assertThat(actual2).isEqualTo(actual1);
   }
 
   @Test
   void toString_returnsStringForMultipleEntriesWithAnImpliedRemove() {
-    final var map = new PrimitiveHashMapOfIntKeyToIntValue();
-    map.put('a', 'w');
-    map.put('b', 'x');
-    map.put('c', 'y');
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
+    mapBuilder.put('a', 'w');
+    mapBuilder.put('b', 'x');
+    mapBuilder.put('c', 'y');
     // Set value to Integer.MIN_VALUE implies a remove because Integer.MIN_VALUE is a sentinel value for no-value
-    map.put('c', Integer.MIN_VALUE);
-    map.put('d', 'z');
-    final var actual = map.toString();
-    assertThat(actual).isEqualTo("""
-        0x61 [a] ⟶ w
-        0x62 [b] ⟶ x
-        0x64 [d] ⟶ z""");
+    mapBuilder.put('c', Integer.MIN_VALUE);
+    mapBuilder.put('d', 'z');
+    final var actual1 = mapBuilder.toString();
+    assertThat(actual1).isEqualTo("""
+        0x00000061 ⟶ 0x00000077, a ⟶ w
+        0x00000062 ⟶ 0x00000078, b ⟶ x
+        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+
+    final var map = mapBuilder.build();
+    final var actual2 = map.toString();
+    assertThat(actual2).isEqualTo(actual1);
   }
 
   @ParameterizedTest
   @EnumSource(PrimitiveHashMapOfIntKeyToIntValueTest.TestSource.class)
   void setContainsAllValuesSorted(PrimitiveHashMapOfIntKeyToIntValueTest.TestSource testSource) {
 
-    final var actual = new PrimitiveHashMapOfIntKeyToIntValue();
+    final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     for (Entry<Integer, Integer> entry : testSource.map.entrySet()) {
-      actual.put(entry.getKey(), entry.getValue());
+      mapBuilder.put(entry.getKey(), entry.getValue());
     }
 
-    assertThat(actual.size()).isEqualTo(testSource.expectedSize);
-    assertThat(actual.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
-    assertThat(actual.keySet()).containsExactly(testSource.expectedKeys);
+    assertThat(mapBuilder.size()).isEqualTo(testSource.expectedSize);
+    assertThat(mapBuilder.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
+    assertThat(mapBuilder.keySet()).containsExactly(testSource.expectedKeys);
 
     for (Entry<Integer, Integer> entry : testSource.map.entrySet()) {
-      assertThat(actual.contains(entry.getKey())).isTrue();
-      assertThat(actual.get(entry.getKey())).isEqualTo(entry.getValue());
+      assertThat(mapBuilder.contains(entry.getKey())).isTrue();
+      assertThat(mapBuilder.get(entry.getKey())).isEqualTo(entry.getValue());
+    }
+
+    final var map = mapBuilder.build();
+    logger.fine("\n\nmap instanceof: " + map.getClass().getSimpleName() + "\n" + map.toString() + "\n" + map.toDataStructureString());
+    assertThat(map.size()).isEqualTo(testSource.expectedSize);
+    assertThat(map.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
+    assertThat(map.keySet()).containsExactly(testSource.expectedKeys);
+
+    for (Entry<Integer, Integer> entry : testSource.map.entrySet()) {
+      assertThat(map.contains(entry.getKey())).isTrue();
+      assertThat(map.get(entry.getKey())).isEqualTo(entry.getValue());
     }
   }
 
@@ -251,18 +311,6 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     TWO_ENTRIES(Map.of(3, (int) 'a', 131, (int) 'b')),
 
     THREE_ENTRIES(Map.of(3, (int) 'a', 131, (int) 'b', 191, (int) 'c')),
-
-    TEN_ENTRIES_IN_SAME_BUCKET(Map.ofEntries(
-        entry(0 * INITIAL_CAPACITY, (int) 'b'),
-        entry(1 * INITIAL_CAPACITY, (int) 'c'),
-        entry(2 * INITIAL_CAPACITY, (int) 'd'),
-        entry(3 * INITIAL_CAPACITY, (int) 'e'),
-        entry(4 * INITIAL_CAPACITY, (int) 'f'),
-        entry(5 * INITIAL_CAPACITY, (int) 'g'),
-        entry(6 * INITIAL_CAPACITY, (int) 'h'),
-        entry(7 * INITIAL_CAPACITY, (int) 'i'),
-        entry(8 * INITIAL_CAPACITY, (int) 'j'),
-        entry(9 * INITIAL_CAPACITY, (int) 'k'))),
 
     FOURTEEN_ENTRIES(Map.ofEntries(
         entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
@@ -280,6 +328,28 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
         entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
         entry(547, (int) 'A'))),
 
+    TWENTY_ENTRIES_IN_SAME_BUCKET(Map.ofEntries(
+        entry(0 * DEFAULT_INITIAL_CAPACITY, (int) 'b'),
+        entry(1 * DEFAULT_INITIAL_CAPACITY, (int) 'c'),
+        entry(2 * DEFAULT_INITIAL_CAPACITY, (int) 'd'),
+        entry(3 * DEFAULT_INITIAL_CAPACITY, (int) 'e'),
+        entry(4 * DEFAULT_INITIAL_CAPACITY, (int) 'f'),
+        entry(5 * DEFAULT_INITIAL_CAPACITY, (int) 'g'),
+        entry(6 * DEFAULT_INITIAL_CAPACITY, (int) 'h'),
+        entry(7 * DEFAULT_INITIAL_CAPACITY, (int) 'i'),
+        entry(8 * DEFAULT_INITIAL_CAPACITY, (int) 'j'),
+        entry(9 * DEFAULT_INITIAL_CAPACITY, (int) 'k'),
+        entry(10 * DEFAULT_INITIAL_CAPACITY, (int) 'l'),
+        entry(11 * DEFAULT_INITIAL_CAPACITY, (int) 'm'),
+        entry(12 * DEFAULT_INITIAL_CAPACITY, (int) 'n'),
+        entry(13 * DEFAULT_INITIAL_CAPACITY, (int) 'o'),
+        entry(14 * DEFAULT_INITIAL_CAPACITY, (int) 'p'),
+        entry(15 * DEFAULT_INITIAL_CAPACITY, (int) 'q'),
+        entry(16 * DEFAULT_INITIAL_CAPACITY, (int) 'r'),
+        entry(17 * DEFAULT_INITIAL_CAPACITY, (int) 's'),
+        entry(18 * DEFAULT_INITIAL_CAPACITY, (int) 't'),
+        entry(19 * DEFAULT_INITIAL_CAPACITY, (int) 'u'))),
+
     THIRTY_ENTRIES(Map.ofEntries(
         entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
         entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
@@ -287,6 +357,21 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
         entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
         entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
         entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'))),
+
+    SIXTY_ENTRIES(Map.ofEntries(
+        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
+        entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
+        entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
+        entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'),
+
+        entry(2179, 367), entry(3191, 435), entry(4193, 535), entry(5211, 635), entry(6229, 735),
+        entry(2283, 378), entry(3307, 444), entry(4311, 544), entry(5331, 644), entry(6349, 744),
+        entry(2419, 379), entry(3431, 456), entry(4433, 556), entry(5449, 656), entry(6463, 756),
+        entry(2547, 383), entry(3563, 467), entry(4569, 567), entry(5587, 667), entry(6601, 767),
+        entry(2661, 392), entry(3677, 478), entry(4683, 578), entry(5709, 678), entry(6733, 778),
+        entry(2811, 399), entry(3823, 479), entry(4827, 579), entry(5853, 679), entry(6863, 779))),
     ;
     private final Map<Integer, Integer> map;
     private final int expectedSize;

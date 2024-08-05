@@ -42,7 +42,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
     final TypeParserBuilderException exception = catchThrowableOfType(
         TypeParserBuilderException.class,
         () -> LongTypeParser.builder()
-            .allowCustomBaseNumbers((char[]) null)
+            .setCustomRadix((char[]) null)
             .build());
 
     assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
@@ -55,7 +55,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
     final TypeParserBuilderException exception = catchThrowableOfType(
         TypeParserBuilderException.class,
         () -> LongTypeParser.builder()
-            .allowCustomBaseNumbers((int[]) null)
+            .setCustomRadix((int[]) null)
             .build());
 
     assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
@@ -65,7 +65,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
   @Test
   void allowCustomBaseNumbers_singleCharacterArrayForBaseCharactersThrowsException() {
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> LongTypeParser.builder().allowCustomBaseNumbers(new char[]{'0'}))
+        .isThrownBy(() -> LongTypeParser.builder().setCustomRadix(new char[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
@@ -75,7 +75,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
   @Test
   void allowCustomBaseNumbers_singleCodePointArrayForBaseCharactersThrowsException() {
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> LongTypeParser.builder().allowCustomBaseNumbers(new int[]{'0'}))
+        .isThrownBy(() -> LongTypeParser.builder().setCustomRadix(new int[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
@@ -117,7 +117,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
+        .setCustomRadix('0','1','2','3','4','5','6','7','8','9','Α','Β','Γ','Δ','Ε','Ζ')
         .caseSensitive()
         .ignoreAllWhitespace()
         .build();
@@ -161,7 +161,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
-        .allowCustomBaseNumbers('0','1','2','3','4','5','6','7','8','9','Α','β','Γ','δ','Ε','ζ')
+        .setCustomRadix('0','1','2','3','4','5','6','7','8','9','Α','β','Γ','δ','Ε','ζ')
         .caseInsensitive()
         .ignoreAllWhitespace()
         .build();
@@ -191,7 +191,7 @@ class LongTypeParserImpl_parseArbitraryRadixTest {
     final var longTypeParser = LongTypeParser.builder()
         .minValueInclusive(-4L)
         .maxValueInclusive(4L)
-        .allowCustomBaseNumbers(0x01F600, 0x01F61E) // 😀😞
+        .setCustomRadix(0x01F600, 0x01F61E) // 😀😞
         .ignoreAllWhitespace()
         .build();
 

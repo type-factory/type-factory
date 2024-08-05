@@ -40,12 +40,12 @@ class LongTypeParserBuilderImplTest {
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
-  void allowCustomBaseNumbers_duplicateBaseCharactersThrowsException(
+  void setCustomBaseNumbers_duplicateBaseCharactersThrowsException(
       @ConvertWith(CodePointArrayConverter.class) final int[] customBaseCodePoints,
       final String expectedMessage) {
 
     final var builder = LongTypeParser.builder()
-        .allowCustomBaseNumbers(customBaseCodePoints);
+        .setCustomRadix(customBaseCodePoints);
 
     assertThatExceptionOfType(TypeParserBuilderException.class)
         .isThrownBy(builder::build)

@@ -160,25 +160,25 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
 
   @Override
   public ShortTypeParserBuilder allowCustomBaseNumbers(char... charactersForCustomNumericBase) {
-    wrapperBuilder.allowCustomBaseNumbers(charactersForCustomNumericBase);
+    wrapperBuilder.setCustomRadix(charactersForCustomNumericBase);
     return this;
   }
 
   @Override
   public ShortTypeParserBuilder allowCustomBaseNumbers(int... codePointsForCustomNumericBase) {
-    wrapperBuilder.allowCustomBaseNumbers(codePointsForCustomNumericBase);
+    wrapperBuilder.setCustomRadix(codePointsForCustomNumericBase);
     return this;
   }
 
   @Override
   public ShortTypeParserBuilder allowBase8Numbers() {
-    wrapperBuilder.allowBase8Numbers();
+    wrapperBuilder.setRadixOctal();
     return this;
   }
 
   @Override
   public ShortTypeParserBuilder allowBase10Numbers() {
-    wrapperBuilder.allowBase10Numbers();
+    wrapperBuilder.setRadixDecimal();
     return this;
   }
 

@@ -117,25 +117,25 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
 
   @Override
   public IntegerTypeParserBuilder allowCustomBaseNumbers(char... charactersForCustomNumericBase) {
-    wrapperBuilder.allowCustomBaseNumbers(charactersForCustomNumericBase);
+    wrapperBuilder.setCustomRadix(charactersForCustomNumericBase);
     return this;
   }
 
   @Override
   public IntegerTypeParserBuilder allowCustomBaseNumbers(int... codePointsForCustomNumericBase) {
-    wrapperBuilder.allowCustomBaseNumbers(codePointsForCustomNumericBase);
+    wrapperBuilder.setCustomRadix(codePointsForCustomNumericBase);
     return this;
   }
 
   @Override
   public IntegerTypeParserBuilder allowBase8Numbers() {
-    wrapperBuilder.allowBase8Numbers();
+    wrapperBuilder.setRadixOctal();
     return this;
   }
 
   @Override
   public IntegerTypeParserBuilder allowBase10Numbers() {
-    wrapperBuilder.allowBase10Numbers();
+    wrapperBuilder.setRadixDecimal();
     return this;
   }
 
