@@ -292,6 +292,13 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
       assertThat(mapBuilder.get(entry.getKey())).isEqualTo(entry.getValue());
     }
 
+    for (int i = 0; i < mapBuilder.size() * 4; ++i) {
+      if (!testSource.map.containsKey(i)) {
+        assertThat(mapBuilder.contains(i)).isFalse();
+        assertThat(mapBuilder.get(i)).isEqualTo(Integer.MIN_VALUE);
+      }
+    }
+
     final var map = mapBuilder.build();
     logger.fine("\n\nmap instanceof: " + map.getClass().getSimpleName() + "\n" + map.toString() + "\n" + map.toDataStructureString());
     assertThat(map.size()).isEqualTo(testSource.expectedSize);
@@ -301,6 +308,13 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     for (Entry<Integer, Integer> entry : testSource.map.entrySet()) {
       assertThat(map.contains(entry.getKey())).isTrue();
       assertThat(map.get(entry.getKey())).isEqualTo(entry.getValue());
+    }
+
+    for (int i = 0; i < map.size() * 4; ++i) {
+      if (!testSource.map.containsKey(i)) {
+        assertThat(map.contains(i)).isFalse();
+        assertThat(map.get(i)).isEqualTo(Integer.MIN_VALUE);
+      }
     }
   }
 
