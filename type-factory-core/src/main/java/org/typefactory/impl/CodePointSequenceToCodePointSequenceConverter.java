@@ -86,6 +86,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
     }
     throw new IllegalArgumentException("Invalid argument - 'converterResults' must be of type " + ConverterResultsImpl.class.getName());
   }
+
   private boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
     boolean result = false;
     TreeNode foundTreeNode = null;
@@ -141,20 +142,14 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
     private final PrimitiveListOfInt convertFromIndexesForNodesInPlay = new PrimitiveListOfInt();
 
+    @Override
     public int getConvertFromIndex() {
       return convertFromIndex;
     }
 
-    public void setConvertFromIndex(int convertFromIndex) {
-      this.convertFromIndex = convertFromIndex;
-    }
-
+    @Override
     public int[] getConvertToCodePointSequence() {
       return convertToCodePointSequence;
-    }
-
-    public void setConvertToCodePointSequence(int[] convertToCodePointSequence) {
-      this.convertToCodePointSequence = convertToCodePointSequence;
     }
 
     private void addTreeNodeInPlay(final int currentParseIndex, final TreeNode treeNode) {
@@ -187,14 +182,14 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
   /**
    * A tree-node for an n-ary tree.
    *
-   * <pre>
+   * <pre>{@code
    *   ┌─────────────────────────────────────────────┐
    *   │ TreeNode                                    │←─┐
    *   ├─────────────────────────────────────────────┤  │ map of int codePoint keys to TreeNode values
    *   │ nodesByCodePoint : Map‹codePoint, TreeNode› │──┘
    *   │ toSequence       : int[]                    │──────→ int[] codePoints
    *   └─────────────────────────────────────────────┘
-   * </pre>
+   * }</pre>
    */
   static class TreeNode {
 

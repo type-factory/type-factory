@@ -83,6 +83,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   void nAryTreeIsFormedCorrectly() {
     final var rootTreeNode = new RootTreeNode();
     rootTreeNode.add("abc".codePoints().toArray(), "".codePoints().toArray());
+    rootTreeNode.add("abcd".codePoints().toArray(), "www".codePoints().toArray());
     rootTreeNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
     rootTreeNode.add("abef".codePoints().toArray(), "tuv".codePoints().toArray());
     rootTreeNode.add("full stop".codePoints().toArray(), "period".codePoints().toArray());
@@ -137,16 +138,6 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     @Override
     public int [] getConvertToCodePointSequence() {
       return convertToCodePointSequence;
-    }
-
-    @Override
-    public void setConvertFromIndex(int convertFromIndex) {
-      this.convertFromIndex = convertFromIndex;
-    }
-
-    @Override
-    public void setConvertToCodePointSequence(int [] convertToCodePointSequence) {
-      this.convertToCodePointSequence = convertToCodePointSequence;
     }
   }
 }
