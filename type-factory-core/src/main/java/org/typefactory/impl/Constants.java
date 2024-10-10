@@ -84,6 +84,13 @@ final class Constants {
   static final int RIGHT_SINGLE_QUOTATION_MARK = '\u2019';
 
   /**
+   * <p>The Unicode code point for a thin space.</p>
+   *
+   * <p>Lenient alternative as a numeric grouping separator (thousands separator).</p>
+   */
+  static final int THIN_SPACE = '\u2009';
+
+  /**
    * <p>The Unicode code point for a narrow no-break space.</p>
    *
    * <p>Used by some locales as a numeric grouping separator (thousands separator).</p>

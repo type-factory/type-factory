@@ -1,3 +1,18 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.impl;
 
 import static org.typefactory.impl.Constants.APOSTROPHE_SINGLE_QUOTATION_MARK;
@@ -10,6 +25,7 @@ import static org.typefactory.impl.Constants.NARROW_NO_BREAK_SPACE;
 import static org.typefactory.impl.Constants.NO_BREAK_SPACE;
 import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
 import static org.typefactory.impl.Constants.SPACE;
+import static org.typefactory.impl.Constants.THIN_SPACE;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -19,7 +35,7 @@ import org.typefactory.NumberFormat.NumberFormatBuilder;
 import org.typefactory.TypeParserBuilderException;
 import org.typefactory.TypeParserBuilderException.MessageCodes;
 
-class NumberFormatBuilderImpl implements NumberFormatBuilder {
+final class NumberFormatBuilderImpl implements NumberFormatBuilder {
 
   private RoundingMode roundingMode;
   private int[] decimalSeparators;
@@ -75,14 +91,17 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
    * @param groupingSeparator the grouping separator used to lookup possible alternatives grouping separators.
    * @return an array of primary and alternative grouping separators for the provided {@code groupingSeparator}
    */
-  private static int[] determineGroupingSeparatorsAndAlternatives(final int groupingSeparator) {
+  static int[] determineGroupingSeparatorsAndAlternatives(final int groupingSeparator) {
     return switch (groupingSeparator) {
       case COMMA -> new int[]{COMMA};
       case FULL_STOP -> new int[]{FULL_STOP};
-      case NO_BREAK_SPACE -> new int[]{NO_BREAK_SPACE, NARROW_NO_BREAK_SPACE, SPACE};
+      case SPACE -> new int[]{SPACE, NO_BREAK_SPACE, NARROW_NO_BREAK_SPACE, THIN_SPACE };
+      case NO_BREAK_SPACE -> new int[]{NO_BREAK_SPACE, NARROW_NO_BREAK_SPACE, SPACE, THIN_SPACE};
       case ARABIC_THOUSANDS_SEPARATOR -> new int[]{ARABIC_THOUSANDS_SEPARATOR, APOSTROPHE_SINGLE_QUOTATION_MARK, ARABIC_COMMA};
+      case APOSTROPHE_SINGLE_QUOTATION_MARK -> new int[]{APOSTROPHE_SINGLE_QUOTATION_MARK, RIGHT_SINGLE_QUOTATION_MARK};
       case RIGHT_SINGLE_QUOTATION_MARK -> new int[]{RIGHT_SINGLE_QUOTATION_MARK, APOSTROPHE_SINGLE_QUOTATION_MARK};
-      case NARROW_NO_BREAK_SPACE -> new int[]{NARROW_NO_BREAK_SPACE, NO_BREAK_SPACE, SPACE};
+      case THIN_SPACE -> new int[]{THIN_SPACE, NARROW_NO_BREAK_SPACE, NO_BREAK_SPACE, SPACE};
+      case NARROW_NO_BREAK_SPACE -> new int[]{NARROW_NO_BREAK_SPACE, NO_BREAK_SPACE, SPACE, THIN_SPACE};
       default -> new int[]{groupingSeparator};
     };
   }
@@ -95,7 +114,7 @@ class NumberFormatBuilderImpl implements NumberFormatBuilder {
    * @param decimalSeparator the grouping separator used to lookup possible alternatives grouping separators.
    * @return an array of primary and alternative grouping separators for the provided {@code decimalSeparator}
    */
-  private static int[] determineDecimalSeparatorsAndAlternatives(final int decimalSeparator) {
+  static int[] determineDecimalSeparatorsAndAlternatives(final int decimalSeparator) {
     return switch (decimalSeparator) {
       case COMMA -> new int[]{COMMA, ARABIC_DECIMAL_SEPARATOR};
       case FULL_STOP -> new int[]{FULL_STOP};

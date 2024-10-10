@@ -1,3 +1,18 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package org.typefactory.impl;
 
 import java.math.RoundingMode;
@@ -44,13 +59,17 @@ final class NumberFormatImpl implements NumberFormat {
     this.minimumFractionDigits = minimumFractionDigits;
     this.maximumFractionDigits = maximumFractionDigits;
     this.negativePrefix = negativePrefix == null || negativePrefix.isEmpty() ? "-" : negativePrefix;
-    this.negativePrefixCodePoints = this.negativePrefix.replaceAll("[\u061c\u200e\u200f]", "").codePoints().toArray();
+    this.negativePrefixCodePoints = getCodePointsWithoutDirectionalMarks(this.negativePrefix);
     this.negativeSuffix = negativeSuffix;
     this.positivePrefix = positivePrefix == null || positivePrefix.isEmpty() ? "+" : positivePrefix;
-    this.positivePrefixCodePoints = this.positivePrefix.replaceAll("[\u061c\u200e\u200f]", "").codePoints().toArray();
+    this.positivePrefixCodePoints = getCodePointsWithoutDirectionalMarks(this.positivePrefix);
     this.positiveSuffix = positiveSuffix;
     this.roundingMode = roundingMode;
     this.zeroDigit = zeroDigit;
+  }
+
+  private int [] getCodePointsWithoutDirectionalMarks(final String value) {
+    return value.replaceAll("[\u061c\u200e\u200f]", "").codePoints().toArray();
   }
 
   @Override

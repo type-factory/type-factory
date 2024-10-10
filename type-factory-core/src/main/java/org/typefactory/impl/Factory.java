@@ -20,11 +20,15 @@ import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
 import java.util.Locale;
+import org.typefactory.IntegerTypeParser;
 import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.InvalidValueException.ParserMessageCode;
+import org.typefactory.LongTypeParser;
 import org.typefactory.LongTypeParser.LongTypeParserBuilder;
 import org.typefactory.MessageCode;
+import org.typefactory.NumberFormat;
 import org.typefactory.NumberFormat.NumberFormatBuilder;
+import org.typefactory.ShortTypeParser;
 import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
@@ -35,7 +39,11 @@ import org.typefactory.TypeParser.TypeParserBuilder;
  * <p>This class is for internal use – you probably shouldn't use this class. Instead use one of these:</p>
  * <ul>
  *   <li>{@link TypeParser#builder()}</li>
+ *   <li>{@link LongTypeParser#builder()}</li>
+ *   <li>{@link IntegerTypeParser#builder()}</li>
+ *   <li>{@link ShortTypeParser#builder()}</li>
  *   <li>{@link Subset#builder()}</li>
+ *   <li>{@link NumberFormat#builder()}</li>
  * </ul>
  *
  * <p>This factory provides a means to directly instantiate concrete implementations of specific
