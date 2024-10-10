@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
@@ -43,15 +44,16 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "das Εichhörnchen", // German 'Squirrel' with Greek 'Ε' epsilon
-      "der Ηirsch", // German 'Deer' with Greek 'Η' ita
-      "die Weiße Τaube", // German 'Dove' with Greek 'Τ' taf
-  })
-  void should_throw_exception_with_non_german_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE            | ERROR_DESCRIPTION                        | COMMENT
+      das Εichhörnchen | 'Ε' U+0395 GREEK CAPITAL LETTER EPSILON. | German 'Squirrel' with Greek 'Ε' epsilon
+      der Ηirsch       | 'Η' U+0397 GREEK CAPITAL LETTER ETA.     | German 'Deer' with Greek 'Η' ita
+      die Weiße Τaube  | 'Τ' U+03A4 GREEK CAPITAL LETTER TAU.     | German 'Dove' with Greek 'Τ' taf
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_german_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of German letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of German letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
 
 }

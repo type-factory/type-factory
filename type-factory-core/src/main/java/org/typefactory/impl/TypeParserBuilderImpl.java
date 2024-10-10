@@ -26,6 +26,7 @@ import org.typefactory.MessageCode;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser.TypeParserBuilder;
+import org.typefactory.impl.TypeParserImpl.WhiteSpace;
 
 final class TypeParserBuilderImpl implements TypeParserBuilder {
 
@@ -37,12 +38,11 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
-
   private Pattern regex = null;
-
   private Predicate<String> validationFunction = null;
   private final SubsetBuilder rangedSubsetBuilder = Subset.builder();
   private final ConverterBuilder converterBuilder = Converter.builder();
+
 
   TypeParserBuilderImpl() {
   }
@@ -196,7 +196,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
    * I think it would generally be better to be explicit about what you will accept by calling the existing public methods.</p>
    *
    * @param charSequence the character sequence containing the code-points you wish to accept.
-   * @return this {@code TypeParserBuilder}.
+   * @return this builder.
    */
   private TypeParserBuilder acceptCodePointsInCharSequence(CharSequence charSequence) {
     if (charSequence == null) {
@@ -502,9 +502,9 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
-        regex,
-        validationFunction,
         rangedSubsetBuilder.build(),
-        converterBuilder.build());
+        converterBuilder.build(),
+        regex,
+        validationFunction);
   }
 }
