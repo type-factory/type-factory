@@ -272,14 +272,14 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       final StringBuilder s = new StringBuilder();
       final Deque<TreeNode> treeNodeStack = new ArrayDeque<>();
       final Deque<Integer> indexStack = new ArrayDeque<>();
-      final Deque<Boolean> indentLevelsHaveMoreNodes = new ArrayDeque<>();
+      final Deque<Boolean> indentLevels = new ArrayDeque<>();
       TreeNode currentTreeNode = this;
       int[] codePoints = currentTreeNode.codePoints();
       int i = 0;
       s.append("•").append(SYSTEM_LINE_SEPARATOR);
       while (i < codePoints.length) {
         int codePoint = codePoints[i];
-        indentLevelsHaveMoreNodes.descendingIterator().forEachRemaining(hasMoreLevels -> {
+        indentLevels.descendingIterator().forEachRemaining(hasMoreLevels -> {
           if (hasMoreLevels) {
             s.append('│');
           } else {
@@ -303,7 +303,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
             }
           }
           if (!treeNode.isLeafNode()) {
-            indentLevelsHaveMoreNodes.push(i < (codePoints.length - 1));
+            indentLevels.push(i < (codePoints.length - 1));
             s.append(SYSTEM_LINE_SEPARATOR);
             treeNodeStack.push(currentTreeNode);
             indexStack.push(i);
@@ -313,8 +313,8 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
           } else {
             if (currentTreeNode == this) { // is root node
               ++i;
-              if (!indentLevelsHaveMoreNodes.isEmpty()) {
-                indentLevelsHaveMoreNodes.pop();
+              if (!indentLevels.isEmpty()) {
+                indentLevels.pop();
               }
             } else {
               do {
@@ -322,8 +322,8 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
                 codePoints = currentTreeNode.codePoints();
                 i = indexStack.pop();
                 ++i;
-                if (!indentLevelsHaveMoreNodes.isEmpty()) {
-                  indentLevelsHaveMoreNodes.pop();
+                if (!indentLevels.isEmpty()) {
+                  indentLevels.pop();
                 }
               } while (i >= codePoints.length && !indexStack.isEmpty());
             }
