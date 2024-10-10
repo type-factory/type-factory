@@ -7,25 +7,16 @@ class StringBuilderUtils {
   }
 
   static void appendHexWithZeroPadding(final StringBuilder s, final int value) {
-    if (value < 0) {
-      s.append("0x");
-    } else if (value < 0x0000_0010) {
-      s.append("0x0000000");
-    } else if (value < 0x0000_0100) {
-      s.append("0x000000");
-    } else if (value < 0x0000_1000) {
-      s.append("0x00000");
-    } else if (value < 0x0001_0000) {
-      s.append("0x0000");
-    } else if (value < 0x0010_0000) {
-      s.append("0x000");
-    } else if (value < 0x0100_0000) {
-      s.append("0x00");
-    } else if (value < 0x1000_0000) {
-      s.append("0x0");
-    } else {
-      s.append("0x");
+    final var hexValue = Integer.toHexString(value);
+    switch (hexValue.length()) {
+      case 1 -> s.append("0x0000000").append(hexValue);
+      case 2 -> s.append("0x000000").append(hexValue);
+      case 3 -> s.append("0x00000").append(hexValue);
+      case 4 -> s.append("0x0000").append(hexValue);
+      case 5 -> s.append("0x000").append(hexValue);
+      case 6 -> s.append("0x00").append(hexValue);
+      case 7 -> s.append("0x0").append(hexValue);
+      default -> s.append("0x").append(hexValue);
     }
-    s.append(Integer.toHexString(value));
   }
 }
