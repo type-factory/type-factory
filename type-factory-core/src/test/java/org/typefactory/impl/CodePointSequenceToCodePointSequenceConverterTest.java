@@ -6,6 +6,7 @@ import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
+import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.TreeNode;
 
 
 class CodePointSequenceToCodePointSequenceConverterTest {
@@ -26,10 +27,36 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     logger.fine(() -> "N-Ary tree" + SYSTEM_LINE_SEPARATOR + rootNode);
 
     assertThat(rootNode.isEmpty()).isFalse();
+    assertThat(rootNode.isLeafNode()).isFalse();
     assertThat(rootNode.codePoints()).contains('a', 'f', 'l');
     assertThat(rootNode.size()).isEqualTo(6); // 6 separate sequences
+    assertThat(rootNode.getMaxToSequenceLength()).isEqualTo(6);
 
+    final TreeNode node = rootNode.get('a');
+    assertThat(node.isLeafNode()).isFalse();
+    assertThat(node.codePoints()).contains('b');
+
+    assertThat(rootNode.toString()).isEqualTo("""
+        •
+        ├a ⟶ "b"
+        │└b
+        │ ├c ⟶ ""
+        │ │└d ⟶ "xyz"
+        │ └e
+        │  └f ⟶ "tuv"
+        ├f
+        │└u
+        │ └l
+        │  └l
+        │   └\s
+        │    └s
+        │     └t
+        │      └o
+        │       └p ⟶ "period"
+        └l ⟶ "n"
+        """);
     //TODO add more assertions
   }
+
 
 }

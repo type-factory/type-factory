@@ -30,14 +30,29 @@ final class PrimitiveListOfInt {
   }
 
   private void ensureCapacity() {
-    if ((integers.length - size) < INITIAL_CAPACITY) {
-      integers = Arrays.copyOf(integers, integers.length + INITIAL_CAPACITY);
+    ensureCapacity(INITIAL_CAPACITY);
+  }
+
+  private void ensureCapacity(final int extraCapacity) {
+    if ((integers.length - size) < extraCapacity) {
+      integers = Arrays.copyOf(integers, integers.length + extraCapacity);
     }
   }
 
   boolean add(final int value) {
     ensureCapacity();
     integers[size++] = value;
+    return true;
+  }
+
+  boolean addAll(final int... values) {
+    if (values == null || values.length == 0) {
+      return false;
+    }
+    ensureCapacity(INITIAL_CAPACITY + values.length);
+    for (int v : values) {
+      integers[size++] = v;
+    }
     return true;
   }
 

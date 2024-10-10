@@ -196,7 +196,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
    *   └─────────────────────────────────────────────┘
    * </pre>
    */
-  private static class TreeNode {
+  static class TreeNode {
 
     public TreeNode() {
       this(null);
@@ -272,24 +272,27 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       final StringBuilder s = new StringBuilder();
       final Deque<TreeNode> treeNodeStack = new ArrayDeque<>();
       final Deque<Integer> indexStack = new ArrayDeque<>();
+      final Deque<Boolean> indentLevelsHaveMoreNodes = new ArrayDeque<>();
       TreeNode currentTreeNode = this;
       int[] codePoints = currentTreeNode.codePoints();
       int i = 0;
-      int j = 0;
+      s.append("•").append(SYSTEM_LINE_SEPARATOR);
       while (i < codePoints.length) {
         int codePoint = codePoints[i];
-        for (int k = 1; k < j; ++k) {
-          s.append(' ');
-        }
-        if (currentTreeNode != this) {
+        indentLevelsHaveMoreNodes.descendingIterator().forEachRemaining(hasMoreLevels -> {
+          if (hasMoreLevels) {
+            s.append('│');
+          } else {
+            s.append(' ');
+          }
+        });
           if (i < codePoints.length - 1) {
             s.append('├');
-          } else if (j > 0) {
+          } else {
             s.append('└');
           }
-        }
         s.appendCodePoint(codePoint);
-        TreeNode treeNode = currentTreeNode.get(codePoint);
+        final TreeNode treeNode = currentTreeNode.get(codePoint);
         if (treeNode != null) {
           if (treeNode.hasToSequence()) {
             s.append(" ⟶ \"");
@@ -300,7 +303,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
             }
           }
           if (!treeNode.isLeafNode()) {
-            ++j;
+            indentLevelsHaveMoreNodes.push(i < (codePoints.length - 1));
             s.append(SYSTEM_LINE_SEPARATOR);
             treeNodeStack.push(currentTreeNode);
             indexStack.push(i);
@@ -310,14 +313,18 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
           } else {
             if (currentTreeNode == this) { // is root node
               ++i;
-              --j;
+              if (!indentLevelsHaveMoreNodes.isEmpty()) {
+                indentLevelsHaveMoreNodes.pop();
+              }
             } else {
               do {
                 currentTreeNode = treeNodeStack.pop();
                 codePoints = currentTreeNode.codePoints();
                 i = indexStack.pop();
                 ++i;
-                --j;
+                if (!indentLevelsHaveMoreNodes.isEmpty()) {
+                  indentLevelsHaveMoreNodes.pop();
+                }
               } while (i >= codePoints.length && !indexStack.isEmpty());
             }
           }
