@@ -460,7 +460,7 @@ final class LongTypeParserImpl implements LongTypeParser {
         case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : -1;
         case UNNECESSARY -> {
           if (fractionalPart != FractionalPart.ZERO) {
-            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getPrimaryDecimalSeparator());
+            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getDecimalSeparators());
           }
           yield 0;
         }
@@ -483,7 +483,7 @@ final class LongTypeParserImpl implements LongTypeParser {
       case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : 1;
       case UNNECESSARY -> {
         if (fractionalPart != FractionalPart.ZERO) {
-          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getPrimaryDecimalSeparator());
+          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getDecimalSeparators());
         }
         yield 0;
       }

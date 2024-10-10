@@ -416,6 +416,9 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER = Factory.parserMessageCode(
         "invalid_value_expecting_whole_number",
         "Invalid value - expected a whole number with either no decimal places, or decimal places of zero, after the decimal point character ''{0}''.");
+    ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART = Factory.parserMessageCode(
+        "invalid_value_expecting_whole_number",
+        "Invalid value - expected a whole number with no decimal places and no decimal point character expected.");
 
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:

@@ -15,6 +15,10 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.impl.Constants.ARABIC_LETTER_MARK;
+import static org.typefactory.impl.Constants.LEFT_TO_RIGHT_INDICATOR;
+import static org.typefactory.impl.Constants.RIGHT_TO_LEFT_INDICATOR;
+
 import java.math.RoundingMode;
 import java.util.Arrays;
 import org.typefactory.NumberFormat;
@@ -69,12 +73,9 @@ final class NumberFormatImpl implements NumberFormat {
   }
 
   private int [] getCodePointsWithoutDirectionalMarks(final String value) {
-    return value.replaceAll("[\u061c\u200e\u200f]", "").codePoints().toArray();
-  }
-
-  @Override
-  public int getPrimaryDecimalSeparator() {
-    return decimalSeparators[0];
+    return value.codePoints()
+        .filter(c -> c != ARABIC_LETTER_MARK && c != LEFT_TO_RIGHT_INDICATOR && c != RIGHT_TO_LEFT_INDICATOR)
+        .toArray();
   }
 
   @Override

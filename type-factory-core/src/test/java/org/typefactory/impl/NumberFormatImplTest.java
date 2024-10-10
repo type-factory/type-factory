@@ -37,62 +37,109 @@ public class NumberFormatImplTest {
 
   @Test
   void numberFormatBuilder_ShouldBuildNumberFormatWithDefaultValues() {
-    // When
-    NumberFormat numberFormat = NumberFormat.builder().build();
+    final NumberFormat numberFormat = NumberFormat.builder().build();
 
-    // Then
     assertThat(numberFormat).isNotNull();
-    assertThat(numberFormat.getPrimaryDecimalSeparator()).isEqualTo('.');
+    assertThat(numberFormat.getDecimalSeparators()).containsExactly('.');
+    assertThat(numberFormat.getGroupingSeparators()).containsExactly(',');
     assertThat(numberFormat.getGroupingSize()).isEqualTo(3);
     assertThat(numberFormat.getRoundingMode()).isEqualTo(RoundingMode.HALF_EVEN);
   }
 
   @Test
-  void numberFormatBuilder_ShouldBuildNumberFormatWithCustomValues() {
-    // When
-    NumberFormat numberFormat = NumberFormat.builder()
-        .decimalSeparator(',')
-        .groupingSeparator('.')
-        .groupingSize(4)
-        .minimumIntegerDigits(1)
-        .maximumIntegerDigits(10)
-        .minimumFractionDigits(2)
-        .maximumFractionDigits(5)
-        .negativePrefix("(")
-        .negativeSuffix(")")
-        .positivePrefix("+")
-        .positiveSuffix("!")
-        .roundingMode(RoundingMode.DOWN)
-        .zeroDigit('0')
-        .build();
+  void constructor_withValidParameters_ShouldInitializeFieldsCorrectly() {
+    final int[] decimalSeparators = {'.'};
+    final int[] groupingSeparators = {','};
+    final int groupingSize = 3;
+    final int minimumIntegerDigits = 1;
+    final int maximumIntegerDigits = 10;
+    final int minimumFractionDigits = 0;
+    final int maximumFractionDigits = 2;
+    final String negativePrefix = "-";
+    final String negativeSuffix = "";
+    final String positivePrefix = "+";
+    final String positiveSuffix = "";
+    final RoundingMode roundingMode = RoundingMode.HALF_UP;
+    final int zeroDigit = '0';
 
-    // Then
-    assertThat(numberFormat).isNotNull();
-    assertThat(numberFormat.getPrimaryDecimalSeparator()).isEqualTo(',');
-    assertThat(numberFormat.getDecimalSeparators()).containsExactly(',');
-    assertThat(numberFormat.isDecimalSeparator(',')).isTrue();
-    assertThat(numberFormat.isDecimalSeparator('.')).isFalse();
-    assertThat(numberFormat.getGroupingSeparators()).containsExactly('.');
-    assertThat(numberFormat.isGroupingSeparator('.')).isTrue();
-    assertThat(numberFormat.isGroupingSeparator(',')).isFalse();
-    assertThat(numberFormat.getGroupingSize()).isEqualTo(4);
-    assertThat(numberFormat.getMinimumIntegerDigits()).isEqualTo(1);
-    assertThat(numberFormat.getMaximumIntegerDigits()).isEqualTo(10);
-    assertThat(numberFormat.getMinimumFractionDigits()).isEqualTo(2);
-    assertThat(numberFormat.getMaximumFractionDigits()).isEqualTo(5);
-    assertThat(numberFormat.getNegativePrefix()).isEqualTo("(");
-    assertThat(numberFormat.getNegativePrefixCodePointAt(-1)).isEqualTo(-1);
-    assertThat(numberFormat.getNegativePrefixCodePointAt(0)).isEqualTo('(');
-    assertThat(numberFormat.getNegativePrefixCodePointAt(1)).isEqualTo(-1);
-    assertThat(numberFormat.getNegativeSuffix()).isEqualTo(")");
-    assertThat(numberFormat.getPositivePrefix()).isEqualTo("+");
-    assertThat(numberFormat.getPositivePrefixCodePointAt(-1)).isEqualTo(-1);
-    assertThat(numberFormat.getPositivePrefixCodePointAt(0)).isEqualTo('+');
-    assertThat(numberFormat.getPositivePrefixCodePointAt(1)).isEqualTo(-1);
-    assertThat(numberFormat.getPositiveSuffix()).isEqualTo("!");
-    assertThat(numberFormat.getRoundingMode()).isEqualTo(RoundingMode.DOWN);
-    assertThat(numberFormat.getZeroDigit()).isEqualTo('0');
+    final NumberFormatImpl numberFormat = new NumberFormatImpl(
+        decimalSeparators,
+        groupingSeparators,
+        groupingSize,
+        minimumIntegerDigits,
+        maximumIntegerDigits,
+        minimumFractionDigits,
+        maximumFractionDigits,
+        negativePrefix,
+        negativeSuffix,
+        positivePrefix,
+        positiveSuffix,
+        roundingMode,
+        zeroDigit
+    );
+
+    assertThat(numberFormat.getDecimalSeparators()).containsExactly(decimalSeparators);
+    assertThat(numberFormat.getGroupingSeparators()).containsExactly(groupingSeparators);
+    assertThat(numberFormat.getGroupingSize()).isEqualTo(groupingSize);
+    assertThat(numberFormat.getMinimumIntegerDigits()).isEqualTo(minimumIntegerDigits);
+    assertThat(numberFormat.getMaximumIntegerDigits()).isEqualTo(maximumIntegerDigits);
+    assertThat(numberFormat.getMinimumFractionDigits()).isEqualTo(minimumFractionDigits);
+    assertThat(numberFormat.getMaximumFractionDigits()).isEqualTo(maximumFractionDigits);
+    assertThat(numberFormat.getNegativePrefix()).isEqualTo(negativePrefix);
+    assertThat(numberFormat.getNegativeSuffix()).isEqualTo(negativeSuffix);
+    assertThat(numberFormat.getPositivePrefix()).isEqualTo(positivePrefix);
+    assertThat(numberFormat.getPositiveSuffix()).isEqualTo(positiveSuffix);
+    assertThat(numberFormat.getRoundingMode()).isEqualTo(roundingMode);
+    assertThat(numberFormat.getZeroDigit()).isEqualTo(zeroDigit);
   }
+
+  @Test
+  void constructor_withValidParameters_ShouldInitializeFieldsCorrectlyWhenNullValuesSupplied() {
+    final int[] decimalSeparators = null;
+    final int[] groupingSeparators = null;
+    final int groupingSize = 3;
+    final int minimumIntegerDigits = 1;
+    final int maximumIntegerDigits = 10;
+    final int minimumFractionDigits = 0;
+    final int maximumFractionDigits = 2;
+    final String negativePrefix = null;
+    final String negativeSuffix = null;
+    final String positivePrefix = null;
+    final String positiveSuffix = null;
+    final RoundingMode roundingMode = null;
+    final int zeroDigit = '0';
+
+    final NumberFormatImpl numberFormat = new NumberFormatImpl(
+        decimalSeparators,
+        groupingSeparators,
+        groupingSize,
+        minimumIntegerDigits,
+        maximumIntegerDigits,
+        minimumFractionDigits,
+        maximumFractionDigits,
+        negativePrefix,
+        negativeSuffix,
+        positivePrefix,
+        positiveSuffix,
+        roundingMode,
+        zeroDigit
+    );
+
+    assertThat(numberFormat.getDecimalSeparators()).isEmpty();
+    assertThat(numberFormat.getGroupingSeparators()).isEmpty();
+    assertThat(numberFormat.getGroupingSize()).isEqualTo(groupingSize);
+    assertThat(numberFormat.getMinimumIntegerDigits()).isEqualTo(minimumIntegerDigits);
+    assertThat(numberFormat.getMaximumIntegerDigits()).isEqualTo(maximumIntegerDigits);
+    assertThat(numberFormat.getMinimumFractionDigits()).isEqualTo(minimumFractionDigits);
+    assertThat(numberFormat.getMaximumFractionDigits()).isEqualTo(maximumFractionDigits);
+    assertThat(numberFormat.getNegativePrefix()).isEqualTo("-");
+    assertThat(numberFormat.getNegativeSuffix()).isEqualTo(negativeSuffix);
+    assertThat(numberFormat.getPositivePrefix()).isEqualTo("+");
+    assertThat(numberFormat.getPositiveSuffix()).isEqualTo(positiveSuffix);
+    assertThat(numberFormat.getRoundingMode()).isEqualTo(roundingMode);
+    assertThat(numberFormat.getZeroDigit()).isEqualTo(zeroDigit);
+  }
+
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -111,7 +158,7 @@ public class NumberFormatImplTest {
     final NumberFormat numberFormat = NumberFormat.builder(locale).build();
 
     assertThat(numberFormat).isNotNull();
-    assertThat(numberFormat.getPrimaryDecimalSeparator()).isEqualTo(expectedDecimalSeparator);
+    assertThat(numberFormat.getDecimalSeparators()).contains(expectedDecimalSeparator);
     assertThat(numberFormat.getGroupingSeparators()).contains(expectedGroupingSeparator);
     assertThat(numberFormat.getGroupingSize()).isEqualTo(expectedGroupingSize);
     assertThat(numberFormat.getRoundingMode()).isEqualTo(expectedRoundingMode);

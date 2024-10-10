@@ -23,19 +23,19 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.IntegerTypeParser;
 import org.typefactory.InvalidValueException;
-import org.typefactory.LongTypeParser;
 
-class LongTypeParserImpl_ofNumericTest {
+class IntegerTypeParserImpl_ofTest {
 
   @Test
   void of_nullShouldReturnNull() {
-    final var longTypeParser = LongTypeParser.builder().build();
+    final var integerTypeParser = IntegerTypeParser.builder().build();
 
-    assertThatObject(longTypeParser.of((Short) null)).isNull();
-    assertThatObject(longTypeParser.of((Integer) null)).isNull();
-    assertThatObject(longTypeParser.of((Long) null)).isNull();
-    assertThatObject(longTypeParser.of((BigInteger) null)).isNull();
+    assertThatObject(integerTypeParser.of((Short) null)).isNull();
+    assertThatObject(integerTypeParser.of((Integer) null)).isNull();
+    assertThatObject(integerTypeParser.of((Long) null)).isNull();
+    assertThatObject(integerTypeParser.of((BigInteger) null)).isNull();
   }
 
   @ParameterizedTest
@@ -47,37 +47,37 @@ class LongTypeParserImpl_ofNumericTest {
       Integer    |          -2147483648 |          -2147483648
       Integer    |           2147483647 |           2147483647
       Integer    |                    0 |                    0
-      Long       | -9223372036854775808 | -9223372036854775808
-      Long       |  9223372036854775807 |  9223372036854775807
+      Long       |          -2147483648 |          -2147483648
+      Long       |           2147483647 |           2147483647
       Long       |                    0 |                    0
-      BigInteger | -9223372036854775808 | -9223372036854775808
-      BigInteger |  9223372036854775807 |  9223372036854775807
+      BigInteger |          -2147483648 |          -2147483648
+      BigInteger |           2147483647 |           2147483647
       BigInteger |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void of_valueShouldSucceedWithInclusiveMinMax(
-      final String type, final long value, final long expected) {
+      final String type, final int value, final int expected) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(Long.MIN_VALUE)
-        .maxValueInclusive(Long.MAX_VALUE)
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .minValueInclusive(Integer.MIN_VALUE)
+        .maxValueInclusive(Integer.MAX_VALUE)
         .build();
 
     switch (type) {
       case "Short":
-        assertThat(longTypeParser.of((short) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of((short) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(longTypeParser.of((int) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Integer.valueOf((int) value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "Long":
-        assertThat(longTypeParser.of(value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of((long) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "BigInteger":
       default:
-        assertThat(longTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
         break;
     }
   }
@@ -91,37 +91,37 @@ class LongTypeParserImpl_ofNumericTest {
       Integer    |          -2147483647 |          -2147483647
       Integer    |           2147483646 |           2147483646
       Integer    |                    0 |                    0
-      Long       | -9223372036854775807 | -9223372036854775807
-      Long       |  9223372036854775806 |  9223372036854775806
+      Long       |          -2147483647 |          -2147483647
+      Long       |           2147483646 |           2147483646
       Long       |                    0 |                    0
-      BigInteger | -9223372036854775807 | -9223372036854775807
-      BigInteger |  9223372036854775806 |  9223372036854775806
+      BigInteger |          -2147483647 |          -2147483647
+      BigInteger |           2147483646 |           2147483646
       BigInteger |                    0 |                    0
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void of_valueShouldSucceedWithExclusiveMinMax(
-      final String type, final long value, final long expected) {
+      final String type, final int value, final int expected) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueExclusive(Long.MIN_VALUE)
-        .maxValueExclusive(Long.MAX_VALUE)
+    final var integerTypeParser = IntegerTypeParser.builder()
+        .minValueExclusive(Integer.MIN_VALUE)
+        .maxValueExclusive(Integer.MAX_VALUE)
         .build();
 
     switch (type) {
       case "Short":
-        assertThat(longTypeParser.of((short) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of((short) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
         // fall-thru
       case "Integer":
-        assertThat(longTypeParser.of((int) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Integer.valueOf((int) value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Integer.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "Long":
-        assertThat(longTypeParser.of(value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of((long) value)).isEqualTo(expected);
+        assertThat(integerTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
         // fall-thru
       case "BigInteger":
       default:
-        assertThat(longTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
+        assertThat(integerTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
         break;
     }
   }
@@ -129,10 +129,6 @@ class LongTypeParserImpl_ofNumericTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
              INCLUSIVE_MIN |       INCLUSIVE_MAX | VALUE_TYPE |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | BigInteger | -9223372036854775809 | Invalid value - must be greater than or equal to -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 | BigInteger |  9223372036854775808 | Invalid value - must be less than or equal to 9,223,372,036,854,775,807.
-      -9223372036854775807 | 9223372036854775807 | Long       | -9223372036854775808 | Invalid value - must be greater than or equal to -9,223,372,036,854,775,807.
-      -9223372036854775808 | 9223372036854775806 | Long       |  9223372036854775807 | Invalid value - must be less than or equal to 9,223,372,036,854,775,806.
                -2147483648 |          2147483647 | Long       |          -2147483649 | Invalid value - must be greater than or equal to -2,147,483,648.
                -2147483648 |          2147483647 | Long       |           2147483648 | Invalid value - must be less than or equal to 2,147,483,647.
                -2147483647 |          2147483647 | Integer    |          -2147483648 | Invalid value - must be greater than or equal to -2,147,483,647.
@@ -157,7 +153,7 @@ class LongTypeParserImpl_ofNumericTest {
       final String valueType, final BigInteger value,
       final String expectedMessage) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueInclusive(min)
         .maxValueInclusive(max)
         .build();
@@ -168,15 +164,15 @@ class LongTypeParserImpl_ofNumericTest {
         final var shortObject = Integer.valueOf(shortPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortObject))
+            .isThrownBy(() -> integerTypeParser.of(shortObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
@@ -184,15 +180,15 @@ class LongTypeParserImpl_ofNumericTest {
         final var integerObject = Integer.valueOf(integerPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerObject))
+            .isThrownBy(() -> integerTypeParser.of(integerObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
@@ -200,25 +196,21 @@ class LongTypeParserImpl_ofNumericTest {
         final var longObject = Long.valueOf(longPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longObject))
+            .isThrownBy(() -> integerTypeParser.of(longObject))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "BigInteger":
       default:
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
+            .isThrownBy(() -> integerTypeParser.of(value))
             .withMessageStartingWith(expectedMessage);
         break;
     }
@@ -227,10 +219,6 @@ class LongTypeParserImpl_ofNumericTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
              EXCLUSIVE_MIN |       EXCLUSIVE_MAX | VALUE_TYPE |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | BigInteger | -9223372036854775808 | Invalid value - must be greater than -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 | BigInteger |  9223372036854775807 | Invalid value - must be less than 9,223,372,036,854,775,807.
-      -9223372036854775807 | 9223372036854775807 | Long       | -9223372036854775807 | Invalid value - must be greater than -9,223,372,036,854,775,807.
-      -9223372036854775808 | 9223372036854775806 | Long       |  9223372036854775806 | Invalid value - must be less than 9,223,372,036,854,775,806.
                -2147483648 |          2147483647 | Long       |          -2147483648 | Invalid value - must be greater than -2,147,483,648.
                -2147483648 |          2147483647 | Long       |           2147483647 | Invalid value - must be less than 2,147,483,647.
                -2147483647 |          2147483647 | Integer    |          -2147483647 | Invalid value - must be greater than -2,147,483,647.
@@ -255,7 +243,7 @@ class LongTypeParserImpl_ofNumericTest {
       final String valueType, final BigInteger value,
       final String expectedMessage) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final var integerTypeParser = IntegerTypeParser.builder()
         .minValueExclusive(min)
         .maxValueExclusive(max)
         .build();
@@ -266,11 +254,11 @@ class LongTypeParserImpl_ofNumericTest {
         final var shortObject = Integer.valueOf(shortPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(shortPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortObject))
+            .isThrownBy(() -> integerTypeParser.of(shortObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Integer":
@@ -278,11 +266,11 @@ class LongTypeParserImpl_ofNumericTest {
         final var integerObject = Integer.valueOf(integerPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(integerPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerObject))
+            .isThrownBy(() -> integerTypeParser.of(integerObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
@@ -290,17 +278,17 @@ class LongTypeParserImpl_ofNumericTest {
         final var longObject = Long.valueOf(longPrimitive);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
+            .isThrownBy(() -> integerTypeParser.of(longPrimitive))
             .withMessageStartingWith(expectedMessage);
 
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longObject))
+            .isThrownBy(() -> integerTypeParser.of(longObject))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "BigInteger":
       default:
         assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
+            .isThrownBy(() -> integerTypeParser.of(value))
             .withMessageStartingWith(expectedMessage);
         break;
     }

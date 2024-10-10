@@ -36,8 +36,6 @@ public interface NumberFormat {
     return Factory.numberFormatBuilder(locale);
   }
 
-  int getPrimaryDecimalSeparator();
-
   int[] getDecimalSeparators();
 
   boolean isDecimalSeparator(char c);

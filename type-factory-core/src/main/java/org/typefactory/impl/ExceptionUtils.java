@@ -275,18 +275,39 @@ class ExceptionUtils {
   static InvalidValueException forExpectingWholeNumber(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
-      final CharSequence value,
-      final int decimalSeparatorCodePoint) {
+      final CharSequence value) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER)
-        .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
-            new String(new int[]{decimalSeparatorCodePoint}, 0, 1))
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART)
         .build();
+  }
+
+  static InvalidValueException forExpectingWholeNumber(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int [] decimalSeparatorCodePoints) {
+
+    final var builder = InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode);
+
+    if (decimalSeparatorCodePoints == null || decimalSeparatorCodePoints.length == 0) {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART)
+          .build();
+    } else {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER)
+          .addParserMessageCodeArg(
+              ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
+              new String(new int[]{decimalSeparatorCodePoints[0]}, 0, 1))
+          .build();
+    }
   }
 
   static String unicodeHexCode(final char ch) {

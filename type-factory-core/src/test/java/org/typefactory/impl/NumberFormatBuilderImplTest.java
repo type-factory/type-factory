@@ -28,9 +28,11 @@ import static org.typefactory.impl.Constants.RIGHT_SINGLE_QUOTATION_MARK;
 import static org.typefactory.impl.Constants.SPACE;
 import static org.typefactory.impl.Constants.THIN_SPACE;
 
+import java.math.RoundingMode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.NumberFormat;
 
 class NumberFormatBuilderImplTest {
 
@@ -117,6 +119,52 @@ class NumberFormatBuilderImplTest {
   void determineDecimalSeparatorsAndAlternatives_ShouldReturnAsExpectedForOtherValues(final int otherCodePoint) {
     final int [] actualSeparators = NumberFormatBuilderImpl.determineDecimalSeparatorsAndAlternatives(otherCodePoint);
     assertThat(actualSeparators).containsExactly(otherCodePoint);
+  }
+
+  @Test
+  void numberFormatBuilder_ShouldBuildNumberFormatWithCustomValues() {
+    // When
+    NumberFormat numberFormat = NumberFormat.builder()
+        .decimalSeparator(',')
+        .groupingSeparator('.')
+        .groupingSize(4)
+        .minimumIntegerDigits(1)
+        .maximumIntegerDigits(10)
+        .minimumFractionDigits(2)
+        .maximumFractionDigits(5)
+        .negativePrefix("(")
+        .negativeSuffix(")")
+        .positivePrefix("+")
+        .positiveSuffix("!")
+        .roundingMode(RoundingMode.DOWN)
+        .zeroDigit('0')
+        .build();
+
+    // Then
+    assertThat(numberFormat).isNotNull();
+    assertThat(numberFormat.getDecimalSeparators()).containsExactly(',');
+    assertThat(numberFormat.isDecimalSeparator(',')).isTrue();
+    assertThat(numberFormat.isDecimalSeparator('.')).isFalse();
+    assertThat(numberFormat.getGroupingSeparators()).containsExactly('.');
+    assertThat(numberFormat.isGroupingSeparator('.')).isTrue();
+    assertThat(numberFormat.isGroupingSeparator(',')).isFalse();
+    assertThat(numberFormat.getGroupingSize()).isEqualTo(4);
+    assertThat(numberFormat.getMinimumIntegerDigits()).isEqualTo(1);
+    assertThat(numberFormat.getMaximumIntegerDigits()).isEqualTo(10);
+    assertThat(numberFormat.getMinimumFractionDigits()).isEqualTo(2);
+    assertThat(numberFormat.getMaximumFractionDigits()).isEqualTo(5);
+    assertThat(numberFormat.getNegativePrefix()).isEqualTo("(");
+    assertThat(numberFormat.getNegativePrefixCodePointAt(-1)).isEqualTo(-1);
+    assertThat(numberFormat.getNegativePrefixCodePointAt(0)).isEqualTo('(');
+    assertThat(numberFormat.getNegativePrefixCodePointAt(1)).isEqualTo(-1);
+    assertThat(numberFormat.getNegativeSuffix()).isEqualTo(")");
+    assertThat(numberFormat.getPositivePrefix()).isEqualTo("+");
+    assertThat(numberFormat.getPositivePrefixCodePointAt(-1)).isEqualTo(-1);
+    assertThat(numberFormat.getPositivePrefixCodePointAt(0)).isEqualTo('+');
+    assertThat(numberFormat.getPositivePrefixCodePointAt(1)).isEqualTo(-1);
+    assertThat(numberFormat.getPositiveSuffix()).isEqualTo("!");
+    assertThat(numberFormat.getRoundingMode()).isEqualTo(RoundingMode.DOWN);
+    assertThat(numberFormat.getZeroDigit()).isEqualTo('0');
   }
 
 }
