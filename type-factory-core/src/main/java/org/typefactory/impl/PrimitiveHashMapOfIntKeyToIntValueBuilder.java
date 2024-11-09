@@ -262,7 +262,7 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
 
   @Override
   public String toDataStructureString() {
-    return PrimitiveHashMapOfIntKeyToIntValueUtils.toDataStructureString(hashTable.keys, hashTable.values);
+    return PrimitiveHashMapUtils.toDataStructureStringForMapsOfIntKeyToIntValue(hashTable.keys, hashTable.values);
   }
 
   /**

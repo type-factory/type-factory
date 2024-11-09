@@ -3,7 +3,11 @@ package org.typefactory.impl;
 import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
 
-final class PrimitiveHashMapOfIntKeyToIntValueUtils {
+final class PrimitiveHashMapUtils {
+
+  private PrimitiveHashMapUtils() {
+    // Prevent instantiation.
+  }
 
   /**
    * Returns a string representation of a primitive HashMap of {@code int} keys to {@code int} values.
@@ -20,7 +24,7 @@ final class PrimitiveHashMapOfIntKeyToIntValueUtils {
    *               </ul>
    * @return a string representation of a primitive HashMap of {@code int} keys to {@code int} values.
    */
-  static String toDataStructureString(int[][] keys, int[][] values) {
+  static String toDataStructureStringForMapsOfIntKeyToIntValue(int[][] keys, int[][] values) {
     final StringBuilder s = new StringBuilder();
     s.append("int[][] keys = new int[][]{").append(SYSTEM_LINE_SEPARATOR);
     for (int[] key : keys) {
@@ -28,11 +32,16 @@ final class PrimitiveHashMapOfIntKeyToIntValueUtils {
         s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
       } else {
         s.append("    new int[]{");
-        for (int i = 0; i < key.length; ++i) {
-          appendHexWithZeroPadding(s, key[i]);
-          if (i < key.length - 1) {
+        if (key.length > 0) {
+          appendHexWithZeroPadding(s, key[0]);
+        }
+        for (int i = 1; i < key.length; ++i) {
+          if (i % 8 == 0) {
+            s.append(',').append(SYSTEM_LINE_SEPARATOR).append("              ");
+          } else {
             s.append(", ");
           }
+          appendHexWithZeroPadding(s, key[i]);
         }
         s.append("},").append(SYSTEM_LINE_SEPARATOR);
       }
@@ -44,11 +53,16 @@ final class PrimitiveHashMapOfIntKeyToIntValueUtils {
         s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
       } else {
         s.append("    new int[]{");
-        for (int i = 0; i < value.length; ++i) {
-          appendHexWithZeroPadding(s, value[i]);
-          if (i < value.length - 1) {
+        if (value.length > 0) {
+          appendHexWithZeroPadding(s, value[0]);
+        }
+        for (int i = 1; i < value.length; ++i) {
+          if (i % 8 == 0) {
+            s.append(',').append(SYSTEM_LINE_SEPARATOR).append("              ");
+          } else {
             s.append(", ");
           }
+          appendHexWithZeroPadding(s, value[i]);
         }
         s.append("},").append(SYSTEM_LINE_SEPARATOR);
       }
@@ -72,31 +86,32 @@ final class PrimitiveHashMapOfIntKeyToIntValueUtils {
    *               </ul>
    * @return a string representation of an 'optimal' primitive HashMap of {@code int} keys to {@code int} values.
    */
-  static String toDataStructureString(int[] keys, int[] values) {
+  static String toDataStructureStringForMapsOfIntKeyToIntValue(int[] keys, int[] values) {
     final StringBuilder s = new StringBuilder();
-    s.append("int[] keys = new int[]{");
+    s.append("int[] keys = new int[]{").append(SYSTEM_LINE_SEPARATOR).append("    ");
     if (keys.length > 0) {
       appendHexWithZeroPadding(s, keys[0]);
     }
     for (int i = 1; i < keys.length; ++i) {
-      s.append(", ");
       if (i % 8 == 0) {
-        s.append(SYSTEM_LINE_SEPARATOR).append("    ");
+        s.append(',').append(SYSTEM_LINE_SEPARATOR).append("    ");
+      } else {
+        s.append(", ");
       }
       appendHexWithZeroPadding(s, keys[i]);
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    s.append("int[] values = new int[]{");
+    s.append("int[] values = new int[]{").append(SYSTEM_LINE_SEPARATOR).append("    ");
     if (values.length > 0) {
       appendHexWithZeroPadding(s, values[0]);
     }
     for (int i = 1; i < values.length; ++i) {
-      s.append(", ");
       if (i % 8 == 0) {
-        s.append(SYSTEM_LINE_SEPARATOR).append("    ");
+        s.append(',').append(SYSTEM_LINE_SEPARATOR).append("    ");
+      } else {
+        s.append(", ");
       }
       appendHexWithZeroPadding(s, values[i]);
-      s.append(", ");
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
     return s.toString();

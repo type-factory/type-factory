@@ -94,7 +94,7 @@ final class ImmutablePrimitiveHashMapOfIntKeyToIntValue implements PrimitiveHash
 
   @Override
   public String toDataStructureString() {
-    return PrimitiveHashMapOfIntKeyToIntValueUtils.toDataStructureString(keys, values);
+    return PrimitiveHashMapUtils.toDataStructureStringForMapsOfIntKeyToIntValue(keys, values);
   }
 
 }

@@ -108,6 +108,6 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
 
   @Override
   public String toDataStructureString() {
-    return PrimitiveHashMapOfIntKeyToIntValueUtils.toDataStructureString(keys, values);
+    return PrimitiveHashMapUtils.toDataStructureStringForMapsOfIntKeyToIntValue(keys, values);
   }
 }
