@@ -83,8 +83,12 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   void nAryTreeIsFormedCorrectly() {
     final var rootTreeNode = new RootTreeNode();
     rootTreeNode.add("abc".codePoints().toArray(), "".codePoints().toArray());
-    rootTreeNode.add("abcd".codePoints().toArray(), "www".codePoints().toArray());
-    rootTreeNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray());
+    rootTreeNode.add("abcd".codePoints().toArray(), "woof".codePoints().toArray());
+    rootTreeNode.add("abcd".codePoints().toArray(), "xyz".codePoints().toArray()); // Overwrites earlier entry
+    rootTreeNode.add("abce".codePoints().toArray(), "moo".codePoints().toArray());
+    rootTreeNode.add("abcf".codePoints().toArray(), "meow".codePoints().toArray());
+    rootTreeNode.add("abcfg".codePoints().toArray(), "roar".codePoints().toArray());
+    rootTreeNode.add("abcg".codePoints().toArray(), "baa".codePoints().toArray());
     rootTreeNode.add("abef".codePoints().toArray(), "tuv".codePoints().toArray());
     rootTreeNode.add("full stop".codePoints().toArray(), "period".codePoints().toArray());
     rootTreeNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
@@ -96,7 +100,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     assertThat(rootTreeNode.isEmpty()).isFalse();
     assertThat(rootTreeNode.isLeafNode()).isFalse();
     assertThat(rootTreeNode.codePoints()).contains('a', 'f', 'l');
-    assertThat(rootTreeNode.size()).isEqualTo(6); // 6 separate sequences
+    assertThat(rootTreeNode.size()).isEqualTo(10); // 10 separate sequences
     assertThat(rootTreeNode.getMaxToSequenceLength()).isEqualTo(6);
 
     final TreeNode node = rootTreeNode.get('a');
@@ -108,7 +112,11 @@ class CodePointSequenceToCodePointSequenceConverterTest {
         ├a ⟶ "b"
         │└b
         │ ├c ⟶ ""
-        │ │└d ⟶ "xyz"
+        │ │├d ⟶ "xyz"
+        │ │├e ⟶ "moo"
+        │ │├f ⟶ "meow"
+        │ ││└g ⟶ "roar"
+        │ │└g ⟶ "baa"
         │ └e
         │  └f ⟶ "tuv"
         ├f
@@ -123,7 +131,6 @@ class CodePointSequenceToCodePointSequenceConverterTest {
         └l ⟶ "n"
         """);
   }
-
 
   static final class SomeConverterResults implements ConverterResults {
 

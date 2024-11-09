@@ -18,6 +18,9 @@ package org.typefactory.impl;
 
 import org.typefactory.TypeParser;
 
+/**
+ * <p>A converter that converts a single code-point to a sequence of code-points.</p>
+ */
 final class CodePointToCodePointSequenceConverter implements Converter {
 
   /**
