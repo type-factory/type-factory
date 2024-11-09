@@ -587,8 +587,6 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
 
     final var map = mapBuilder.build();
     assertThat(map).isInstanceOf(testSource.expectedInstanceType);
-    logger.fine("\n\nmap instanceof: " + map.getClass().getSimpleName() + "\n" + map.toString() + "\n" + map.toDataStructureString());
-
     assertThat(map.toString()).isEqualTo(mapBuilder.toString());
 
     assertThat(map.size()).isEqualTo(testSource.expectedSize);
