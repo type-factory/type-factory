@@ -586,6 +586,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     }
 
     final var map = mapBuilder.build();
+    assertThat(map).isInstanceOf(testSource.expectedInstanceType);
     logger.fine("\n\nmap instanceof: " + map.getClass().getSimpleName() + "\n" + map.toString() + "\n" + map.toDataStructureString());
 
     assertThat(map.toString()).isEqualTo(mapBuilder.toString());
@@ -609,108 +610,124 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
 
   private enum TestSource {
 
-    ZERO_ENTRY(Map.of()),
+    ZERO_ENTRY(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.of()),
 
-    ONE_ENTRY(Map.of(3, (int) 'a')),
+    ONE_ENTRY(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.of(3, (int) 'a')),
 
-    TWO_ENTRIES(Map.of(3, (int) 'a', 131, (int) 'b')),
+    TWO_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.of(3, (int) 'a', 131, (int) 'b')),
 
-    THREE_ENTRIES(Map.of(3, (int) 'a', 131, (int) 'b', 191, (int) 'c')),
+    THREE_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.of(3, (int) 'a', 131, (int) 'b', 191, (int) 'c')),
 
-    FOURTEEN_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'))),
+    FOURTEEN_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'))),
 
-    FIFTEEN_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'))),
+    FIFTEEN_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'))),
 
-    SIXTEEN_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
-        entry(547, (int) 'A'))),
+    SIXTEEN_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
+            entry(547, (int) 'A'))),
 
-    TWENTY_ENTRIES_IN_SAME_BUCKET(Map.ofEntries(
-        entry(0 * DEFAULT_INITIAL_CAPACITY, (int) 'b'),
-        entry(1 * DEFAULT_INITIAL_CAPACITY, (int) 'c'),
-        entry(2 * DEFAULT_INITIAL_CAPACITY, (int) 'd'),
-        entry(3 * DEFAULT_INITIAL_CAPACITY, (int) 'e'),
-        entry(4 * DEFAULT_INITIAL_CAPACITY, (int) 'f'),
-        entry(5 * DEFAULT_INITIAL_CAPACITY, (int) 'g'),
-        entry(6 * DEFAULT_INITIAL_CAPACITY, (int) 'h'),
-        entry(7 * DEFAULT_INITIAL_CAPACITY, (int) 'i'),
-        entry(8 * DEFAULT_INITIAL_CAPACITY, (int) 'j'),
-        entry(9 * DEFAULT_INITIAL_CAPACITY, (int) 'k'),
-        entry(10 * DEFAULT_INITIAL_CAPACITY, (int) 'l'),
-        entry(11 * DEFAULT_INITIAL_CAPACITY, (int) 'm'),
-        entry(12 * DEFAULT_INITIAL_CAPACITY, (int) 'n'),
-        entry(13 * DEFAULT_INITIAL_CAPACITY, (int) 'o'),
-        entry(14 * DEFAULT_INITIAL_CAPACITY, (int) 'p'),
-        entry(15 * DEFAULT_INITIAL_CAPACITY, (int) 'q'),
-        entry(16 * DEFAULT_INITIAL_CAPACITY, (int) 'r'),
-        entry(17 * DEFAULT_INITIAL_CAPACITY, (int) 's'),
-        entry(18 * DEFAULT_INITIAL_CAPACITY, (int) 't'),
-        entry(19 * DEFAULT_INITIAL_CAPACITY, (int) 'u'))),
+    TWENTY_ENTRIES_IN_SAME_BUCKET(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(0 * DEFAULT_INITIAL_CAPACITY, (int) 'b'),
+            entry(1 * DEFAULT_INITIAL_CAPACITY, (int) 'c'),
+            entry(2 * DEFAULT_INITIAL_CAPACITY, (int) 'd'),
+            entry(3 * DEFAULT_INITIAL_CAPACITY, (int) 'e'),
+            entry(4 * DEFAULT_INITIAL_CAPACITY, (int) 'f'),
+            entry(5 * DEFAULT_INITIAL_CAPACITY, (int) 'g'),
+            entry(6 * DEFAULT_INITIAL_CAPACITY, (int) 'h'),
+            entry(7 * DEFAULT_INITIAL_CAPACITY, (int) 'i'),
+            entry(8 * DEFAULT_INITIAL_CAPACITY, (int) 'j'),
+            entry(9 * DEFAULT_INITIAL_CAPACITY, (int) 'k'),
+            entry(10 * DEFAULT_INITIAL_CAPACITY, (int) 'l'),
+            entry(11 * DEFAULT_INITIAL_CAPACITY, (int) 'm'),
+            entry(12 * DEFAULT_INITIAL_CAPACITY, (int) 'n'),
+            entry(13 * DEFAULT_INITIAL_CAPACITY, (int) 'o'),
+            entry(14 * DEFAULT_INITIAL_CAPACITY, (int) 'p'),
+            entry(15 * DEFAULT_INITIAL_CAPACITY, (int) 'q'),
+            entry(16 * DEFAULT_INITIAL_CAPACITY, (int) 'r'),
+            entry(17 * DEFAULT_INITIAL_CAPACITY, (int) 's'),
+            entry(18 * DEFAULT_INITIAL_CAPACITY, (int) 't'),
+            entry(19 * DEFAULT_INITIAL_CAPACITY, (int) 'u'))),
 
-    THIRTY_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
-        entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
-        entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
-        entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'))),
+    THIRTY_ENTRIES(OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
+            entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
+            entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
+            entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'))),
 
-    SIXTY_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
-        entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
-        entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
-        entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'),
+    SIXTY_ENTRIES(ImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
+            entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
+            entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
+            entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'),
 
-        entry(2179, 367), entry(3191, 435), entry(4193, 535), entry(5211, 635), entry(6229, 735),
-        entry(2283, 378), entry(3307, 444), entry(4311, 544), entry(5331, 644), entry(6349, 744),
-        entry(2419, 379), entry(3431, 456), entry(4433, 556), entry(5449, 656), entry(6463, 756),
-        entry(2547, 383), entry(3563, 467), entry(4569, 567), entry(5587, 667), entry(6601, 767),
-        entry(2661, 392), entry(3677, 478), entry(4683, 578), entry(5709, 678), entry(6733, 778),
-        entry(2811, 399), entry(3823, 479), entry(4827, 579), entry(5853, 679), entry(6863, 779))),
+            entry(2179, 367), entry(3191, 435), entry(4193, 535), entry(5211, 635), entry(6229, 735),
+            entry(2283, 378), entry(3307, 444), entry(4311, 544), entry(5331, 644), entry(6349, 744),
+            entry(2419, 379), entry(3431, 456), entry(4433, 556), entry(5449, 656), entry(6463, 756),
+            entry(2547, 383), entry(3563, 467), entry(4569, 567), entry(5587, 667), entry(6601, 767),
+            entry(2661, 392), entry(3677, 478), entry(4683, 578), entry(5709, 678), entry(6733, 778),
+            entry(2811, 399), entry(3823, 479), entry(4827, 579), entry(5853, 679), entry(6863, 779))),
 
-    NINETY_ENTRIES(Map.ofEntries(
-        entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
-        entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
-        entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
-        entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
-        entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
-        entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'),
+    NINETY_ENTRIES(ImmutablePrimitiveHashMapOfIntKeyToIntValue.class,
+        Map.<Integer, Integer>ofEntries(
+            entry(179, (int) 'a'), entry(191, (int) 'b'), entry(193, (int) 'c'), entry(211, (int) 'd'), entry(229, (int) 'e'),
+            entry(283, (int) 'f'), entry(307, (int) 'g'), entry(311, (int) 'h'), entry(331, (int) 'i'), entry(349, (int) 'j'),
+            entry(419, (int) 'k'), entry(431, (int) 'l'), entry(433, (int) 'm'), entry(449, (int) 'n'), entry(463, (int) 'o'),
+            entry(547, (int) 'A'), entry(563, (int) 'B'), entry(569, (int) 'C'), entry(587, (int) 'D'), entry(601, (int) 'E'),
+            entry(661, (int) 'F'), entry(677, (int) 'G'), entry(683, (int) 'H'), entry(709, (int) 'I'), entry(733, (int) 'J'),
+            entry(811, (int) 'K'), entry(823, (int) 'L'), entry(827, (int) 'M'), entry(853, (int) 'N'), entry(863, (int) 'O'),
 
-        entry(2179, 367), entry(3191, 435), entry(4193, 535), entry(5211, 635), entry(6229, 735),
-        entry(2283, 378), entry(3307, 444), entry(4311, 544), entry(5331, 644), entry(6349, 744),
-        entry(2419, 379), entry(3431, 456), entry(4433, 556), entry(5449, 656), entry(6463, 756),
-        entry(2547, 383), entry(3563, 467), entry(4569, 567), entry(5587, 667), entry(6601, 767),
-        entry(2661, 392), entry(3677, 478), entry(4683, 578), entry(5709, 678), entry(6733, 778),
-        entry(2811, 399), entry(3823, 479), entry(4827, 579), entry(5853, 679), entry(6863, 779),
+            entry(2179, 367), entry(3191, 435), entry(4193, 535), entry(5211, 635), entry(6229, 735),
+            entry(2283, 378), entry(3307, 444), entry(4311, 544), entry(5331, 644), entry(6349, 744),
+            entry(2419, 379), entry(3431, 456), entry(4433, 556), entry(5449, 656), entry(6463, 756),
+            entry(2547, 383), entry(3563, 467), entry(4569, 567), entry(5587, 667), entry(6601, 767),
+            entry(2661, 392), entry(3677, 478), entry(4683, 578), entry(5709, 678), entry(6733, 778),
+            entry(2811, 399), entry(3823, 479), entry(4827, 579), entry(5853, 679), entry(6863, 779),
 
-        entry(12179, 1367), entry(13191, 1435), entry(14193, 1535), entry(15211, 1635), entry(16229, 1735),
-        entry(12283, 1378), entry(13307, 1444), entry(14311, 1544), entry(15331, 1644), entry(16349, 1744),
-        entry(12419, 1379), entry(13431, 1456), entry(14433, 1556), entry(15449, 1656), entry(16463, 1756),
-        entry(12547, 1383), entry(13563, 1467), entry(14569, 1567), entry(15587, 1667), entry(16601, 1767),
-        entry(12661, 1392), entry(13677, 1478), entry(14683, 1578), entry(15709, 1678), entry(16733, 1778),
-        entry(12811, 1399), entry(13823, 1479), entry(14827, 1579), entry(15853, 1679), entry(16863, 1779))),
+            entry(12179, 1367), entry(13191, 1435), entry(14193, 1535), entry(15211, 1635), entry(16229, 1735),
+            entry(12283, 1378), entry(13307, 1444), entry(14311, 1544), entry(15331, 1644), entry(16349, 1744),
+            entry(12419, 1379), entry(13431, 1456), entry(14433, 1556), entry(15449, 1656), entry(16463, 1756),
+            entry(12547, 1383), entry(13563, 1467), entry(14569, 1567), entry(15587, 1667), entry(16601, 1767),
+            entry(12661, 1392), entry(13677, 1478), entry(14683, 1578), entry(15709, 1678), entry(16733, 1778),
+            entry(12811, 1399), entry(13823, 1479), entry(14827, 1579), entry(15853, 1679), entry(16863, 1779))),
     ;
+    private final Class<? extends PrimitiveHashMapOfIntKeyToIntValue> expectedInstanceType;
     private final Map<Integer, Integer> map;
     private final int expectedSize;
     private final boolean expectedIsEmpty;
     private final int[] expectedKeys;
 
 
-    TestSource(final Map<Integer, Integer> map) {
+    TestSource(
+        final Class<? extends PrimitiveHashMapOfIntKeyToIntValue> expectedInstanceType,
+        final Map<Integer, Integer> map) {
+
       final Map<Integer, Integer> temp = new HashMap<>();
       for (Entry<Integer, Integer> entry : map.entrySet()) {
         temp.put(entry.getKey(), entry.getValue());
       }
+      this.expectedInstanceType = expectedInstanceType;
       this.map = Map.copyOf(temp);
       this.expectedSize = map.size();
       this.expectedIsEmpty = map.isEmpty();
