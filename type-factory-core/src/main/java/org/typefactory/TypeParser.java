@@ -745,6 +745,20 @@ public interface TypeParser {
     /**
      * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
      *
+     * <p>Character conversions and char-sequence conversions take precedence over Category conversions. So for the code:</p>
+     * <pre>{@code
+     * static final TypeParser TYPE_PARSER = TypeParser.builder()
+     *    .acceptLettersAtoZ()
+     *    .acceptDigits0to9()
+     *    .convertChar('1', '0')
+     *    .convertAnyInCategory(Category.DECIMAL_DIGIT_NUMBER, '*')
+     *    .build();
+     *
+     * TYPE_PARSER.parseToString("123") // ⟶ "0**" because the convertChar('1', '0') conversion takes precedence.
+     * TYPE_PARSER.parseToString("234") // ⟶ "***" because the convertAnyInCategory(Category.DECIMAL_DIGIT_NUMBER, '*') converts and digits.
+     * TYPE_PARSER.parseToString("abc") // ⟶ "abc" because no conversions are applied.
+     * }</pre>
+     *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toChar the character to convert to.
      * @return this builder.

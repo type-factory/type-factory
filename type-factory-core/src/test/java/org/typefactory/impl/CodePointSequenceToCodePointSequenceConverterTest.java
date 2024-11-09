@@ -2,10 +2,14 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.typefactory.Category;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.TreeNode;
 import org.typefactory.impl.Converter.ConverterResults;
@@ -78,7 +82,37 @@ class CodePointSequenceToCodePointSequenceConverterTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("Invalid argument - 'converterResults' must be of type");
   }
-  
+
+  @ParameterizedTest
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      CATEGORY             | VALUE | REQUIRES_CONVERSION | CONVERT_TO_CODE_POINT_SEQUENCE
+      PUNCTUATION          | a     | false               |
+      PUNCTUATION          | 1     | false               |
+      PUNCTUATION          | ?     | true                | aaa
+      LETTER               | 1     | false               |
+      LETTER               | a     | true                | bbb
+      LETTER               | 2     | false               |
+      DECIMAL_DIGIT_NUMBER | ?     | false               |
+      DECIMAL_DIGIT_NUMBER | a     | false               |
+      DECIMAL_DIGIT_NUMBER | 1     | true                | x
+      """)
+  void isCodePointConversionRequired_ShouldReturnTrue_WhenCategoryConversionIsRequired(
+      final Category category, final char value, final boolean requiresConversion, final String convertToCodePointSequence) {
+    
+    categoryToCodePointSequence = new PrimitiveHashMapOfIntKeyToIntArrayValue();
+    for (final int categoryCode : category.getCharacterCategories()) {
+      categoryToCodePointSequence.put(categoryCode, convertToCodePointSequence == null ? EMPTY_INT_ARRAY : convertToCodePointSequence.codePoints().toArray());
+    }
+    final var converter = new CodePointSequenceToCodePointSequenceConverter(new RootTreeNode(), categoryToCodePointSequence);
+    final ConverterResults results = converter.createConverterResults();
+    final boolean result = converter.isCodePointConversionRequired(value, 0, results);
+    assertThat(result).isEqualTo(requiresConversion);
+    if (requiresConversion) {
+      assertThat(results.getConvertFromIndex()).isEqualTo(0);
+      assertThat(results.getConvertToCodePointSequence()).containsExactly(convertToCodePointSequence.codePoints().toArray());
+    }
+  }
+
   @Test
   void nAryTreeIsFormedCorrectly() {
     final var rootTreeNode = new RootTreeNode();

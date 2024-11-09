@@ -30,7 +30,15 @@ import org.typefactory.TypeParser;
  */
 final class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
+  /**
+   * The root tree-node for the n-ary tree.
+   */
   private final RootTreeNode rootTreeNode;
+
+  /**
+   * Hash-map of Character categories to code-point arrays:
+   */
+  private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence;
 
   /**
    * The maximum number of code-points that a single code-point could be converted to.
@@ -41,6 +49,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       final RootTreeNode rootTreeNode,
       final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence) {
     this.rootTreeNode = rootTreeNode;
+    this.categoryToCodePointSequence = categoryToCodePointSequence;
     int max = 0;
     if (rootTreeNode != null && !rootTreeNode.isEmpty()) {
       max = Math.max(max, rootTreeNode.getMaxToSequenceLength());
@@ -123,6 +132,15 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
         if (converterResults.getConvertFromIndexForNodeInPlay(i) > converterResults.convertFromIndex) {
           converterResults.removeTreeNodeInPlay(i);
         }
+      }
+    }
+
+    if (!result && categoryToCodePointSequence != null) {
+      final int [] toCodePoints = categoryToCodePointSequence.get(Character.getType(currentCodePoint));
+      if (toCodePoints != null) {
+        converterResults.convertFromIndex = currentIndex;
+        converterResults.convertToCodePointSequence = toCodePoints;
+        result = true;
       }
     }
 

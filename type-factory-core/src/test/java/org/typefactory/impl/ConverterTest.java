@@ -426,6 +426,108 @@ class ConverterTest {
   }
 
   @ParameterizedTest
+  @CsvSource(textBlock = """
+      INPUT   | FROM_CHAR | CHAR_TO_SEQUENCE | CATEGORY             | CATEGORY_TO_SEQUENCE | EXPECTED
+      1       | a         | u                | LETTER               | Y                    | 1
+      1       | a         | uu               | LETTER               | YY                   | 1
+      1       | 1         | v                | LETTER               | Y                    | v
+      1       | 1         | vv               | LETTER               | YY                   | vv
+
+      a       | a         | u                | LETTER               | Y                    | u
+      a       | a         | uu               | LETTER               | YY                   | uu
+      a       | 1         | v                | LETTER               | Y                    | Y
+      a       | 1         | vv               | LETTER               | YY                   | YY
+
+      abc-123 | a         | u                | LETTER               | Y                    | uYY-123
+      abc-123 | a         | uu               | LETTER               | YY                   | uuYYYY-123
+      abc-123 | 1         | v                | LETTER               | Y                    | YYY-v23
+      abc-123 | 1         | vv               | LETTER               | YY                   | YYYYYY-vv23
+
+      1       | a         | u                | DECIMAL_DIGIT_NUMBER | Y                    | Y
+      1       | a         | uu               | DECIMAL_DIGIT_NUMBER | YY                   | YY
+      1       | 1         | v                | DECIMAL_DIGIT_NUMBER | Y                    | v
+      1       | 1         | vv               | DECIMAL_DIGIT_NUMBER | YY                   | vv
+
+      a       | a         | u                | DECIMAL_DIGIT_NUMBER | Y                    | u
+      a       | a         | uu               | DECIMAL_DIGIT_NUMBER | YY                   | uu
+      a       | 1         | v                | DECIMAL_DIGIT_NUMBER | Y                    | a
+      a       | 1         | vv               | DECIMAL_DIGIT_NUMBER | YY                   | a
+
+      abc-123 | a         | u                | DECIMAL_DIGIT_NUMBER | Y                    | ubc-YYY
+      abc-123 | a         | uu               | DECIMAL_DIGIT_NUMBER | YY                   | uubc-YYYYYY
+      abc-123 | 1         | v                | DECIMAL_DIGIT_NUMBER | Y                    | abc-vYY
+      abc-123 | 1         | vv               | DECIMAL_DIGIT_NUMBER | YY                   | abc-vvYYYY
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void mixedCharacterAndCategoryConversion_convertsAsExpectedBecauseCategoryConversionTakesLowerPriority(
+      final String input,
+      final char fromCharacter,
+      final String fromCharacterToCharSequence,
+      final Category fromCategory,
+      final String fromCategoryToCharSequence,
+      final String expected) {
+
+    final var converter = new ConverterBuilder()
+        .addCharConversion(fromCharacter, fromCharacterToCharSequence)
+        .addCategoryConversion(fromCategory, fromCategoryToCharSequence)
+        .build();
+
+    final String actual = convert(input, converter);
+
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      INPUT     | FROM_CHAR_SEQUENCE | CHAR_TO_SEQUENCE | CATEGORY             | CATEGORY_TO_SEQUENCE | EXPECTED
+      11        | aa                 | u                | LETTER               | Y                    | 11
+      11        | aa                 | uu               | LETTER               | YY                   | 11
+      11        | 11                 | v                | LETTER               | Y                    | v
+      11        | 11                 | vv               | LETTER               | YY                   | vv
+
+      aa        | aa                 | u                | LETTER               | Y                    | u
+      aa        | aa                 | uu               | LETTER               | YY                   | uu
+      aa        | 11                 | v                | LETTER               | Y                    | YY
+      aa        | 11                 | vv               | LETTER               | YY                   | YYYY
+
+      aabc-1123 | aa                 | u                | LETTER               | Y                    | uYY-1123
+      aabc-1123 | aa                 | uu               | LETTER               | YY                   | uuYYYY-1123
+      aabc-1123 | 11                 | v                | LETTER               | Y                    | YYYY-v23
+      aabc-1123 | 11                 | vv               | LETTER               | YY                   | YYYYYYYY-vv23
+
+      11        | aa                 | u                | DECIMAL_DIGIT_NUMBER | Y                    | YY
+      11        | aa                 | uu               | DECIMAL_DIGIT_NUMBER | YY                   | YYYY
+      11        | 11                 | v                | DECIMAL_DIGIT_NUMBER | Y                    | v
+      11        | 11                 | vv               | DECIMAL_DIGIT_NUMBER | YY                   | vv
+
+      aa        | aa                 | u                | DECIMAL_DIGIT_NUMBER | Y                    | u
+      aa        | aa                 | uu               | DECIMAL_DIGIT_NUMBER | YY                   | uu
+      aa        | 11                 | v                | DECIMAL_DIGIT_NUMBER | Y                    | aa
+      aa        | 11                 | vv               | DECIMAL_DIGIT_NUMBER | YY                   | aa
+
+      aabc-1123 | aa                 | u                | DECIMAL_DIGIT_NUMBER | Y                    | ubc-YYYY
+      aabc-1123 | aa                 | uu               | DECIMAL_DIGIT_NUMBER | YY                   | uubc-YYYYYYYY
+      aabc-1123 | 11                 | v                | DECIMAL_DIGIT_NUMBER | Y                    | aabc-vYY
+      aabc-1123 | 11                 | vv               | DECIMAL_DIGIT_NUMBER | YY                   | aabc-vvYYYY
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void mixedCharSequenceAndCategoryConversion_convertsAsExpectedBecauseCategoryConversionTakesLowerPriority(
+      final String input,
+      final String fromCharSequence,
+      final String fromCharSequenceToCharSequence,
+      final Category fromCategory,
+      final String fromCategoryToCharSequence,
+      final String expected) {
+
+    final var converter = new ConverterBuilder()
+        .addCharSequenceConversion(fromCharSequence, fromCharSequenceToCharSequence)
+        .addCategoryConversion(fromCategory, fromCategoryToCharSequence)
+        .build();
+
+    final String actual = convert(input, converter);
+
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
   @CsvSource(value = {
       " semi-trailer    | s          | d           |              |           |                 |       | demi-trailer        ",
       " semi-trailer    | s          | d           | semi-trailer | lorry     |                 |       | lorry               ",
