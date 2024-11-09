@@ -114,6 +114,7 @@ class NumberFormatBuilderImplTest {
     final int [] actualSeparators = NumberFormatBuilderImpl.determineDecimalSeparatorsAndAlternatives(ARABIC_DECIMAL_SEPARATOR);
     assertThat(actualSeparators).containsExactly(ARABIC_DECIMAL_SEPARATOR, COMMA);
   }
+
   @ParameterizedTest
   @ValueSource(ints = {'~', '^'})
   void determineDecimalSeparatorsAndAlternatives_ShouldReturnAsExpectedForOtherValues(final int otherCodePoint) {

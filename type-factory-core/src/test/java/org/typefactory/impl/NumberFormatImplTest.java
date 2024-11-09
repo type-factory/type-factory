@@ -30,6 +30,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.typefactory.NumberFormat;
 import org.typefactory.TypeParserBuilderException;
 
@@ -197,6 +198,19 @@ public class NumberFormatImplTest {
     assertThat(numberFormat.getGroupingSeparators()).containsExactly(NARROW_NO_BREAK_SPACE, NO_BREAK_SPACE, SPACE, THIN_SPACE);
   }
 
+  @ParameterizedTest
+  @NullAndEmptySource
+  void groupingSeparator_withNullOrEmptyAdditionalGroupingSeparatorCharacters(final char [] additionalGroupingSeparators) {
+
+    final NumberFormat numberFormat = NumberFormat.builder()
+        .groupingSeparator((char)NARROW_NO_BREAK_SPACE, additionalGroupingSeparators)
+        .build();
+
+    assertThat(numberFormat).isNotNull();
+    assertThat(numberFormat.getGroupingSeparators()).containsExactly(NARROW_NO_BREAK_SPACE);
+  }
+
+
   @Test
   void groupingSeparator_withMultipleCodePoints() {
 
@@ -206,6 +220,18 @@ public class NumberFormatImplTest {
 
     assertThat(numberFormat).isNotNull();
     assertThat(numberFormat.getGroupingSeparators()).containsExactly(NARROW_NO_BREAK_SPACE, NO_BREAK_SPACE, SPACE, THIN_SPACE);
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  void groupingSeparator_withNullOrEmptyAdditionalGroupingSeparatorCodePoints(final int [] additionalGroupingSeparators) {
+
+    final NumberFormat numberFormat = NumberFormat.builder()
+        .groupingSeparator(NARROW_NO_BREAK_SPACE, additionalGroupingSeparators)
+        .build();
+
+    assertThat(numberFormat).isNotNull();
+    assertThat(numberFormat.getGroupingSeparators()).containsExactly(NARROW_NO_BREAK_SPACE);
   }
 
   @Test
@@ -242,6 +268,18 @@ public class NumberFormatImplTest {
     assertThat(numberFormat.getDecimalSeparators()).containsExactly(COMMA, ARABIC_DECIMAL_SEPARATOR);
   }
 
+  @ParameterizedTest
+  @NullAndEmptySource
+  void decimalSeparator_withNullOrEmptyAdditionalDecimalSeparatorCharacters(final char [] additionalDecimalSeparators) {
+
+    final NumberFormat numberFormat = NumberFormat.builder()
+        .decimalSeparator((char)COMMA, additionalDecimalSeparators)
+        .build();
+
+    assertThat(numberFormat).isNotNull();
+    assertThat(numberFormat.getDecimalSeparators()).containsExactly(COMMA);
+  }
+
   @Test
   void decimalSeparator_withMultipleCodePoints() {
 
@@ -251,6 +289,18 @@ public class NumberFormatImplTest {
 
     assertThat(numberFormat).isNotNull();
     assertThat(numberFormat.getDecimalSeparators()).containsExactly(COMMA, ARABIC_DECIMAL_SEPARATOR);
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  void decimalSeparator_withNullOrEmptyAdditionalDecimalSeparatorCodePoints(final int [] additionalDecimalSeparators) {
+
+    final NumberFormat numberFormat = NumberFormat.builder()
+        .decimalSeparator(COMMA, additionalDecimalSeparators)
+        .build();
+
+    assertThat(numberFormat).isNotNull();
+    assertThat(numberFormat.getDecimalSeparators()).containsExactly(COMMA);
   }
 
   @Test
