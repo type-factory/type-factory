@@ -307,7 +307,7 @@ class ExceptionUtils {
             : String.format("U+%04X %s", (short) codePoint, Character.getName(codePoint));
       }
       if (codePoint == '\'') {
-        return String.format("' U+0027 APOSTROPHE");
+        return "' U+0027 APOSTROPHE";
       }
       if (Character.isHighSurrogate((char) codePoint)) {
         return String.format("U+%04X HIGH SURROGATE", (short) codePoint);
@@ -327,7 +327,7 @@ class ExceptionUtils {
     }
 
     return codePoint > 0xFFFF
-        ? String.format("U+%06X UNASSIGNED UNICODE CHARACTER", codePoint, Character.getName(codePoint))
-        : String.format("U+%04X UNASSIGNED UNICODE CHARACTER", codePoint, Character.getName(codePoint));
+        ? String.format("U+%06X UNASSIGNED UNICODE CHARACTER", codePoint)
+        : String.format("U+%04X UNASSIGNED UNICODE CHARACTER", codePoint);
   }
 }
