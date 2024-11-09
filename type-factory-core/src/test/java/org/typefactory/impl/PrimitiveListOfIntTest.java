@@ -3,12 +3,27 @@ package org.typefactory.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.testutils.IntArrayConverter;
 
 public class PrimitiveListOfIntTest {
+
+  @Test
+  void addAll_ShouldHandleNullList() {
+    PrimitiveListOfInt list = new PrimitiveListOfInt();
+    assertThat(list.addAll((int[])null)).isFalse();
+    assertThat(list.toArray()).isEmpty();
+  }
+
+  @Test
+  void addAll_ShouldHandleEmptyList() {
+    PrimitiveListOfInt list = new PrimitiveListOfInt();
+    assertThat(list.addAll(Constants.EMPTY_INT_ARRAY)).isFalse();
+    assertThat(list.toArray()).isEmpty();
+  }
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', textBlock = """
