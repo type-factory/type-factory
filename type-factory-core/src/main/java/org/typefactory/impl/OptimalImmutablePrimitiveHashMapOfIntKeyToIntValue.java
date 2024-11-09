@@ -112,27 +112,28 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
   public String toDataStructureString() {
     final StringBuilder s = new StringBuilder();
     s.append("int[] keys = new int[]{");
-    for (int i = 0; i < keys.length; ++i) {
+    if (keys.length > 0) {
+      appendHexWithZeroPadding(s, keys[0]);
+    }
+    for (int i = 1; i < keys.length; ++i) {
+      s.append(", ");
       if (i % 8 == 0) {
         s.append(SYSTEM_LINE_SEPARATOR).append("    ");
       }
       appendHexWithZeroPadding(s, keys[i]);
-      s.append(", ");
-    }
-    if (s.charAt(s.length() - 2) == ',') {
-        s.setLength(s.length() - 2);
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
     s.append("int[] values = new int[]{");
-    for (int i = 0; i < values.length; ++i) {
+    if (values.length > 0) {
+      appendHexWithZeroPadding(s, values[0]);
+    }
+    for (int i = 1; i < values.length; ++i) {
+      s.append(", ");
       if (i % 8 == 0) {
         s.append(SYSTEM_LINE_SEPARATOR).append("    ");
       }
       appendHexWithZeroPadding(s, values[i]);
       s.append(", ");
-    }
-    if (s.charAt(s.length() - 2) == ',') {
-      s.setLength(s.length() - 2);
     }
     s.append("};").append(SYSTEM_LINE_SEPARATOR);
     return s.toString();
