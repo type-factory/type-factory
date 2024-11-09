@@ -15,21 +15,19 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
-import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
-
 import java.util.Arrays;
 
 /**
- * <p>This is a hash-map of integer keys mapped to integer values.</p>
+ * <p>This is an 'optimal' hash-map of integer keys mapped to integer values.</p>
+ *
+ * <p>An 'optimal' primitive hashmap has at most one key in each hash bucket, which reduces the number of arrays used to store the data.</p>
  *
  * <p>We can use it to map:</p>
  * <ul>
  *   <li>a single code point to an integer value.</li>
  * </ul>
  *
- * <p>We currently use maps of this type to map code-points (characters)
- * for an arbitrary numeric radix (base) to their corresponding value.</p>
+ * <p>We currently use maps of this type to map code-points (characters) for an arbitrary numeric radix (base) to their corresponding value.</p>
  */
 final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements PrimitiveHashMapOfIntKeyToIntValue {
 
@@ -54,7 +52,7 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
    */
   private final int[] keySet;
 
-  OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue(final int [] keySet, final int[] keys, final int[] values) {
+  OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue(final int[] keySet, final int[] keys, final int[] values) {
     this.keys = keys;
     this.values = values;
     this.keySet = keySet;
@@ -110,32 +108,6 @@ final class OptimalImmutablePrimitiveHashMapOfIntKeyToIntValue implements Primit
 
   @Override
   public String toDataStructureString() {
-    final StringBuilder s = new StringBuilder();
-    s.append("int[] keys = new int[]{");
-    if (keys.length > 0) {
-      appendHexWithZeroPadding(s, keys[0]);
-    }
-    for (int i = 1; i < keys.length; ++i) {
-      s.append(", ");
-      if (i % 8 == 0) {
-        s.append(SYSTEM_LINE_SEPARATOR).append("    ");
-      }
-      appendHexWithZeroPadding(s, keys[i]);
-    }
-    s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    s.append("int[] values = new int[]{");
-    if (values.length > 0) {
-      appendHexWithZeroPadding(s, values[0]);
-    }
-    for (int i = 1; i < values.length; ++i) {
-      s.append(", ");
-      if (i % 8 == 0) {
-        s.append(SYSTEM_LINE_SEPARATOR).append("    ");
-      }
-      appendHexWithZeroPadding(s, values[i]);
-      s.append(", ");
-    }
-    s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    return s.toString();
+    return PrimitiveHashMapOfIntKeyToIntValueUtils.toDataStructureString(keys, values);
   }
 }

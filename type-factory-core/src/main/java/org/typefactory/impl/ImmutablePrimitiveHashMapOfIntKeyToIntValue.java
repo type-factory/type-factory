@@ -1,8 +1,5 @@
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
-import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
-
 import java.util.Arrays;
 
 final class ImmutablePrimitiveHashMapOfIntKeyToIntValue implements PrimitiveHashMapOfIntKeyToIntValue {
@@ -97,40 +94,7 @@ final class ImmutablePrimitiveHashMapOfIntKeyToIntValue implements PrimitiveHash
 
   @Override
   public String toDataStructureString() {
-    final StringBuilder s = new StringBuilder();
-    s.append("int[][] keys = new int[][]{").append(SYSTEM_LINE_SEPARATOR);
-    for (int[] key : keys) {
-      if (key == null) {
-        s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
-      } else {
-        s.append("    new int[]{");
-        for (int i = 0; i < key.length; ++i) {
-          appendHexWithZeroPadding(s, key[i]);
-          if (i < key.length - 1) {
-            s.append(", ");
-          }
-        }
-        s.append("},").append(SYSTEM_LINE_SEPARATOR);
-      }
-    }
-    s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    s.append("int[][] values = new int[][]{").append(SYSTEM_LINE_SEPARATOR);
-    for (int[] value : values) {
-      if (value == null) {
-        s.append("    null,").append(SYSTEM_LINE_SEPARATOR);
-      } else {
-        s.append("    new int[]{");
-        for (int i = 0; i < value.length; ++i) {
-          appendHexWithZeroPadding(s, value[i]);
-          if (i < value.length - 1) {
-            s.append(", ");
-          }
-        }
-        s.append("},").append(SYSTEM_LINE_SEPARATOR);
-      }
-    }
-    s.append("};").append(SYSTEM_LINE_SEPARATOR);
-    return s.toString();
+    return PrimitiveHashMapOfIntKeyToIntValueUtils.toDataStructureString(keys, values);
   }
 
 }
