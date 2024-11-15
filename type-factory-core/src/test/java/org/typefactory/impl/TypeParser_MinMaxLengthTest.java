@@ -86,4 +86,66 @@ class TypeParser_MinMaxLengthTest extends AbstractTypeParserTest {
         .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      VALUE | MIN_LENGTH | CHARACTERS_TO_REMOVE | EXPECTED_VALUE
+      -     | 0          | -                    | ''
+      --    | 0          | -                    | ''
+      -A-   | 1          | -                    | A
+      A-B   | 2          | -                    | AB
+      A--B  | 2          | -                    | AB
+      A-B-  | 2          | -                    | AB
+      -A-B- | 2          | -                    | AB
+      _     | 0          | _                    | ''
+      __    | 0          | _                    | ''
+      A_B   | 2          | _                    | AB
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void minlength_handleWhenCharactersRemoved(
+      final String value, final int minSize, final char characterToRemove, final String expectedValue) {
+
+    final TypeParser typeParser =
+        TypeParser.builder()
+            .messageCode(MessageCode.of("some.error.message", "Some error message."))
+            .minSize(minSize)
+            .acceptCharRange('a', 'z')
+            .acceptCharRange('A', 'Z')
+            .acceptChars('-', '_')
+            .removeAllChars(characterToRemove)
+            .build();
+
+    Assertions.assertThat(typeParser.parseToString(value)).isEqualTo(expectedValue);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      VALUE | MIN_LENGTH | CHARACTERS_TO_REMOVE | EXPECTED_MESSAGE
+      -     | 1          | -                    | Invalid value - too short, minimum length is 1.
+      --    | 1          | -                    | Invalid value - too short, minimum length is 1.
+      A-B   | 3          | -                    | Invalid value - too short, minimum length is 3.
+      A--B  | 3          | -                    | Invalid value - too short, minimum length is 3.
+      A-B-  | 3          | -                    | Invalid value - too short, minimum length is 3.
+      -A-B- | 3          | -                    | Invalid value - too short, minimum length is 3.
+      _     | 1          | _                    | Invalid value - too short, minimum length is 1.
+      __    | 1          | _                    | Invalid value - too short, minimum length is 1.
+      A_B   | 3          | _                    | Invalid value - too short, minimum length is 3.
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void minlength_handleWhenCharactersRemovedAndThrowsExceptionWhenTooSmall(
+      final String value, final int minSize, final char characterToRemove, final String expectedParserErrorMessage) {
+
+    final TypeParser typeParser =
+        TypeParser.builder()
+            .messageCode(MessageCode.of("some.error.message", "Some error message."))
+            .minSize(minSize)
+            .acceptCharRange('a', 'z')
+            .acceptCharRange('A', 'Z')
+            .acceptChars('-', '_')
+            .removeAllChars(characterToRemove)
+            .build();
+
+    Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
+        .isInstanceOf(InvalidValueException.class)
+        .hasMessage("Some error message. " + expectedParserErrorMessage)
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
+  }
+
 }
