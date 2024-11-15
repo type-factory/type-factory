@@ -278,7 +278,7 @@ final class TypeParserImpl implements TypeParser {
       }
       ++sourceIndex;
     }
-    if (targetIndex > 0 && targetIndex < minNumberOfCodePoints) {
+    if (targetIndex >= 0 && targetIndex < minNumberOfCodePoints) {
       throw ExceptionUtils.forValueTooShort(messageCode, targetTypeClass, source, minNumberOfCodePoints);
     }
 
