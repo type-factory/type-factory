@@ -15,13 +15,25 @@
 */
 package org.typefactory.impl;
 
+import static org.typefactory.Category.codePointIsInOneOfTheCategories;
+
 import java.util.regex.Pattern;
+import org.typefactory.Category;
 import org.typefactory.InvalidValueException;
 import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.MessageCode;
 import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
 
-public class ExceptionUtils {
+class ExceptionUtils {
+
+  private static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          Category.CONTROL,
+          Category.FORMAT,
+          Category.SPACE_SEPARATOR,
+          Category.LINE_SEPARATOR,
+          Category.PARAGRAPH_SEPARATOR);
+
   private ExceptionUtils() {
     // don't instantiate me
   }
@@ -60,56 +72,105 @@ public class ExceptionUtils {
         .build();
   }
 
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            minExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            minInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            maxExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            maxInclusiveValue)
+        .build();
+  }
+
   static InvalidValueException forInvalidCodePoint(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
       final int invalidCodePoint) {
 
-    if (Character.isWhitespace(invalidCodePoint)) {
-      return InvalidValueException.builder()
-          .invalidValue(value)
-          .targetTypeClass(targetTypeClass)
-          .messageCode(messageCode)
-          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER)
-          .addParserMessageCodeArg(
-              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-              unicodeHexCode(invalidCodePoint))
-          .build();
-    }
+    final ParserMessageCode parserMessageCode;
 
-    if (Character.isISOControl(invalidCodePoint)) {
-      return InvalidValueException.builder()
-          .invalidValue(value)
-          .targetTypeClass(targetTypeClass)
-          .messageCode(messageCode)
-          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER)
-          .addParserMessageCodeArg(
-              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-              unicodeHexCode(invalidCodePoint))
-          .build();
-    }
-
-    if ('\'' == invalidCodePoint) {
-      return InvalidValueException.builder()
-          .invalidValue(value)
-          .targetTypeClass(targetTypeClass)
-          .messageCode(messageCode)
-          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER)
-          .addParserMessageCodeArg(
-              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-              "'")
-          .build();
+    if (invalidCodePoint == '\'') {
+      parserMessageCode = ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER;
+    } else if (Character.isWhitespace(invalidCodePoint)) {
+      parserMessageCode = ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
+    } else {
+      parserMessageCode = switch (Character.getType(invalidCodePoint)) {
+        case Character.CONTROL -> ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER;
+        case Character.FORMAT -> ParserMessageCode.INVALID_VALUE_INVALID_FORMAT_CHARACTER;
+        case Character.SPACE_SEPARATOR,
+             Character.LINE_SEPARATOR,
+             Character.PARAGRAPH_SEPARATOR -> ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER;
+        default -> ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER;
+      };
     }
 
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
         .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER)
+        .parserMessageCode(parserMessageCode)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-            new String(new int[]{invalidCodePoint}, 0, 1))
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            unicodeHexCode(invalidCodePoint))
         .build();
   }
 
@@ -117,7 +178,7 @@ public class ExceptionUtils {
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int invalidCodePoint) {
+      final char invalidChar) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
@@ -125,8 +186,8 @@ public class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-            unicodeHexCode(invalidCodePoint))
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            unicodeHexCode(invalidChar))
         .build();
   }
 
@@ -134,7 +195,7 @@ public class ExceptionUtils {
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int invalidCodePoint) {
+      final char invalidChar) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
@@ -142,8 +203,8 @@ public class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-            unicodeHexCode(invalidCodePoint))
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            unicodeHexCode(invalidChar))
         .build();
   }
 
@@ -179,10 +240,94 @@ public class ExceptionUtils {
         .build();
   }
 
-  static String unicodeHexCode(final int codePoint) {
-    return Character.isSupplementaryCodePoint(codePoint)
-        ? String.format("U+%06X", codePoint)
-        : String.format("U+%04X", (short) codePoint);
+  static InvalidValueException forMultipleDecimalPoints(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MULTIPLE_DECIMAL_POINTS)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            new String(new int[]{invalidCodePoint}, 0, 1))
+        .build();
   }
 
+  static InvalidValueException forDecimalPointNotPermittedForNonBaseTenNumbers(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            new String(new int[]{invalidCodePoint}, 0, 1))
+        .build();
+  }
+
+  static InvalidValueException forExpectingWholeNumber(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int[] decimalSeparatorCodePoints) {
+
+    final var builder = InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode);
+
+    if (decimalSeparatorCodePoints == null || decimalSeparatorCodePoints.length == 0) {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART)
+          .build();
+    } else {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER)
+          .addParserMessageCodeArg(
+              ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
+              new String(new int[]{decimalSeparatorCodePoints[0]}, 0, 1))
+          .build();
+    }
+  }
+
+  static String unicodeHexCode(final int codePoint) {
+    if (Character.isDefined(codePoint)) {
+      if (codePointIsInOneOfTheCategories(codePoint, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
+        return codePoint > 0xFFFF
+            ? String.format("U+%06X %s", codePoint, Character.getName(codePoint))
+            : String.format("U+%04X %s", (short) codePoint, Character.getName(codePoint));
+      }
+      if (codePoint == '\'') {
+        return "' U+0027 APOSTROPHE";
+      }
+      if (Character.isHighSurrogate((char) codePoint)) {
+        return String.format("U+%04X HIGH SURROGATE", (short) codePoint);
+      }
+      if (Character.isLowSurrogate((char) codePoint)) {
+        return String.format("U+%04X LOW SURROGATE", (short) codePoint);
+      }
+      return codePoint > 0xFFFF
+          ? String.format("'%c' U+%06X %s", codePoint, codePoint, Character.getName(codePoint))
+          : String.format("'%c' U+%04X %s", codePoint, (short) codePoint, Character.getName(codePoint));
+    }
+
+    if (!Character.isValidCodePoint(codePoint)) {
+      return codePoint > 0xFFFFFFL
+          ? String.format("U+%08X NOT A UNICODE CHARACTER", codePoint)
+          : String.format("U+%06X NOT A UNICODE CHARACTER", codePoint);
+    }
+
+    return codePoint > 0xFFFF
+        ? String.format("U+%06X UNASSIGNED UNICODE CHARACTER", codePoint)
+        : String.format("U+%04X UNASSIGNED UNICODE CHARACTER", codePoint);
+  }
 }

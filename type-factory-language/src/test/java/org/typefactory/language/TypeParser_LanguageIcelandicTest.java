@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
@@ -43,15 +44,16 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "björη", // Icelandic 'Bear' with Greek 'η' ita
-      "mörðυr", // Icelandic 'Marten' with Greek 'υ' upsilon
-      "hvίtabjörninn", // Icelandic 'Polar Bear' with Greek 'ί' iοta
-  })
-  void should_throw_exception_with_non_icelandic_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE         | ERROR_DESCRIPTION                              | COMMENT
+      björη         | 'η' U+03B7 GREEK SMALL LETTER ETA.             | Icelandic 'Bear' with Greek 'η' ita
+      mörðυr        | 'υ' U+03C5 GREEK SMALL LETTER UPSILON.         | Icelandic 'Marten' with Greek 'υ' upsilon
+      hvίtabjörninn | 'ί' U+03AF GREEK SMALL LETTER IOTA WITH TONOS. | Icelandic 'Polar Bear' with Greek 'ί' iοta
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_icelandic_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of Icelandic letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of Icelandic letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
 
 }
