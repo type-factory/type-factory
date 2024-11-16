@@ -99,10 +99,12 @@ class ShortTypeParserBuilderImplTest {
   void minValueInclusive_shouldThrowException(
       final String type, final long minValue, final String expectedMessage) {
 
+    final var builder = ShortTypeParser.builder();
+
     switch (type) {
       case "Integer":
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().minValueInclusive((int) minValue).build())
+            .isThrownBy(() -> builder.minValueInclusive((int) minValue))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
@@ -127,10 +129,12 @@ class ShortTypeParserBuilderImplTest {
   void minValueExclusive_shouldThrowException(
       final String type, final long minValue, final String expectedMessage) {
 
+    final var builder = ShortTypeParser.builder();
+
     switch (type) {
       case "Integer":
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().minValueExclusive((int) minValue).build())
+            .isThrownBy(() -> builder.minValueExclusive((int) minValue))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
@@ -155,10 +159,12 @@ class ShortTypeParserBuilderImplTest {
   void maxValueInclusive_shouldThrowException(
       final String type, final long maxValue, final String expectedMessage) {
 
+    final var builder = ShortTypeParser.builder();
+
     switch (type) {
       case "Integer":
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().maxValueInclusive((int) maxValue).build())
+            .isThrownBy(() -> builder.maxValueInclusive((int) maxValue))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":
@@ -183,10 +189,12 @@ class ShortTypeParserBuilderImplTest {
   void maxValueExclusive_shouldThrowException(
       final String type, final long maxValue, final String expectedMessage) {
 
+    final var builder = ShortTypeParser.builder();
+
     switch (type) {
       case "Integer":
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().maxValueExclusive((int) maxValue).build())
+            .isThrownBy(() -> builder.maxValueExclusive((int) maxValue))
             .withMessageStartingWith(expectedMessage);
         // fall-thru
       case "Long":

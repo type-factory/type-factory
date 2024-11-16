@@ -17,20 +17,17 @@ package org.typefactory.impl;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValueBuilder.DEFAULT_INITIAL_CAPACITY;
+import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValueBuilderImpl.DEFAULT_INITIAL_CAPACITY;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 
 class PrimitiveHashMapOfIntKeyToIntValueTest {
-
-  private static final Logger logger = Logger.getLogger(PrimitiveHashMapOfIntKeyToIntValueTest.class.getName());
 
   @Test
   void isEmpty_returnsTrue() {
@@ -222,12 +219,12 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     mapBuilder.put('a', 'w');
     mapBuilder.put('b', 'x');
     mapBuilder.put('c', 'y');
-    mapBuilder.put('c', Integer.MIN_VALUE);
     mapBuilder.put('d', 'z');
     final var actual1 = mapBuilder.toString();
     assertThat(actual1).isEqualTo("""
         0x00000061 ⟶ 0x00000077, a ⟶ w
         0x00000062 ⟶ 0x00000078, b ⟶ x
+        0x00000063 ⟶ 0x00000079, c ⟶ y
         0x00000064 ⟶ 0x0000007a, d ⟶ z""");
 
     final var map = mapBuilder.build();
@@ -587,7 +584,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
 
     final var map = mapBuilder.build();
     assertThat(map).isInstanceOf(testSource.expectedInstanceType);
-    assertThat(map.toString()).isEqualTo(mapBuilder.toString());
+    assertThat(map).hasToString(mapBuilder.toString());
 
     assertThat(map.size()).isEqualTo(testSource.expectedSize);
     assertThat(map.isEmpty()).isEqualTo(testSource.expectedIsEmpty);

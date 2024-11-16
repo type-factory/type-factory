@@ -73,7 +73,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   private static void addCodePointToRadixCodePointsMap(
-      final PrimitiveHashMapOfIntKeyToIntValueBuilder numericRadixCodePointsMapBuilder,
+      final PrimitiveHashMapOfIntKeyToIntValue.PrimitiveHashMapOfIntKeyToIntValueBuilder numericRadixCodePointsMapBuilder,
       final int codepoint,
       final int numericValue) {
 

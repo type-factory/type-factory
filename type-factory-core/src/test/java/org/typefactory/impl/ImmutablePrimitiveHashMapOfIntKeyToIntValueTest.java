@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  *
  * The extra tests in this class are to force execution of the missing code paths.
  */
-public class ImmutablePrimitiveHashMapOfIntKeyToIntValueTest {
+class ImmutablePrimitiveHashMapOfIntKeyToIntValueTest {
 
   @Test
   void isEmpty_returnsTrue() {

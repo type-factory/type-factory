@@ -100,11 +100,13 @@ class IntegerTypeParserBuilderImplTest {
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void minValueInclusive_shouldThrowException(final long minValue) {
 
-    final String expectedMessage = "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.";
+    final var expectedMessage = "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.";
 
-        assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> IntegerTypeParser.builder().minValueInclusive(minValue).build())
-            .withMessageStartingWith(expectedMessage);
+    final var builder = IntegerTypeParser.builder();
+
+    assertThatExceptionOfType(TypeParserBuilderException.class)
+        .isThrownBy(() -> builder.minValueInclusive(minValue))
+        .withMessageStartingWith(expectedMessage);
   }
 
   @ParameterizedTest
@@ -117,10 +119,12 @@ class IntegerTypeParserBuilderImplTest {
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void minValueExclusive_shouldThrowException(final long minValue) {
 
-    final String expectedMessage = "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.";
+    final var expectedMessage = "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.";
+
+    final var builder = IntegerTypeParser.builder();
 
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder().minValueExclusive(minValue).build())
+        .isThrownBy(() -> builder.minValueExclusive(minValue))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -134,10 +138,12 @@ class IntegerTypeParserBuilderImplTest {
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void maxValueInclusive_shouldThrowException(final long maxValue) {
 
-    final String expectedMessage = "An invalid maximum value has been configured for the IntegerTypeParser – maximum value must be less-than or equal to Integer.MAX_VALUE.";
+    final var expectedMessage = "An invalid maximum value has been configured for the IntegerTypeParser – maximum value must be less-than or equal to Integer.MAX_VALUE.";
+
+    final var builder = IntegerTypeParser.builder();
 
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder().maxValueInclusive(maxValue).build())
+        .isThrownBy(() -> builder.maxValueInclusive(maxValue))
         .withMessageStartingWith(expectedMessage);
   }
 
@@ -153,8 +159,10 @@ class IntegerTypeParserBuilderImplTest {
 
     final var expectedMessage = "An invalid maximum value has been configured for the IntegerTypeParser – maximum value must be less-than or equal to Integer.MAX_VALUE.";
 
+    final var builder = IntegerTypeParser.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder().maxValueExclusive(maxValue).build())
+        .isThrownBy(() -> builder.maxValueExclusive(maxValue))
         .withMessageStartingWith(expectedMessage);
   }
 

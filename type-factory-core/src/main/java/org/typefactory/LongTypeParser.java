@@ -151,7 +151,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends LongType> S of(Short value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      Short value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given integer value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms to all
@@ -190,7 +194,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends LongType> S of(Integer value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      Integer value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given long value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms to all
@@ -229,7 +237,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends LongType> S of(Long value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      Long value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given {@link BigInteger} value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it
@@ -268,7 +280,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends LongType> S of(BigInteger value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      BigInteger value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link Long} value. This method is null-safe,

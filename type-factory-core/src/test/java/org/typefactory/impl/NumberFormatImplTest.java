@@ -34,7 +34,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.typefactory.NumberFormat;
 import org.typefactory.TypeParserBuilderException;
 
-public class NumberFormatImplTest {
+class NumberFormatImplTest {
 
   @Test
   void numberFormatBuilder_ShouldBuildNumberFormatWithDefaultValues() {
@@ -329,19 +329,21 @@ public class NumberFormatImplTest {
 
   @Test
   void zeroDigit_withInvalidChar_ShouldThrowException() {
+
+    final var builder = NumberFormat.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> NumberFormat.builder()
-            .zeroDigit('A') // 'A' is not a valid zero digit
-            .build())
+        .isThrownBy(() -> builder.zeroDigit('A')) // 'A' is not a valid zero digit
         .withMessageContaining("An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
   }
 
   @Test
   void zeroDigit_withInvalidCodePoint_ShouldThrowException() {
+
+    final var builder = NumberFormat.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> NumberFormat.builder()
-            .zeroDigit((int)'A') // 'A' is not a valid zero digit
-            .build())
+        .isThrownBy(() -> builder.zeroDigit((int)'A')) // 'A' is not a valid zero digit
         .withMessageContaining("An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
   }
 }

@@ -26,7 +26,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     final var rootTreeNode = new RootTreeNode();
     final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
     assertThat(converter.isEmpty()).isTrue();
-    assertThat(converter.getMaxConvertedLength()).isEqualTo(0);
+    assertThat(converter.getMaxConvertedLength()).isZero();
   }
 
   @Test
@@ -60,7 +60,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     final ConverterResults results = converter.createConverterResults();
     final boolean result = converter.isCodePointConversionRequired('a', 0, results);
     assertThat(result).isTrue();
-    assertThat(results.getConvertFromIndex()).isEqualTo(0);
+    assertThat(results.getConvertFromIndex()).isZero();
     assertThat(results.getConvertToCodePointSequence()).containsExactly('b');
   }
 
@@ -108,7 +108,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     final boolean result = converter.isCodePointConversionRequired(value, 0, results);
     assertThat(result).isEqualTo(requiresConversion);
     if (requiresConversion) {
-      assertThat(results.getConvertFromIndex()).isEqualTo(0);
+      assertThat(results.getConvertFromIndex()).isZero();
       assertThat(results.getConvertToCodePointSequence()).containsExactly(convertToCodePointSequence.codePoints().toArray());
     }
   }
@@ -141,7 +141,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
     assertThat(node.isLeafNode()).isFalse();
     assertThat(node.codePoints()).contains('b');
 
-    assertThat(rootTreeNode.toString()).isEqualTo("""
+    assertThat(rootTreeNode).hasToString("""
         •
         ├a ⟶ "b"
         │└b

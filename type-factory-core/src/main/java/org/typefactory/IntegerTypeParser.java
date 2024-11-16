@@ -151,7 +151,10 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends IntegerType> S of(Short value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S of(Short value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given integer value as an instance of {@code S}, a subclass of {@link IntegerType}, after verifying that it conforms to
@@ -190,7 +193,10 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends IntegerType> S of(Integer value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S of(Integer value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given long value as an instance of {@code S}, a subclass of {@link IntegerType}, after verifying that it conforms to all
@@ -229,7 +235,10 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends IntegerType> S of(Long value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S of(Long value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given {@link BigInteger} value as an instance of {@code S}, a subclass of {@link IntegerType}, after verifying that it
@@ -268,7 +277,10 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   @Override
-  <S extends IntegerType> S of(BigInteger value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S of(BigInteger value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link Integer} value. This method is null-safe,

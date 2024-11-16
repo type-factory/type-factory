@@ -9,7 +9,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.testutils.IntArrayConverter;
 
-public class PrimitiveListOfIntTest {
+class PrimitiveListOfIntTest {
 
   @Test
   void addAll_ShouldHandleNullList() {

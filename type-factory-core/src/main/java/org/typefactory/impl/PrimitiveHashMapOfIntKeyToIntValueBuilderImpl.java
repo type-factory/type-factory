@@ -19,6 +19,7 @@ import static java.lang.Math.max;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValue.PrimitiveHashMapOfIntKeyToIntValueBuilder;
 
 /**
  * <p>This is a hash-map of integer keys mapped to integer values.</p>
@@ -31,7 +32,7 @@ import java.util.Comparator;
  * <p>We currently use maps of this type to map code-points (characters)
  * for an arbitrary numeric radix (base) to their corresponding value.</p>
  */
-final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMapOfIntKeyToIntValue {
+final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHashMapOfIntKeyToIntValueBuilder {
 
   static final int DEFAULT_INITIAL_CAPACITY = 64;
 
@@ -51,16 +52,17 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
 
   private HashTable hashTable;
 
-  PrimitiveHashMapOfIntKeyToIntValueBuilder() {
+  PrimitiveHashMapOfIntKeyToIntValueBuilderImpl() {
     this(DEFAULT_INITIAL_CAPACITY);
   }
 
-  PrimitiveHashMapOfIntKeyToIntValueBuilder(final int initialCapacity) {
+  PrimitiveHashMapOfIntKeyToIntValueBuilderImpl(final int initialCapacity) {
     this.initialCapacity = initialCapacity;
     clear();
   }
 
-  void clear() {
+  @Override
+  public void clear() {
     this.hashTable = new HashTable(initialCapacity);
     this.keySet = new PrimitiveSortedSetOfInt();
     this.threshold = (int) (initialCapacity * LOAD_FACTOR);
@@ -72,6 +74,7 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
    *
    * @return the number of keys in this hash map.
    */
+  @Override
   public int size() {
     return keySet.size();
   }
@@ -81,14 +84,17 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
    *
    * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
    */
+  @Override
   public boolean isEmpty() {
     return size() == 0;
   }
 
+  @Override
   public int[] keySet() {
     return keySet.toArray();
   }
 
+  @Override
   public boolean contains(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -109,6 +115,7 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
    * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
    * @see Integer#MIN_VALUE
    */
+  @Override
   public int get(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -130,7 +137,8 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
    * @param key   the key identifying the entry in the map.
    * @param value the value to associate with the specified {@code key}.
    */
-  void put(final int key, final int value) {
+  @Override
+  public void put(final int key, final int value) {
     if (value == Integer.MIN_VALUE) {
       remove(key);
       return;
@@ -141,7 +149,7 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
     put(key, value, hashTable);
   }
 
-  void putAll(final HashTable sourceHashTable, final HashTable targetHashTable) {
+  private void putAll(final HashTable sourceHashTable, final HashTable targetHashTable) {
     for (int i = 0; i < sourceHashTable.keys.length; ++i) {
       if (sourceHashTable.keys[i] != null) {
         for (int j = 0; j < sourceHashTable.keys[i].length; ++j) {
@@ -186,7 +194,8 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
    * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
    * @see Integer#MIN_VALUE
    */
-  int remove(final int key) {
+  @Override
+  public int remove(final int key) {
     final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     final int[] bucketKeys = hashTable.keys[hashIndex];
     final int[] bucketValues = hashTable.values[hashIndex];
@@ -219,7 +228,8 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder implements PrimitiveHashMa
     this.hashTable = newHashTable;
   }
 
-  PrimitiveHashMapOfIntKeyToIntValue build() {
+  @Override
+  public PrimitiveHashMapOfIntKeyToIntValue build() {
     final int minBuckets = max(size(), 1);
     final int maxBuckets = minBuckets * 4;
     final HashOption[] hashOptions = new HashOption[maxBuckets - minBuckets];

@@ -6,7 +6,7 @@ import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
 interface PrimitiveHashMapOfIntKeyToIntValue {
 
   static PrimitiveHashMapOfIntKeyToIntValueBuilder builder() {
-    return new PrimitiveHashMapOfIntKeyToIntValueBuilder();
+    return new PrimitiveHashMapOfIntKeyToIntValueBuilderImpl();
   }
 
   int size();
@@ -53,4 +53,31 @@ interface PrimitiveHashMapOfIntKeyToIntValue {
 
   String toDataStructureString();
 
+  interface PrimitiveHashMapOfIntKeyToIntValueBuilder extends PrimitiveHashMapOfIntKeyToIntValue {
+
+    void clear();
+
+    int size();
+
+    boolean isEmpty();
+
+    int[] keySet();
+
+    boolean contains(int key);
+
+    int get(int key);
+
+    void put(int key, int value);
+
+    int remove(int key);
+
+    PrimitiveHashMapOfIntKeyToIntValue build();
+
+    @Override
+    String toString();
+
+    String toDataStructureString();
+  }
 }
+
+
