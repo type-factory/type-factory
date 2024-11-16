@@ -75,6 +75,27 @@ final class LongTypeParserImpl implements LongTypeParser {
     this.ignoreLeadingPositiveSign = ignoreLeadingPositiveSign;
   }
 
+  private static FractionalPart calculateNewFractionalPart(
+      final int fractionalDigitCount, final int fractionalDigitValue, final FractionalPart fractionalPart) {
+
+    if (fractionalDigitCount == 1) {
+      if (fractionalDigitValue == 5) {
+        return FractionalPart.EQUIDISTANT;
+      } else if (fractionalDigitValue > 5) {
+        return FractionalPart.UPPER;
+      } else if (fractionalDigitValue > 0) {
+        return FractionalPart.LOWER;
+      }
+    } else if (fractionalDigitValue > 0) {
+      if (fractionalPart == FractionalPart.ZERO) {
+        return FractionalPart.LOWER;
+      } else if (fractionalPart == FractionalPart.EQUIDISTANT) {
+        return FractionalPart.UPPER;
+      }
+    }
+    return fractionalPart;
+  }
+
   @Override
   public int getRadix() {
     return radix;
@@ -373,8 +394,12 @@ final class LongTypeParserImpl implements LongTypeParser {
     return (long) codePoint << 32 | sourceIndex;
   }
 
-  private long calculateNewTargetValueProvidedNextDigitValue(final CharSequence source, final Sign sign, final long targetValue,
+  private long calculateNewTargetValueProvidedNextDigitValue(
+      final CharSequence source,
+      final Sign sign,
+      final long targetValue,
       final int nextDigitValue) {
+
     if (sign == Sign.NEGATIVE) {
       long newTargetValue = (targetValue * radix) - nextDigitValue;
       return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
@@ -384,8 +409,12 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  private long calculateNewTargetValueApplyingRoundingValue(final CharSequence source, final Sign sign, final long targetValue,
+  private long calculateNewTargetValueApplyingRoundingValue(
+      final CharSequence source,
+      final Sign sign,
+      final long targetValue,
       final long roundingValue) {
+
     long newTargetValue = targetValue + roundingValue;
     if (sign == Sign.NEGATIVE) {
       return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
@@ -394,7 +423,11 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  private long validateNewPositiveTargetValue(final CharSequence source, final long targetValue, final long newTargetValue) {
+  private long validateNewPositiveTargetValue(
+      final CharSequence source,
+      final long targetValue,
+      final long newTargetValue) throws InvalidValueException {
+
     if (newTargetValue < targetValue) {
       // primitive overflow so number too large
       if (maxValueComparisonInclusive) {
@@ -406,9 +439,13 @@ final class LongTypeParserImpl implements LongTypeParser {
     return newTargetValue;
   }
 
-  private long validateNewNegativeTargetValue(final CharSequence source, final long targetValue, final long newTargetValue) {
+  private long validateNewNegativeTargetValue(
+      final CharSequence source,
+      final long targetValue,
+      final long newTargetValue) throws InvalidValueException {
+
     if (newTargetValue > targetValue) {
-      // primitive overflow so number too small
+      // primitive underflow so number too small
       if (minValueComparisonInclusive) {
         throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
       } else {
@@ -418,30 +455,12 @@ final class LongTypeParserImpl implements LongTypeParser {
     return newTargetValue;
   }
 
-  private static FractionalPart calculateNewFractionalPart(
-      final int fractionalDigitCount, final int fractionalDigitValue, final FractionalPart fractionalPart) {
-
-    if (fractionalDigitCount == 1) {
-      if (fractionalDigitValue == 5) {
-        return FractionalPart.EQUIDISTANT;
-      } else if (fractionalDigitValue > 5) {
-        return FractionalPart.UPPER;
-      } else if (fractionalDigitValue > 0) {
-        return FractionalPart.LOWER;
-      }
-    } else if (fractionalDigitValue > 0) {
-      if (fractionalPart == FractionalPart.ZERO) {
-        return FractionalPart.LOWER;
-      } else if (fractionalPart == FractionalPart.EQUIDISTANT) {
-        return FractionalPart.UPPER;
-      }
-    }
-    return fractionalPart;
-  }
-
   private long getRoundingValue(
-      final CharSequence source, final Sign sign, final NumberFormat numberFormat, long targetValue,
-      final FractionalPart fractionalPart) throws ArithmeticException {
+      final CharSequence source,
+      final Sign sign,
+      final NumberFormat numberFormat,
+      final long targetValue,
+      final FractionalPart fractionalPart) throws InvalidValueException {
 
     if (sign == Sign.NEGATIVE) {
       return switch (numberFormat.getRoundingMode()) {

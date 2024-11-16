@@ -64,8 +64,11 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
 
   @Test
   void allowCustomBaseNumbers_singleCharacterArrayForBaseCharactersThrowsException() {
+
+    final var builder = IntegerTypeParser.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder().allowCustomBaseNumbers(new char[]{'0'}))
+        .isThrownBy(() -> builder.allowCustomBaseNumbers(new char[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
@@ -74,8 +77,11 @@ class IntegerTypeParserImpl_parseArbitraryRadixTest {
 
   @Test
   void allowCustomBaseNumbers_singleCodePointArrayForBaseCharactersThrowsException() {
+
+    final var builder = IntegerTypeParser.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> IntegerTypeParser.builder().allowCustomBaseNumbers(new int[]{'0'}))
+        .isThrownBy(() -> builder.allowCustomBaseNumbers(new int[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());

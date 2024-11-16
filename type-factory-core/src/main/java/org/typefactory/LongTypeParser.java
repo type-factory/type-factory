@@ -329,10 +329,10 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  Long parse(CharSequence value, final Locale locale) throws InvalidValueException;
+  Long parse(CharSequence value, Locale locale) throws InvalidValueException;
 
   @Override
-  Long parse(CharSequence value, final NumberFormat numberFormat) throws InvalidValueException;
+  Long parse(CharSequence value, NumberFormat numberFormat) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link LongType}. This method is null-safe,
@@ -369,7 +369,11 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  <S extends LongType> S parse(CharSequence value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S parse(
+      CharSequence value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link LongType}, using the provided {@code locale}.
@@ -412,9 +416,20 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  <S extends LongType> S parse(CharSequence value, final Locale locale, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S parse(
+      CharSequence value,
+      Locale locale,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
-  <S extends LongType> S parse(CharSequence value, final NumberFormat numberFormat, Function<Long, S> constructorOrFactoryMethod)
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S parse(
+      CharSequence value,
+      NumberFormat numberFormat,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod)
       throws InvalidValueException;
 
   /**

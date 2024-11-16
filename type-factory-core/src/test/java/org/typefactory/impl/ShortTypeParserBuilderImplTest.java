@@ -110,7 +110,7 @@ class ShortTypeParserBuilderImplTest {
       case "Long":
       default:
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().minValueInclusive(minValue).build())
+            .isThrownBy(() -> builder.minValueInclusive(minValue).build())
             .withMessageStartingWith(expectedMessage);
         break;
     }
@@ -140,7 +140,7 @@ class ShortTypeParserBuilderImplTest {
       case "Long":
       default:
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().minValueExclusive(minValue).build())
+            .isThrownBy(() -> builder.minValueExclusive(minValue).build())
             .withMessageStartingWith(expectedMessage);
         break;
     }
@@ -170,7 +170,7 @@ class ShortTypeParserBuilderImplTest {
       case "Long":
       default:
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().maxValueInclusive(maxValue).build())
+            .isThrownBy(() -> builder.maxValueInclusive(maxValue).build())
             .withMessageStartingWith(expectedMessage);
         break;
     }
@@ -200,7 +200,7 @@ class ShortTypeParserBuilderImplTest {
       case "Long":
       default:
         assertThatExceptionOfType(TypeParserBuilderException.class)
-            .isThrownBy(() -> ShortTypeParser.builder().maxValueExclusive(maxValue).build())
+            .isThrownBy(() -> builder.maxValueExclusive(maxValue).build())
             .withMessageStartingWith(expectedMessage);
         break;
     }

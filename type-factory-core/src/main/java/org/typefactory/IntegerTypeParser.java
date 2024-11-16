@@ -325,10 +325,10 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  Integer parse(CharSequence value, final Locale locale) throws InvalidValueException;
+  Integer parse(CharSequence value, Locale locale) throws InvalidValueException;
 
   @Override
-  Integer parse(CharSequence value, final NumberFormat numberFormat) throws InvalidValueException;
+  Integer parse(CharSequence value, NumberFormat numberFormat) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link IntegerType}. This method is null-safe,
@@ -366,7 +366,11 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @see #parse(CharSequence, Locale, Function)
    */
   @Override
-  <S extends IntegerType> S parse(CharSequence value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S parse(
+      CharSequence value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into an instance of {@code S}, a subclass of {@link IntegerType}, using the provided {@code locale}.
@@ -411,11 +415,21 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
    * @see #parse(CharSequence, Function)
    */
   @Override
-  <S extends IntegerType> S parse(CharSequence value, final Locale locale, Function<Integer, S> constructorOrFactoryMethod)
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S parse(
+      CharSequence value,
+      Locale locale,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod)
       throws InvalidValueException;
 
   @Override
-  <S extends IntegerType> S parse(CharSequence value, final NumberFormat numberFormat, Function<Integer, S> constructorOrFactoryMethod)
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  <S extends IntegerType> S parse(
+      CharSequence value,
+      NumberFormat numberFormat,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      Function<Integer, S> constructorOrFactoryMethod)
       throws InvalidValueException;
 
   /**

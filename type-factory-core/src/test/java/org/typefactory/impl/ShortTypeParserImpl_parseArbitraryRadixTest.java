@@ -52,11 +52,10 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
   @Test
   void build_allowCustomBaseNumbersForNullCodepointArray() {
 
+    final var builder = ShortTypeParser.builder();
+
     final TypeParserBuilderException exception = catchThrowableOfType(
-        TypeParserBuilderException.class,
-        () -> ShortTypeParser.builder()
-            .allowCustomBaseNumbers((int[]) null)
-            .build());
+        TypeParserBuilderException.class, () -> builder.allowCustomBaseNumbers((int[]) null));
 
     assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
     assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
@@ -64,8 +63,11 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
 
   @Test
   void allowCustomBaseNumbers_singleCharacterArrayForBaseCharactersThrowsException() {
+
+    final var builder = ShortTypeParser.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> ShortTypeParser.builder().allowCustomBaseNumbers(new char[]{'0'}))
+        .isThrownBy(() -> builder.allowCustomBaseNumbers(new char[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());
@@ -74,8 +76,11 @@ class ShortTypeParserImpl_parseArbitraryRadixTest {
 
   @Test
   void allowCustomBaseNumbers_singleCodePointArrayForBaseCharactersThrowsException() {
+
+    final var builder = ShortTypeParser.builder();
+
     assertThatExceptionOfType(TypeParserBuilderException.class)
-        .isThrownBy(() -> ShortTypeParser.builder().allowCustomBaseNumbers(new int[]{'0'}))
+        .isThrownBy(() -> builder.allowCustomBaseNumbers(new int[]{'0'}))
         .satisfies(exception -> {
           assertThat(exception.getMessageCode()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.code());
           assertThat(exception.getMessage()).isEqualTo(INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE.message());

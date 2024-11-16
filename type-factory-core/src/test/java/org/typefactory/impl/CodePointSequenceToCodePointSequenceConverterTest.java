@@ -78,7 +78,8 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   void isCodePointConversionRequired_ShouldThrowException_WhenInvalidConverterResults() {
     final var rootTreeNode = new RootTreeNode();
     final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
-    assertThatThrownBy(() -> converter.isCodePointConversionRequired('a', 0, new SomeConverterResults()))
+    final var someConverterResults = new SomeConverterResults();
+    assertThatThrownBy(() -> converter.isCodePointConversionRequired('a', 0, someConverterResults))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("Invalid argument - 'converterResults' must be of type");
   }
