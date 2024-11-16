@@ -76,28 +76,48 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
-  public <S extends IntegerType> S of(Short value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final Short value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends IntegerType> S of(Integer value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final Integer value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends IntegerType> S of(Long value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final Long value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends IntegerType> S of(BigInteger value, Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final BigInteger value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
@@ -125,7 +145,12 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
-  public <T extends IntegerType> T parse(final CharSequence value, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <T extends IntegerType> T parse(
+      final CharSequence value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     final Long parsedValue = wrappedParser.parse(value);
     return parsedValue == null
         ? null
@@ -133,12 +158,23 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   }
 
   @Override
-  public <T extends IntegerType> T parse(final CharSequence value, final Locale locale, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <T extends IntegerType> T parse(
+      final CharSequence value,
+      final Locale locale,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     return parse(value, NumberFormat.of(locale), constructorOrFactoryMethod);
   }
 
   @Override
-  public <T extends IntegerType> T parse(final CharSequence value, final NumberFormat numberFormat, Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <T extends IntegerType> T parse(
+      final CharSequence value,
+      // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final NumberFormat numberFormat, final Function<Integer, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     final Long parsedValue = wrappedParser.parse(value, numberFormat);
     return parsedValue == null
         ? null

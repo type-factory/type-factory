@@ -156,28 +156,47 @@ final class LongTypeParserImpl implements LongTypeParser {
   }
 
   @Override
-  public <S extends LongType> S of(Short value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(
+      final Short value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends LongType> S of(Integer value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(
+      final Integer value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends LongType> S of(Long value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(
+      final Long value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
   }
 
   @Override
-  public <S extends LongType> S of(BigInteger value, Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(final BigInteger value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));
@@ -195,20 +214,35 @@ final class LongTypeParserImpl implements LongTypeParser {
     return parseImpl(source, numberFormat == null ? defaultNumberFormat : numberFormat);
   }
 
-  public <T extends LongType> T parse(final CharSequence value, Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <T extends LongType> T parse(
+      final CharSequence value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     final Long parsedValue = parse(value);
     return parsedValue == null
         ? null
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  public <T extends LongType> T parse(final CharSequence value, final Locale locale, Function<Long, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <T extends LongType> T parse(
+      final CharSequence value,
+      final Locale locale,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     return parse(value, NumberFormat.of(locale), constructorOrFactoryMethod);
   }
 
-  public <T extends LongType> T parse(final CharSequence value, final NumberFormat numberFormat, Function<Long, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <T extends LongType> T parse(
+      final CharSequence value,
+      final NumberFormat numberFormat,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, T> constructorOrFactoryMethod) throws InvalidValueException {
+
     final Long parsedValue = parseImpl(value, numberFormat == null ? defaultNumberFormat : numberFormat);
     return parsedValue == null
         ? null
