@@ -1,12 +1,13 @@
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
-import static org.typefactory.impl.StringBuilderUtils.appendHexWithZeroPadding;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 interface PrimitiveHashMapOfIntKeyToIntValue {
 
   static PrimitiveHashMapOfIntKeyToIntValueBuilder builder() {
-    return new PrimitiveHashMapOfIntKeyToIntValueBuilderImpl();
+    return new PrimitiveHashMapOfIntKeyToIntValueBuilder();
   }
 
   int size();
@@ -32,52 +33,19 @@ interface PrimitiveHashMapOfIntKeyToIntValue {
   int get(final int key);
 
   default String toEntryString() {
-    final StringBuilder s = new StringBuilder();
-    int value;
-    for (int key : keySet()) {
-      value = get(key);
-      appendHexWithZeroPadding(s, key);
-      s.append(" ⟶ ");
-      appendHexWithZeroPadding(s, value);
-      // We use Integer.MIN_VALUE as a sentinel value to indicate that no value exists for the key.
-      if (value > Integer.MIN_VALUE) {
-        s.append(", ").appendCodePoint(key).append(" ⟶ ").appendCodePoint(value);
-      }
-      s.append(SYSTEM_LINE_SEPARATOR);
-    }
-    if (s.length() >= SYSTEM_LINE_SEPARATOR.length()) {
-      s.setLength(s.length() - SYSTEM_LINE_SEPARATOR.length());
-    }
-    return s.toString();
+    return stream(keySet())
+        .mapToObj(key -> {
+          var value = get(key);
+          if (Character.isValidCodePoint(value)) {
+            return format("0x%08X ⟶ 0x%08X, %c ⟶ %c", key, value, key, value);
+          } else {
+            return format("0x%08X ⟶ 0x%08X", key, value);
+          }})
+        .collect(joining("\n"));
   }
 
   String toDataStructureString();
 
-  interface PrimitiveHashMapOfIntKeyToIntValueBuilder extends PrimitiveHashMapOfIntKeyToIntValue {
-
-    void clear();
-
-    int size();
-
-    boolean isEmpty();
-
-    int[] keySet();
-
-    boolean contains(int key);
-
-    int get(int key);
-
-    void put(int key, int value);
-
-    int remove(int key);
-
-    PrimitiveHashMapOfIntKeyToIntValue build();
-
-    @Override
-    String toString();
-
-    String toDataStructureString();
-  }
 }
 
 

@@ -1,6 +1,5 @@
 package org.typefactory.impl;
 
-import static java.util.Objects.requireNonNullElse;
 import static org.typefactory.impl.Constants.ARABIC_LETTER_MARK;
 import static org.typefactory.impl.Constants.HEAVY_MINUS;
 import static org.typefactory.impl.Constants.LEFT_TO_RIGHT_INDICATOR;
@@ -73,7 +72,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   private static void addCodePointToRadixCodePointsMap(
-      final PrimitiveHashMapOfIntKeyToIntValue.PrimitiveHashMapOfIntKeyToIntValueBuilder numericRadixCodePointsMapBuilder,
+      final PrimitiveHashMapOfIntKeyToIntValueBuilder numericRadixCodePointsMapBuilder,
       final int codepoint,
       final int numericValue) {
 
@@ -336,7 +335,7 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
           .build();
     }
 
-    numericRadixCodePoints = requireNonNullElse(codePointsForCustomNumericBase, Constants.EMPTY_INT_ARRAY);
+    numericRadixCodePoints = codePointsForCustomNumericBase;
     return this;
   }
 

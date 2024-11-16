@@ -16,10 +16,12 @@
 package org.typefactory.impl;
 
 import static java.lang.Math.max;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValue.PrimitiveHashMapOfIntKeyToIntValueBuilder;
 
 /**
  * <p>This is a hash-map of integer keys mapped to integer values.</p>
@@ -32,7 +34,7 @@ import org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValue.PrimitiveHashMapO
  * <p>We currently use maps of this type to map code-points (characters)
  * for an arbitrary numeric radix (base) to their corresponding value.</p>
  */
-final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHashMapOfIntKeyToIntValueBuilder {
+final class PrimitiveHashMapOfIntKeyToIntValueBuilder {
 
   static final int DEFAULT_INITIAL_CAPACITY = 64;
 
@@ -52,16 +54,15 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
 
   private HashTable hashTable;
 
-  PrimitiveHashMapOfIntKeyToIntValueBuilderImpl() {
+  PrimitiveHashMapOfIntKeyToIntValueBuilder() {
     this(DEFAULT_INITIAL_CAPACITY);
   }
 
-  PrimitiveHashMapOfIntKeyToIntValueBuilderImpl(final int initialCapacity) {
+  PrimitiveHashMapOfIntKeyToIntValueBuilder(final int initialCapacity) {
     this.initialCapacity = initialCapacity;
     clear();
   }
 
-  @Override
   public void clear() {
     this.hashTable = new HashTable(initialCapacity);
     this.keySet = new PrimitiveSortedSetOfInt();
@@ -74,7 +75,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    *
    * @return the number of keys in this hash map.
    */
-  @Override
   public int size() {
     return keySet.size();
   }
@@ -84,17 +84,14 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    *
    * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
    */
-  @Override
   public boolean isEmpty() {
     return size() == 0;
   }
 
-  @Override
   public int[] keySet() {
     return keySet.toArray();
   }
 
-  @Override
   public boolean contains(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -115,7 +112,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
    * @see Integer#MIN_VALUE
    */
-  @Override
   public int get(final int key) {
     int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     int[] bucket = hashTable.keys[hashIndex];
@@ -137,7 +133,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    * @param key   the key identifying the entry in the map.
    * @param value the value to associate with the specified {@code key}.
    */
-  @Override
   public void put(final int key, final int value) {
     if (value == Integer.MIN_VALUE) {
       remove(key);
@@ -164,7 +159,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    *
    * @param key   the key identifying the entry in the map.
    * @param value the value to associate with the specified {@code key}.
-   * @return the index of the key-value pair in the hash bucket.
    */
   private void put(final int key, final int value, final HashTable hashTable) {
     final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
@@ -194,7 +188,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
    * @return the value for the specified {@code key} or {@link Integer#MIN_VALUE} if no such key exists.
    * @see Integer#MIN_VALUE
    */
-  @Override
   public int remove(final int key) {
     final int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
     final int[] bucketKeys = hashTable.keys[hashIndex];
@@ -228,7 +221,6 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
     this.hashTable = newHashTable;
   }
 
-  @Override
   public PrimitiveHashMapOfIntKeyToIntValue build() {
     final int minBuckets = max(size(), 1);
     final int maxBuckets = minBuckets * 4;
@@ -267,10 +259,18 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilderImpl implements PrimitiveHa
 
   @Override
   public String toString() {
-    return toEntryString();
+    return stream(keySet())
+        .mapToObj(key -> {
+          var value = get(key);
+          if (Character.isValidCodePoint(value)) {
+            return format("0x%08X ⟶ 0x%08X, %c ⟶ %c", key, value, key, value);
+          } else {
+            return format("0x%08X ⟶ 0x%08X", key, value);
+          }
+        })
+        .collect(joining("\n"));
   }
 
-  @Override
   public String toDataStructureString() {
     return PrimitiveHashMapUtils.toDataStructureStringForMapsOfIntKeyToIntValue(hashTable.keys, hashTable.values);
   }

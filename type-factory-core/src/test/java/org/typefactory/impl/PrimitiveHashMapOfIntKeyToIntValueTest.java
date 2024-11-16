@@ -17,7 +17,7 @@ package org.typefactory.impl;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValueBuilderImpl.DEFAULT_INITIAL_CAPACITY;
+import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToIntValueBuilder.DEFAULT_INITIAL_CAPACITY;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -206,7 +206,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     final var mapBuilder = PrimitiveHashMapOfIntKeyToIntValue.builder();
     mapBuilder.put('a', 'z');
     final var actual1 = mapBuilder.toString();
-    assertThat(actual1).isEqualTo("0x00000061 ⟶ 0x0000007a, a ⟶ z");
+    assertThat(actual1).isEqualTo("0x00000061 ⟶ 0x0000007A, a ⟶ z");
 
     final var map = mapBuilder.build();
     final var actual2 = map.toString();
@@ -225,7 +225,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
         0x00000061 ⟶ 0x00000077, a ⟶ w
         0x00000062 ⟶ 0x00000078, b ⟶ x
         0x00000063 ⟶ 0x00000079, c ⟶ y
-        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+        0x00000064 ⟶ 0x0000007A, d ⟶ z""");
 
     final var map = mapBuilder.build();
     final var actual2 = map.toString();
@@ -244,7 +244,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     assertThat(actual1).isEqualTo("""
         0x00000061 ⟶ 0x00000077, a ⟶ w
         0x00000062 ⟶ 0x00000078, b ⟶ x
-        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+        0x00000064 ⟶ 0x0000007A, d ⟶ z""");
 
     final var map = mapBuilder.build();
     final var actual2 = map.toString();
@@ -264,7 +264,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
     assertThat(actual1).isEqualTo("""
         0x00000061 ⟶ 0x00000077, a ⟶ w
         0x00000062 ⟶ 0x00000078, b ⟶ x
-        0x00000064 ⟶ 0x0000007a, d ⟶ z""");
+        0x00000064 ⟶ 0x0000007A, d ⟶ z""");
 
     final var map = mapBuilder.build();
     final var actual2 = map.toString();
@@ -719,10 +719,7 @@ class PrimitiveHashMapOfIntKeyToIntValueTest {
         final Class<? extends PrimitiveHashMapOfIntKeyToIntValue> expectedInstanceType,
         final Map<Integer, Integer> map) {
 
-      final Map<Integer, Integer> temp = new HashMap<>();
-      for (Entry<Integer, Integer> entry : map.entrySet()) {
-        temp.put(entry.getKey(), entry.getValue());
-      }
+      final Map<Integer, Integer> temp = new HashMap<>(map);
       this.expectedInstanceType = expectedInstanceType;
       this.map = Map.copyOf(temp);
       this.expectedSize = map.size();
