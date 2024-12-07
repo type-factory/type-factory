@@ -287,12 +287,25 @@ public class InvalidValueException extends IllegalArgumentException {
      * @param invalidValue the value that was considered invalid by the {@link TypeParser}.
      * @return this builder
      */
-    public InvalidValueExceptionBuilder invalidValue(final CharSequence invalidValue) {
+    public <T> InvalidValueExceptionBuilder invalidValue(final T invalidValue) {
       if (invalidValue instanceof String invalidValueString) {
         this.invalidValue = invalidValueString;
       } else {
         this.invalidValue = invalidValue == null ? null : invalidValue.toString();
       }
+      return this;
+    }
+
+    /**
+     * Set the value that was considered invalid by the {@link TypeParser}. This value is not presented in the {@link InvalidValueException} message
+     * as it may contain sensitive, secret or personal information. It is captured solely to enable any exception handlers meaningful access to the
+     * invalid value.
+     *
+     * @param invalidValue the value that was considered invalid by the {@link TypeParser}.
+     * @return this builder
+     */
+    public InvalidValueExceptionBuilder invalidValue(final Number invalidValue) {
+      this.invalidValue = invalidValue == null ? null : invalidValue.toString();
       return this;
     }
   }
@@ -380,16 +393,32 @@ public class InvalidValueException extends IllegalArgumentException {
         "Invalid value - does not pass custom validation criteria.");
     ParserMessageCode INVALID_VALUE_INVALID_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_character",
-        "Invalid value - invalid character ''{0}''.");
+        "Invalid value - invalid character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_CONTROL_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_control_character",
         "Invalid value - invalid control character {0}.");
+    ParserMessageCode INVALID_VALUE_INVALID_FORMAT_CHARACTER = Factory.parserMessageCode(
+        "invalid_value_invalid_format_character",
+        "Invalid value - invalid format character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_QUOTE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_quote_character",
-        "Invalid value - invalid quote character \"{0}\".");
+        "Invalid value - invalid quote character {0}.");
     ParserMessageCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_whitespace_character",
         "Invalid value - invalid white-space character {0}.");
+
+    ParserMessageCode INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS = Factory.parserMessageCode(
+        "invalid_value_decimal_point_not_permitted_for_non_base_ten_numbers",
+        "Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers ''{0}''.");
+    ParserMessageCode INVALID_VALUE_MULTIPLE_DECIMAL_POINTS = Factory.parserMessageCode(
+        "invalid_value_multiple_decimal_points",
+        "Invalid value - invalid character or unexpected multiple decimal points found ''{0}''.");
+    ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER = Factory.parserMessageCode(
+        "invalid_value_expecting_whole_number",
+        "Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character ''{0}''.");
+    ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART = Factory.parserMessageCode(
+        "invalid_value_expecting_whole_number",
+        "Invalid value - expected a whole number with no decimal places and no decimal point character expected.");
 
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
@@ -436,6 +465,19 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");
+
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than",
+        "Invalid value - must be greater than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than_or_equal_to",
+        "Invalid value - must be greater than or equal to {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than",
+        "Invalid value - must be less than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than_or_equal_to",
+        "Invalid value - must be less than or equal to {0}.");
   }
 
 }
