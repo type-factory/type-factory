@@ -101,6 +101,7 @@ class TypeParserImpl_StringType_ConvertNullToEmptyTest {
 
     final var parser = TypeParser.builder()
         .convertNullToEmpty()
+        .forbidWhitespace()
         .build();
 
     final SomeStringType actual = parser.parseToStringType(value, SomeStringType::new);
