@@ -86,10 +86,7 @@ final class TypeParserImpl implements TypeParser {
       throws InvalidValueException {
     final String parsedValue = parseToString(value);
     return switch (nullHandling) {
-      case PRESERVE_NULL_AND_EMPTY -> parsedValue == null
-          ? null
-          : constructorOrFactoryMethod.apply(parsedValue);
-      case CONVERT_EMPTY_TO_NULL -> parsedValue == null || parsedValue.isEmpty()
+      case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> parsedValue == null
           ? null
           : constructorOrFactoryMethod.apply(parsedValue);
       case CONVERT_NULL_TO_EMPTY -> constructorOrFactoryMethod.apply(parsedValue);
