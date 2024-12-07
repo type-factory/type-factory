@@ -201,9 +201,9 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
   }
 
   private static Stream<Arguments> provideLocaleSpecificDecimalValuesCreatedByJavaNumberFormat() {
-    final double[] allDeltas = new double[]{-0.501, -0.5, -0.499, -0.001, 0, 0.001, 0.499, 0.5, 0.501};
-    final double[] negativeDeltas = new double[]{-0.6, -0.501, -0.5, -0.499, 0.001, 0};
-    final double[] positiveDeltas = new double[]{0, 0.001, 0.499, 0.5, 0.501, 0.6};
+    final double[] allDeltas = new double[]{-0.5001, -0.5, -0.4999, -0.0001, 0, 0.0001, 0.4999, 0.5, 0.5001};
+    final double[] negativeDeltas = new double[]{-0.6, -0.5001, -0.5, -0.4999, -0.0001, 0};
+    final double[] positiveDeltas = new double[]{0, 0.0001, 0.4999, 0.5, 0.5001, 0.6};
     return minimalSetOfLocalesRepresentingAllDistinctNumberFormats()
         .flatMap(locale ->
             Arrays.stream(RoundingMode.values())
@@ -267,7 +267,32 @@ class LongTypeParserImpl_parseLocaleSpecificTest {
   @ParameterizedTest
   @MethodSource({
       "provideLocaleSpecificDecimalValuesCreatedByJavaNumberFormat"})
-  void parse_localeInParser(final Locale locale, final String value, final RoundingMode roundingMode, final BigInteger expectedRoundedValue) {
+  void parse_localeAndRoundingModeInParser(final Locale locale, final String value, final RoundingMode roundingMode, final BigInteger expectedRoundedValue) {
+
+    final var longTypeParser = LongTypeParser.builder()
+        .defaultLocale(locale)
+        .roundingMode(roundingMode)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedRoundedValue.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0) {
+      assertThatExceptionOfType(InvalidValueException.class)
+          .isThrownBy(() -> longTypeParser.parse(value))
+          .withMessageContaining("Invalid value - must be greater than or equal to -9,223,372,036,854,775,808.");
+    } else if (expectedRoundedValue.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+      assertThatExceptionOfType(InvalidValueException.class)
+          .isThrownBy(() -> longTypeParser.parse(value))
+          .withMessageContaining("Invalid value - must be less than or equal to 9,223,372,036,854,775,807.");
+    } else {
+      final var actual = longTypeParser.parse(value);
+      assertThat(actual).isEqualTo(expectedRoundedValue.longValue());
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "provideLocaleSpecificDecimalValuesCreatedByJavaNumberFormat"})
+  void parse_localeAndRoundingModeInNumberFormatObjectProvidedToParseMethod(final Locale locale, final String value, final RoundingMode roundingMode, final BigInteger expectedRoundedValue) {
 
     final var longTypeParser = LongTypeParser.builder()
         .forbidWhitespace()
