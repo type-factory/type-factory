@@ -16,8 +16,6 @@
 package org.typefactory.impl;
 
 import static java.lang.Character.isWhitespace;
-import static org.typefactory.impl.NullHandling.CONVERT_EMPTY_TO_NULL;
-import static org.typefactory.impl.NullHandling.PRESERVE_NULL_AND_EMPTY;
 
 import java.text.Normalizer;
 import java.util.Arrays;
@@ -26,10 +24,10 @@ import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import org.typefactory.MessageCode;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
+import org.typefactory.MessageCode;
 import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
@@ -82,13 +80,17 @@ final class TypeParserImpl implements TypeParser {
     this.converter = converter;
   }
 
+
   @Override
   public <T extends StringType> T parseToStringType(final CharSequence value, Function<String, T> constructorOrFactoryMethod)
       throws InvalidValueException {
-    return (nullHandling == PRESERVE_NULL_AND_EMPTY && value == null)
-        || (nullHandling == CONVERT_EMPTY_TO_NULL && (value == null || value.isEmpty()))
-        ? null
-        : constructorOrFactoryMethod.apply(parseToString(value));
+    final String parsedValue = parseToString(value);
+    return switch (nullHandling) {
+      case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> parsedValue == null
+          ? null
+          : constructorOrFactoryMethod.apply(parsedValue);
+      case CONVERT_NULL_TO_EMPTY -> constructorOrFactoryMethod.apply(parsedValue);
+    };
   }
 
   @Override
