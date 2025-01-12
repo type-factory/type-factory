@@ -222,11 +222,10 @@ final class PrimitiveHashMapOfIntKeyToIntValueBuilder {
   }
 
   public PrimitiveHashMapOfIntKeyToIntValue build() {
-    final int minBuckets = max(size(), 1);
-    final int maxBuckets = minBuckets * 4;
-    final HashOption[] hashOptions = new HashOption[maxBuckets - minBuckets];
-    for (int numberOfBuckets = minBuckets, optionIndex = 0; numberOfBuckets < maxBuckets; ++numberOfBuckets, ++optionIndex) {
-      hashOptions[optionIndex] = new HashOption(keySet(), numberOfBuckets);
+    final int minBuckets = max(1, size());
+    final HashOption[] hashOptions = new HashOption[minBuckets * 4];
+    for (int optionIndex = 0; optionIndex < hashOptions.length; ++optionIndex) {
+      hashOptions[optionIndex] = new HashOption(keySet(), optionIndex + minBuckets);
       if (hashOptions[optionIndex].containsHashBucketsWithAtMostOneKey()) {
         break;
       }
