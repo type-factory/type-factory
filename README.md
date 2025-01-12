@@ -5,8 +5,9 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=type-factory_type-factory&metric=coverage)](https://sonarcloud.io/summary/new_code?id=type-factory_type-factory)
 <br/>
-[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
 [![CodeQL](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/codeql.yml)
+[![Java build](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml/badge.svg?branch=main)](https://github.com/type-factory/type-factory/actions/workflows/maven-build.yml)
+[![Javadoc](https://javadoc.io/badge2/org.typefactory/type-factory-core/javadoc.svg)](https://javadoc.io/doc/org.typefactory/type-factory-core)
 [![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
 Type Factory
@@ -22,46 +23,41 @@ Easily create custom data types and remove cruft and boilerplate from your code.
 Latest release
 ==============
 
-To use Type Factory, you must be using Java 17 or later. 
+Type Factory requires that you are using Java 17 or later. 
 
-### type-factory-bom [<img alt="Maven Central" align="right" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
-
-The Type Factory bill-of-materials (bom) containing dependencies to all Type Factory modules.
+Consider importing the Type Factory bill-of-materials (bom) into your Maven dependency management section and then add the core and language modules as needed to your Maven dependencies section.
 
 ```xml
-<dependency>
-  <groupId>org.typefactory</groupId>
-  <artifactId>type-factory-bom</artifactId>
-  <version>1.0.0</version>
-  <type>pom</type>
-</dependency>
+<!-- Import the bill-of-materials (bom) into your project -->
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.typefactory</groupId>
+      <artifactId>type-factory-bom</artifactId>
+      <version>1.0.1</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<!-- Then import the type-factory-core module and 
+     optionally the type-factory-language module. --> 
+<dependencies>
+  <dependency>
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory-core</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory-language</artifactId>
+  </dependency>
+</dependencies>
 ```
 
-### type-factory-core [<img alt="Maven Central" align="right" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-core?label=type-factory-core">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
-
-The core module contains everything you need to create your custom data types. 
-It is a good place to start.
-
-```xml
-<dependency>
-  <groupId>org.typefactory</groupId>
-  <artifactId>type-factory-core</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
-
-### type-factory-language [<img alt="Maven Central" align="right" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-language?label=type-factory-language">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
-
-This module provides language specific alphabet subsets that will help you write your custom
-data types. It is still very young and a work in progress.
-
-```xml
-<dependency>
-  <groupId>org.typefactory</groupId>
-  <artifactId>type-factory-language</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
+[<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
+[<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-core?label=type-factory-core">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
+[<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-language?label=type-factory-language">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
 Example 1 – currency code
 -------------------------
