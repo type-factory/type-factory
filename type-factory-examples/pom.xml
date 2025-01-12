@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
 
   <artifactId>type-factory-examples</artifactId>
