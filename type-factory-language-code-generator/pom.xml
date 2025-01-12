@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>type-factory-language-code-generator</artifactId>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.11.3</version>
+      <version>5.11.4</version>
       <scope>test</scope>
     </dependency>
 
