@@ -45,7 +45,7 @@
 
     <junit-jupiter.version>5.11.4</junit-jupiter.version>
     <assertj-core.version>3.26.3</assertj-core.version>
-    <mockito-bom.version>5.14.2</mockito-bom.version>
+    <mockito-bom.version>5.15.2</mockito-bom.version>
     <icu4j.version>76.1</icu4j.version>
 
     <sonar.organization>type-factory</sonar.organization>
