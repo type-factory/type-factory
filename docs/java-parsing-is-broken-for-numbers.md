@@ -58,9 +58,9 @@ Long value = -12345678L;
 Locale locale = new Locale("en", "US"); // English (United States)
 NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
-value.toString()                    = "-12345678"
-numberFormat.format(value)          = "-12,345,678"
-String.format(locale, "%d", value)  = "-12345678"
+value.toString()                    → "-12345678"
+numberFormat.format(value)          → "-12,345,678"
+String.format(locale, "%d", value)  → "-12345678"
 
 Long.parseLong(value.toString())                       = Long.parseLong("-12345678"  )     = -12345678L
 Long.parseLong(numberFormat.format(value))             = Long.parseLong("-12,345,678")     → NumberFormatException
@@ -84,26 +84,32 @@ While reading this code, keep in mind that Arabic numbers are written left-to-ri
 Also notice that the locale-specific formating now has some curious quirks, with the negative sign sometimes appearing before the number and sometimes after it.
 
 ```java
+// A value that we want to format and parse
 Long value = -12345678L;
 Locale locale = new Locale("ar", "EG"); // Arabic (Egypt)
 NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
-value.toString()                    = "-12345678"
-numberFormat.format(value)          = "؜-١٢٬٣٤٥٬٦٧٨"
-String.format(locale, "%d", value)  = "-١٢٣٤٥٦٧٨"
+// Lets see the formatted string values
+value.toString();                    // → "-12345678"
+numberFormat.format(value);          // → "؜-١٢٬٣٤٥٬٦٧٨" – notice placement of negative sign
+String.format(locale, "%d", value);  // → "-١٢٣٤٥٦٧٨"   – notice placement of negative sign
 
-value.toString().codePoints()                   = "[45, 49, 50, 51, 52, 53, 54, 55, 56]"
-numberFormat.format(value).codePoints()         = "[1564, 45, 1633, 1634, 1644, 1635, 1636, 1637, 1644, 1638, 1639, 1640]"
-String.format(locale, "%d", value).codePoints() = "[45, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640]"
+// Lets see the Unicode code points for each string
+value.toString().codePoints();                   // → [45, 49, 50, 51, 52, 53, 54, 55, 56]
+numberFormat.format(value).codePoints();         // → [1564, 45, 1633, 1634, 1644, 1635, 1636, 1637, 1644, 1638, 1639, 1640]
+String.format(locale, "%d", value).codePoints(); // → [45, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640]
 
+// Results using Long.parseLong(String)
 Long.parseLong(value.toString())                       = Long.parseLong("-12345678"  )     = -12345678L
 Long.parseLong(numberFormat.format(value))             = Long.parseLong("؜-١٢٬٣٤٥٬٦٧٨")     → NumberFormatException
 Long.parseLong(String.format(locale, "%d", value))     = Long.parseLong("-١٢٣٤٥٦٧٨"  )     = -12345678L
 
+// Results using Long.valueOf(String)
 Long.valueOf(value.toString())                         = Long.valueOf("-12345678"  )       = -12345678L
 Long.valueOf(numberFormat.format(value))               = Long.valueOf("؜-١٢٬٣٤٥٬٦٧٨")       → NumberFormatException
 Long.valueOf(String.format(locale, "%d", value))       = Long.valueOf("-١٢٣٤٥٦٧٨"  )       = -12345678L
 
+// Results using NumberFormat.parse(String)
 numberFormat.parse(value.toString())                   = numberFormat.parse("-12345678"  ) → ParseException
 numberFormat.parse(numberFormat.format(value))         = numberFormat.parse("؜-١٢٬٣٤٥٬٦٧٨") = -12345678L
 numberFormat.parse(String.format(locale, "%d", value)) = numberFormat.parse("-١٢٣٤٥٦٧٨"  ) → ParseException
