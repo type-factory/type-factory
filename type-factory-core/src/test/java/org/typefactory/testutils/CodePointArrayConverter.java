@@ -34,7 +34,7 @@ public class CodePointArrayConverter implements ArgumentConverter {
       String value = ((String) source).trim();
       if (!value.startsWith("[") || !value.endsWith("]")) {
         throw new IllegalArgumentException(
-            "The argument should be a string written as array of comma separates strings each representing a single code-point values all within square brackets. Invalid value: " + source);
+            "The argument should be a string written as array of comma separated strings each representing a single code-point values all within square brackets. Invalid value: " + source);
       }
       value = value.substring(1, value.length() - 1);
       if (value.isBlank()) {

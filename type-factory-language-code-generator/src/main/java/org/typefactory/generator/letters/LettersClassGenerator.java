@@ -61,16 +61,16 @@ public class LettersClassGenerator {
     s.append(licenseHeader)
         .append("""
         package org.typefactory.language;
-                
+        
         import java.util.HashMap;
         import java.util.Locale;
         import javax.annotation.processing.Generated;
         import org.typefactory.Subset;
         import org.typefactory.impl.Factory;
-                
+        
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the type-factory-language-code-generator module.",
-            value = "org.typefactory:type-factory-language-code-generator") 
+            value = "org.typefactory:type-factory-language-code-generator")
         public class Letters {
                 
           private Letters() {
@@ -172,11 +172,11 @@ public class LettersClassGenerator {
     s.append(licenseHeader)
         .append(String.format("""
         package org.typefactory.language;
-                
+        
         import javax.annotation.processing.Generated;
         import org.typefactory.Subset;
         import org.typefactory.impl.Factory;
-                
+        
         @Generated(
             comments = "This file is generated from data in the LanguageData class in the type-factory-language-code-generator module.",
             value = "org.typefactory:type-factory-language-code-generator")
@@ -185,7 +185,7 @@ public class LettersClassGenerator {
           private %s() {
             // don't instantiate me
           }
-                
+        
         """, lettersClassName, lettersClassName));
 
     if (subsetWrapper instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {

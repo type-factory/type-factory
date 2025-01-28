@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
@@ -43,15 +44,15 @@ class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "Εşşək", // Azeri 'Donkey' with Greek 'Ε' epsilon
-      "Κəpənək", // Azeri 'Butterfly' with Greek 'Κ' kappa
-      "Ζürafə", // Azeri 'Girrafe' with Greek 'Ζ' zita
-  })
-  void should_throw_exception_with_non_azeri_latin_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE   | ERROR_DESCRIPTION                        | COMMENT
+      Εşşək   | 'Ε' U+0395 GREEK CAPITAL LETTER EPSILON. | Azeri 'Donkey' with Greek 'Ε' epsilon
+      Κəpənək | 'Κ' U+039A GREEK CAPITAL LETTER KAPPA.   | Azeri 'Butterfly' with Greek 'Κ' kappa
+      Ζürafə  | 'Ζ' U+0396 GREEK CAPITAL LETTER ZETA.    | Azeri 'Girrafe' with Greek 'Ζ' zita
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_azeri_latin_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of Azeri Latin letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of Azeri Latin letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
-
 }

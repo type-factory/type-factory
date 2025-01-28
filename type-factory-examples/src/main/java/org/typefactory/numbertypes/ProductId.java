@@ -15,22 +15,27 @@
 */
 package org.typefactory.numbertypes;
 
-import org.typefactory.MessageCode;
+import java.io.Serial;
 import org.typefactory.LongType;
-import org.typefactory.TypeParser;
+import org.typefactory.LongTypeParser;
+import org.typefactory.MessageCode;
 
 public final class ProductId extends LongType {
+
+  @Serial
+  private static final long serialVersionUID = 3869245051300150396L;
 
   private static final MessageCode ERROR_MESSAGE =
       MessageCode.of("invalid.product.id", "must be a 16-digit product-id");
 
-  private static final TypeParser TYPE_PARSER =
-      TypeParser.builder()
+  private static final LongTypeParser TYPE_PARSER =
+      LongTypeParser.builder()
           .messageCode(ERROR_MESSAGE)
-          .removeAllWhitespace()
-          .removeAllDashesAndHyphens()
-          .acceptDigits0to9()
-          .fixedSize(16)
+          .minValueInclusive(1_000_000_000_000_000L)
+          .maxValueInclusive(9_999_999_999_999_999L)
+          .setRadixDecimal()
+          .ignoreAllWhitespace()
+          .ignoreAllDashesAndHyphens()
           .build();
 
   private ProductId(final Long value) {
@@ -38,6 +43,6 @@ public final class ProductId extends LongType {
   }
 
   public static ProductId of(final CharSequence value) {
-    return TYPE_PARSER.parseToLongType(value, ProductId::new);
+    return TYPE_PARSER.parse(value, ProductId::new);
   }
 }
