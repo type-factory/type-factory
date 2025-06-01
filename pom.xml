@@ -45,7 +45,7 @@
 
     <junit-jupiter.version>5.12.0</junit-jupiter.version>
     <assertj-core.version>3.26.3</assertj-core.version>
-    <mockito-bom.version>5.14.2</mockito-bom.version>
+    <mockito-bom.version>5.17.0</mockito-bom.version>
     <icu4j.version>76.1</icu4j.version>
 
     <sonar.organization>type-factory</sonar.organization>
@@ -303,7 +303,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.14.0</version>
       </plugin>
 
       <plugin>
