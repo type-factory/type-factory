@@ -43,7 +43,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <junit-jupiter.version>5.12.0</junit-jupiter.version>
+    <junit-jupiter.version>5.13.0</junit-jupiter.version>
     <assertj-core.version>3.27.3</assertj-core.version>
     <mockito-bom.version>5.17.0</mockito-bom.version>
     <icu4j.version>77.1</icu4j.version>
@@ -163,7 +163,7 @@
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>5.0.0.4389</version>
+          <version>5.1.0.4751</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -275,7 +275,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
         <executions>
           <execution>
             <!-- enable flattening -->
