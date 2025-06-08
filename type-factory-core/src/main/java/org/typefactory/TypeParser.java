@@ -951,6 +951,12 @@ public interface TypeParser {
      */
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
+    default TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final char zeroDigitChar) {
+      return convertAnyDecimalDigitsToDigitsStartingWithZeroDigit((int) zeroDigitChar);
+    }
+
+    TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final int zeroDigitCodePoint);
+
     /**
      * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
      *
@@ -1359,6 +1365,20 @@ public interface TypeParser {
      * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
      */
     TypeParserBuilder acceptAllUnicodeLetters();
+
+    /**
+     * <p>A convenience method that is the same as calling:</p>
+     * <pre>{@code
+     *   acceptUnicodeCategory(Category.DECIMAL_DIGIT_NUMBER)
+     * }</pre>
+     *
+     * <p>Essentially it accepts all characters/code-points found in the {@link Category#DECIMAL_DIGIT_NUMBER} composite category.</p>
+     *
+     * @return this {@code TypeParserBuilder}.
+     * @see #acceptUnicodeCategory(Category)
+     * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
+     */
+    TypeParserBuilder acceptAllUnicodeDecimalDigits();
 
     /**
      * <p>Configures the type parser to accepts all letters [a-zA-Z] that are in the <a href="https://unicode.org/charts/PDF/U0000.pdf">Basic
