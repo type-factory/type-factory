@@ -30,7 +30,9 @@ public class TypeParser_ConvertDecimalDigitsTest {
       ZERO_DIGIT | VALUE      |  EXPECTED
       0          | 0123456789 |  0123456789
       0          | 9876543210 |  9876543210
+      0          | 01234ABCDE |  01234ABCDE
       0          | ０１２３４５６７８９ | 0123456789
+      0          | ０１２３４ＡＢＣＤＥ | 01234ＡＢＣＤＥ
       1          | 0123456789 | TypeParserBuilderException
       A          | 0123456789 | TypeParserBuilderException
       ०          | 0123456789 | ०१२३४५६७८९
