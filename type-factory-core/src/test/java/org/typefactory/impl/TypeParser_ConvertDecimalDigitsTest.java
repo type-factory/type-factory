@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.TypeParser;
 import org.typefactory.TypeParserBuilderException;
 
-public class TypeParser_ConvertDecimalDigitsTest {
+class TypeParser_ConvertDecimalDigitsTest {
 
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
@@ -50,7 +50,7 @@ public class TypeParser_ConvertDecimalDigitsTest {
       ൩         | ൦൧൨൩൪൫൬൭൮൯ | TypeParserBuilderException
       ഖ         | ൦൧൨൩൪൫൬൭൮൯ | TypeParserBuilderException
       """, delimiter = '|', useHeadersInDisplayName = true)
-  public void testConvertDecimalDigits(
+  void testConvertDecimalDigits(
       final char zeroDigit,
       final String value,
       final String expected) {
