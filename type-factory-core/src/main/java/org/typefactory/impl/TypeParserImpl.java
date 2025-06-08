@@ -44,6 +44,7 @@ final class TypeParserImpl implements TypeParser {
   private final Normalizer.Form targetCharacterNormalizationForm;
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
+  private final int convertAnyDecimalDigitsToDigitsStartingWithZeroDigit;
 
   private final Pattern regex;
 
@@ -62,6 +63,7 @@ final class TypeParserImpl implements TypeParser {
       final Normalizer.Form targetCharacterNormalizationForm,
       final int minNumberOfCodePoints,
       final int maxNumberOfCodePoints,
+      final int convertAnyDecimalDigitsToDigitsStartingWithZeroDigit,
       final Pattern regex,
       final Predicate<String> validationFunction,
       final Subset acceptedCodePoints,
@@ -74,6 +76,7 @@ final class TypeParserImpl implements TypeParser {
     this.targetCharacterNormalizationForm = targetCharacterNormalizationForm;
     this.minNumberOfCodePoints = minNumberOfCodePoints;
     this.maxNumberOfCodePoints = maxNumberOfCodePoints;
+    this.convertAnyDecimalDigitsToDigitsStartingWithZeroDigit = convertAnyDecimalDigitsToDigitsStartingWithZeroDigit;
     this.regex = regex;
     this.validationFunction = validationFunction;
     this.acceptedCodePoints = acceptedCodePoints;
@@ -237,6 +240,10 @@ final class TypeParserImpl implements TypeParser {
         codePointWasWhitespace = true;
       } else {
         codePointWasWhitespace = false;
+      }
+
+      if (convertAnyDecimalDigitsToDigitsStartingWithZeroDigit > 0 && Character.isDigit(codePoint)) {
+        codePoint = convertAnyDecimalDigitsToDigitsStartingWithZeroDigit + Character.digit(codePoint, 10);
       }
 
       if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {

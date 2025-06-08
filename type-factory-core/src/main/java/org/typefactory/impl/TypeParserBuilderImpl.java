@@ -26,6 +26,8 @@ import org.typefactory.MessageCode;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.TypeParser.TypeParserBuilder;
+import org.typefactory.TypeParserBuilderException;
+import org.typefactory.TypeParserBuilderException.MessageCodes;
 
 final class TypeParserBuilderImpl implements TypeParserBuilder {
 
@@ -36,6 +38,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   private Normalizer.Form targetCharacterNormalizationForm = Form.NFC;
   private int minNumberOfCodePoints = 0;
   private int maxNumberOfCodePoints = 64;
+  private int convertAnyDecimalDigitsToDigitsStartingWithZeroDigit = -1; // -1 means no conversion
   private TargetCase targetCase = TargetCase.PRESERVE_CASE;
 
   private Pattern regex = null;
@@ -242,6 +245,19 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   }
 
   @Override
+  public TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final int zeroDigitCodePoint) {
+    for (int i = 0, codePoint = zeroDigitCodePoint; i < 10; ++i, ++codePoint) {
+      if (!Character.isDigit(codePoint) || Character.digit(codePoint, 10) != i) {
+        throw TypeParserBuilderException.builder()
+            .messageCode(MessageCodes.INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE)
+            .build();
+      }
+    }
+    convertAnyDecimalDigitsToDigitsStartingWithZeroDigit = zeroDigitCodePoint;
+    return this;
+  }
+
+  @Override
   public TypeParserBuilder convertAnyInCategory(final Category fromCategory, final char toChar) {
     converterBuilder.addCategoryConversion(fromCategory, toChar);
     return this;
@@ -362,6 +378,11 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
   @Override
   public TypeParserBuilder acceptAllUnicodeLetters() {
     return acceptUnicodeCategory(Category.LETTER);
+  }
+
+  @Override
+  public TypeParserBuilder acceptAllUnicodeDecimalDigits() {
+    return acceptUnicodeCategory(Category.DECIMAL_DIGIT_NUMBER);
   }
 
   @Override
@@ -502,6 +523,7 @@ final class TypeParserBuilderImpl implements TypeParserBuilder {
         nullHandling,
         targetCharacterNormalizationForm,
         minNumberOfCodePoints, maxNumberOfCodePoints,
+        convertAnyDecimalDigitsToDigitsStartingWithZeroDigit,
         regex,
         validationFunction,
         rangedSubsetBuilder.build(),
