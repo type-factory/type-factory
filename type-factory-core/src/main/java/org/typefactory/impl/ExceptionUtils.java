@@ -106,59 +106,6 @@ public class ExceptionUtils {
         .build();
   }
 
-//    static InvalidValueException forInvalidCodePoint(
-//      final MessageCode messageCode,
-//      final Class<?> targetTypeClass,
-//      final CharSequence value,
-//      final int invalidCodePoint) {
-//
-//    if (Character.isWhitespace(invalidCodePoint)) {
-//      return InvalidValueException.builder()
-//          .invalidValue(value)
-//          .targetTypeClass(targetTypeClass)
-//          .messageCode(messageCode)
-//          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER)
-//          .addParserMessageCodeArg(
-//              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-//              unicodeHexCode(invalidCodePoint))
-//          .build();
-//    }
-//
-//    if (Character.isISOControl(invalidCodePoint)) {
-//      return InvalidValueException.builder()
-//          .invalidValue(value)
-//          .targetTypeClass(targetTypeClass)
-//          .messageCode(messageCode)
-//          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER)
-//          .addParserMessageCodeArg(
-//              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-//              unicodeHexCode(invalidCodePoint))
-//          .build();
-//    }
-//
-//    if ('\'' == invalidCodePoint) {
-//      return InvalidValueException.builder()
-//          .invalidValue(value)
-//          .targetTypeClass(targetTypeClass)
-//          .messageCode(messageCode)
-//          .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER)
-//          .addParserMessageCodeArg(
-//              ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-//              "'")
-//          .build();
-//    }
-//
-//    return InvalidValueException.builder()
-//        .invalidValue(value)
-//        .targetTypeClass(targetTypeClass)
-//        .messageCode(messageCode)
-//        .parserMessageCode(ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER)
-//        .addParserMessageCodeArg(
-//            ParserMessageCodeArgKeys.INVALID_CODE_POINT,
-//            new String(new int[]{invalidCodePoint}, 0, 1))
-//        .build();
-//  }
-
   static InvalidValueException forHighSurrogateWithoutLowSurrogate(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
@@ -224,12 +171,6 @@ public class ExceptionUtils {
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
         .build();
   }
-
-//  static String unicodeHexCode(final int codePoint) {
-//    return Character.isSupplementaryCodePoint(codePoint)
-//        ? String.format("U+%06X", codePoint)
-//        : String.format("U+%04X", (short) codePoint);
-//  }
 
   static String unicodeHexCode(final int codePoint) {
     if (Character.isDefined(codePoint)) {
