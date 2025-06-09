@@ -16,6 +16,10 @@
 package org.typefactory.impl;
 
 import static java.lang.Character.isWhitespace;
+import static org.typefactory.impl.Constants.REPLACEMENT_CHARACTER;
+import static org.typefactory.impl.InvalidCharactersAction.FAIL_ON_INVALID_CHARACTERS;
+import static org.typefactory.impl.InvalidCharactersAction.REMOVE_INVALID_CHARACTERS;
+import static org.typefactory.impl.InvalidCharactersAction.REPLACE_INVALID_CHARACTERS;
 
 import java.text.Normalizer;
 import java.util.Arrays;
@@ -28,6 +32,7 @@ import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
 import org.typefactory.MessageCode;
+import org.typefactory.ParseResult;
 import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
@@ -149,34 +154,56 @@ final class TypeParserImpl implements TypeParser {
     return Long.valueOf(parsedValue);
   }
 
+  @Override
+  public String parseToString(final CharSequence originalValue) throws InvalidValueException {
+    return parse(originalValue, FAIL_ON_INVALID_CHARACTERS).parsedValue();
+  }
+
+  @Override
+  public ParseResult parseToStringReplacingInvalidCharacters(final CharSequence originalValue) throws InvalidValueException {
+    return parse(originalValue, REPLACE_INVALID_CHARACTERS);
+  }
+
+  @Override
+  public ParseResult parseToStringRemovingInvalidCharacters(final CharSequence originalValue) throws InvalidValueException {
+    return parse(originalValue, REMOVE_INVALID_CHARACTERS);
+  }
+
   // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
   // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
   // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
   @SuppressWarnings({"java:S3776"})
-  @Override
-  public String parseToString(final CharSequence originalValue) throws InvalidValueException {
+  public ParseResult parse(final CharSequence originalValue, final InvalidCharactersAction invalidCharactersAction)
+      throws InvalidValueException {
+
+    final ParseResultImpl parseResult = new ParseResultImpl();
+
     if (originalValue == null) {
-      return switch (nullHandling) {
-        case CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> null;
-      };
+      parseResult.setParsedValue(
+          switch (nullHandling) {
+            case CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
+            case PRESERVE_NULL_AND_EMPTY, CONVERT_EMPTY_TO_NULL -> null;
+          });
+      return parseResult;
     } else if (originalValue.isEmpty()) {
-      return switch (nullHandling) {
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
-        case CONVERT_EMPTY_TO_NULL -> null;
-      };
+      parseResult.setParsedValue(
+          switch (nullHandling) {
+            case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
+            case CONVERT_EMPTY_TO_NULL -> null;
+          });
+      return parseResult;
     }
 
-    final CharSequence source = targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
-        ? originalValue
-        : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
+    final CharSequence source = normalizeToTargetCharacterNormalizationForm(originalValue);
 
     final int length = source == null ? 0 : source.length();
     if (length == 0) {
-      return switch (nullHandling) {
-        case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
-        case CONVERT_EMPTY_TO_NULL -> null;
-      };
+      parseResult.setParsedValue(
+          switch (nullHandling) {
+            case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
+            case CONVERT_EMPTY_TO_NULL -> null;
+          });
+      return parseResult;
     }
 
     int[] target = converter == null ? new int[length] : new int[Math.min(maxNumberOfCodePoints, length * 2)];
@@ -188,34 +215,62 @@ final class TypeParserImpl implements TypeParser {
     int[] toCodePoints;
     final int[] reusableSingleCodePointArray = new int[1];
 
-    ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
+    final ConverterResults converterResults = converter == null ? null : converter.createConverterResults();
 
     while (sourceIndex < length) {
       { // Get the codepoint. The anonymous block ensures that variable "ch" is limited in scope.
         final char ch = source.charAt(sourceIndex);
         if (Character.isHighSurrogate(ch)) {
-          if (++sourceIndex < length) {
-            final char lowCh = source.charAt(sourceIndex);
+          final int nextSourceIndex = sourceIndex + 1;
+          if (nextSourceIndex < length) {
+            final char lowCh = source.charAt(nextSourceIndex);
             if (Character.isLowSurrogate(lowCh)) {
               codePoint = Character.toCodePoint(ch, lowCh);
+              sourceIndex = nextSourceIndex;
             } else {
-              throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+              codePoint = handleInvalidCodePoints(
+                  parseResult,
+                  invalidCharactersAction,
+                  ch,
+                  () -> ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch));
             }
           } else {
-            throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+            codePoint = handleInvalidCodePoints(
+                parseResult,
+                invalidCharactersAction,
+                ch,
+                () -> ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch));
           }
         } else if (Character.isLowSurrogate(ch)) {
-          throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
+          codePoint = handleInvalidCodePoints(
+              parseResult,
+              invalidCharactersAction,
+              ch,
+              () -> ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch));
         } else {
           codePoint = ch;
         }
+      }
+
+      if (skipCodePointDueToRemoval(codePoint)) {
+        ++sourceIndex;
+        continue;
       }
 
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
             if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
-              throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
+              final int currentCodePoint = codePoint;
+              codePoint = handleInvalidCodePoints(
+                  parseResult,
+                  invalidCharactersAction,
+                  codePoint,
+                  () -> ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, currentCodePoint));
+              if (skipCodePointDueToRemoval(codePoint)) {
+                ++sourceIndex;
+                continue;
+              }
             }
             break;
           case PRESERVE_WHITESPACE:
@@ -247,11 +302,19 @@ final class TypeParserImpl implements TypeParser {
       }
 
       if (!isAcceptedCodePoint(codePoint) && !codePointWasWhitespace) {
-        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
+        final int currentCodePoint = codePoint;
+        codePoint = handleInvalidCodePoints(
+            parseResult,
+            invalidCharactersAction,
+            codePoint,
+            () -> ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, currentCodePoint));
+        if (skipCodePointDueToRemoval(codePoint)) {
+          ++sourceIndex;
+          continue;
+        }
       }
 
-      if (converter != null &&
-          converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+      if (converter != null && converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
         targetIndex = converterResults.getConvertFromIndex();
         toCodePoints = converterResults.getConvertToCodePointSequence();
         if (toCodePoints.length == 0 && (targetIndex > 0 && Character.isWhitespace(target[targetIndex - 1]))) {
@@ -302,42 +365,80 @@ final class TypeParserImpl implements TypeParser {
     }
 
     final int parsedLength = targetEndIndex - targetStartIndex;
-    final String parsedValue;
     if (parsedLength == 0) {
-      return switch (nullHandling) {
+      parseResult.setParsedValue(switch (nullHandling) {
         case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> Constants.EMPTY_STRING;
         case CONVERT_EMPTY_TO_NULL -> null;
-      };
+      });
+      return parseResult;
     }
 
-    parsedValue = new String(target, targetStartIndex, targetEndIndex - targetStartIndex);
+    parseResult.setParsedValue(new String(target, targetStartIndex, targetEndIndex - targetStartIndex));
 
-    validateThatParsedValueConformToTheRegex(parsedValue, source);
+    validateThatParsedValueConformsToTheRegex(parseResult, source);
 
-    validationUsingCustomValidationFunction(parsedValue, source);
+    validationUsingCustomValidationFunction(parseResult, source);
 
-    return parsedValue;
+    return parseResult;
+  }
+
+  private CharSequence normalizeToTargetCharacterNormalizationForm(CharSequence originalValue) {
+    return targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
+        ? originalValue
+        : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
+  }
+
+  private static boolean skipCodePointDueToRemoval(int codePoint) {
+    // -1 is used to indicate that the code-point was removed and should be skipped
+    return codePoint < 0;
+  }
+
+  /**
+   * Handle invalid code-points.
+   *
+   * @param invalidCharactersAction      the action to take for invalid characters
+   * @param invalidValueExceptionCreator the functional interface that will create the exception to be thrown if we are to fail on invalid values
+   * @return the code-point to use or -1 if it should be skipped
+   */
+  private static int handleInvalidCodePoints(
+      final ParseResultImpl parseResult,
+      final InvalidCharactersAction invalidCharactersAction,
+      final int invalidCodePoint,
+      final InvalidValueExceptionCreator invalidValueExceptionCreator) throws InvalidValueException {
+    parseResult.addInvalidCodePoint(invalidCodePoint);
+    return switch (invalidCharactersAction) {
+      case FAIL_ON_INVALID_CHARACTERS -> throw invalidValueExceptionCreator.createException();
+      case REPLACE_INVALID_CHARACTERS -> REPLACEMENT_CHARACTER;
+      case REMOVE_INVALID_CHARACTERS -> -1; // -1 is used to indicate that the code-point should be skipped
+    };
+  }
+
+  @FunctionalInterface
+  private interface InvalidValueExceptionCreator {
+    InvalidValueException createException();
   }
 
   private boolean isAcceptedCodePoint(final int codePoint) {
     return acceptedCodePoints.contains(codePoint);
   }
 
-  void validateThatParsedValueConformToTheRegex(final String parsedValue, final CharSequence originalValue) {
-    if (regex == null) {
+  void validateThatParsedValueConformsToTheRegex(
+      final ParseResult parseResult,
+      final CharSequence originalValue) {
+    if (regex == null || parseResult.parsedValueWasInvalid()) {
       return;
     }
-    if (!regex.matcher(parsedValue).matches()) {
+    if (!regex.matcher(parseResult.parsedValue()).matches()) {
       throw ExceptionUtils.forValueNotMatchRegex(messageCode, targetTypeClass, originalValue, regex);
     }
   }
 
-  void validationUsingCustomValidationFunction(final String parsedValue, final CharSequence originalValue) {
-    if (validationFunction == null) {
+  void validationUsingCustomValidationFunction(final ParseResult parseResult, final CharSequence originalValue) {
+    if (validationFunction == null || parseResult.parsedValueWasInvalid()) {
       return;
     }
     try {
-      final boolean isValid = validationFunction.test(parsedValue);
+      final boolean isValid = validationFunction.test(parseResult.parsedValue());
       if (!isValid) {
         throw ExceptionUtils.forValueNotValidUsingCustomValidation(messageCode, targetTypeClass, originalValue, null);
       }

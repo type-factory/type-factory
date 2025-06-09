@@ -22,6 +22,8 @@ final class Constants {
 
   static final String EMPTY_STRING = "";
 
+  static final char REPLACEMENT_CHARACTER = '\uFFFD';
+
   static final int BYTE_MASK = 0xFF;
 
   static final String[] EMPTY_STRING_ARRAY = new String[0];

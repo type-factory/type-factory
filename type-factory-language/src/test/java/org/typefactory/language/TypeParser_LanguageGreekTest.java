@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
@@ -43,15 +44,16 @@ class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "Αρκoύδα", // Greek 'Bear' with English 'o'
-      "Kαμηλοπάρδαλη", // Greek 'Giraffe' with English 'K'
-      "Mαϊμού", // Greek 'Monkey' with English 'M'
-  })
-  void should_throw_exception_with_non_greek_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE            | ERROR_DESCRIPTION                  | COMMENT
+      Αρκoύδα          | 'o' U+006F LATIN SMALL LETTER O.   | Greek 'Bear' with English 'o'
+      Kαμηλοπάρδαλη    | 'K' U+004B LATIN CAPITAL LETTER K. | Greek 'Giraffe' with English 'K'
+      Mαϊμού           | 'M' U+004D LATIN CAPITAL LETTER M. | Greek 'Monkey' with English 'M'
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_greek_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of Greek letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of Greek letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
 
 }

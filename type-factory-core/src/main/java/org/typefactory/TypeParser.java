@@ -242,6 +242,10 @@ public interface TypeParser {
    */
   String parseToString(CharSequence value) throws InvalidValueException;
 
+  ParseResult parseToStringReplacingInvalidCharacters(CharSequence value);
+
+  ParseResult parseToStringRemovingInvalidCharacters(CharSequence value);
+
   /**
    * <p>Parse the provided {@code value} into a {@link Short} value.</p>
    *
@@ -951,10 +955,62 @@ public interface TypeParser {
      */
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
+    /**
+     * <p>Configures the type-parser to convert any Unicode decimal digit in the input sequence to a digit starting with the {@code zeroDigitChar}.</p>
+     *
+     * <p>For example, for the following {@code zeroDigitChar} values, the type-parser will parse the following input values to the parsed values:</p>
+     * <pre>{@code
+     * ZERO_DIGIT | INPUT_VALUE |  PARSED_VALUE
+     * 0          | 0123456789  |  0123456789
+     * 0          | 9876543210  |  9876543210
+     * 0          | 01234ABCDE  |  01234ABCDE
+     * 0          | ０１２３４５６７８９ | 0123456789  // full-width digits in input-value
+     * 0          | ０１２３４ＡＢＣＤＥ | 01234ＡＢＣＤＥ  // full-width digits in input-value
+     * ०          | 0123456789  | ०१२३४५६७८९  // Devanagari zero-digit parsed to Devanagari digits
+     * ൦          | 0123456789  | ൦൧൨൩൪൫൬൭൮൯  // Malayalam zero-digit parsed to Malayalam digits
+     * ०          | ०१२३४५६७८९  | ०१२३४५६७८९
+     * 0          | ०१२३४५६७८९  | 0123456789  // Western Arabic zero-digit parsed to Western Arabic digits
+     * ०          | ०१२३४56789  | ०१२३४५६७८९
+     * 0          | ०१२३४56789  | 0123456789
+     * 0          | ൦൧൨൩൪൫൬൭൮൯ | 0123456789 // Western Arabic zero-digit parsed to Western Arabic digits
+     * ൦          | ൦൧൨൩൪൫൬൭൮൯ | ൦൧൨൩൪൫൬൭൮൯
+     * ൦          | ൦൧൨൩൪56789  | ൦൧൨൩൪൫൬൭൮൯
+     * 0          | ൦൧൨൩൪56789  | 0123456789
+     * }</pre>
+     *
+     * @param zeroDigitChar the character to use as the zero digit.
+     * @return this {@code TypeParserBuilder}.
+     */
     default TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final char zeroDigitChar) {
       return convertAnyDecimalDigitsToDigitsStartingWithZeroDigit((int) zeroDigitChar);
     }
 
+    /**
+     * <p>Configures the type-parser to convert any Unicode decimal digit in the input sequence to a digit starting with the {@code zeroDigitCodePoint}.</p>
+     *
+     * <p>For example, for the following {@code zeroDigitCodePoint} values, the type-parser will parse the following input values to the parsed values:</p>
+     * <pre>{@code
+     * ZERO_DIGIT | INPUT_VALUE |  PARSED_VALUE
+     * 0          | 0123456789  |  0123456789
+     * 0          | 9876543210  |  9876543210
+     * 0          | 01234ABCDE  |  01234ABCDE
+     * 0          | ０１２３４５６７８９ | 0123456789  // full-width digits in input-value
+     * 0          | ０１２３４ＡＢＣＤＥ | 01234ＡＢＣＤＥ  // full-width digits in input-value
+     * ०          | 0123456789  | ०१२३४५६७८९  // Devanagari zero-digit parsed to Devanagari digits
+     * ൦          | 0123456789  | ൦൧൨൩൪൫൬൭൮൯  // Malayalam zero-digit parsed to Malayalam digits
+     * ०          | ०१२३४५६७८९  | ०१२३४५६७८९
+     * 0          | ०१२३४५६७८९  | 0123456789  // Western Arabic zero-digit parsed to Western Arabic digits
+     * ०          | ०१२३४56789  | ०१२३४५६७८९
+     * 0          | ०१२३४56789  | 0123456789
+     * 0          | ൦൧൨൩൪൫൬൭൮൯ | 0123456789 // Western Arabic zero-digit parsed to Western Arabic digits
+     * ൦          | ൦൧൨൩൪൫൬൭൮൯ | ൦൧൨൩൪൫൬൭൮൯
+     * ൦          | ൦൧൨൩൪56789  | ൦൧൨൩൪൫൬൭൮൯
+     * 0          | ൦൧൨൩൪56789  | 0123456789
+     * }</pre>
+     *
+     * @param zeroDigitCodePoint the code-point to use as the zero digit.
+     * @return this {@code TypeParserBuilder}.
+     */
     TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final int zeroDigitCodePoint);
 
     /**
