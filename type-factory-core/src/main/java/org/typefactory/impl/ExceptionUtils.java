@@ -179,9 +179,6 @@ public class ExceptionUtils {
             ? String.format("U+%06X %s", codePoint, Character.getName(codePoint))
             : String.format("U+%04X %s", (short) codePoint, Character.getName(codePoint));
       }
-//      if (codePoint == '\'') {
-//        return "' U+0027 APOSTROPHE";
-//      }
       if (Character.isHighSurrogate((char) codePoint)) {
         return String.format("U+%04X HIGH SURROGATE", (short) codePoint);
       }
