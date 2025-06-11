@@ -17,17 +17,45 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Category;
 import org.typefactory.Subset;
-import org.typefactory.Subset.SubsetBuilder;
 import org.typefactory.impl.Converter.ConverterResults;
 import org.typefactory.testutils.CodePointArrayConverter;
 import org.typefactory.testutils.CodePointConverter;
 
 class ConverterTest {
+
+  @Test
+  void builder_returnsZeroMaxLengthForNoConversions() {
+    final Converter converter = Converter.builder().build();
+    assertThat(converter.getMaxConvertedLength()).isZero();
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(textBlock = """
+      CONVERT_FROM | CONVERT_TO | CODE_POINT_NOT_REQUIRING_CONVERSION
+      1            | 1          | 2
+      a            | a          | b
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void codePointConversionIsRequired_returnsAsExpected(
+      final char convertFrom, final char convertTo, final char codePointNotRequiringConversion) {
+
+    final Converter converter = Converter.builder()
+        .addCodePointConversion(convertFrom, convertTo)
+        .build();
+
+    final ConverterResults converterResults = converter.createConverterResults();
+
+    assertThat(converter.codePointConversionIsRequired(convertFrom, 0, converterResults)).isTrue();
+    assertThat(converter.codePointConversionIsRequired(codePointNotRequiringConversion, 0, converterResults)).isFalse();
+
+    assertThat(converter.codePointConversionIsNotRequired(convertFrom, 0, converterResults)).isFalse();
+    assertThat(converter.codePointConversionIsNotRequired(codePointNotRequiringConversion, 0, converterResults)).isTrue();
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -466,7 +494,7 @@ class ConverterTest {
     for (int i = 0; i < codePoints.length; ++i) {
       int codePoint = codePoints[i];
       s.appendCodePoint(codePoint);
-      if (converter.isCodePointConversionRequired(codePoint, s.length() - 1, converterResults)) {
+      if (converter.codePointConversionIsRequired(codePoint, s.length() - 1, converterResults)) {
         s.setLength(converterResults.getConvertFromIndex());
         final int[] toCodePointSequence = converterResults.getConvertToCodePointSequence();
         for (int j = 0; j < toCodePointSequence.length; ++j) {

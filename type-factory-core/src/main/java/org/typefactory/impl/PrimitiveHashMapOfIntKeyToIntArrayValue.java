@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 
 import java.util.Arrays;
 
@@ -176,10 +176,10 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
           .appendCodePoint(key)
           .append("] ⟶ ")
           .append(value == null ? "" : new String(value, 0, value.length))
-          .append(LINE_SEPARATOR);
+          .append(SYSTEM_LINE_SEPARATOR);
     }
-    if (s.length() >= LINE_SEPARATOR.length()) {
-      s.setLength(s.length() - LINE_SEPARATOR.length());
+    if (s.length() >= SYSTEM_LINE_SEPARATOR.length()) {
+      s.setLength(s.length() - SYSTEM_LINE_SEPARATOR.length());
     }
     return s.toString();
   }

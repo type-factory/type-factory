@@ -15,44 +15,52 @@
 */
 package org.typefactory.language;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
   static final TypeParser TYPE_PARSER = TypeParser.builder()
-      .messageCode(MessageCode.of("must.be.french.letters.only", "Must be made up of French letters only."))
-      .toCharacterNormalizationFormNFC()
       .acceptSubset(Letters.FRENCH_fr)
+      .toCharacterNormalizationFormNFC()
       .convertAllDashesToHyphen()
       .acceptChar('\'')
       .normalizeWhitespace()
+      .messageCode(MessageCode.of(
+          "must.be.french.letters.only",
+          "Must be made up of characters in the French "
+              + "alphabet, hyphens, apostrophes or spaces only."))
       .build();
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "l'huître", // French 'Oyster'
+      "l'huître",     // French 'Oyster'
       "le porc-épic", // French 'Porcupine'
-      "le léopard", // French 'Leopard'
+      "le léopard",   // French 'Leopard'
   })
   void should_parse_accepting_only_french_letters(final String value) {
     Assertions.assertThat(TYPE_PARSER.parseToString(value)).hasToString(value);
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "l'hυître", // French 'Oyster' with Greek 'υ' upsilon
-      "le pοrc-épic", // French 'Porcupine' with Greek 'ο' omicron
-      "le léoρard", // French 'Leopard' with Greek 'ρ' rho
-  })
-  void should_throw_exception_with_non_french_letters(final String value) {
-    Assertions.assertThatExceptionOfType(InvalidValueException.class)
+  @CsvSource(textBlock = """
+      VALUE        | ERROR_DESCRIPTION                    | COMMENT
+      l'hυître     | υ U+03C5 GREEK SMALL LETTER UPSILON. | French 'Oyster' with Greek 'υ' upsilon
+      le pοrc-épic | ο U+03BF GREEK SMALL LETTER OMICRON. | French 'Porcupine' with Greek 'ο' omicron
+      le léoρard   | ρ U+03C1 GREEK SMALL LETTER RHO.     | French 'Leopard' with Greek 'ρ' rho
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_french_letters(final String value, final String expectedErrorDescription) {
+    assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of French letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of characters in the French alphabet, hyphens, apostrophes or spaces only. Invalid value - invalid character "
+            + expectedErrorDescription);
   }
 
 }

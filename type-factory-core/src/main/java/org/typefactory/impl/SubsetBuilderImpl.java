@@ -18,7 +18,7 @@ package org.typefactory.impl;
 import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
-import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 import static org.typefactory.impl.SubsetUtils.compactDoubleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.compactSingleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.compactTripleByteCodePointRanges;
@@ -709,24 +709,24 @@ final class SubsetBuilderImpl implements SubsetBuilder {
             .append(Integer.toString(getInclusiveFrom(singleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(singleByteCodePointRanges[i]), 16))
-            .append(LINE_SEPARATOR);
+            .append(", ");
       }
       for (int i = 0; i < doubleByteCodePointRangesSize; ++i) {
         s.append("0x")
             .append(Integer.toString(getInclusiveFrom(doubleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(doubleByteCodePointRanges[i]), 16))
-            .append(LINE_SEPARATOR);
+            .append(", ");
       }
       for (int i = 0; i < tripleByteCodePointRangesSize; ++i) {
         s.append("0x")
             .append(Integer.toString(getInclusiveFrom(tripleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(tripleByteCodePointRanges[i]), 16))
-            .append(LINE_SEPARATOR);
+            .append(", ");
       }
-      if (s.length() > LINE_SEPARATOR.length()) {
-        s.setLength(s.length() - LINE_SEPARATOR.length());
+      if (s.length() > 2) {
+        s.setLength(s.length() - 2); // remove the last ", "
       }
       return s.toString();
     }
@@ -892,15 +892,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
           }
         }
       }
-      s.append(LINE_SEPARATOR).append("|=============|=========|========|=======|========|=========|==========|=======|=============|");
-      if (subsetOptions.length > 20) {
-        s.append(LINE_SEPARATOR).append("""
-            | subset type |  # hash | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |
-            |             | buckets |-----------------------------------|--------------------------------|
-            |             |         |    hash buckets containing...     |     memory required (bytes)    |
-            |=============|=========|========|=======|========|=========|==========|=======|=============|
-            """).append(LINE_SEPARATOR);
-      }
+      s.append(SYSTEM_LINE_SEPARATOR).append("|=============|=========|========|=======|========|=========|==========|=======|=============|");
       return s.toString();
     }
 

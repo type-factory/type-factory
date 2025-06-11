@@ -112,12 +112,12 @@ public interface MessageCode extends Serializable {
   }
 
   /**
-   * <p>Returns {@code true} if the provided {@code messageCode.code()} equals {@link this#code()}, and {@code false} otherwise.</p>
+   * <p>Returns {@code true} if the provided {@code messageCode.code()} equals {@link #code()}, and {@code false} otherwise.</p>
    *
    * <p>If the provided {@code messageCode} argument is {@code null} then this method will return {@code false}.</p>
    *
    * @param messageCode the message code instance to test.
-   * @return {@code true} if the provided {@code messageCode.code()} equals {@link this#code()}, and {@code false} otherwise.
+   * @return {@code true} if the provided {@code messageCode.code()} equals {@link #code()}, and {@code false} otherwise.
    */
   default boolean hasSameCodeAs(final MessageCode messageCode) {
     if (messageCode == null) {
