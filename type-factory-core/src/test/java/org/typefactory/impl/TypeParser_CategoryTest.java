@@ -130,7 +130,7 @@ class TypeParser_CategoryTest extends AbstractTypeParserTest {
       Жирафа\uD83E\uDD92 | Invalid value - invalid character '\uD83E\uDD92' U+01F992 GIRAFFE FACE. | 🦒 giraffe emoji
       """, delimiter = '|')
   void should_throw_exception_when_value_contains_letters(
-      final String value, final String expectedParserErrorMessage, final String ignoredDescription) {
+      final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder()
