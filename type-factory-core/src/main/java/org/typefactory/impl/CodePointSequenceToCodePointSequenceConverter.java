@@ -128,6 +128,18 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
           converterResults.removeTreeNodeInPlay(i);
         }
       }
+      return true;
+    }
+
+    // if we get here, then we did not find a conversion in the n-ary tree, so we check the category to code-point sequence map
+    if (categoryToCodePointSequence != null) {
+      final int [] toCodePointSequence = categoryToCodePointSequence.get(Character.getType(currentCodePoint));
+      if (toCodePointSequence == null || toCodePointSequence.length == 0) {
+        return false; // no conversion found
+      }
+      converterResults.setConvertFromIndex(currentIndex);
+      converterResults.setConvertToCodePointSequence(toCodePointSequence);
+      return true;
     }
 
     return result;
