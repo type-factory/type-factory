@@ -196,17 +196,9 @@ final class TypeParserImpl implements TypeParser {
       return parseResult;
     }
 
-    final CharSequence source = normalizeToTargetCharacterNormalizationForm(originalValue);
+    final CharSequence source = normalizeToTargetCharacterNormalizationForm(originalValue, targetCharacterNormalizationForm);
 
-    final int length = source == null ? 0 : source.length();
-    if (length == 0) {
-      parseResult.setParsedValue(
-          switch (nullHandling) {
-            case PRESERVE_NULL_AND_EMPTY, CONVERT_NULL_TO_EMPTY -> "";
-            case CONVERT_EMPTY_TO_NULL -> null;
-          });
-      return parseResult;
-    }
+    final int length = source.length();
 
     int[] target = converter == null ? new int[length] : new int[Math.min(maxNumberOfCodePoints, length * 2)];
     boolean codePointWasWhitespace = true;
@@ -384,7 +376,9 @@ final class TypeParserImpl implements TypeParser {
     return parseResult;
   }
 
-  private CharSequence normalizeToTargetCharacterNormalizationForm(CharSequence originalValue) {
+  private static CharSequence normalizeToTargetCharacterNormalizationForm(
+      final CharSequence originalValue,
+      final Normalizer.Form targetCharacterNormalizationForm) {
     return targetCharacterNormalizationForm == null || Normalizer.isNormalized(originalValue, targetCharacterNormalizationForm)
         ? originalValue
         : Normalizer.normalize(originalValue, targetCharacterNormalizationForm);
