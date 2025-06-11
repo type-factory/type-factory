@@ -893,14 +893,6 @@ final class SubsetBuilderImpl implements SubsetBuilder {
         }
       }
       s.append(SYSTEM_LINE_SEPARATOR).append("|=============|=========|========|=======|========|=========|==========|=======|=============|");
-      if (subsetOptions.length > 20) {
-        s.append(SYSTEM_LINE_SEPARATOR).append("""
-            | subset type |  # hash | 0 keys | 1 key | 2 keys | 3+ keys | obj refs |  data | total bytes |
-            |             | buckets |-----------------------------------|--------------------------------|
-            |             |         |    hash buckets containing...     |     memory required (bytes)    |
-            |=============|=========|========|=======|========|=========|==========|=======|=============|
-            """).append(SYSTEM_LINE_SEPARATOR);
-      }
       return s.toString();
     }
 
