@@ -169,10 +169,12 @@ final class TypeParserImpl implements TypeParser {
     return parse(originalValue, REMOVE_INVALID_CHARACTERS);
   }
 
-  // Suppress SonarQube "java:S3776 Cognitive Complexity of methods should not be too high"
-  // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
-  // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
-  @SuppressWarnings({"java:S3776"})
+  // Suppress SonarQube:
+  // - "java:S3776 Cognitive Complexity of methods should not be too high..."
+  // - "java:S6541 A 'Brain Method' was detected..."
+  // This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
+  // Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
+  @SuppressWarnings({"java:S3776", "java:S6541"})
   public ParseResult parse(final CharSequence originalValue, final InvalidCharactersAction invalidCharactersAction)
       throws InvalidValueException {
 
