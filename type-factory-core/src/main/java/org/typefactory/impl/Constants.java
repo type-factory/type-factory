@@ -33,4 +33,14 @@ final class Constants {
 
   static final String LINE_SEPARATOR = System.lineSeparator();
 
+  /**
+   * <p>The Unicode code point for a line separator.</p>
+   */
+  static final int UNICODE_LINE_SEPARATOR = '\u2028';
+
+  /**
+   * <p>The Unicode code point for a paragraph separator.</p>
+   */
+  static final int UNICODE_PARAGRAPH_SEPARATOR = '\u2029';
+
 }

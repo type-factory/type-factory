@@ -70,11 +70,13 @@ class ParseResultImplTest extends AbstractTypeParserTest {
     parseResult.addInvalidCodePoint('\t'); // tab
     parseResult.addInvalidCodePoint('\r'); // carriage return
     parseResult.addInvalidCodePoint('\f'); // form feed
+    parseResult.addInvalidCodePoint('\u2028'); // Unicode line separator
+    parseResult.addInvalidCodePoint('\u2029'); // Unicode paragraph separator
     parseResult.addInvalidCodePoint('\u000B'); // vertical tab
 
-    assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(' ', '\n', '\t', '\r', '\f', '\u000B');
+    assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(' ', '\n', '\t', '\r', '\f', '\u2028', '\u2029', '\u000B');
     assertThat(parseResult.invalidCodePointsToString())
-        .isEqualTo("[U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000B LINE TABULATION, U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), U+0020 SPACE]");
+        .isEqualTo("[U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000B LINE TABULATION, U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), U+0020 SPACE, U+2028 LINE SEPARATOR, U+2029 PARAGRAPH SEPARATOR]");
     assertThat(parseResult.parsedValueWasValid()).isFalse();
     assertThat(parseResult.parsedValueWasInvalid()).isTrue();
   }
@@ -86,6 +88,8 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       ``            | [\b]                | {parsedValue: , parsedValueWasValid: false, invalidCodePoints: [U+0008 BACKSPACE]}
       ` `           | [']                 | {parsedValue:  , parsedValueWasValid: false, invalidCodePoints: [' U+0027 APOSTROPHE]}
       a             | []                  | {parsedValue: a, parsedValueWasValid: true, invalidCodePoints: []}
+      1             | [\u2028]            | {parsedValue: 1, parsedValueWasValid: true, invalidCodePoints: []}
+      1A            | [\u2029]            | {parsedValue: 1A, parsedValueWasValid: true, invalidCodePoints: []}
       hello         | [a]                 | {parsedValue: hello, parsedValueWasValid: false, invalidCodePoints: ['a' U+0061 LATIN SMALL LETTER A]}
       xyz XYZ       | [\u200B]            | {parsedValue: xyz XYZ, parsedValueWasValid: false, invalidCodePoints: [U+200B ZERO WIDTH SPACE]}
       xyz-XYZ       | [a, \b, !, \u200B]  | {parsedValue: xyz-XYZ, parsedValueWasValid: false, invalidCodePoints: [U+0008 BACKSPACE, '!' U+0021 EXCLAMATION MARK, 'a' U+0061 LATIN SMALL LETTER A, U+200B ZERO WIDTH SPACE]}
