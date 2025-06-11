@@ -274,7 +274,7 @@ final class TypeParserImpl implements TypeParser {
             codePoint = ' ';
             break;
           case NORMALIZE_WHITESPACE, NORMALIZE_AND_CONVERT_WHITESPACE:
-            if (codePointWasWhitespace) { // if previous code-point was whitespace
+            if (codePointWasWhitespace) { // if the previous code-point was whitespace
               codePointIsRepeatedWhitespaceRequiringNormalisation = true;
             }
             codePoint = ' ';
@@ -282,9 +282,6 @@ final class TypeParserImpl implements TypeParser {
           case REMOVE_WHITESPACE:
             ++sourceIndex;
             continue;
-          default:
-            // do nothing
-            break;
         }
         codePointWasWhitespace = true;
       } else {
