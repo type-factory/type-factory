@@ -709,24 +709,24 @@ final class SubsetBuilderImpl implements SubsetBuilder {
             .append(Integer.toString(getInclusiveFrom(singleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(singleByteCodePointRanges[i]), 16))
-            .append(SYSTEM_LINE_SEPARATOR);
+            .append(", ");
       }
       for (int i = 0; i < doubleByteCodePointRangesSize; ++i) {
         s.append("0x")
             .append(Integer.toString(getInclusiveFrom(doubleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(doubleByteCodePointRanges[i]), 16))
-            .append(SYSTEM_LINE_SEPARATOR);
+            .append(", ");
       }
       for (int i = 0; i < tripleByteCodePointRangesSize; ++i) {
         s.append("0x")
             .append(Integer.toString(getInclusiveFrom(tripleByteCodePointRanges[i]), 16))
             .append('_')
             .append(Integer.toString(getInclusiveTo(tripleByteCodePointRanges[i]), 16))
-            .append(SYSTEM_LINE_SEPARATOR);
+            .append(", ");
       }
-      if (s.length() > SYSTEM_LINE_SEPARATOR.length()) {
-        s.setLength(s.length() - SYSTEM_LINE_SEPARATOR.length());
+      if (s.length() > 2) {
+        s.setLength(s.length() - 2); // remove the last ", "
       }
       return s.toString();
     }

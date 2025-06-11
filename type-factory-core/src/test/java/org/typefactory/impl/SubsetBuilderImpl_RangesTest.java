@@ -23,6 +23,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Subset.CodePointRange;
 import org.typefactory.impl.SubsetBuilderImpl.Ranges;
+import org.typefactory.testutils.CodePointArrayConverter;
 import org.typefactory.testutils.CodePointRangeArrayConverter;
 import org.typefactory.testutils.RangesAsCharArrayConverter;
 import org.typefactory.testutils.RangesAsIntegerArrayConverter;
@@ -217,4 +218,52 @@ class SubsetBuilderImpl_RangesTest {
         .hasSameSizeAs(expectedRanges)
         .containsExactlyInAnyOrder(expectedRanges);
   }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      [a]                  | 0x61_61
+      [a, b]               | 0x61_61, 0x62_62
+      [Σ, Τ]               | 0x3a3_3a3, 0x3a4_3a4
+      [🈂, 😀]             | 0x1f202_1f202, 0x1f600_1f600
+      [a, b, Σ, Τ]         | 0x61_61, 0x62_62, 0x3a3_3a3, 0x3a4_3a4
+      [a, b, 🈂, 😀]       | 0x61_61, 0x62_62, 0x1f202_1f202, 0x1f600_1f600
+      [Σ, Τ, 🈂, 😀]       | 0x3a3_3a3, 0x3a4_3a4, 0x1f202_1f202, 0x1f600_1f600
+      [a, b, Σ, Τ, 🈂, 😀] | 0x61_61, 0x62_62, 0x3a3_3a3, 0x3a4_3a4, 0x1f202_1f202, 0x1f600_1f600
+      """, delimiter = '|')
+  void toString_uncompactedReturnsAsExpected(
+      @ConvertWith(CodePointArrayConverter.class) final int[] codePoints,
+      final String expectedToStringValue) {
+
+    final var ranges = new Ranges();
+    for (final int codePoint : codePoints) {
+      ranges.addCodePoint(codePoint);
+    }
+
+    assertThat(ranges).hasToString(expectedToStringValue);
+  }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      [a]                  | 0x61_61
+      [a, b]               | 0x61_62
+      [Σ, Τ]               | 0x3a3_3a4
+      [🈂, 😀]             | 0x1f202_1f202, 0x1f600_1f600
+      [a, b, Σ, Τ]         | 0x61_62, 0x3a3_3a4
+      [a, b, 🈂, 😀]       | 0x61_62, 0x1f202_1f202, 0x1f600_1f600
+      [Σ, Τ, 🈂, 😀]       | 0x3a3_3a4, 0x1f202_1f202, 0x1f600_1f600
+      [a, b, Σ, Τ, 🈂, 😀] | 0x61_62, 0x3a3_3a4, 0x1f202_1f202, 0x1f600_1f600
+      """, delimiter = '|')
+  void toString_compactedReturnsAsExpected(
+      @ConvertWith(CodePointArrayConverter.class) final int[] codePoints,
+      final String expectedToStringValue) {
+
+    final var ranges = new Ranges();
+    for (final int codePoint : codePoints) {
+      ranges.addCodePoint(codePoint);
+    }
+    ranges.compact();
+
+    assertThat(ranges).hasToString(expectedToStringValue);
+  }
+
 }
