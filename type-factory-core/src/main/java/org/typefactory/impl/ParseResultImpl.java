@@ -8,7 +8,7 @@ import org.typefactory.ParseResult;
 final class ParseResultImpl implements ParseResult {
 
   private String parsedValue;
-  private PrimitiveSortedSetOfInt invalidCodePoints = new PrimitiveSortedSetOfInt();
+  private final PrimitiveSortedSetOfInt invalidCodePoints = new PrimitiveSortedSetOfInt();
 
   ParseResultImpl() {}
 
