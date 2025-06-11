@@ -1773,4 +1773,104 @@ public interface TypeParser {
      */
     TypeParser build();
   }
+
+  /**
+   * <p>Represents the result of parsing a value. It contains the parsed value, whether it was valid or invalid, and any invalid code points
+   * encountered during parsing.</p>
+   *
+   * <p>A valid parsed value will have met the requirements of the configured {@link TypeParser}.</p>
+   *
+   * <p>An invalid parsed value will have either had invalid characters removed or replaced with the Unicode Replacement Character � {@code (U+FFFD)}.
+   * If this is the case, the invalid characters will be listed in the {@link #invalidCodePoints()} array. The removal or replacement will depend on
+   * which of the following two methods were invoked.</p>
+   *
+   * <ul>
+   *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+   *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+   * </ul>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric),
+   * then for the following input values the parsed value will be as shown below:</p>
+   *
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   *
+   * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+   * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+   */
+  interface ParseResult {
+
+    /**
+     * <p>Returns a parsed value that may be valid or invalid. The {@link #parsedValueWasValid()} and {@link #parsedValueWasInvalid()} methods indicate
+     * validity.</p>
+     *
+     * <p>A valid parsed value will have met the requirements of the configured {@link TypeParser}.</p>
+     *
+     * <p>An invalid parsed value will have either had invalid characters removed or replaced with the Unicode Replacement Character �
+     * {@code (U+FFFD)}. If this is the case, the invalid characters will be listed in the {@link #invalidCodePoints()} array. The removal or
+     * replacement will depend on which of the following two methods were invoked.</p>
+     *
+     * <ul>
+     *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+     *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+     * </ul>
+     *
+     * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric),
+     * then for the following input values the parsed value will be as shown below:</p>
+     *
+     * <pre>{@code
+     * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT   | PARSED_VALUE_WITH_REMOVAL
+     * abc123                        | abc123                          | abc123
+     * abc123!                       | abc123�                         | abc123
+     * abc123!@#                     | abc123���                       | abc123
+     * <body onload="alert('Boo!')"> | �body�onload��alert��Hello����� | bodyonloadalertHello
+     * }</pre>
+     *
+     * @return a parsed value that may be valid or invalid. A valid value will be intact. An invalid value will have had all invalid characters either
+     * removed or replaced with the Unicode Replacement Character � {@code (U+FFFD)}.
+     * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+     * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+     */
+    String parsedValue();
+
+    /**
+     * <p>Indicates whether the parsed value was valid according to the configured {@link TypeParser}.</p>
+     *
+     * @return {@code true} if the parsed value was valid, {@code false} otherwise.
+     */
+    boolean parsedValueWasValid();
+
+    /**
+     * <p>Indicates whether the parsed value was invalid according to the configured {@link TypeParser}.</p>
+     *
+     * @return {@code true} if the parsed value was invalid, {@code false} otherwise.
+     */
+    boolean parsedValueWasInvalid();
+
+    /**
+     * <p>Returns an array of invalid code points encountered during parsing.</p>
+     *
+     * <p>These code points would have either removed or replaced in the parsed value depending on which of the two following methods were invoked:</p>
+     *
+     * <ul>
+     *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+     *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+     * </ul>
+     *
+     * <p>If the parsed value was valid, this will return an empty array.</p>
+     *
+     * @return an array of invalid code points, or an empty array if the parsed value was valid.
+     * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+     * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+     */
+    int[] invalidCodePoints();
+  }
 }

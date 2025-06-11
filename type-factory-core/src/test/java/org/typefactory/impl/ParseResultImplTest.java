@@ -20,7 +20,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       'hello' | 'hello'
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parsedValue_containsExpectedValue(final String value, final String expectedValue ) {
-    final var parseResult = new ParseResultImpl();
+    final var parseResult = new TypeParserImpl.ParseResultImpl();
     parseResult.setParsedValue(value);
     assertThat(parseResult.parsedValue()).isEqualTo(expectedValue);
     assertThat(parseResult.parsedValueWasValid()).isTrue();
@@ -41,7 +41,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       @ConvertWith(IntArrayConverter.class) final int [] values,
       final String expectedInvalidValuesToString) {
 
-    final var parseResult = new ParseResultImpl();
+    final var parseResult = new TypeParserImpl.ParseResultImpl();
     for (int value : values) {
       parseResult.addInvalidCodePoint(value);
     }
@@ -54,7 +54,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
   @Test
   void invalidCodePoints_returnsEmptyWhenNoInvalidCodePoints() {
 
-    final var parseResult = new ParseResultImpl();
+    final var parseResult = new TypeParserImpl.ParseResultImpl();
     assertThat(parseResult.invalidCodePoints()).isEmpty();
     assertThat(parseResult.invalidCodePointsToString()).isEqualTo("[]");
     assertThat(parseResult.parsedValueWasValid()).isTrue();
@@ -64,7 +64,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
   @Test
   void invalidCodePoints_containsExpectedValuesForWhitespace() {
 
-    final var parseResult = new ParseResultImpl();
+    final var parseResult = new TypeParserImpl.ParseResultImpl();
     parseResult.addInvalidCodePoint(' ');  // space
     parseResult.addInvalidCodePoint('\n'); // newline
     parseResult.addInvalidCodePoint('\t'); // tab
@@ -99,7 +99,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       @ConvertWith(IntArrayConverter.class) final int [] invalidCodePoints,
       final String expectedToString) {
 
-    final var parseResult = new ParseResultImpl();
+    final var parseResult = new TypeParserImpl.ParseResultImpl();
     parseResult.setParsedValue(value);
     for (int codePoint : invalidCodePoints) {
       parseResult.addInvalidCodePoint(codePoint);
