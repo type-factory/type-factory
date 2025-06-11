@@ -76,7 +76,7 @@ final class ParseResultImpl implements ParseResult {
     final StringBuilder s = new StringBuilder(256);
     s.append("{parsedValue: ").append(parsedValue());
     if (parsedValueWasValid()) {
-      s.append(", parsedValueWasValid: true");
+      s.append(", parsedValueWasValid: true, invalidCodePoints: []");
     } else {
       s.append(", parsedValueWasValid: false, invalidCodePoints: [");
       for (int codePoint : invalidCodePoints.toArray()) {
