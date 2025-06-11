@@ -10,21 +10,22 @@ class TypeParser_ReplaceInvalidCharactersTest {
 
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-      VALUE                                             | IS_VALID_VALUE | EXPECTED_VALUE
-      abcdefg                                           | true           | abcdefg
-      abc1234                                           | true           | abc1234
-      abc-123                                           | false          | abc�123
-      123_abc                                           | false          | 123�abc
-      $bcdefg                                           | false          | �bcdefg
-      abcdef$                                           | false          | abcdef�
-      abcd$fg                                           | false          | abcd�fg
-      abcd$#%                                           | false          | abcd���
-      abc defg                                          | false          | abc�defg
-      $(".classname").each(function(){alert("Boo!");}); | false          | ����classname���each�function���alert��Boo�������
+      VALUE                                             | IS_VALID_VALUE | INVALID_CODEPOINTS | EXPECTED_VALUE
+      abcdefg                                           | true           |                    | abcdefg
+      abc1234                                           | true           |                    | abc1234
+      abc-123                                           | false          | -                  | abc�123
+      123_abc                                           | false          | _                  | 123�abc
+      $bcdefg                                           | false          | $                  | �bcdefg
+      abcdef$                                           | false          | $                  | abcdef�
+      abcd$fg                                           | false          | $                  | abcd�fg
+      abcd$#%                                           | false          | $#%                | abcd���
+      abc defg                                          | false          | ' '                | abc�defg
+      $(".classname").each(function(){alert("Boo!");}); | false          | $()!".{};          | ����classname���each�function���alert��Boo�������
       """, delimiter = '|', useHeadersInDisplayName = true)
   void parseToStringReplacingInvalidCharacters_returnsAsExpected(
       final String value,
       final boolean isValidValue,
+      final String expectedInvalidCodePoints,
       final String expectedValue) {
 
     final var typeParser = TypeParser.builder()
@@ -37,5 +38,44 @@ class TypeParser_ReplaceInvalidCharactersTest {
     assertThat(parseResult.parsedValueWasValid()).isEqualTo(isValidValue);
     assertThat(parseResult.parsedValueWasInvalid()).isNotEqualTo(isValidValue);
     assertThat(parseResult.parsedValue()).isEqualTo(expectedValue);
+    if (expectedInvalidCodePoints != null) {
+      assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(expectedInvalidCodePoints.codePoints().toArray());
+    }
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(textBlock = """
+      VALUE                                             | IS_VALID_VALUE | INVALID_CODEPOINTS | EXPECTED_VALUE
+      abcdefg                                           | true           |                    | aBcdefg
+      abc1234                                           | true           |                    | aBc1234
+      abc-123                                           | false          | -                  | aBc�123
+      123_abc                                           | false          | _                  | 123�aBc
+      $bcdefg                                           | false          | $                  | �Bcdefg
+      abcdef$                                           | false          | $                  | aBcdef�
+      abcd$fg                                           | false          | $                  | aBcd�fg
+      abcd$#%                                           | false          | $#%                | aBcd���
+      abc defg                                          | false          | ' '                | aBc�defg
+      $(".classname").each(function(){alert("Boo!");}); | false          | $()!".{};          | ����classname���each�function���alert��Boo�������
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void parseToStringReplacingInvalidCharacters_returnsAsExpectedWithCharacterConversion(
+      final String value,
+      final boolean isValidValue,
+      final String expectedInvalidCodePoints,
+      final String expectedValue) {
+
+    final var typeParser = TypeParser.builder()
+        .convertChar('b', 'B')
+        .acceptAllUnicodeLetters()
+        .acceptAllUnicodeDecimalDigits()
+        .build();
+
+    final var parseResult = typeParser.parseToStringReplacingInvalidCharacters(value);
+    assertThat(parseResult).isNotNull();
+    assertThat(parseResult.parsedValueWasValid()).isEqualTo(isValidValue);
+    assertThat(parseResult.parsedValueWasInvalid()).isNotEqualTo(isValidValue);
+    assertThat(parseResult.parsedValue()).isEqualTo(expectedValue);
+    if (expectedInvalidCodePoints != null) {
+      assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(expectedInvalidCodePoints.codePoints().toArray());
+    }
   }
 }
