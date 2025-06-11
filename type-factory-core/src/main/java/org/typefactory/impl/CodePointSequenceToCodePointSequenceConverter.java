@@ -80,7 +80,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
    * @return {@code true} if a conversion is required with the conversion information set into the {@code converterResults} object that was passed in
    * as an argument.
    */
-  public boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+  public boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
     if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
       return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }

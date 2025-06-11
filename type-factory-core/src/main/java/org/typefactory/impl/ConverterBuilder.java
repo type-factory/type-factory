@@ -162,6 +162,11 @@ final class ConverterBuilder {
     return this;
   }
 
+  /**
+   * Builds the {@link Converter} based on the conversions added to this builder, or {@code null} if no conversions are required.
+   *
+   * @return a {@link Converter} that can be used to convert code-points, or {@code null} if no conversions are required.
+   */
   Converter build() {
     if (!codePointSequenceToCodePointSequence.isEmpty()) {
       if (!codePointToCodePointSequence.isEmpty()) {
@@ -175,8 +180,10 @@ final class ConverterBuilder {
           codePointSequenceToCodePointSequence,
           categoryToCodePointSequence);
     }
-    return new CodePointToCodePointSequenceConverter(
-        codePointToCodePointSequence.isEmpty() ? null : codePointToCodePointSequence,
-        categoryToCodePointSequence.isEmpty() ? null : categoryToCodePointSequence);
+    return codePointToCodePointSequence.isEmpty() && categoryToCodePointSequence.isEmpty()
+        ? null
+        : new CodePointToCodePointSequenceConverter(
+            codePointToCodePointSequence.isEmpty() ? null : codePointToCodePointSequence,
+            categoryToCodePointSequence.isEmpty() ? null : categoryToCodePointSequence);
   }
 }

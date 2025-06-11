@@ -70,7 +70,7 @@ final class CodePointToCodePointSequenceConverter implements Converter {
     this.maxConvertedLength = max;
   }
 
-  public boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+  public boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
     if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
       return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }

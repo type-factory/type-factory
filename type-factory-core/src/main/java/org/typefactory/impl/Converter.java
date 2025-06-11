@@ -24,13 +24,17 @@ interface Converter {
 
   /**
    * Creates a reusable {@link ConverterResults} instance that should be used with the
-   * {@link #isCodePointConversionRequired(int, int, ConverterResults)} method.
+   * {@link #codePointConversionIsRequired(int, int, ConverterResults)} method.
    *
    * @return a reusable {@link ConverterResults} instance.
    */
   ConverterResults createConverterResults();
 
-  boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults);
+  boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults);
+
+  default boolean codePointConversionIsNotRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+    return !codePointConversionIsRequired(currentCodePoint, currentIndex, converterResults);
+  }
 
   static ConverterBuilder builder() {
     return new ConverterBuilder();

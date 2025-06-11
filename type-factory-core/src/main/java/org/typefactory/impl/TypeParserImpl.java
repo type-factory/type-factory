@@ -260,7 +260,7 @@ final class TypeParserImpl implements TypeParser {
       if (Character.isWhitespace(codePoint)) {
         switch (whiteSpace) {
           case FORBID_WHITESPACE:
-            if (converter != null && !converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+            if (converter == null || converter.codePointConversionIsNotRequired(codePoint, targetIndex, converterResults)) {
               final int currentCodePoint = codePoint;
               codePoint = handleInvalidCodePoints(
                   parseResult,
@@ -314,7 +314,7 @@ final class TypeParserImpl implements TypeParser {
         }
       }
 
-      if (converter != null && converter.isCodePointConversionRequired(codePoint, targetIndex, converterResults)) {
+      if (converter != null && converter.codePointConversionIsRequired(codePoint, targetIndex, converterResults)) {
         targetIndex = converterResults.getConvertFromIndex();
         toCodePoints = converterResults.getConvertToCodePointSequence();
         if (toCodePoints.length == 0 && (targetIndex > 0 && Character.isWhitespace(target[targetIndex - 1]))) {
