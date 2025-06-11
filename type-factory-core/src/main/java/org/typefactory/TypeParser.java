@@ -242,8 +242,56 @@ public interface TypeParser {
    */
   String parseToString(CharSequence value) throws InvalidValueException;
 
+  /**
+   * <p>Parses the provided {@code value} replacing any invalid characters with a Unicode replacement character � {@code (U+FFFD)} 
+   * and returns the result into a {@link ParseResult} that contains a parsed-value as well as flags to indicate whether the parsed
+   * value is valid or not, and the array of invalid code-points if the parsed value was invalid.</p>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the 
+   * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REPLACEMENT} column:</p>
+   * 
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   * 
+   * @param value the value to parse into a {@link ParseResult}.
+   * @return a {@link ParseResult} containing the parsed string and any parsing errors.
+   * @see #parseToStringRemovingInvalidCharacters(CharSequence) 
+   * @see #parseToString(CharSequence)
+   */
   ParseResult parseToStringReplacingInvalidCharacters(CharSequence value);
 
+  /**
+   * <p>Parses the provided {@code value} removing any invalid characters and returns the result into a {@link ParseResult} that 
+   * contains a parsed-value as well as flags to indicate whether the parsed value is valid or not, and the array of invalid
+   * code-points if the parsed value was invalid.</p>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the 
+   * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REMOVAL} column:</p>
+   *
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   *
+   * @param value the value to parse into a {@link ParseResult}.
+   * @return a {@link ParseResult} containing the parsed string and any parsing errors.
+   * @see #parseToStringReplacingInvalidCharacters(CharSequence) 
+   * @see #parseToString(CharSequence) 
+   */
   ParseResult parseToStringRemovingInvalidCharacters(CharSequence value);
 
   /**
@@ -1827,11 +1875,14 @@ public interface TypeParser {
      * then for the following input values the parsed value will be as shown below:</p>
      *
      * <pre>{@code
-     * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT   | PARSED_VALUE_WITH_REMOVAL
-     * abc123                        | abc123                          | abc123
-     * abc123!                       | abc123�                         | abc123
-     * abc123!@#                     | abc123���                       | abc123
-     * <body onload="alert('Boo!')"> | �body�onload��alert��Hello����� | bodyonloadalertHello
+     * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+     * abc123                        | abc123                        | abc123
+     * abc 123                       | abc�123                       | abc123
+     * abc-123                       | abc�123                       | abc123
+     * abc_123                       | abc�123                       | abc123
+     * abc123!                       | abc123�                       | abc123
+     * abc123!@#                     | abc123���                     | abc123
+     * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
      * }</pre>
      *
      * @return a parsed value that may be valid or invalid. A valid value will be intact. An invalid value will have had all invalid characters either
