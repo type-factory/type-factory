@@ -31,7 +31,7 @@ final class Constants {
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
-  static final String LINE_SEPARATOR = System.lineSeparator();
+  static final String SYSTEM_LINE_SEPARATOR = System.lineSeparator();
 
   /**
    * <p>The Unicode code point for a line separator.</p>

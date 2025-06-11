@@ -51,11 +51,7 @@ interface Converter {
 
     int getConvertFromIndex();
 
-    void setConvertFromIndex(int convertFromIndex);
-
     int[] getConvertToCodePointSequence();
-
-    void setConvertToCodePointSequence(int[] convertToCodePointSequence);
   }
 
 }

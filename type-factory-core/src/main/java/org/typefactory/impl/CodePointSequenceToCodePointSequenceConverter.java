@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.impl.Constants.LINE_SEPARATOR;
+import static org.typefactory.impl.Constants.SYSTEM_LINE_SEPARATOR;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ import org.typefactory.TypeParser;
 final class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
   /**
+   * The root tree-node for the n-ary tree.
+   */
+  private final RootTreeNode rootTreeNode;
+
+  /**
    * Hash-map of Character categories to code-point arrays:
    */
   private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence;
-
-  /**
-   * The root node of the n-ary tree that contains the code-point sequences.
-   */
-  private final RootTreeNode rootTreeNode;
 
   /**
    * The maximum number of code-points that a single code-point could be converted to.
@@ -73,7 +73,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
     return (rootTreeNode == null || rootTreeNode.isEmpty())
            && (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty());
   }
-
+  
   /**
    * The maximum number of code-points that a single code-point could be converted to.
    */
@@ -85,19 +85,20 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
    * Will return {@code true} if a conversion is required with the conversion information set into the {@code converterResults} object that was passed
    * in as an argument.
    *
-   * @param currentCodePoint
-   * @param currentIndex
-   * @param converterResults
+   * @param currentCodePoint the current code-point being parsed
+   * @param currentIndex the current index of the code-point being parsed in the character sequence
+   * @param converterResults the {@link ConverterResults} object that will receive the conversion information if a conversion is required.
    * @return {@code true} if a conversion is required with the conversion information set into the {@code converterResults} object that was passed in
    * as an argument.
    */
   public boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
     if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
-      return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
+      return codePointConversionIsRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }
     throw new IllegalArgumentException("Invalid argument - 'converterResults' must be of type " + ConverterResultsImpl.class.getName());
   }
-  private boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
+
+  private boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
     boolean result = false;
     TreeNode foundTreeNode = null;
     TreeNode treeNodeInPlay = null;
@@ -110,7 +111,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       } else {
         if (foundTreeNode.hasToSequence()) {
           converterResults.convertFromIndex = converterResults.getConvertFromIndexForNodeInPlay(i);
-          converterResults.convertToCodePointSequence = foundTreeNode.toSequence;
+          converterResults.convertToCodePointSequence = foundTreeNode.toCodePointSequence;
           if (foundTreeNode.isLeafNode()) {
             converterResults.removeTreeNodeInPlay(i);
           }
@@ -128,18 +129,15 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
           converterResults.removeTreeNodeInPlay(i);
         }
       }
-      return true;
     }
 
-    // if we get here, then we did not find a conversion in the n-ary tree, so we check the category to code-point sequence map
-    if (categoryToCodePointSequence != null) {
-      final int [] toCodePointSequence = categoryToCodePointSequence.get(Character.getType(currentCodePoint));
-      if (toCodePointSequence == null || toCodePointSequence.length == 0) {
-        return false; // no conversion found
+    if (!result && categoryToCodePointSequence != null) {
+      final int [] toCodePoints = categoryToCodePointSequence.get(Character.getType(currentCodePoint));
+      if (toCodePoints != null) {
+        converterResults.convertFromIndex = currentIndex;
+        converterResults.convertToCodePointSequence = toCodePoints;
+        result = true;
       }
-      converterResults.setConvertFromIndex(currentIndex);
-      converterResults.setConvertToCodePointSequence(toCodePointSequence);
-      return true;
     }
 
     return result;
@@ -157,27 +155,19 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
    */
   static class ConverterResultsImpl implements ConverterResults {
 
+    private final List<TreeNode> treeNodeInPlay = new ArrayList<>();
+    private final PrimitiveListOfInt convertFromIndexesForNodesInPlay = new PrimitiveListOfInt();
     private int convertFromIndex;
     private int[] convertToCodePointSequence;
 
-    private final List<TreeNode> treeNodeInPlay = new ArrayList<>();
-
-    private final PrimitiveListOfInt convertFromIndexesForNodesInPlay = new PrimitiveListOfInt();
-
+    @Override
     public int getConvertFromIndex() {
       return convertFromIndex;
     }
 
-    public void setConvertFromIndex(int convertFromIndex) {
-      this.convertFromIndex = convertFromIndex;
-    }
-
+    @Override
     public int[] getConvertToCodePointSequence() {
       return convertToCodePointSequence;
-    }
-
-    public void setConvertToCodePointSequence(int[] convertToCodePointSequence) {
-      this.convertToCodePointSequence = convertToCodePointSequence;
     }
 
     private void addTreeNodeInPlay(final int currentParseIndex, final TreeNode treeNode) {
@@ -210,28 +200,28 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
   /**
    * A tree-node for an n-ary tree.
    *
-   * <pre>
+   * <pre>{@code
    *   ┌─────────────────────────────────────────────┐
    *   │ TreeNode                                    │←─┐
    *   ├─────────────────────────────────────────────┤  │ map of int codePoint keys to TreeNode values
    *   │ nodesByCodePoint : Map‹codePoint, TreeNode› │──┘
    *   │ toSequence       : int[]                    │──────→ int[] codePoints
    *   └─────────────────────────────────────────────┘
-   * </pre>
+   * }</pre>
    */
-  private static class TreeNode {
+  static class TreeNode {
+
+    private final PrimitiveHashMapOfIntKeyToObjectValue<TreeNode> nodesByCodePoint;
+    private int[] toCodePointSequence;
 
     public TreeNode() {
       this(null);
     }
 
-    public TreeNode(final int[] toSequence) {
-      this.toSequence = toSequence;
+    public TreeNode(final int[] toCodePointSequence) {
+      this.toCodePointSequence = toCodePointSequence;
       this.nodesByCodePoint = new PrimitiveHashMapOfIntKeyToObjectValue<>();
     }
-
-    private int[] toSequence;
-    private final PrimitiveHashMapOfIntKeyToObjectValue<TreeNode> nodesByCodePoint;
 
     void put(final int codePoint, final TreeNode treeNode) {
       nodesByCodePoint.put(codePoint, treeNode);
@@ -246,11 +236,67 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
     }
 
     boolean hasToSequence() {
-      return toSequence != null;
+      return toCodePointSequence != null;
     }
 
     boolean isLeafNode() {
       return nodesByCodePoint.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+      final StringBuilder s = new StringBuilder();
+      final Deque<TreeNode> treeNodeStack = new ArrayDeque<>();
+      final Deque<Integer> indexStack = new ArrayDeque<>();
+      final Deque<String> indentLevels = new ArrayDeque<>();
+      indentLevels.push("");
+      TreeNode currentTreeNode = this;
+      int[] codePoints = currentTreeNode.codePoints();
+      int i = 0;
+      s.append("•").append(SYSTEM_LINE_SEPARATOR);
+      while (i < codePoints.length) {
+        int codePoint = codePoints[i];
+        indentLevels.descendingIterator().forEachRemaining(s::append);
+        if (i < codePoints.length - 1) {
+          s.append('├');
+        } else {
+          s.append('└');
+        }
+        s.appendCodePoint(codePoint);
+        final TreeNode treeNode = currentTreeNode.get(codePoint);
+        if (treeNode != null) {
+          if (treeNode.hasToSequence()) {
+            s.append(" ⟶ \"");
+            s.append(new String(treeNode.toCodePointSequence, 0, treeNode.toCodePointSequence.length));
+            s.append('"');
+          }
+          s.append(SYSTEM_LINE_SEPARATOR);
+          if (!treeNode.isLeafNode()) {
+            indentLevels.push(i < (codePoints.length - 1) ? "│" : " ");
+            treeNodeStack.push(currentTreeNode);
+            indexStack.push(i);
+            currentTreeNode = treeNode;
+            codePoints = currentTreeNode.codePoints();
+            i = 0;
+          } else {
+            if (currentTreeNode == this) { // is root node
+              ++i;
+              indentLevels.pop();
+            } else if ((i + 1) < codePoints.length) {
+              ++i;
+            } else {
+              do {
+                currentTreeNode = treeNodeStack.pop();
+                i = indexStack.pop();
+                indentLevels.pop();
+                codePoints = currentTreeNode.codePoints();
+                ++i;
+              } while (i >= codePoints.length && !indexStack.isEmpty());
+            }
+          }
+        }
+      }
+      return s.toString();
     }
   }
 
@@ -286,67 +332,8 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       if (!currentTreeNode.hasToSequence()) {
         size++;
       }
-      currentTreeNode.toSequence = toSequence;
+      currentTreeNode.toCodePointSequence = toSequence;
       maxToSequenceLength = Math.max(maxToSequenceLength, toSequence.length);
-    }
-
-    @Override
-    public String toString() {
-      final StringBuilder s = new StringBuilder();
-      final Deque<TreeNode> treeNodeStack = new ArrayDeque<>();
-      final Deque<Integer> indexStack = new ArrayDeque<>();
-      TreeNode currentTreeNode = this;
-      int[] codePoints = currentTreeNode.codePoints();
-      int i = 0;
-      int j = 0;
-      while (i < codePoints.length) {
-        int codePoint = codePoints[i];
-        for (int k = 1; k < j; ++k) {
-          s.append(' ');
-        }
-        if (currentTreeNode != this) {
-          if (i < codePoints.length - 1) {
-            s.append('├');
-          } else if (j > 0) {
-            s.append('└');
-          }
-        }
-        s.appendCodePoint(codePoint);
-        TreeNode treeNode = currentTreeNode.get(codePoint);
-        if (treeNode != null) {
-          if (treeNode.hasToSequence()) {
-            s.append(" ⟶ \"");
-            s.append(new String(treeNode.toSequence, 0, treeNode.toSequence.length));
-            s.append('"');
-            if (i == codePoints.length - 1) {
-              s.append(LINE_SEPARATOR);
-            }
-          }
-          if (!treeNode.isLeafNode()) {
-            ++j;
-            s.append(LINE_SEPARATOR);
-            treeNodeStack.push(currentTreeNode);
-            indexStack.push(i);
-            currentTreeNode = treeNode;
-            codePoints = currentTreeNode.codePoints();
-            i = 0;
-          } else {
-            if (currentTreeNode == this) { // is root node
-              ++i;
-              --j;
-            } else {
-              do {
-                currentTreeNode = treeNodeStack.pop();
-                codePoints = currentTreeNode.codePoints();
-                i = indexStack.pop();
-                ++i;
-                --j;
-              } while (i >= codePoints.length && !indexStack.isEmpty());
-            }
-          }
-        }
-      }
-      return s.toString();
     }
   }
 }
