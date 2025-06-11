@@ -85,7 +85,7 @@ final class TypeParserImpl implements TypeParser {
     this.regex = regex;
     this.validationFunction = validationFunction;
     this.acceptedCodePoints = acceptedCodePoints;
-    this.converter = converter;
+    this.converter = converter == null || converter.isEmpty() ? null : converter;
   }
 
 

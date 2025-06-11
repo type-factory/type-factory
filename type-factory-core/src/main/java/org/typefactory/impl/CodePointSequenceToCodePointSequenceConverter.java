@@ -24,6 +24,15 @@ import java.util.List;
 import org.typefactory.TypeParser;
 
 final class CodePointSequenceToCodePointSequenceConverter implements Converter {
+
+  /**
+   * Hash-map of Character categories to code-point arrays:
+   */
+  private final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence;
+
+  /**
+   * The root node of the n-ary tree that contains the code-point sequences.
+   */
   private final RootTreeNode rootTreeNode;
 
   /**
@@ -35,6 +44,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
       final RootTreeNode rootTreeNode,
       final PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence) {
     this.rootTreeNode = rootTreeNode;
+    this.categoryToCodePointSequence = categoryToCodePointSequence;
     int max = 0;
     if (rootTreeNode != null && !rootTreeNode.isEmpty()) {
       max = Math.max(max, rootTreeNode.getMaxToSequenceLength());
@@ -60,7 +70,8 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
   }
 
   public boolean isEmpty() {
-    return rootTreeNode.isEmpty();
+    return (rootTreeNode == null || rootTreeNode.isEmpty())
+           && (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty());
   }
 
   /**

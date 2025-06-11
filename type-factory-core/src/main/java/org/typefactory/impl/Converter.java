@@ -18,6 +18,13 @@ package org.typefactory.impl;
 interface Converter {
 
   /**
+   * Indicates whether there are any configured conversions.
+   *
+   * @return {@code true} if there are no conversions configured, {@code false} otherwise.
+   */
+  boolean isEmpty();
+
+  /**
    * The maximum number of code-points that a single code-point could be converted to.
    */
   int getMaxConvertedLength();

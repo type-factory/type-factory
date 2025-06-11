@@ -35,6 +35,12 @@ final class CodePointToCodePointSequenceConverter implements Converter {
    */
   private final int maxConvertedLength;
 
+  @Override
+  public boolean isEmpty() {
+    return (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty())
+           && (codePointToCodePointSequence == null || codePointToCodePointSequence.isEmpty());
+  }
+
   /**
    * Creates a {@link ConverterResults} object to be used for the life of a single {@link TypeParser} parse method.
    * <p>

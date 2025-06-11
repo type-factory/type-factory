@@ -180,9 +180,7 @@ final class ConverterBuilder {
           codePointSequenceToCodePointSequence,
           categoryToCodePointSequence);
     }
-    return codePointToCodePointSequence.isEmpty() && categoryToCodePointSequence.isEmpty()
-        ? null
-        : new CodePointToCodePointSequenceConverter(
+    return new CodePointToCodePointSequenceConverter(
             codePointToCodePointSequence.isEmpty() ? null : codePointToCodePointSequence,
             categoryToCodePointSequence.isEmpty() ? null : categoryToCodePointSequence);
   }
