@@ -45,10 +45,10 @@ class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE           | ERROR_DESCRIPTION                      | COMMENT
-      Cοn gấu         | 'ο' U+03BF GREEK SMALL LETTER OMICRON. | Vietnamese 'Bear' with Greek 'ο' omicron
-      Con hươυ cao cổ | 'υ' U+03C5 GREEK SMALL LETTER UPSILON. | Vietnamese 'Giraffe' with Greek 'υ' upsilon
-      Con Κhỉ         | 'Κ' U+039A GREEK CAPITAL LETTER KAPPA. | Vietnamese 'Monkey' with Greek 'Κ' kappa
+      VALUE           | ERROR_DESCRIPTION                    | COMMENT
+      Cοn gấu         | ο U+03BF GREEK SMALL LETTER OMICRON. | Vietnamese 'Bear' with Greek 'ο' omicron
+      Con hươυ cao cổ | υ U+03C5 GREEK SMALL LETTER UPSILON. | Vietnamese 'Giraffe' with Greek 'υ' upsilon
+      Con Κhỉ         | Κ U+039A GREEK CAPITAL LETTER KAPPA. | Vietnamese 'Monkey' with Greek 'Κ' kappa
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_vietnamese_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

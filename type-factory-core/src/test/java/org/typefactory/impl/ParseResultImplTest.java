@@ -33,9 +33,9 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       [\u0000]            | [U+0000 NULL]
       [\b]                | [U+0008 BACKSPACE]
       [']                 | [' U+0027 APOSTROPHE]
-      [a]                 | ['a' U+0061 LATIN SMALL LETTER A]
+      [a]                 | [a U+0061 LATIN SMALL LETTER A]
       [\u200B]            | [U+200B ZERO WIDTH SPACE]
-      [a, \b, !, \u200B]  | [U+0008 BACKSPACE, '!' U+0021 EXCLAMATION MARK, 'a' U+0061 LATIN SMALL LETTER A, U+200B ZERO WIDTH SPACE]
+      [a, \b, !, \u200B]  | [U+0008 BACKSPACE, ! U+0021 EXCLAMATION MARK, a U+0061 LATIN SMALL LETTER A, U+200B ZERO WIDTH SPACE]
       """, delimiter = '|', nullValues = "null", quoteCharacter = '`', useHeadersInDisplayName = true)
   void invalidCodePoints_containsExpectedValues(
       @ConvertWith(IntArrayConverter.class) final int [] values,
@@ -90,9 +90,9 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       a             | []                  | {parsedValue: a, parsedValueWasValid: true, invalidCodePoints: []}
       1             | [\u2028]            | {parsedValue: 1, parsedValueWasValid: true, invalidCodePoints: []}
       1A            | [\u2029]            | {parsedValue: 1A, parsedValueWasValid: true, invalidCodePoints: []}
-      hello         | [a]                 | {parsedValue: hello, parsedValueWasValid: false, invalidCodePoints: ['a' U+0061 LATIN SMALL LETTER A]}
+      hello         | [a]                 | {parsedValue: hello, parsedValueWasValid: false, invalidCodePoints: [a U+0061 LATIN SMALL LETTER A]}
       xyz XYZ       | [\u200B]            | {parsedValue: xyz XYZ, parsedValueWasValid: false, invalidCodePoints: [U+200B ZERO WIDTH SPACE]}
-      xyz-XYZ       | [a, \b, !, \u200B]  | {parsedValue: xyz-XYZ, parsedValueWasValid: false, invalidCodePoints: [U+0008 BACKSPACE, '!' U+0021 EXCLAMATION MARK, 'a' U+0061 LATIN SMALL LETTER A, U+200B ZERO WIDTH SPACE]}
+      xyz-XYZ       | [a, \b, !, \u200B]  | {parsedValue: xyz-XYZ, parsedValueWasValid: false, invalidCodePoints: [U+0008 BACKSPACE, ! U+0021 EXCLAMATION MARK, a U+0061 LATIN SMALL LETTER A, U+200B ZERO WIDTH SPACE]}
       """, delimiter = '|', nullValues = "null", quoteCharacter = '`', useHeadersInDisplayName = true)
   void toString_containsExpectedValues(
       final String value,

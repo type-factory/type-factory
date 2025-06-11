@@ -26,8 +26,8 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
   
   @ParameterizedTest
   @CsvSource(value = {
-      "Café au lait                            | Invalid value - invalid character 'é' U+00E9 LATIN SMALL LETTER E WITH ACUTE.",
-      "Apple-tart                              | Invalid value - invalid character '-' U+002D HYPHEN-MINUS.",
+      "Café au lait                            | Invalid value - invalid character é U+00E9 LATIN SMALL LETTER E WITH ACUTE.",
+      "Apple-tart                              | Invalid value - invalid character - U+002D HYPHEN-MINUS.",
       "Apple tart with a really very long name | Invalid value - invalid white-space character U+0020 SPACE.",
   }, delimiter = '|')
   void should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
@@ -47,7 +47,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Τίγρη | Invalid value - invalid character 'ί' U+03AF GREEK SMALL LETTER IOTA WITH TONOS.", // Greek iota-with-tonos (diacritic) is not in the accepted character range
+      "Τίγρη | Invalid value - invalid character ί U+03AF GREEK SMALL LETTER IOTA WITH TONOS.", // Greek iota-with-tonos (diacritic) is not in the accepted character range
   }, delimiter = '|')
   void greek_range_should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
 

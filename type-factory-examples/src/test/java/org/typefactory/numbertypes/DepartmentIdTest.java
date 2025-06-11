@@ -59,9 +59,9 @@ class DepartmentIdTest {
       00000 | Invalid value - too long, maximum length is 4.
       10000 | Invalid value - too long, maximum length is 4.
       99999 | Invalid value - too long, maximum length is 4.
-      A     | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      AAAA  | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      111B  | Invalid value - invalid character 'B' U+0042 LATIN CAPITAL LETTER B.
+      A     | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      AAAA  | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      111B  | Invalid value - invalid character B U+0042 LATIN CAPITAL LETTER B.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> DepartmentId.of(value))

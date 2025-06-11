@@ -61,15 +61,15 @@ class ProductIdTest {
       0                     | Invalid value - too short, minimum length is 16.
       000000000000000       | Invalid value - too short, minimum length is 16.
       0000-0000-0000-000    | Invalid value - too short, minimum length is 16.
-      0000.0000.0000.0000   | Invalid value - invalid character '.' U+002E FULL STOP.
-      0000_0000_0000_0000   | Invalid value - invalid character '_' U+005F LOW LINE.
+      0000.0000.0000.0000   | Invalid value - invalid character . U+002E FULL STOP.
+      0000_0000_0000_0000   | Invalid value - invalid character _ U+005F LOW LINE.
       00000000000000000     | Invalid value - too long, maximum length is 16.
       99999999999999999     | Invalid value - too long, maximum length is 16.
       0000-0000-0000-0000-0 | Invalid value - too long, maximum length is 16.
-      00000000000000A       | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      000000000000000A      | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      0000000000000000A     | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      A                     | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      00000000000000A       | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      000000000000000A      | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      0000000000000000A     | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      A                     | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> ProductId.of(value))

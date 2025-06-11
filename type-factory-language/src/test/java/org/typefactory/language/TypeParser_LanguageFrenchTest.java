@@ -51,10 +51,10 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE        | ERROR_DESCRIPTION                      | COMMENT
-      l'hυître     | 'υ' U+03C5 GREEK SMALL LETTER UPSILON. | French 'Oyster' with Greek 'υ' upsilon
-      le pοrc-épic | 'ο' U+03BF GREEK SMALL LETTER OMICRON. | French 'Porcupine' with Greek 'ο' omicron
-      le léoρard   | 'ρ' U+03C1 GREEK SMALL LETTER RHO.     | French 'Leopard' with Greek 'ρ' rho
+      VALUE        | ERROR_DESCRIPTION                    | COMMENT
+      l'hυître     | υ U+03C5 GREEK SMALL LETTER UPSILON. | French 'Oyster' with Greek 'υ' upsilon
+      le pοrc-épic | ο U+03BF GREEK SMALL LETTER OMICRON. | French 'Porcupine' with Greek 'ο' omicron
+      le léoρard   | ρ U+03C1 GREEK SMALL LETTER RHO.     | French 'Leopard' with Greek 'ρ' rho
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_french_letters(final String value, final String expectedErrorDescription) {
     assertThatExceptionOfType(InvalidValueException.class)
