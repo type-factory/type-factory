@@ -105,7 +105,7 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       parseResult.addInvalidCodePoint(codePoint);
     }
 
-    assertThat(parseResult.toString()).isEqualTo(expectedToString);
+    assertThat(parseResult).hasToString(expectedToString);
   }
 
 }
