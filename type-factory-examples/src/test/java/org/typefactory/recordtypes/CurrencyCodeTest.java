@@ -65,7 +65,7 @@ class CurrencyCodeTest {
       AU   | Invalid value - too short, minimum length is 3.
       AUSD | Invalid value - too long, maximum length is 3.
       USAD | Invalid value - too long, maximum length is 3.
-      61D  | Invalid value - invalid character '6'.
+      61D  | Invalid value - invalid character 6 U+0036 DIGIT SIX.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> new CurrencyCode(value))

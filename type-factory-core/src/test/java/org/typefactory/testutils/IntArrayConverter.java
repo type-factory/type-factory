@@ -17,13 +17,25 @@ package org.typefactory.testutils;
 
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 
+/**
+ * <p>Converts a string representation of an array of integers or single characters into an actual int array.
+ * If single characters are provided, their Unicode code points are used as the integer values.</p>
+ *
+ * <p>The string must be formatted as an array with square brackets and comma-separated values, for example:</p>
+ * <pre>{@code
+ * [1, 20, 345, a, b, $, z]
+ * }</pre>
+ */
 public class IntArrayConverter implements ArgumentConverter {
 
   private static final int [] EMPTY_INT_ARRAY = new int[0];
+
+  private static final Pattern CHARACTER_PATTERN = Pattern.compile("^\\P{Nd}$");
 
   @Override
   public int[] convert(Object source, ParameterContext context) throws ArgumentConversionException {
@@ -41,7 +53,7 @@ public class IntArrayConverter implements ArgumentConverter {
         return EMPTY_INT_ARRAY;
       }
       return Arrays.stream(value.split(",\\s*"))
-          .mapToInt(Integer::parseInt)
+          .mapToInt(s -> CHARACTER_PATTERN.matcher(s).matches() ? (int)s.charAt(0) : Integer.parseInt(s))
           .toArray();
     } catch (Exception e) {
       throw new IllegalArgumentException(

@@ -173,25 +173,36 @@ class RangedSubsetImpl implements RangedSubset {
   @Override
   public final String toString() {
     final StringBuilder s = new StringBuilder();
-    s.append('[');
-    for (char singleByteCodePointRange : singleByteCodePointRanges) {
-      s.append("0x").append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('_')
-          .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
+    if (singleByteCodePointRanges.length > 0) {
+      s.append('[');
+      for (char singleByteCodePointRange : singleByteCodePointRanges) {
+        s.append("0x").append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('_')
+            .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
+      }
+      s.setLength(s.length() - 1); // remove final comma
+      s.append("],");
     }
-    s.setLength(s.length() - 1); // remove final comma
-    s.append("],[");
-    for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
-      s.append("0x").append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('_')
-          .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
+    if (doubleByteCodePointRanges.length > 0) {
+      s.append("[");
+      for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
+        s.append("0x").append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('_')
+            .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
+      }
+      s.setLength(s.length() - 1); // remove final comma
+      s.append("],");
     }
-    s.setLength(s.length() - 1); // remove final comma
-    s.append("],[");
-    for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
-      s.append("0x").append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('_')
-          .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
+    if (tripleByteCodePointRanges.length > 0) {
+      s.append("[");
+      for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
+        s.append("0x").append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('_')
+            .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
+      }
+      s.setLength(s.length() - 1); // remove final comma
+      s.append(']');
     }
-    s.setLength(s.length() - 1); // remove final comma
-    s.append(']');
+    if (s.charAt(s.length() - 1) == ',') {
+      s.setLength(s.length() - 1);
+    }
     return s.toString();
   }
 

@@ -69,7 +69,7 @@ class CountryCodeTest {
       A   | Invalid value - too short, minimum length is 2.
       AUS | Invalid value - too long, maximum length is 2.
       USA | Invalid value - too long, maximum length is 2.
-      61  | Invalid value - invalid character '6'.
+      61  | Invalid value - invalid character 6 U+0036 DIGIT SIX.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> new CountryCode(value))

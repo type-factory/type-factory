@@ -35,6 +35,12 @@ final class CodePointToCodePointSequenceConverter implements Converter {
    */
   private final int maxConvertedLength;
 
+  @Override
+  public boolean isEmpty() {
+    return (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty())
+           && (codePointToCodePointSequence == null || codePointToCodePointSequence.isEmpty());
+  }
+
   /**
    * Creates a {@link ConverterResults} object to be used for the life of a single {@link TypeParser} parse method.
    * <p>
@@ -70,14 +76,14 @@ final class CodePointToCodePointSequenceConverter implements Converter {
     this.maxConvertedLength = max;
   }
 
-  public boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+  public boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
     if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
-      return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
+      return codePointConversionIsRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }
     throw new IllegalArgumentException("Invalid argument - 'converterResults' must be of type " + ConverterResultsImpl.class.getName());
   }
 
-  private boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
+  private boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
     int[] toCodePointSequence = getCodePointConversion(currentCodePoint);
     if (toCodePointSequence != null) {
       converterResults.setConvertFromIndex(currentIndex);

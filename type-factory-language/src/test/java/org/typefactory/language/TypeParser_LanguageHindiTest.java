@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
@@ -47,15 +48,16 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "\uD805\uDE13ल्लू", // Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead 'उ' (u) from the Devanagari script
-      "बा\uD805\uDE11", // Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead 'घ' (gha) from the Devanagari script
-      "कबू\uD805\uDE1Dर", // Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead 'त' (ta) from the Devanagari script
-  })
-  void should_throw_exception_with_non_hindi_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE            | ERROR_DESCRIPTION            | COMMENT
+      \uD805\uDE13ल्लू   | 𑘓 U+011613 MODI LETTER CA.   | Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead of 'उ' (u) from the Devanagari script
+      बा\uD805\uDE11    | 𑘑 U+011611 MODI LETTER GHA.  | Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead of 'घ' (gha) from the Devanagari script
+      कबू\uD805\uDE1Dर   | 𑘝 U+01161D MODI LETTER TA.   | Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead of 'त' (ta) from the Devanagari script
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_hindi_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of Hindi letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of Hindi letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
 
 }
