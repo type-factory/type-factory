@@ -16,7 +16,6 @@
 package org.typefactory.impl;
 
 import org.typefactory.Category;
-import org.typefactory.SubsetWithCategories;
 
 class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSubsetImpl implements SubsetWithCategories {
 
@@ -46,18 +45,16 @@ class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSub
 
   @Override
   public boolean contains(final int codePoint) {
-    return super.contains(codePoint)
-        || (unicodeCategoryBitFlags > 0L
-        && (unicodeCategoryBitFlags & (0x1L << Character.getType(codePoint))) > 0L);
+    return super.contains(codePoint) || Category.codePointIsInOneOfTheCategories(codePoint, unicodeCategoryBitFlags);
+  }
+
+  @Override
+  public boolean includes(final Category category) {
+    return Category.categoryBitFlagsIncludesCategory(category,unicodeCategoryBitFlags);
   }
 
   @Override
   public long unicodeCategoryBitFlags() {
     return unicodeCategoryBitFlags;
-  }
-
-  @Override
-  public int numberOfUnicodeCategories() {
-    return numberOfUnicodeCategories;
   }
 }

@@ -25,6 +25,7 @@ import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.typefactory.Category;
 
 class RangedSubsetImpl implements RangedSubset {
 
@@ -171,6 +172,11 @@ class RangedSubsetImpl implements RangedSubset {
   }
 
   @Override
+  public boolean includes(Category category) {
+    return false;
+  }
+
+  @Override
   public final String toString() {
     final StringBuilder s = new StringBuilder();
     if (singleByteCodePointRanges.length > 0) {
@@ -225,7 +231,7 @@ class RangedSubsetImpl implements RangedSubset {
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;
     private int tripleByteIndex = 0;
-    private CodePointRange result = new CodePointRange(0, 0);
+    private final CodePointRange result = new CodePointRange(0, 0);
 
     @Override
     public boolean hasNext() {

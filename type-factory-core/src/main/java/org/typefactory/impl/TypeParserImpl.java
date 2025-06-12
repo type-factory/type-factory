@@ -24,21 +24,25 @@ import static org.typefactory.impl.InvalidCharactersAction.REPLACE_INVALID_CHARA
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
-import org.typefactory.LongType;
 import org.typefactory.MessageCode;
-import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
 import org.typefactory.TypeParser;
 import org.typefactory.impl.Converter.ConverterResults;
 
 final class TypeParserImpl implements TypeParser {
+
+  enum WhiteSpace {
+    FORBID_WHITESPACE,
+    PRESERVE_WHITESPACE,
+    PRESERVE_AND_CONVERT_WHITESPACE,
+    NORMALIZE_WHITESPACE,
+    NORMALIZE_AND_CONVERT_WHITESPACE,
+    REMOVE_WHITESPACE,
+  }
 
   private final Class<?> targetTypeClass;
   private final MessageCode messageCode;
@@ -49,12 +53,10 @@ final class TypeParserImpl implements TypeParser {
   private final int minNumberOfCodePoints;
   private final int maxNumberOfCodePoints;
   private final int convertAnyDecimalDigitsToDigitsStartingWithZeroDigit;
-
-  private final Pattern regex;
-
-  private final Predicate<String> validationFunction;
   private final Subset acceptedCodePoints;
   private final Converter converter;
+  private final Pattern regex;
+  private final Predicate<String> validationFunction;
 
   @SuppressWarnings("java:S107")
     // Suppress SonaQube "Methods should not have too many parameters" because this constructor is called by a builder
@@ -100,59 +102,10 @@ final class TypeParserImpl implements TypeParser {
     };
   }
 
-  @Override
-  public <T extends ShortType> T parseToShortType(final CharSequence value, Function<Short, T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Short parsedValue = parseToShort(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends IntegerType> T parseToIntegerType(final CharSequence value, IntFunction<T> constructorOrFactoryMethod)
-      throws InvalidValueException {
-    final Integer parsedValue = parseToInteger(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public <T extends LongType> T parseToLongType(final CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException {
-    final Long parsedValue = parseToLong(value);
-    return parsedValue == null
-        ? null
-        : constructorOrFactoryMethod.apply(parsedValue);
-  }
-
-  @Override
-  public Short parseToShort(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Short.valueOf(parsedValue);
-  }
-
-  @Override
-  public Integer parseToInteger(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Integer.valueOf(parsedValue);
-  }
-
-  @Override
-  public Long parseToLong(final CharSequence originalValue) throws InvalidValueException {
-    final String parsedValue = parseToString(originalValue);
-    if (parsedValue == null || parsedValue.isBlank()) {
-      return null;
-    }
-    return Long.valueOf(parsedValue);
-  }
-
+  // Suppress SonarCloud "java:S3776 Cognitive Complexity of methods should not be too high"
+  // – This is the main parse method and, for the moment, I don't want to break it up and create and pass around instantiated state pass object/s.
+  // - Though I am considering doing this to be able to build a parser as a composite of "plug-ins".
+  @SuppressWarnings({"java:S3776"})
   @Override
   public String parseToString(final CharSequence originalValue) throws InvalidValueException {
     return parse(originalValue, FAIL_ON_INVALID_CHARACTERS).parsedValue();

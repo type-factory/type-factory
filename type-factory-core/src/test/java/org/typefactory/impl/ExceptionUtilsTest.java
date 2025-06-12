@@ -20,10 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.InvalidValueException;
 import org.typefactory.MessageCode;
 import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
+import org.typefactory.testutils.CodePointArrayConverter;
 
 class ExceptionUtilsTest {
 
@@ -61,9 +63,9 @@ class ExceptionUtilsTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      ` `  | some value                          | U+0020 SPACE                      | Some default message. Invalid value - invalid white-space character U+0020 SPACE.
-      `\b` | some value \b with backspace        | U+0008 BACKSPACE                  | Some default message. Invalid value - invalid control character U+0008 BACKSPACE.
-      '    | some 'value' with single quotes     | ' U+0027 APOSTROPHE               | Some default message. Invalid value - invalid quote character ' U+0027 APOSTROPHE.
+      ` `  | some value                          | U+0020 SPACE                    | Some default message. Invalid value - invalid white-space character U+0020 SPACE.
+      `\b` | some value \b with backspace        | U+0008 BACKSPACE                | Some default message. Invalid value - invalid control character U+0008 BACKSPACE.
+      '    | some 'value' with single quotes     | ' U+0027 APOSTROPHE             | Some default message. Invalid value - invalid quote character ' U+0027 APOSTROPHE.
       e    | some value                          | e U+0065 LATIN SMALL LETTER E   | Some default message. Invalid value - invalid character e U+0065 LATIN SMALL LETTER E.
       🈂    | some value 🈂 triple byte codepoint | 🈂 U+01F202 SQUARED KATAKANA SA | Some default message. Invalid value - invalid character 🈂 U+01F202 SQUARED KATAKANA SA.
       """, delimiter = '|', quoteCharacter = '`')
@@ -109,6 +111,111 @@ class ExceptionUtilsTest {
         .isInstanceOf(InvalidValueException.class)
         .satisfies(exception -> assertThat(exception.getMessage())
             .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - does not pass custom validation criteria."));
+  }
+
+  @Test
+  void forMultipleDecimalPoints() {
+    final var someValue = "23..89";
+    final var actual = ExceptionUtils.forMultipleDecimalPoints(MESSAGE_CODE, SomeClass.class, someValue, '.');
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - invalid character or unexpected multiple decimal points found . U+002E FULL STOP."));
+  }
+
+  @Test
+  void forDecimalPointNotPermittedForNonBaseTenNumbers() {
+    final var someValue = "2AB.99F";
+    final var actual = ExceptionUtils.forDecimalPointNotPermittedForNonBaseTenNumbers(MESSAGE_CODE, SomeClass.class, someValue, '.');
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers . U+002E FULL STOP."));
+  }
+
+  @ParameterizedTest
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      VALUE | DECIMAL_SEPARATORS | EXPECTED_MESSAGE
+      1.23  | null               | Invalid value - expected a whole number with no decimal places and no decimal point character expected.
+      3.45  | []                 | Invalid value - expected a whole number with no decimal places and no decimal point character expected.
+      3.45  | [.]                | Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character . U+002E FULL STOP.
+      """)
+  void forExpectingWholeNumber_noDecimalSeparatorsProvided(
+      final String value,
+      @ConvertWith(CodePointArrayConverter.class) final int[] decimalSeparators,
+      final String expectedMessage) {
+
+    final var actual = ExceptionUtils.forExpectingWholeNumber(MESSAGE_CODE, SomeClass.class, value, decimalSeparators);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". " + expectedMessage));
+  }
+
+  @Test
+  void forValueMustBeGreaterThanMinValue() {
+    final var someValue = 1;
+    final var minValue = 2;
+    final var actual = ExceptionUtils.forValueMustBeGreaterThanMinValue(MESSAGE_CODE, SomeClass.class, someValue, minValue);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - must be greater than 2."));
+  }
+
+  @Test
+  void forValueMustBeGreaterThanOrEqualToMinValue() {
+    final var someValue = 1;
+    final var minValue = 2;
+    final var actual = ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(MESSAGE_CODE, SomeClass.class, someValue, minValue);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - must be greater than or equal to 2."));
+  }
+
+  @Test
+  void forValueMustBeLessThanMaxValue() {
+    final var someValue = 3;
+    final var maxValue = 2;
+    final var actual = ExceptionUtils.forValueMustBeLessThanMaxValue(MESSAGE_CODE, SomeClass.class, someValue, maxValue);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - must be less than 2."));
+  }
+
+  @Test
+  void forValueMustBeLessThanOrEqualToMaxValue() {
+    final var someValue = 3;
+    final var maxValue = 2;
+    final var actual = ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(MESSAGE_CODE, SomeClass.class, someValue, maxValue);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - must be less than or equal to 2."));
+  }
+
+  @Test
+  void forHighSurrogateWithoutLowSurrogate() {
+    final var someValue = "some value";
+    final char highSurrogate = 0xD83D;
+    final var actual = ExceptionUtils.forHighSurrogateWithoutLowSurrogate(MESSAGE_CODE, SomeClass.class, someValue, highSurrogate);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - incomplete surrogate-pair - the low-surrogate code unit is missing for the high-surrogate code unit U+D83D HIGH SURROGATE."));
+  }
+
+  @Test
+  void forLowSurrogateWithoutHighSurrogate() {
+    final var someValue = "some value";
+    final char lowSurrogate = 0xDE03;
+    final var actual = ExceptionUtils.forLowSurrogateWithoutHighSurrogate(MESSAGE_CODE, SomeClass.class, someValue, lowSurrogate);
+    assertThat(actual)
+        .isInstanceOf(InvalidValueException.class)
+        .satisfies(exception -> assertThat(exception.getMessage())
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - incomplete surrogate-pair - the high-surrogate code unit is missing for the low-surrogate code unit U+DE03 LOW SURROGATE."));
   }
 
   @ParameterizedTest
@@ -177,6 +284,7 @@ class ExceptionUtilsTest {
     final var actual = ExceptionUtils.unicodeHexCode(codePoint);
     assertThat(actual).isEqualTo(expectedValue);
   }
+
 
   private static class SomeClass {
 

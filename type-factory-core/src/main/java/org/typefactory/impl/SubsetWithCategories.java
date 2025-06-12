@@ -15,11 +15,14 @@
 */
 package org.typefactory.impl;
 
-enum WhiteSpace {
-  FORBID_WHITESPACE,
-  PRESERVE_WHITESPACE,
-  PRESERVE_AND_CONVERT_WHITESPACE,
-  NORMALIZE_WHITESPACE,
-  NORMALIZE_AND_CONVERT_WHITESPACE,
-  REMOVE_WHITESPACE,
+import org.typefactory.Category;
+import org.typefactory.Subset;
+
+public interface SubsetWithCategories extends Subset {
+
+  /**
+   * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
+   */
+  long unicodeCategoryBitFlags();
+
 }

@@ -45,6 +45,10 @@
   </distributionManagement>
 
   <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+
     <type-factory-core.version>${project.version}</type-factory-core.version>
     <type-factory-language.version>${project.version}</type-factory-language.version>
   </properties>
@@ -60,6 +64,12 @@
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-language</artifactId>
         <version>${type-factory-language.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-test-assertj</artifactId>
+        <version>${type-factory-core.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

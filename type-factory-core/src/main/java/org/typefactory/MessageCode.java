@@ -43,7 +43,6 @@ import org.typefactory.impl.Factory;
  */
 public interface MessageCode extends Serializable {
 
-
   /**
    * Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
    *
