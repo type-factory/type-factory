@@ -309,7 +309,20 @@ public enum Category {
    */
   OTHER("C", "Other", CONTROL, FORMAT, SURROGATE, PRIVATE_USE, UNASSIGNED);
 
+  /**
+   * The Unicode character categories represented by this category as per the int values in the Java {@link Character} constants:
+   * {@link Character#UPPERCASE_LETTER}, {@link Character#LOWERCASE_LETTER}, {@link Character#TITLECASE_LETTER},
+   * {@link Character#MODIFIER_LETTER}, {@link Character#OTHER_LETTER}, {@link Character#NON_SPACING_MARK},
+   * {@link Character#ENCLOSING_MARK}, {@link Character#COMBINING_SPACING_MARK}, {@link Character#DECIMAL_DIGIT_NUMBER},
+   * {@link Character#LETTER_NUMBER}, {@link Character#OTHER_NUMBER}, {@link Character#SPACE_SEPARATOR}, {@link Character#LINE_SEPARATOR},
+   * {@link Character#PARAGRAPH_SEPARATOR}, {@link Character#CONTROL}, {@link Character#FORMAT}, {@link Character#PRIVATE_USE}
+   * {@link Character#SURROGATE}, {@link Character#DASH_PUNCTUATION}, {@link Character#START_PUNCTUATION},
+   * {@link Character#END_PUNCTUATION}, {@link Character#CONNECTOR_PUNCTUATION},
+   * {@link Character#OTHER_PUNCTUATION}, {@link Character#MATH_SYMBOL}, {@link Character#CURRENCY_SYMBOL}, {@link Character#MODIFIER_SYMBOL},
+   * {@link Character#OTHER_SYMBOL}, {@link Character#UNASSIGNED}, {@link Character#INITIAL_QUOTE_PUNCTUATION}, {@link Character#FINAL_QUOTE_PUNCTUATION}.
+   */
   final int[] characterCategories;
+
   final String abbreviation;
   final String alias;
   public final long bitMask;
@@ -318,7 +331,7 @@ public enum Category {
     this.characterCategories = new int[]{characterCategory};
     this.abbreviation = abbreviation;
     this.alias = alias;
-    this.bitMask = 0x1 << characterCategory; // characterCategory values start from zero.
+    this.bitMask = 0x1L << characterCategory; // characterCategory values start from zero.
   }
 
   Category(final String abbreviation, final String alias, final Category... categories) {
@@ -366,5 +379,9 @@ public enum Category {
    */
   public static boolean codePointIsInOneOfTheCategories(final int codePoint, final long categoryBitFlags) {
     return (categoryBitFlags & (0x1L << Character.getType(codePoint))) > 0;
+  }
+
+  public static boolean categoryBitFlagsIncludesCategory(final Category category, final long categoryBitFlags) {
+    return (categoryBitFlags & category.bitMask) == category.bitMask;
   }
 }

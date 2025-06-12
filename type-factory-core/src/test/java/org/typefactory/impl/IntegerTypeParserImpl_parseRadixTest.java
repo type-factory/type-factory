@@ -16,42 +16,15 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.typefactory.assertions.Assertions.assertThat;
 
+import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.IntegerType;
 import org.typefactory.IntegerTypeParser;
-import org.typefactory.InvalidValueException;
 
-class IntegerTypeParserImpl_parseToIntegerTest {
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_shouldReturnNull(final String value) {
-    final var integerTypeParser = IntegerTypeParser.builder()
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = integerTypeParser.parse(value);
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_whitespaceShouldThrowException(final String value) {
-    final var integerTypeParser = IntegerTypeParser.builder()
-        .forbidWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
-  }
+class IntegerTypeParserImpl_parseRadixTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -82,15 +55,15 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base8NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase8Numbers()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -124,15 +97,15 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base10NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase10Numbers()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -165,7 +138,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base16NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase16Numbers()
@@ -173,8 +146,8 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -207,7 +180,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base32NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase32Numbers()
@@ -215,8 +188,8 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -249,7 +222,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base36NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase36Numbers()
@@ -257,8 +230,8 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseInsensitive()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -291,7 +264,7 @@ class IntegerTypeParserImpl_parseToIntegerTest {
   void parse_base62NumbersParseAsExpected(
       final String value, final int expected, final String ignoredComments) {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
+    final IntegerTypeParser typeParser = IntegerTypeParser.builder()
         .minValueInclusive(Integer.MIN_VALUE)
         .maxValueInclusive(Integer.MAX_VALUE)
         .allowBase62Numbers()
@@ -299,79 +272,18 @@ class IntegerTypeParserImpl_parseToIntegerTest {
         .caseSensitive()
         .build();
 
-    final var actual = integerTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expected);
   }
 
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-      INCLUSIVE_MIN | INCLUSIVE_MAX |       VALUE | EXPECTED_MESSAGE
-        -2147483648 |    2147483647 | -2147483649 | Invalid value - must be greater than or equal to -2,147,483,648.
-        -2147483648 |    2147483647 |  2147483648 | Invalid value - must be less than or equal to 2,147,483,647.
-                  0 |             0 |          -1 | Invalid value - must be greater than or equal to 0.
-                  0 |             0 |           1 | Invalid value - must be less than or equal to 0.
-                 -1 |             1 |          -2 | Invalid value - must be greater than or equal to -1.
-                 -1 |             1 |           2 | Invalid value - must be less than or equal to 1.
-                -20 |           -10 |         -21 | Invalid value - must be greater than or equal to -20.
-                -20 |           -10 |          -9 | Invalid value - must be less than or equal to -10.
-                 10 |            20 |           9 | Invalid value - must be greater than or equal to 10.
-                 10 |            20 |          21 | Invalid value - must be less than or equal to 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_outsideInclusiveMinMaxThrowsException(
-      final int min, final int max,
-      final String value, final String expectedMessage) {
+  private static class SomeIntegerType extends IntegerType {
 
-    final var integerTypeParser = IntegerTypeParser.builder()
-        .minValueInclusive(min)
-        .maxValueInclusive(max)
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
+    @Serial
+    private static final long serialVersionUID = 1443000566308904061L;
 
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-      EXCLUSIVE_MIN | EXCLUSIVE_MAX |       VALUE | EXPECTED_MESSAGE
-        -2147483648 |    2147483647 | -2147483649 | Invalid value - must be greater than -2,147,483,648.
-        -2147483648 |    2147483647 | -2147483648 | Invalid value - must be greater than -2,147,483,648.
-        -2147483648 |    2147483647 |  2147483648 | Invalid value - must be less than 2,147,483,647.
-        -2147483648 |    2147483647 |  2147483649 | Invalid value - must be less than 2,147,483,647.
-                  0 |             0 |          -1 | Invalid value - must be greater than 0.
-                  0 |             0 |           0 | Invalid value - must be greater than 0.
-                  0 |             0 |           1 | Invalid value - must be less than 0.
-                 -1 |             1 |          -1 | Invalid value - must be greater than -1.
-                 -1 |             1 |           1 | Invalid value - must be less than 1.
-                -20 |           -10 |         -20 | Invalid value - must be greater than -20.
-                -20 |           -10 |         -21 | Invalid value - must be greater than -20.
-                -20 |           -10 |         -10 | Invalid value - must be less than -10.
-                -20 |           -10 |          -9 | Invalid value - must be less than -10.
-                 10 |            20 |          10 | Invalid value - must be greater than 10.
-                 10 |            20 |           9 | Invalid value - must be greater than 10.
-                 10 |            20 |          20 | Invalid value - must be less than 20.
-                 10 |            20 |          21 | Invalid value - must be less than 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_outsideExclusiveMinMaxThrowsException(
-      final int min, final int max,
-      final String value, final String expectedMessage) {
-
-    final var integerTypeParser = IntegerTypeParser.builder()
-        .minValueExclusive(min)
-        .maxValueExclusive(max)
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> integerTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
+    protected SomeIntegerType(final Integer value) {
+      super(value);
+    }
   }
 
 }

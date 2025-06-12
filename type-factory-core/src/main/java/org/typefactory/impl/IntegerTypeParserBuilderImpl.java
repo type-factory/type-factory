@@ -3,6 +3,7 @@ package org.typefactory.impl;
 import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE;
 import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE;
 
+import java.math.RoundingMode;
 import java.util.Locale;
 import org.typefactory.IntegerTypeParser.IntegerTypeParserBuilder;
 import org.typefactory.MessageCode;
@@ -32,6 +33,36 @@ class IntegerTypeParserBuilderImpl implements IntegerTypeParserBuilder {
   @Override
   public IntegerTypeParserBuilder defaultLocale(Locale locale) {
     wrapperBuilder.defaultLocale(locale);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder roundingMode(RoundingMode roundingMode) {
+    wrapperBuilder.roundingMode(roundingMode);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder decimalSeparator(char decimalSeparator, char... alternativeDecimalSeparators) {
+    wrapperBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder decimalSeparator(int decimalSeparator, int... alternativeDecimalSeparators) {
+    wrapperBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder groupingSeparator(char groupingSeparator, char... alternativeGroupingSeparators) {
+    wrapperBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
+    return this;
+  }
+
+  @Override
+  public IntegerTypeParserBuilder groupingSeparator(int groupingSeparator, int... alternativeGroupingSeparators) {
+    wrapperBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
     return this;
   }
 

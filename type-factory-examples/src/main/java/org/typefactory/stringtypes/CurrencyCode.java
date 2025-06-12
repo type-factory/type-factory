@@ -15,16 +15,20 @@
 */
 package org.typefactory.stringtypes;
 
+import java.io.Serial;
 import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
 public final class CurrencyCode extends StringType {
 
-  public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");
+  @Serial
+  private static final long serialVersionUID = -7776817560847792022L;
 
-  private static final MessageCode ERROR_MESSAGE =
-      MessageCode.of("invalid.currency.code", "must be a 3-character ISO 4217 alpha currency code");
+  public static final MessageCode ERROR_MESSAGE =
+      MessageCode.of(
+          "invalid.currency.code",
+          "must be a 3-character ISO 4217 alpha currency code");
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
       .messageCode(ERROR_MESSAGE)
@@ -32,7 +36,7 @@ public final class CurrencyCode extends StringType {
       .acceptCharRange('A', 'Z')
       .fixedSize(3)
       .removeAllWhitespace()
-      .preserveNullAndEmpty()
+      .convertEmptyToNull()
       .toUpperCase()
       .build();
 
@@ -43,5 +47,4 @@ public final class CurrencyCode extends StringType {
   public static CurrencyCode of(final CharSequence value) {
     return TYPE_PARSER.parseToStringType(value, CurrencyCode::new);
   }
-
 }

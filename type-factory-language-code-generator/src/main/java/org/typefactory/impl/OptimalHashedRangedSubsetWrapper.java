@@ -15,6 +15,8 @@
 */
 package org.typefactory.impl;
 
+import org.typefactory.Category;
+
 public class OptimalHashedRangedSubsetWrapper implements SubsetWrapper, OptimalHashedRangedSubset {
 
   private final OptimalHashedRangedSubsetImpl wrapped;
@@ -31,6 +33,11 @@ public class OptimalHashedRangedSubsetWrapper implements SubsetWrapper, OptimalH
   @Override
   public boolean contains(int codePoint) {
     return wrapped.contains(codePoint);
+  }
+
+  @Override
+  public boolean includes(Category category) {
+    return wrapped.includes(category);
   }
 
   @Override

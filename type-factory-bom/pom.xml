@@ -65,6 +65,12 @@
         <artifactId>type-factory-language</artifactId>
         <version>${type-factory-language.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-test-assertj</artifactId>
+        <version>${type-factory-core.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

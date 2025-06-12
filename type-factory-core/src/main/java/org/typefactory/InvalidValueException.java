@@ -362,10 +362,12 @@ public class InvalidValueException extends IllegalArgumentException {
     final StringBuilder s = new StringBuilder();
     s.append(this.getClass().getSimpleName())
         .append("{")
-        .append("message='").append(getMessage()).append('\'')
-        .append(", messageCode='").append(messageCode.code()).append('\'')
-        .append(", defaultErrorMessage='").append(messageCode.defaultMessage()).append('\'')
-        .append(", parserMessageCode='").append(parserMessageCode.code()).append('\'')
+        .append("message='").append(getMessage()).append('\'');
+    if (messageCode != null) {
+      s.append(", messageCode='").append(messageCode.code()).append('\'')
+          .append(", defaultErrorMessage='").append(messageCode.defaultMessage()).append('\'');
+    }
+    s.append(", parserMessageCode='").append(parserMessageCode.code()).append('\'')
         .append(", defaultParserErrorMessage='").append(parserMessageCode.defaultMessage()).append('\'');
     for (Map.Entry<String, Serializable> entry : parserMessageCodeArgs.entrySet()) {
       s.append(", ").append(entry.getKey()).append("='").append(entry.getValue()).append('\'');
@@ -423,11 +425,10 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
      * <blockquote>
-     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
-     *   where a pair of surrogate code units (a
-     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
-     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
-     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16, where a pair of surrogate code units (a
+     * <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     * followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>) “stand in” for a <a
+     * href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
      * </blockquote>
      *
      * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>
@@ -443,11 +444,10 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
      * <blockquote>
-     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
-     *   where a pair of surrogate code units (a
-     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
-     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
-     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16, where a pair of surrogate code units (a
+     * <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     * followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>) “stand in” for a <a
+     * href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
      * </blockquote>
      *
      * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>
@@ -459,6 +459,7 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE = Factory.parserMessageCode(
         "invalid_value_low_surrogate_without_high_surrogate",
         "Invalid value - incomplete surrogate-pair - the high-surrogate code unit is missing for the low-surrogate code unit {0}.");
+
     ParserMessageCode INVALID_VALUE_TOO_LONG = Factory.parserMessageCode(
         "invalid_value_too_long",
         "Invalid value - too long, maximum length is {0,number,integer}.");
@@ -469,15 +470,27 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN = Factory.parserMessageCode(
         "invalid_value_must_be_greater_than",
         "Invalid value - must be greater than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN_USING_ROUNDING_MODE = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than_using_rounding_mode",
+        "Invalid value - must be greater than {0} using rounding mode {1}.");
     ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
         "invalid_value_must_be_greater_than_or_equal_to",
         "Invalid value - must be greater than or equal to {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE = Factory.parserMessageCode(
+        "invalid_value_must_be_greater_than_or_equal_to_using_rounding_mode",
+        "Invalid value - must be greater than or equal to {0} using rounding mode {1}.");
     ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN = Factory.parserMessageCode(
         "invalid_value_must_be_less_than",
         "Invalid value - must be less than {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_USING_ROUNDING_MODE = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than_using_rounding_mode",
+        "Invalid value - must be less than {0} using rounding mode {1}.");
     ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO = Factory.parserMessageCode(
         "invalid_value_must_be_less_than_or_equal_to",
         "Invalid value - must be less than or equal to {0}.");
+    ParserMessageCode INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE = Factory.parserMessageCode(
+        "invalid_value_must_be_less_than_or_equal_to_using_rounding_mode",
+        "Invalid value - must be less than or equal to {0} using rounding mode {1}.");
   }
 
 }

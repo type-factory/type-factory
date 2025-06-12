@@ -369,6 +369,18 @@ final class LongTypeParserBuilderImpl implements LongTypeParserBuilder {
   }
 
   /**
+   * <p>Will accept the following digits for base-10 numbers:</p>
+   *
+   * <pre>{@code
+   * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+   * }</pre>
+   */
+  @Override
+  public LongTypeParserBuilderImpl allowBase10Numbers() {
+    return setCustomRadix(DEFAULT_BASE_10_CODE_POINTS);
+  }
+
+  /**
    * <p>Will accept the following digits for base-16 numbers:</p>
    *
    * <pre>{@code

@@ -243,7 +243,7 @@ public class TypeParserBuilderException extends RuntimeException  {
 
     public static final MessageCode INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE = Factory.messageCode(
         "invalid_zero_digit",
-        "An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
+        "An invalid zero digit has been configured for the type parser – the zero digit along with the subsequent nine characters must be valid unicode decimal digits.");
 
     public static final MessageCode INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
         "invalid_short_min_value",

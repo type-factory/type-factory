@@ -334,7 +334,7 @@ class NumberFormatImplTest {
 
     assertThatExceptionOfType(TypeParserBuilderException.class)
         .isThrownBy(() -> builder.zeroDigit('A')) // 'A' is not a valid zero digit
-        .withMessageContaining("An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
+        .withMessageContaining("An invalid zero digit has been configured for the type parser – the zero digit along with the subsequent nine characters must be valid unicode decimal digits.");
   }
 
   @Test
@@ -344,6 +344,6 @@ class NumberFormatImplTest {
 
     assertThatExceptionOfType(TypeParserBuilderException.class)
         .isThrownBy(() -> builder.zeroDigit((int)'A')) // 'A' is not a valid zero digit
-        .withMessageContaining("An invalid zero digit has been configured for the numeric type parser – the zero digit along with the subsequent nine characters must be valid unicode digits.");
+        .withMessageContaining("An invalid zero digit has been configured for the type parser – the zero digit along with the subsequent nine characters must be valid unicode decimal digits.");
   }
 }

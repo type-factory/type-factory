@@ -3,6 +3,7 @@ package org.typefactory.impl;
 import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE;
 import static org.typefactory.TypeParserBuilderException.MessageCodes.INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE;
 
+import java.math.RoundingMode;
 import java.util.Locale;
 import org.typefactory.MessageCode;
 import org.typefactory.ShortTypeParser.ShortTypeParserBuilder;
@@ -31,6 +32,36 @@ class ShortTypeParserBuilderImpl implements ShortTypeParserBuilder {
   @Override
   public ShortTypeParserBuilder defaultLocale(Locale locale) {
     wrapperBuilder.defaultLocale(locale);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder roundingMode(RoundingMode roundingMode) {
+    wrapperBuilder.roundingMode(roundingMode);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder decimalSeparator(char decimalSeparator, char... alternativeDecimalSeparators) {
+    wrapperBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder decimalSeparator(int decimalSeparator, int... alternativeDecimalSeparators) {
+    wrapperBuilder.decimalSeparator(decimalSeparator, alternativeDecimalSeparators);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder groupingSeparator(char groupingSeparator, char... alternativeGroupingSeparators) {
+    wrapperBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
+    return this;
+  }
+
+  @Override
+  public ShortTypeParserBuilder groupingSeparator(int groupingSeparator, int... alternativeGroupingSeparators) {
+    wrapperBuilder.groupingSeparator(groupingSeparator, alternativeGroupingSeparators);
     return this;
   }
 

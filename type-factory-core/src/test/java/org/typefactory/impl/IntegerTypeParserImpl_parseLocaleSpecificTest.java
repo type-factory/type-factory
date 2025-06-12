@@ -16,15 +16,138 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 import java.io.Serial;
+import java.math.RoundingMode;
 import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.typefactory.IntegerType;
 import org.typefactory.IntegerTypeParser;
+import org.typefactory.InvalidValueException;
+import org.typefactory.assertions.Assertions;
 
 class IntegerTypeParserImpl_parseLocaleSpecificTest {
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaNumberFormatToTestInclusiveIntegerParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaStringFormatToTestInclusiveIntegerParsers"
+  })
+  void parse_localeSpecificIntegralStringValues_usingIntegerParserWithInclusiveLimits(
+      final Locale locale, final String value,
+      final Integer expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = IntegerTypeParser.builder()
+        .minValueInclusive(Integer.MIN_VALUE)
+        .maxValueInclusive(Integer.MAX_VALUE)
+        .defaultLocale(locale)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expectedValue);
+    } else {
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeIntegerType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaNumberFormatToTestExclusiveIntegerParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaStringFormatToTestExclusiveIntegerParsers"
+  })
+  void parse_localeSpecificIntegralStringValues_usingIntegerParserWithExclusiveLimits(
+      final Locale locale, final String value,
+      final Integer expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = IntegerTypeParser.builder()
+        .minValueExclusive(Integer.MIN_VALUE)
+        .maxValueExclusive(Integer.MAX_VALUE)
+        .defaultLocale(locale)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expectedValue);
+    } else {
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeIntegerType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaNumberFormatToTestInclusiveIntegerParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaStringFormatToTestInclusiveIntegerParsers"
+  })
+  void parse_localeSpecificDecimalStringValues_usingIntegerParserWithInclusiveLimits(
+      final Locale locale, final RoundingMode roundingMode, final String value,
+      final Integer expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = IntegerTypeParser.builder()
+        .minValueInclusive(Integer.MIN_VALUE)
+        .maxValueInclusive(Integer.MAX_VALUE)
+        .defaultLocale(locale)
+        .roundingMode(roundingMode)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expectedValue);
+    } else {
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeIntegerType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaNumberFormatToTestExclusiveIntegerParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaStringFormatToTestExclusiveIntegerParsers"
+  })
+  void parse_localeSpecificDecimalStringValues_usingIntegerParserWithExclusiveLimits(
+      final Locale locale, final RoundingMode roundingMode, final String value,
+      final Integer expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = IntegerTypeParser.builder()
+        .minValueExclusive(Integer.MIN_VALUE)
+        .maxValueExclusive(Integer.MAX_VALUE)
+        .defaultLocale(locale)
+        .roundingMode(roundingMode)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(typeParser.parse(value, SomeIntegerType::new)).hasValue(expectedValue);
+    } else {
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      Assertions.assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeIntegerType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
   static final String LOCALE_SPECIFIC_INTEGER_TEST_CASES = """
       LOCALE |          VALUE |    EXPECTED

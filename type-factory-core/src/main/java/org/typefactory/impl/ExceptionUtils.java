@@ -17,6 +17,7 @@ package org.typefactory.impl;
 
 import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
+import java.math.RoundingMode;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
 import org.typefactory.InvalidValueException;
@@ -84,10 +85,36 @@ class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            ParserMessageCodeArgKeys.MIN_VALUE,
             minExclusiveValue)
         .build();
   }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minExclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, invalidValue, minExclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minExclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
+        .build();
+  }
+
 
   static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
       final MessageCode messageCode,
@@ -101,8 +128,33 @@ class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.MIN_INCLUSIVE_VALUE,
+            ParserMessageCodeArgKeys.MIN_VALUE,
             minInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minInclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, invalidValue, minInclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minInclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
         .build();
   }
 
@@ -118,8 +170,33 @@ class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            ParserMessageCodeArgKeys.MAX_VALUE,
             maxExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxExclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, invalidValue, maxExclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxExclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
         .build();
   }
 
@@ -135,8 +212,33 @@ class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)
         .addParserMessageCodeArg(
-            ParserMessageCodeArgKeys.MAX_INCLUSIVE_VALUE,
+            ParserMessageCodeArgKeys.MAX_VALUE,
             maxInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxInclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, invalidValue, maxInclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxInclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
         .build();
   }
 

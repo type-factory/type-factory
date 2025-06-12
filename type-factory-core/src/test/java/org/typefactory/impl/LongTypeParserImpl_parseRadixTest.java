@@ -16,42 +16,15 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.typefactory.assertions.Assertions.assertThat;
 
+import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.InvalidValueException;
+import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 
-class LongTypeParserImpl_parseToLongTest {
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_shouldReturnNull(final String value) {
-    final var longTypeParser = LongTypeParser.builder()
-        .setRadixDecimal()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = longTypeParser.parse(value);
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_whitespaceShouldThrowException(final String value) {
-    final var longTypeParser = LongTypeParser.builder()
-        .forbidWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
-  }
+class LongTypeParserImpl_parseRadixTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -82,15 +55,15 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base8NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .setRadixOctal()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -124,15 +97,15 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base10NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .setRadixDecimal()
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -165,7 +138,7 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base16NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase16Numbers()
@@ -173,8 +146,8 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -207,7 +180,7 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base32NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase32Numbers()
@@ -215,8 +188,8 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -249,7 +222,7 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base36NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase36Numbers()
@@ -257,8 +230,8 @@ class LongTypeParserImpl_parseToLongTest {
         .caseInsensitive()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -291,7 +264,7 @@ class LongTypeParserImpl_parseToLongTest {
   void parseToLong_base62NumbersParseAsExpected(
       final String value, final long expected, final String ignoredComments) {
 
-    final var longTypeParser = LongTypeParser.builder()
+    final LongTypeParser typeParser = LongTypeParser.builder()
         .minValueInclusive(Long.MIN_VALUE)
         .maxValueInclusive(Long.MAX_VALUE)
         .allowBase62Numbers()
@@ -299,79 +272,18 @@ class LongTypeParserImpl_parseToLongTest {
         .caseSensitive()
         .build();
 
-    final var actual = longTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(typeParser.parse(value)).isEqualTo(expected);
+    assertThat(typeParser.parse(value, SomeLongType::new)).hasValue(expected);
   }
 
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-             INCLUSIVE_MIN |       INCLUSIVE_MAX |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | -9223372036854775809 | Invalid value - must be greater than or equal to -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 |  9223372036854775808 | Invalid value - must be less than or equal to 9,223,372,036,854,775,807.
-                         0 |                   0 |                   -1 | Invalid value - must be greater than or equal to 0.
-                         0 |                   0 |                    1 | Invalid value - must be less than or equal to 0.
-                        -1 |                   1 |                   -2 | Invalid value - must be greater than or equal to -1.
-                        -1 |                   1 |                    2 | Invalid value - must be less than or equal to 1.
-                       -20 |                 -10 |                  -21 | Invalid value - must be greater than or equal to -20.
-                       -20 |                 -10 |                   -9 | Invalid value - must be less than or equal to -10.
-                        10 |                  20 |                    9 | Invalid value - must be greater than or equal to 10.
-                        10 |                  20 |                   21 | Invalid value - must be less than or equal to 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parseToLong_outsideInclusiveMinMaxThrowsException(
-      final long min, final long max,
-      final String value, final String expectedMessage) {
+  private static class SomeLongType extends LongType {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(min)
-        .maxValueInclusive(max)
-        .setRadixDecimal()
-        .ignoreAllWhitespace()
-        .build();
+    @Serial
+    private static final long serialVersionUID = 1443000566308904061L;
 
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-             EXCLUSIVE_MIN |       EXCLUSIVE_MAX |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | -9223372036854775809 | Invalid value - must be greater than -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 | -9223372036854775808 | Invalid value - must be greater than -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 |  9223372036854775808 | Invalid value - must be less than 9,223,372,036,854,775,807.
-      -9223372036854775808 | 9223372036854775807 |  9223372036854775807 | Invalid value - must be less than 9,223,372,036,854,775,807.
-                         0 |                   0 |                   -1 | Invalid value - must be greater than 0.
-                         0 |                   0 |                    0 | Invalid value - must be greater than 0.
-                         0 |                   0 |                    1 | Invalid value - must be less than 0.
-                        -1 |                   1 |                   -1 | Invalid value - must be greater than -1.
-                        -1 |                   1 |                    1 | Invalid value - must be less than 1.
-                       -20 |                 -10 |                  -20 | Invalid value - must be greater than -20.
-                       -20 |                 -10 |                  -21 | Invalid value - must be greater than -20.
-                       -20 |                 -10 |                  -10 | Invalid value - must be less than -10.
-                       -20 |                 -10 |                   -9 | Invalid value - must be less than -10.
-                        10 |                  20 |                   10 | Invalid value - must be greater than 10.
-                        10 |                  20 |                    9 | Invalid value - must be greater than 10.
-                        10 |                  20 |                   20 | Invalid value - must be less than 20.
-                        10 |                  20 |                   21 | Invalid value - must be less than 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parseToLong_outsideExclusiveMinMaxThrowsException(
-      final long min, final long max,
-      final String value, final String expectedMessage) {
-
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueExclusive(min)
-        .maxValueExclusive(max)
-        .setRadixDecimal()
-        .ignoreAllWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> longTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
+    protected SomeLongType(final Long value) {
+      super(value);
+    }
   }
 
 }

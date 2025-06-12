@@ -15,16 +15,138 @@
 */
 package org.typefactory.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.catchThrowableOfType;
 
 import java.io.Serial;
+import java.math.RoundingMode;
 import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.InvalidValueException;
 import org.typefactory.ShortType;
 import org.typefactory.ShortTypeParser;
 
 class ShortTypeParserImpl_parseLocaleSpecificTest {
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaNumberFormatToTestInclusiveShortParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaStringFormatToTestInclusiveShortParsers"
+  })
+  void parse_localeSpecificIntegralStringValues_usingShortParserWithInclusiveLimits(
+      final Locale locale, final String value,
+      final Short expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = ShortTypeParser.builder()
+        .minValueInclusive(Short.MIN_VALUE)
+        .maxValueInclusive(Short.MAX_VALUE)
+        .defaultLocale(locale)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      assertThat(typeParser.parse(value, SomeShortType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeShortType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaNumberFormatToTestExclusiveShortParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificIntegralStringValuesCreatedByJavaStringFormatToTestExclusiveShortParsers"
+  })
+  void parse_localeSpecificIntegralStringValues_usingShortParserWithExclusiveLimits(
+      final Locale locale, final String value,
+      final Short expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = ShortTypeParser.builder()
+        .minValueExclusive(Short.MIN_VALUE)
+        .maxValueExclusive(Short.MAX_VALUE)
+        .defaultLocale(locale)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      assertThat(typeParser.parse(value, SomeShortType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeShortType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaNumberFormatToTestInclusiveShortParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaStringFormatToTestInclusiveShortParsers"
+  })
+  void parse_localeSpecificDecimalStringValues_usingShortParserWithInclusiveLimits(
+      final Locale locale, final RoundingMode roundingMode, final String value,
+      final Short expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = ShortTypeParser.builder()
+        .minValueInclusive(Short.MIN_VALUE)
+        .maxValueInclusive(Short.MAX_VALUE)
+        .defaultLocale(locale)
+        .roundingMode(roundingMode)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      assertThat(typeParser.parse(value, SomeShortType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeShortType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource({
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaNumberFormatToTestExclusiveShortParsers",
+      "org.typefactory.testutils.NumericValueScenarios#provideLocaleSpecificDecimalStringValuesCreatedByJavaStringFormatToTestExclusiveShortParsers"
+  })
+  void parse_localeSpecificDecimalStringValues_usingShortParserWithExclusiveLimits(
+      final Locale locale, final RoundingMode roundingMode, final String value,
+      final Short expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    final var typeParser = ShortTypeParser.builder()
+        .minValueExclusive(Short.MIN_VALUE)
+        .maxValueExclusive(Short.MAX_VALUE)
+        .defaultLocale(locale)
+        .roundingMode(roundingMode)
+        .forbidWhitespace()
+        .build();
+
+    if (expectedExceptionMessage == null) {
+      assertThat(typeParser.parse(value)).isEqualTo(expectedValue);
+      assertThat(typeParser.parse(value, SomeShortType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> typeParser.parse(value, SomeShortType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
   static final String LOCALE_SPECIFIC_SHORT_TEST_CASES = """
       LOCALE |      VALUE | EXPECTED
@@ -64,7 +186,7 @@ class ShortTypeParserImpl_parseLocaleSpecificTest {
       de-DE  |     +1.444 |     1444
       de-DE  |     32.767 |    32767
       
-      # contains mixture of ordinary apostrophes as well as right single quotation marks
+      # contains mixture of ordinary apostrophes as well as right single quotation marks ’ U+2019
       de-CH  |    -32'768 |   -32768
       de-CH  |    -32’768 |   -32768
       de-CH  |     -3'111 |    -3111
@@ -78,7 +200,7 @@ class ShortTypeParserImpl_parseLocaleSpecificTest {
       de-CH  |     +1'444 |     1444
       de-CH  |     32’767 |    32767
       
-      # contains mixture of ordinary spaces as well as narrow no-break spaces
+      # contains mixture of ordinary spaces as well as narrow no-break spaces U+202F
       fr-CH  |     -32 768 |  -32768
       fr-CH  | -3\u202F111 |   -3111
       fr-CH  |     -3  222 |   -3222
@@ -178,7 +300,7 @@ class ShortTypeParserImpl_parseLocaleSpecificTest {
         .isEqualTo(new SomeShortType(expected));
   }
 
-  static class SomeShortType extends ShortType {
+  private static class SomeShortType extends ShortType {
 
     @Serial
     private static final long serialVersionUID = -8866349817477970777L;

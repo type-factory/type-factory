@@ -1344,8 +1344,8 @@ public interface TypeParser {
     TypeParserBuilder removeAllWhitespace();
 
     /**
-     * <p>Removes all leading and trailing whitespace, then replaces all other contiguous blocks of whitespace with a single space {' ' (U+0020)}
-     * character.</p>
+     * <p>Removes all leading and trailing whitespace, then replaces all other contiguous blocks of whitespace with a
+     * single space {@code ' '} {@code (U+0020)} character.</p>
      *
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *

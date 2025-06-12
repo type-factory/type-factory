@@ -42,7 +42,6 @@ import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.CodePointRange;
 import org.typefactory.Subset.SubsetBuilder;
-import org.typefactory.SubsetWithCategories;
 import org.typefactory.impl.SubsetBuilderImpl.SubsetOptimiser.HashedSubsetOption;
 
 final class SubsetBuilderImpl implements SubsetBuilder {

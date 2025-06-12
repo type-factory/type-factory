@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -97,14 +97,14 @@ class HashedRangedSubsetWithCategoriesImplTest {
   @Test
   void numberOfUnicodeCategories_returnsAsExpected() {
     final var actual = new HashedRangedSubsetWithCategoriesImpl(
-        0x5,
+        Category.getCategoryBitFlags(Category.LOWERCASE_LETTER, Category.UPPERCASE_LETTER),
         new char[0][],
         new char[0][][],
         0,
         0,
         2);
 
-    assertThat(actual.numberOfUnicodeCategories()).isEqualTo(2);
+    assertThat(actual).includesExactlyCategories(Category.LOWERCASE_LETTER, Category.UPPERCASE_LETTER);
   }
 
 }

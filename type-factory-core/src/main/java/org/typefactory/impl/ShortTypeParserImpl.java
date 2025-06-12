@@ -1,5 +1,6 @@
 package org.typefactory.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
@@ -56,6 +57,30 @@ final class ShortTypeParserImpl implements ShortTypeParser {
     wrappedParser.checkValueIsWithinBounds(value);
     return value.shortValue();
   }
+  
+  @Override
+  public Short of(final Float value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).shortValue();
+  }
+  
+  @Override
+  public Short of(final Double value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).shortValue();
+  }
+  
+  @Override
+  public Short of(final BigDecimal value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).shortValue();
+  }
 
   @Override
   public short of(final short value) throws InvalidValueException {
@@ -74,7 +99,7 @@ final class ShortTypeParserImpl implements ShortTypeParser {
     wrappedParser.checkValueIsWithinBounds(value);
     return (short)value;
   }
-
+  
   @Override
   public <S extends ShortType> S of(Short value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
     return value == null
@@ -98,6 +123,27 @@ final class ShortTypeParserImpl implements ShortTypeParser {
 
   @Override
   public <S extends ShortType> S of(BigInteger value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+  
+  @Override
+  public <S extends ShortType> S of(Float value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+  
+  @Override
+  public <S extends ShortType> S of(Double value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+  
+  @Override
+  public <S extends ShortType> S of(BigDecimal value, Function<Short, S> constructorOrFactoryMethod) throws InvalidValueException {
     return value == null
         ? null
         : constructorOrFactoryMethod.apply(of(value));

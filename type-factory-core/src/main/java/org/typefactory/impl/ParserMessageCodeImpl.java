@@ -52,8 +52,9 @@ class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode
 
     public static final String MIN_LENGTH = "minLength";
     public static final String MAX_LENGTH = "maxLength";
-    public static final String MIN_INCLUSIVE_VALUE = "minInclusiveValue";
-    public static final String MAX_INCLUSIVE_VALUE = "maxInclusiveValue";
+    public static final String MIN_VALUE = "minValue";
+    public static final String MAX_VALUE = "maxValue";
+    public static final String ROUNDING_MODE = "roundingMode";
     public static final String INVALID_CHARACTER_DESCRIPTION = "invalidCharacterDescription";
     public static final String DECIMAL_SEPARATOR = "decimalSeparator";
     public static final String FRACTIONAL_VALUE = "fractionalValue";

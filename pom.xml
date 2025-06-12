@@ -44,6 +44,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <junit-jupiter.version>5.11.4</junit-jupiter.version>
+    <junit-platform-reporting.version>1.11.4</junit-platform-reporting.version>
     <assertj-core.version>3.26.3</assertj-core.version>
     <mockito-bom.version>5.14.2</mockito-bom.version>
     <icu4j.version>76.1</icu4j.version>
@@ -70,6 +71,7 @@
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
     <module>type-factory-core</module>
+    <module>type-factory-test-assertj</module>
     <module>type-factory-bom</module>
   </modules>
 
@@ -112,15 +114,31 @@
       </dependency>
 
       <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-test-assertj</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-params</artifactId>
         <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-reporting</artifactId>
+        <version>${junit-platform-reporting.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -135,6 +153,7 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
         <version>${assertj-core.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -266,6 +285,12 @@
           <systemPropertyVariables>
             <java.util.logging.config.file>${project.basedir}/src/test/resources/logging.properties</java.util.logging.config.file>
           </systemPropertyVariables>
+          <properties>
+            <configurationParameters>
+              junit.platform.reporting.open.xml.enabled=true
+              junit.platform.reporting.output.dir=${project.build.directory}/surefire-reports
+            </configurationParameters>
+          </properties>
         </configuration>
       </plugin>
 

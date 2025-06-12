@@ -1,6 +1,7 @@
 package org.typefactory;
 
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.impl.Factory;
@@ -501,6 +502,16 @@ public interface IntegerTypeParser extends NumericTypeParser<Integer, IntegerTyp
      * @return this builder
      */
     IntegerTypeParserBuilder defaultLocale(Locale locale);
+
+    IntegerTypeParserBuilder roundingMode(final RoundingMode roundingMode);
+
+    IntegerTypeParserBuilder decimalSeparator(final char decimalSeparator, char... alternativeDecimalSeparators);
+
+    IntegerTypeParserBuilder decimalSeparator(final int decimalSeparator, int... alternativeDecimalSeparators);
+
+    IntegerTypeParserBuilder groupingSeparator(final char groupingSeparator, char... alternativeGroupingSeparators);
+
+    IntegerTypeParserBuilder groupingSeparator(final int groupingSeparator, int... alternativeGroupingSeparators);
 
     /**
      * Set a minimum value that will be used to validate values. Calling this will replace any previously set inclusive or exclusive minimum value.

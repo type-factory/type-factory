@@ -1,5 +1,6 @@
 package org.typefactory;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
@@ -70,6 +71,36 @@ public interface NumericTypeParser<V extends Number & Comparable<V>, T extends N
   V of(BigInteger value) throws InvalidValueException;
 
   /**
+   * Returns the value of the given float value as an instance of the type {@code V}, a subclass of {@link Number}, after verifying that it conforms to
+   * all the type parser rules.
+   *
+   * @param value the float value to be validated by the type parser.
+   * @return the value of the given float value as an instance of the type {@code V}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  V of(Float value) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given double value as an instance of the type {@code V}, a subclass of {@link Number}, after verifying that it conforms to
+   * all the type parser rules.
+   *
+   * @param value the double value to be validated by the type parser.
+   * @return the value of the given double value as an instance of the type {@code V}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  V of(Double value) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given big-decimal value as an instance of the type {@code V}, a subclass of {@link Number}, after verifying that it conforms to
+   * all the type parser rules.
+   *
+   * @param value the big-decimal value to be validated by the type parser.
+   * @return the value of the given big-decimal value as an instance of the type {@code V}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  V of(BigDecimal value) throws InvalidValueException;
+
+  /**
    * Returns the value of the given short value as an instance of {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number}, after verifying that it
    * conforms to all the type parser rules.
    *
@@ -120,6 +151,45 @@ public interface NumericTypeParser<V extends Number & Comparable<V>, T extends N
    * @throws InvalidValueException if the given value fails to conform to the type parser rules.
    */
   <S extends T> S of(BigInteger value, Function<V, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given float value as an instance of {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number}, after verifying that it
+   * conforms to all the type parser rules.
+   *
+   * @param value                      the float value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type
+   *                                   {@code S}, a subclass of {@link NumberType}.
+   * @param <S>                        the subclass type of the {@link NumberType} instance to be created.
+   * @return the value of the given float value as an instance of the type {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  <S extends T> S of(Float value, Function<V, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given double value as an instance of {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number}, after verifying that it
+   * conforms to all the type parser rules.
+   *
+   * @param value                      the double value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type
+   *                                   {@code S}, a subclass of {@link NumberType}.
+   * @param <S>                        the subclass type of the {@link NumberType} instance to be created.
+   * @return the value of the given double value as an instance of the type {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  <S extends T> S of(Double value, Function<V, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given big-decimal value as an instance of {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number}, after verifying
+   * that it conforms to all the type parser rules.
+   *
+   * @param value                      the big-decimal value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type
+   *                                   {@code S}, a subclass of {@link NumberType}.
+   * @param <S>                        the subclass type of the {@link NumberType} instance to be created.
+   * @return the value of the given big-decimal value as an instance of the type {@code S}, a subclass of {@link NumberType}, a subclass of {@link Number},
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  <S extends T> S of(BigDecimal value, Function<V, S> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * Returns the value of the given char-sequence value as an instance of the type {@code V}, a subclass of {@link Number}, after parsing and

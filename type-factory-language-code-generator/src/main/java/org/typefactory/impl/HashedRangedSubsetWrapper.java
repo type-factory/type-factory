@@ -15,6 +15,8 @@
 */
 package org.typefactory.impl;
 
+import org.typefactory.Category;
+
 public class HashedRangedSubsetWrapper implements SubsetWrapper, HashedRangedSubset {
 
   private final HashedRangedSubsetImpl wrapped;
@@ -31,6 +33,11 @@ public class HashedRangedSubsetWrapper implements SubsetWrapper, HashedRangedSub
   @Override
   public boolean contains(int codePoint) {
     return wrapped.contains(codePoint);
+  }
+
+  @Override
+  public boolean includes(Category category) {
+    return wrapped.includes(category);
   }
 
   @Override

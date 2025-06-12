@@ -1,5 +1,6 @@
 package org.typefactory.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.function.Function;
@@ -55,6 +56,30 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
     }
     wrappedParser.checkValueIsWithinBounds(value);
     return value.intValue();
+  }
+
+  @Override
+  public Integer of(final Float value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).intValue();
+  }
+
+  @Override
+  public Integer of(final Double value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).intValue();
+  }
+
+  @Override
+  public Integer of(final BigDecimal value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return wrappedParser.roundValueAndCheckValueIsWithinBounds(value).intValue();
   }
 
   @Override
@@ -116,6 +141,39 @@ final class IntegerTypeParserImpl implements IntegerTypeParser {
   public <S extends IntegerType> S of(
       final BigInteger value,
       // Using Function<Integer, S> instead of IntFunction<S> to allow for method references that accept a Integer value that may be null.
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final Float value,
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final Double value,
+      final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'IntFunction<S>'
+  public <S extends IntegerType> S of(
+      final BigDecimal value,
       final Function<Integer, S> constructorOrFactoryMethod) throws InvalidValueException {
 
     return value == null

@@ -15,43 +15,15 @@
 */
 package org.typefactory.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.typefactory.assertions.Assertions.assertThat;
 
+import java.io.Serial;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.InvalidValueException;
+import org.typefactory.ShortType;
 import org.typefactory.ShortTypeParser;
 
-class ShortTypeParserImpl_parseToShortTest {
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_shouldReturnNull(final String value) {
-    final var shortTypeParser = ShortTypeParser.builder()
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
-
-    final var actual = shortTypeParser.parse(value);
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
-  @ValueSource(strings = {" ", "  ", "   "})
-  void parse_whitespaceShouldThrowException(final String value) {
-    final var shortTypeParser = ShortTypeParser.builder()
-        .forbidWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parse(value))
-        .withMessageStartingWith("Invalid value - invalid white-space character U+0020 SPACE.");
-  }
+class ShortTypeParserImpl_parseRadixTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -75,7 +47,7 @@ class ShortTypeParserImpl_parseToShortTest {
             17 |       15 | Fifteen
          77776 |    32766 | Short.MAX_VALUE - 1
          77777 |    32767 | Short.MAX_VALUE
-        +77777 |   32767 | Plus Short.MAX_VALUE
+        +77777 |    32767 | Plus Short.MAX_VALUE
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
@@ -89,8 +61,8 @@ class ShortTypeParserImpl_parseToShortTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -115,9 +87,9 @@ class ShortTypeParserImpl_parseToShortTest {
        '    18 ' |       18 | Whitespace eighteen
             19   |       19 | Nineteen
             20   |       20 | Twenty
-         32766   |  32766 | Short.MAX_VALUE -1
-         32767   |  32767 | Short.MAX_VALUE
-        +32767   |  32767 | Plus Short.MAX_VALUE
+         32766   |    32766 | Short.MAX_VALUE -1
+         32767   |    32767 | Short.MAX_VALUE
+        +32767   |    32767 | Plus Short.MAX_VALUE
       """,
       delimiter = '|',
       useHeadersInDisplayName = true)
@@ -131,8 +103,8 @@ class ShortTypeParserImpl_parseToShortTest {
         .ignoreAllWhitespace()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -173,8 +145,8 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -215,8 +187,8 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -257,8 +229,8 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseInsensitive()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
   @ParameterizedTest
@@ -299,79 +271,18 @@ class ShortTypeParserImpl_parseToShortTest {
         .caseSensitive()
         .build();
 
-    final var actual = shortTypeParser.parse(value);
-    assertThat(actual).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value)).isEqualTo(expected);
+    assertThat(shortTypeParser.parse(value, SomeShortType::new)).hasValue(expected);
   }
 
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-      INCLUSIVE_MIN | INCLUSIVE_MAX |  VALUE | EXPECTED_MESSAGE
-             -32768 |         32767 | -32769 | Invalid value - must be greater than or equal to -32,768.
-             -32768 |         32767 |  32768 | Invalid value - must be less than or equal to 32,767.
-                  0 |             0 |     -1 | Invalid value - must be greater than or equal to 0.
-                  0 |             0 |      1 | Invalid value - must be less than or equal to 0.
-                 -1 |             1 |     -2 | Invalid value - must be greater than or equal to -1.
-                 -1 |             1 |      2 | Invalid value - must be less than or equal to 1.
-                -20 |           -10 |    -21 | Invalid value - must be greater than or equal to -20.
-                -20 |           -10 |     -9 | Invalid value - must be less than or equal to -10.
-                 10 |            20 |      9 | Invalid value - must be greater than or equal to 10.
-                 10 |            20 |     21 | Invalid value - must be less than or equal to 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_outsideInclusiveMinMaxThrowsException(
-      final short min, final short max,
-      final String value, final String expectedMessage) {
+  private static class SomeShortType extends ShortType {
 
-    final var shortTypeParser = ShortTypeParser.builder()
-        .minValueInclusive(min)
-        .maxValueInclusive(max)
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
+    @Serial
+    private static final long serialVersionUID = 1443000566308904061L;
 
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
-  }
-
-  @ParameterizedTest
-  @CsvSource(textBlock = """
-      EXCLUSIVE_MIN | EXCLUSIVE_MAX |  VALUE | EXPECTED_MESSAGE
-             -32768 |         32767 | -32769 | Invalid value - must be greater than -32,768.
-             -32768 |         32767 | -32768 | Invalid value - must be greater than -32,768.
-             -32768 |         32767 |  32768 | Invalid value - must be less than 32,767.
-             -32768 |         32767 |  32767 | Invalid value - must be less than 32,767.
-                  0 |             0 |     -1 | Invalid value - must be greater than 0.
-                  0 |             0 |      0 | Invalid value - must be greater than 0.
-                  0 |             0 |      1 | Invalid value - must be less than 0.
-                 -1 |             1 |     -1 | Invalid value - must be greater than -1.
-                 -1 |             1 |      1 | Invalid value - must be less than 1.
-                -20 |           -10 |    -20 | Invalid value - must be greater than -20.
-                -20 |           -10 |    -21 | Invalid value - must be greater than -20.
-                -20 |           -10 |    -10 | Invalid value - must be less than -10.
-                -20 |           -10 |     -9 | Invalid value - must be less than -10.
-                 10 |            20 |     10 | Invalid value - must be greater than 10.
-                 10 |            20 |      9 | Invalid value - must be greater than 10.
-                 10 |            20 |     20 | Invalid value - must be less than 20.
-                 10 |            20 |     21 | Invalid value - must be less than 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void parse_outsideExclusiveMinMaxThrowsException(
-      final short min, final short max,
-      final String value, final String expectedMessage) {
-
-    final var shortTypeParser = ShortTypeParser.builder()
-        .minValueExclusive(min)
-        .maxValueExclusive(max)
-        .allowBase10Numbers()
-        .ignoreAllWhitespace()
-        .build();
-
-    assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> shortTypeParser.parse(value))
-        .withMessageStartingWith(expectedMessage);
+    protected SomeShortType(final Short value) {
+      super(value);
+    }
   }
 
 }

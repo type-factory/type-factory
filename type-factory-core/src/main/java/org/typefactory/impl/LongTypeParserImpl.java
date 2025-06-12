@@ -15,7 +15,9 @@
 */
 package org.typefactory.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.InvalidValueException;
@@ -138,6 +140,30 @@ final class LongTypeParserImpl implements LongTypeParser {
   }
 
   @Override
+  public Long of(final Float value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return roundValueAndCheckValueIsWithinBounds(value).longValue();
+  }
+
+  @Override
+  public Long of(final Double value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return roundValueAndCheckValueIsWithinBounds(value).longValue();
+  }
+
+  @Override
+  public Long of(final BigDecimal value) throws InvalidValueException {
+    if (value == null) {
+      return null;
+    }
+    return roundValueAndCheckValueIsWithinBounds(value).longValue();
+  }
+
+  @Override
   public long of(final short value) throws InvalidValueException {
     checkValueIsWithinBounds(value);
     return value;
@@ -202,6 +228,39 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(of(value));
   }
 
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(final Float value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(final Double value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  public <S extends LongType> S of(final BigDecimal value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      final Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException {
+
+    return value == null
+        ? null
+        : constructorOrFactoryMethod.apply(of(value));
+  }
+
   public Long parse(final CharSequence originalValue) throws InvalidValueException {
     return parseImpl(originalValue, defaultNumberFormat);
   }
@@ -249,140 +308,165 @@ final class LongTypeParserImpl implements LongTypeParser {
         : constructorOrFactoryMethod.apply(parsedValue);
   }
 
-  // Suppress SonarCloud issues:
-  // - "java:S3776 Cognitive Complexity of methods should not be too high"
-  // - "java:S6541 Methods should not perform too many tasks (aka Brain method)"
-  // - "java:S135  Loops should not contain more than a single "break" or "continue" statement"
-  @SuppressWarnings({"java:S3776", "java:S6541", "java:S135"})
-  private Long parseImpl(final CharSequence source, final NumberFormat numberFormat) throws InvalidValueException {
-    if (source == null || source.isEmpty()) {
-      return null;
-    }
+  private static class ParseState {
 
-    final int sourceLength = source.length();
+    final NumberFormat numberFormat;
+    final int numberFormatNegativePrefixLength;
+    final int numberFormatPositivePrefixLength;
+    final int firstNegativePrefixCodepoint;
+    final int firstPositivePrefixCodepoint;
+    final CharSequence source;
+    final int sourceLength;
     int sourceIndex = 0;
+    int codePoint;
+    int lookAheadSourceIndex = 0;
+    int lookAheadCodePoint;
     long targetValue = 0;
     int fractionalDigitCount = 0;
     boolean intoDigits = false;
     boolean intoFractional = false;
     FractionalPart fractionalPart = FractionalPart.ZERO;
-    int firstNegativePrefixCodepoint = numberFormat.getNegativePrefixCodePointAt(0);
-    int firstPositivePrefixCodepoint = numberFormat.getPositivePrefixCodePointAt(0);
     Sign sign = null;
-    int codePoint;
-    long indexAndCodePoint;
 
-    while (sourceIndex < sourceLength) {
-      indexAndCodePoint = nextCodePointAndSourceIndex(source, sourceIndex);
-      codePoint = (int) (indexAndCodePoint >> 32);
-      sourceIndex = (int) indexAndCodePoint;
+    ParseState(final CharSequence source, final NumberFormat numberFormat) {
+      this.numberFormat = numberFormat;
+      this.numberFormatNegativePrefixLength = numberFormat.getNegativePrefixCodePointsLength();
+      this.numberFormatPositivePrefixLength = numberFormat.getPositivePrefixCodePointsLength();
+      this.firstNegativePrefixCodepoint = numberFormat.getNegativePrefixCodePointAt(0);
+      this.firstPositivePrefixCodepoint = numberFormat.getPositivePrefixCodePointAt(0);
+      this.source = source;
+      this.sourceLength = source.length();
+    }
+  }
 
-      if (numberFormat.isGroupingSeparator(codePoint)) {
-        ++sourceIndex;
+  private Long parseImpl(final CharSequence source, final NumberFormat numberFormat) throws InvalidValueException {
+    if (source == null || source.isEmpty()) {
+      return null;
+    }
+    return parseImpl(new ParseState(source, numberFormat));
+  }
+
+  // Suppress SonarCloud issues:
+  // - "java:S3776 Cognitive Complexity of methods should not be too high"
+  // - "java:S6541 Methods should not perform too many tasks (aka Brain method)"
+  // - "java:S135  Loops should not contain more than a single "break" or "continue" statement"
+  @SuppressWarnings({"java:S3776", "java:S6541", "java:S135"})
+  private Long parseImpl(final ParseState parseState) throws InvalidValueException {
+
+    while (parseState.sourceIndex < parseState.sourceLength) {
+      advanceToNextCodePoint(parseState, false);
+
+      if (parseState.numberFormat.isGroupingSeparator(parseState.codePoint)) {
+        ++parseState.sourceIndex;
         continue;
       }
 
-      if (Character.isWhitespace(codePoint) || Character.isSpaceChar(codePoint)) {
+      if (Character.isWhitespace(parseState.codePoint) || Character.isSpaceChar(parseState.codePoint)) {
         if (whiteSpace == WhiteSpace.IGNORE_WHITESPACE) {
-          ++sourceIndex;
+          ++parseState.sourceIndex;
           continue;
         }
-        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
+        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, parseState.source, parseState.codePoint);
       }
 
-      if (ignoreCharactersSubset.contains(codePoint)) {
-        ++sourceIndex;
+      if (ignoreCharactersSubset.contains(parseState.codePoint)) {
+        ++parseState.sourceIndex;
         continue;
       }
 
       // Check for negative
-      if (sign == null && !ignoreLeadingNegativeSign && !intoDigits && isCodePointEqualToAnotherOrSimilar(codePoint, firstNegativePrefixCodepoint)) {
+      if (parseState.sign == null
+          && !ignoreLeadingNegativeSign
+          && !parseState.intoDigits
+          && isCodePointEqualToAnotherOrSimilar(parseState.codePoint, parseState.firstNegativePrefixCodepoint)) {
         int j = 1;
-        int tempCodePoint;
-        int tempIndex = sourceIndex + 1;
-        for (; j < numberFormat.getNegativePrefixCodePointsLength() && tempIndex < sourceLength; ++j) {
-          indexAndCodePoint = nextCodePointAndSourceIndex(source, tempIndex);
-          tempCodePoint = (int) (indexAndCodePoint >> 32);
-          tempIndex = (int) indexAndCodePoint;
-          if (!isCodePointEqualToAnotherOrSimilar(tempCodePoint, numberFormat.getNegativePrefixCodePointAt(j))) {
+        parseState.lookAheadSourceIndex = parseState.sourceIndex + 1;
+        while (j < parseState.numberFormatNegativePrefixLength && parseState.lookAheadSourceIndex < parseState.sourceLength) {
+          advanceToNextCodePoint(parseState, true);
+          if (!isCodePointEqualToAnotherOrSimilar(parseState.lookAheadCodePoint, parseState.numberFormat.getNegativePrefixCodePointAt(j))) {
             break;
           }
-          ++tempIndex;
+          ++j;
+          ++parseState.lookAheadSourceIndex;
         }
-        if (j == numberFormat.getNegativePrefixCodePointsLength()) {
-          sign = Sign.NEGATIVE;
-          sourceIndex = tempIndex;
+        if (j == parseState.numberFormat.getNegativePrefixCodePointsLength()) {
+          parseState.sign = Sign.NEGATIVE;
+          parseState.sourceIndex = parseState.lookAheadSourceIndex;
           continue;
         }
       }
 
       // Check for positive
-      if (sign == null && !ignoreLeadingPositiveSign && !intoDigits && isCodePointEqualToAnotherOrSimilar(codePoint, firstPositivePrefixCodepoint)) {
+      if (parseState.sign == null
+          && !ignoreLeadingPositiveSign
+          && !parseState.intoDigits
+          && isCodePointEqualToAnotherOrSimilar(parseState.codePoint, parseState.firstPositivePrefixCodepoint)) {
         int j = 1;
-        int tempCodePoint;
-        int tempIndex = sourceIndex + 1;
-        for (; j < numberFormat.getPositivePrefixCodePointsLength() && tempIndex < sourceLength; ++j) {
-          indexAndCodePoint = nextCodePointAndSourceIndex(source, tempIndex);
-          tempCodePoint = (int) (indexAndCodePoint >> 32);
-          tempIndex = (int) indexAndCodePoint;
-          if (!isCodePointEqualToAnotherOrSimilar(tempCodePoint, numberFormat.getPositivePrefixCodePointAt(j))) {
+        parseState.lookAheadSourceIndex = parseState.sourceIndex + 1;
+        while (j < parseState.numberFormatPositivePrefixLength && parseState.lookAheadSourceIndex < parseState.sourceLength) {
+          advanceToNextCodePoint(parseState, true);
+          if (!isCodePointEqualToAnotherOrSimilar(parseState.lookAheadCodePoint, parseState.numberFormat.getPositivePrefixCodePointAt(j))) {
             break;
           }
-          ++tempIndex;
+          ++j;
+          ++parseState.lookAheadSourceIndex;
         }
-        if (j == numberFormat.getPositivePrefixCodePointsLength()) {
-          sign = Sign.POSITIVE;
-          sourceIndex = tempIndex;
+        if (j == parseState.numberFormat.getPositivePrefixCodePointsLength()) {
+          parseState.sign = Sign.POSITIVE;
+          parseState.sourceIndex = parseState.lookAheadSourceIndex;
           continue;
         }
       }
 
-      if (numberFormat.isDecimalSeparator(codePoint)) {
+      if (parseState.numberFormat.isDecimalSeparator(parseState.codePoint)) {
         if (radix != 10) {
-          throw ExceptionUtils.forDecimalPointNotPermittedForNonBaseTenNumbers(messageCode, targetTypeClass, source, codePoint);
+          throw ExceptionUtils.forDecimalPointNotPermittedForNonBaseTenNumbers(messageCode, targetTypeClass, parseState.source, parseState.codePoint);
         }
-        if (intoFractional) {
-          throw ExceptionUtils.forMultipleDecimalPoints(messageCode, targetTypeClass, source, codePoint);
+        if (parseState.intoFractional) {
+          throw ExceptionUtils.forMultipleDecimalPoints(messageCode, targetTypeClass, parseState.source, parseState.codePoint);
         }
-        intoFractional = true;
-        ++sourceIndex;
+        parseState.intoFractional = true;
+        ++parseState.sourceIndex;
         continue;
       }
 
-      intoDigits = true;
+      parseState.intoDigits = true;
 
-      int digitValue = numericRadixCodePointsMap.get(codePoint);
+      int digitValue = numericRadixCodePointsMap.get(parseState.codePoint);
       if (digitValue < 0 && allowAllUnicodeDecimalDigits) { // not found in map
-        digitValue = Character.digit(codePoint, radix);
+        digitValue = Character.digit(parseState.codePoint, radix);
       }
       if (digitValue < 0) {
-        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, source, codePoint);
+        throw ExceptionUtils.forInvalidCodePoint(messageCode, targetTypeClass, parseState.source, parseState.codePoint);
       }
 
-      if (intoFractional) {
-        ++fractionalDigitCount;
-        fractionalPart = calculateNewFractionalPart(fractionalDigitCount, digitValue, fractionalPart);
-        ++sourceIndex;
+      if (parseState.intoFractional) {
+        ++parseState.fractionalDigitCount;
+        parseState.fractionalPart = calculateNewFractionalPart(parseState.fractionalDigitCount, digitValue, parseState.fractionalPart);
+        ++parseState.sourceIndex;
         continue;
       }
 
-      targetValue = calculateNewTargetValueProvidedNextDigitValue(source, sign, targetValue, digitValue);
-      ++sourceIndex;
+      parseState.targetValue = calculateNewTargetValueProvidedNextDigitValue(parseState, digitValue);
+      ++parseState.sourceIndex;
     }
 
-    if (!intoDigits) {
+    if (!parseState.intoDigits) {
       return null;
     }
 
-    if (fractionalPart != FractionalPart.ZERO) {
-      final long roundingValue = getRoundingValue(source, sign, numberFormat, targetValue, fractionalPart);
-      if (roundingValue != 0) {
-        targetValue = calculateNewTargetValueApplyingRoundingValue(source, sign, targetValue, roundingValue);
+    if (parseState.intoFractional) {
+      if (parseState.fractionalPart != FractionalPart.ZERO) {
+        final long roundingValue = getRoundingValue(parseState);
+        if (roundingValue != 0) {
+          parseState.targetValue = calculateNewTargetValueByApplyingRoundingValue(parseState, roundingValue);
+        }
       }
+      checkValueIsWithinBounds(parseState.targetValue, parseState.source, parseState.numberFormat.getRoundingMode());
+    } else {
+      checkValueIsWithinBounds(parseState.targetValue, parseState.source, null);
     }
-    checkValueIsWithinBounds(targetValue, source);
-
-    return targetValue;
+    return parseState.targetValue;
   }
 
   boolean isCodePointEqualToAnotherOrSimilar(final int codePoint, final int otherCodePoint) {
@@ -402,141 +486,139 @@ final class LongTypeParserImpl implements LongTypeParser {
   /**
    * Returns both the new sourceIndex and the next code point in the source CharSequence.
    *
-   * @param source      the character sequence to get the next code point from
-   * @param sourceIndex the index of the current code point in the source CharSequence
-   * @return a long value where the upper 32 bits are the next code point and the lower 32 bits are the new sourceIndex
+   * @param parseState the parse state containing the source CharSequence and NumberFormat along with all the state variables required for parsing.
+   * @param lookAhead  if true, the method will not update the {@code lookAheadCodePoint} and {@code lookAheadSourceIndex} in the {@code parseState}.
+   *                   It will leave untouched the {@code codePoint} and {@code sourceIndex}.
    */
-  private long nextCodePointAndSourceIndex(final CharSequence source, int sourceIndex) {
-    final char ch = source.charAt(sourceIndex);
+  private void advanceToNextCodePoint(final ParseState parseState, final boolean lookAhead) {
+    int tempIndex = lookAhead ? parseState.lookAheadSourceIndex : parseState.sourceIndex;
+    final char ch = parseState.source.charAt(tempIndex);
     int codePoint;
     if (Character.isHighSurrogate(ch)) {
-      if (++sourceIndex < source.length()) {
-        final char lowCh = source.charAt(sourceIndex);
+      if (++tempIndex < parseState.source.length()) {
+        final char lowCh = parseState.source.charAt(tempIndex);
         if (Character.isLowSurrogate(lowCh)) {
           codePoint = Character.toCodePoint(ch, lowCh);
         } else {
-          throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+          throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, parseState.source, ch);
         }
       } else {
-        throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, source, ch);
+        throw ExceptionUtils.forHighSurrogateWithoutLowSurrogate(messageCode, targetTypeClass, parseState.source, ch);
       }
     } else if (Character.isLowSurrogate(ch)) {
-      throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, source, ch);
+      throw ExceptionUtils.forLowSurrogateWithoutHighSurrogate(messageCode, targetTypeClass, parseState.source, ch);
     } else {
       codePoint = ch;
     }
-    return (long) codePoint << 32 | sourceIndex;
+    if (lookAhead) {
+      parseState.lookAheadCodePoint = codePoint;
+      parseState.lookAheadSourceIndex = tempIndex;
+    } else {
+      parseState.codePoint = codePoint;
+      parseState.sourceIndex = tempIndex;
+    }
   }
 
   private long calculateNewTargetValueProvidedNextDigitValue(
-      final CharSequence source,
-      final Sign sign,
-      final long targetValue,
+      final ParseState parseState,
       final int nextDigitValue) {
 
-    if (sign == Sign.NEGATIVE) {
-      long newTargetValue = (targetValue * radix) - nextDigitValue;
-      return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
-    } else {
-      long newTargetValue = (targetValue * radix) + nextDigitValue;
-      return validateNewPositiveTargetValue(source, targetValue, newTargetValue);
-    }
+    final long newTargetValue = parseState.sign == Sign.NEGATIVE
+        ? (parseState.targetValue * radix) - nextDigitValue
+        : (parseState.targetValue * radix) + nextDigitValue;
+    checkThatPrimitiveOverflowOrUnderflowHasNotOccurred(parseState, newTargetValue);
+    return newTargetValue;
   }
 
-  private long calculateNewTargetValueApplyingRoundingValue(
-      final CharSequence source,
-      final Sign sign,
-      final long targetValue,
+  private long calculateNewTargetValueByApplyingRoundingValue(
+      final ParseState parseState,
       final long roundingValue) {
 
-    long newTargetValue = targetValue + roundingValue;
-    if (sign == Sign.NEGATIVE) {
-      return validateNewNegativeTargetValue(source, targetValue, newTargetValue);
+    long newTargetValue = parseState.targetValue + roundingValue;
+    checkThatPrimitiveOverflowOrUnderflowHasNotOccurred(parseState, newTargetValue);
+    return newTargetValue;
+  }
+
+  private void checkThatPrimitiveOverflowOrUnderflowHasNotOccurred(
+      final ParseState parseState,
+      final long newTargetValue) throws InvalidValueException {
+
+    if (parseState.sign == Sign.NEGATIVE) {
+      if (newTargetValue > parseState.targetValue) {
+        // primitive underflow so number too small
+        final RoundingMode roundingMode = sourceContainsDecimalPoint(parseState) ? parseState.numberFormat.getRoundingMode() : null;
+        if (minValueComparisonInclusive) {
+          throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, parseState.source, minValue, roundingMode);
+        } else {
+          throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, parseState.source, minValue, roundingMode);
+        }
+      }
     } else {
-      return validateNewPositiveTargetValue(source, targetValue, newTargetValue);
+      if (newTargetValue < parseState.targetValue) {
+        // primitive overflow so number too large
+        final RoundingMode roundingMode = sourceContainsDecimalPoint(parseState) ? parseState.numberFormat.getRoundingMode() : null;
+        if (maxValueComparisonInclusive) {
+          throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, parseState.source, maxValue, roundingMode);
+        } else {
+          throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, parseState.source, maxValue, roundingMode);
+        }
+      }
     }
   }
 
-  private long validateNewPositiveTargetValue(
-      final CharSequence source,
-      final long targetValue,
-      final long newTargetValue) throws InvalidValueException {
-
-    if (newTargetValue < targetValue) {
-      // primitive overflow so number too large
-      if (maxValueComparisonInclusive) {
-        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, source, maxValue);
-      } else {
-        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, source, maxValue);
-      }
+  private boolean sourceContainsDecimalPoint(final ParseState parseState) {
+    if (parseState.intoFractional) {
+      return true;
     }
-    return newTargetValue;
-  }
-
-  private long validateNewNegativeTargetValue(
-      final CharSequence source,
-      final long targetValue,
-      final long newTargetValue) throws InvalidValueException {
-
-    if (newTargetValue > targetValue) {
-      // primitive underflow so number too small
-      if (minValueComparisonInclusive) {
-        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, source, minValue);
-      } else {
-        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, source, minValue);
+    parseState.lookAheadSourceIndex = parseState.sourceIndex + 1;
+    while (parseState.lookAheadSourceIndex < parseState.sourceLength) {
+      advanceToNextCodePoint(parseState, true);
+      if (parseState.numberFormat.isDecimalSeparator(parseState.lookAheadCodePoint)) {
+        return true;
       }
+      ++parseState.lookAheadSourceIndex;
     }
-    return newTargetValue;
+    return false;
   }
 
   private long getRoundingValue(
-      final CharSequence source,
-      final Sign sign,
-      final NumberFormat numberFormat,
-      final long targetValue,
-      final FractionalPart fractionalPart) throws InvalidValueException {
+      final ParseState parseState) throws InvalidValueException {
 
-    if (sign == Sign.NEGATIVE) {
-      return switch (numberFormat.getRoundingMode()) {
+    if (parseState.sign == Sign.NEGATIVE) {
+      return switch (parseState.numberFormat.getRoundingMode()) {
         case CEILING, DOWN -> 0;
-        case FLOOR, UP -> fractionalPart == FractionalPart.ZERO ? 0 : -1;
-        case HALF_DOWN -> fractionalPart == FractionalPart.UPPER ? -1 : 0;
-        case HALF_EVEN -> {
-          if (fractionalPart == FractionalPart.LOWER) {
-            yield 0;
-          }
-          if (fractionalPart == FractionalPart.UPPER) {
-            yield -1;
-          }
-          yield targetValue % 2 == 0 ? 0 : -1;
-        }
-        case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : -1;
+        case FLOOR, UP -> parseState.fractionalPart == FractionalPart.ZERO ? 0 : -1;
+        case HALF_DOWN -> parseState.fractionalPart == FractionalPart.UPPER ? -1 : 0;
+        case HALF_EVEN -> switch (parseState.fractionalPart) {
+          case LOWER -> 0;
+          case UPPER -> -1;
+          default -> parseState.targetValue % 2 == 0 ? 0 : -1;
+        };
+        case HALF_UP -> parseState.fractionalPart == FractionalPart.LOWER ? 0 : -1;
         case UNNECESSARY -> {
-          if (fractionalPart != FractionalPart.ZERO) {
-            throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getDecimalSeparators());
+          if (parseState.fractionalPart != FractionalPart.ZERO) {
+            throw ExceptionUtils.forExpectingWholeNumber(
+                messageCode, targetTypeClass, parseState.source, parseState.numberFormat.getDecimalSeparators());
           }
           yield 0;
         }
       };
     }
 
-    return switch (numberFormat.getRoundingMode()) {
-      case CEILING, UP -> fractionalPart == FractionalPart.ZERO ? 0 : 1;
+    return switch (parseState.numberFormat.getRoundingMode()) {
+      case CEILING, UP -> parseState.fractionalPart == FractionalPart.ZERO ? 0 : 1;
       case DOWN, FLOOR -> 0;
-      case HALF_DOWN -> fractionalPart == FractionalPart.UPPER ? 1 : 0;
-      case HALF_EVEN -> {
-        if (fractionalPart == FractionalPart.LOWER) {
-          yield 0;
-        }
-        if (fractionalPart == FractionalPart.UPPER) {
-          yield 1;
-        }
-        yield targetValue % 2 == 0 ? 0 : 1;
-      }
-      case HALF_UP -> fractionalPart == FractionalPart.LOWER ? 0 : 1;
+      case HALF_DOWN -> parseState.fractionalPart == FractionalPart.UPPER ? 1 : 0;
+      case HALF_EVEN -> switch (parseState.fractionalPart) {
+        case LOWER -> 0;
+        case UPPER -> 1;
+        default -> parseState.targetValue % 2 == 0 ? 0 : 1;
+      };
+      case HALF_UP -> parseState.fractionalPart == FractionalPart.LOWER ? 0 : 1;
       case UNNECESSARY -> {
-        if (fractionalPart != FractionalPart.ZERO) {
-          throw ExceptionUtils.forExpectingWholeNumber(messageCode, targetTypeClass, source, numberFormat.getDecimalSeparators());
+        if (parseState.fractionalPart != FractionalPart.ZERO) {
+          throw ExceptionUtils.forExpectingWholeNumber(
+              messageCode, targetTypeClass, parseState.source, parseState.numberFormat.getDecimalSeparators());
         }
         yield 0;
       }
@@ -567,29 +649,16 @@ final class LongTypeParserImpl implements LongTypeParser {
     }
   }
 
-  @SuppressWarnings("Duplicates")
-    // Duplicates are necessary to avoid boxing/unboxing
-  <N extends Number> void checkValueIsWithinBounds(final N value) throws InvalidValueException {
+  void checkValueIsWithinBounds(final Short value) throws InvalidValueException {
+    checkValueIsWithinBounds(value.longValue());
+  }
 
-    if (minValueComparisonInclusive) {
-      if (value.longValue() < minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, value, minValue);
-      }
-    } else /* exclusive comparison */ {
-      if (value.longValue() <= minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, value, minValue);
-      }
-    }
+  void checkValueIsWithinBounds(final Integer value) throws InvalidValueException {
+    checkValueIsWithinBounds(value.longValue());
+  }
 
-    if (maxValueComparisonInclusive) {
-      if (value.longValue() > maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, value, maxValue);
-      }
-    } else /* exclusive comparison */ {
-      if (value.longValue() >= maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, value, maxValue);
-      }
-    }
+  void checkValueIsWithinBounds(final Long value) throws InvalidValueException {
+    checkValueIsWithinBounds(value.longValue());
   }
 
   @SuppressWarnings("Duplicates")
@@ -619,24 +688,58 @@ final class LongTypeParserImpl implements LongTypeParser {
 
   @SuppressWarnings("Duplicates")
     // Duplicates are necessary to avoid boxing/unboxing
-  <T extends CharSequence> void checkValueIsWithinBounds(final long targetValue, final T sourceValue) throws InvalidValueException {
+  BigInteger roundValueAndCheckValueIsWithinBounds(final Number value) throws InvalidValueException {
+
+    final BigDecimal bigDecimalValue = value instanceof BigDecimal bigDecimal ? bigDecimal : BigDecimal.valueOf(value.doubleValue());
+    final BigInteger roundedValue = bigDecimalValue.setScale(0, defaultNumberFormat.getRoundingMode()).toBigIntegerExact();
+
+    if (minValueComparisonInclusive) {
+      if (roundedValue.compareTo(BigInteger.valueOf(minValue)) < 0) {
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(
+            messageCode, targetTypeClass, value, minValue, defaultNumberFormat.getRoundingMode());
+      }
+    } else /* exclusive comparison */ {
+      if (roundedValue.compareTo(BigInteger.valueOf(minValue)) <= 0) {
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(
+            messageCode, targetTypeClass, value, minValue, defaultNumberFormat.getRoundingMode());
+      }
+    }
+
+    if (maxValueComparisonInclusive) {
+      if (roundedValue.compareTo(BigInteger.valueOf(maxValue)) > 0) {
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(
+            messageCode, targetTypeClass, value, maxValue, defaultNumberFormat.getRoundingMode());
+      }
+    } else /* exclusive comparison */ {
+      if (roundedValue.compareTo(BigInteger.valueOf(maxValue)) >= 0) {
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(
+            messageCode, targetTypeClass, value, maxValue, defaultNumberFormat.getRoundingMode());
+      }
+    }
+    return roundedValue;
+  }
+
+  @SuppressWarnings("Duplicates")
+    // Duplicates are necessary to avoid boxing/unboxing
+  <T extends CharSequence> void checkValueIsWithinBounds(final long targetValue, final T sourceValue, final RoundingMode roundingMode)
+      throws InvalidValueException {
     if (minValueComparisonInclusive) {
       if (targetValue < minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, sourceValue, minValue);
+        throw ExceptionUtils.forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, sourceValue, minValue, roundingMode);
       }
     } else /* exclusive comparison */ {
       if (targetValue <= minValue) {
-        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, sourceValue, minValue);
+        throw ExceptionUtils.forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, sourceValue, minValue, roundingMode);
       }
     }
 
     if (maxValueComparisonInclusive) {
       if (targetValue > maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, sourceValue, maxValue);
+        throw ExceptionUtils.forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, sourceValue, maxValue, roundingMode);
       }
     } else /* exclusive comparison */ {
       if (targetValue >= maxValue) {
-        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, sourceValue, maxValue);
+        throw ExceptionUtils.forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, sourceValue, maxValue, roundingMode);
       }
     }
   }

@@ -1,6 +1,7 @@
 package org.typefactory;
 
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.function.Function;
 import org.typefactory.impl.Factory;
@@ -71,6 +72,16 @@ public interface ShortTypeParser extends NumericTypeParser<Short, ShortType> {
     ShortTypeParserBuilder messageCode(final MessageCode messageCode);
 
     ShortTypeParserBuilder defaultLocale(Locale locale);
+
+    ShortTypeParserBuilder roundingMode(final RoundingMode roundingMode);
+
+    ShortTypeParserBuilder decimalSeparator(final char decimalSeparator, char... alternativeDecimalSeparators);
+
+    ShortTypeParserBuilder decimalSeparator(final int decimalSeparator, int... alternativeDecimalSeparators);
+
+    ShortTypeParserBuilder groupingSeparator(final char groupingSeparator, char... alternativeGroupingSeparators);
+
+    ShortTypeParserBuilder groupingSeparator(final int groupingSeparator, int... alternativeGroupingSeparators);
 
     ShortTypeParserBuilder minValueInclusive(short minValue);
 

@@ -1,5 +1,6 @@
 package org.typefactory;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Locale;
@@ -84,6 +85,39 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
    */
   @Override
   Long of(BigInteger value) throws InvalidValueException;
+
+  /**
+   * <p>Returns the value of the given {@link Float} value as a {@link Long} value after verifying that it conforms to all the type
+   * parser rules. This method is null-safe, returning {@code null} if the provided {@code value} was null.</p>
+   *
+   * @param value the float value to be validated by the type parser.
+   * @return the value of the given {@link Float} value as a {@link Long} value, or {@code null} if the provided {@code value} was null.
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  Long of(Float value) throws InvalidValueException;
+
+  /**
+   * <p>Returns the value of the given {@link Double} value as a {@link Long} value after verifying that it conforms to all the type
+   * parser rules. This method is null-safe, returning {@code null} if the provided {@code value} was null.</p>
+   *
+   * @param value the double value to be validated by the type parser.
+   * @return the value of the given {@link Double} value as a {@link Long} value, or {@code null} if the provided {@code value} was null.
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  Long of(Double value) throws InvalidValueException;
+
+  /**
+   * <p>Returns the value of the given {@link BigDecimal} value as a {@link Long} value after verifying that it conforms to all the type
+   * parser rules. This method is null-safe, returning {@code null} if the provided {@code value} was null.</p>
+   *
+   * @param value the {@link BigDecimal} value to be validated by the type parser.
+   * @return the value of the given {@link BigDecimal} value as a {@link Long} value, or {@code null} if the provided {@code value} was null.
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  Long of(BigDecimal value) throws InvalidValueException;
 
   /**
    * <p>Returns the value of the given {@code short} value as a {@code long} value after verifying that it conforms to all the type
@@ -283,6 +317,135 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
   @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
   <S extends LongType> S of(
       BigInteger value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given {@link Float} value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms
+   * to all the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a {@link Float} value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance. The
+   * second {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final Float value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the {@link Float} value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given {@link Float} value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      Float value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given {@link Double} value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it conforms
+   * to all the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a {@link Double} value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance. The
+   * second {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final Double value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the {@link Double} value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given {@link Double} value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      Double value,
+      // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
+      Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
+
+  /**
+   * Returns the value of the given {@link BigDecimal} value as an instance of {@code S}, a subclass of {@link LongType}, after verifying that it
+   * conforms to all the type parser rules.
+   *
+   * <p><b>Example – create a custom type extending {@link LongType}</b></p>
+   *
+   * <p>The {@code ProductId} type below provides overloaded factory {@code 'of'} methods which use the type-parser. The first {@code of} method
+   * takes a {@link BigDecimal} value and verifies it conforms to all the type parser rules and returns a newly created the {@code ProductId} instance.
+   * The second {@code of} method does something similar by first parsing a char-sequence into a long value.</p>
+   *
+   * <pre>{@code
+   * public final class ProductId extends LongType {
+   *
+   *   static final LongTypeParser TYPE_PARSER = LongTypeParser.builder()...build();
+   *
+   *   private ProductId(final Long value) {
+   *     super(value);
+   *   }
+   *
+   *   public static ProductId of(final BigDecimal value) {
+   *     return TYPE_PARSER.of(value, ProductId::new);
+   *   }
+   *
+   *   public static ProductId of(final CharSequence value) {
+   *     return TYPE_PARSER.parse(value, ProductId::new);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param value                      the {@link BigDecimal} value to be validated by the type parser.
+   * @param constructorOrFactoryMethod the constructor or factory method to be used for creating the instance of the type {@code S}, a subclass of
+   *                                   {@link LongType}.
+   * @param <S>                        the subclass type of the {@link LongType} instance to be created.
+   * @return the value of the given {@link BigDecimal} value as an instance of the type {@code S}, a subclass of {@link LongType}
+   * @throws InvalidValueException if the given value fails to conform to the type parser rules.
+   */
+  @Override
+  @SuppressWarnings("java:S4276") // SonarQube Refactor this code to use the more specialised Functional Interface 'LongFunction<S>'
+  <S extends LongType> S of(
+      BigDecimal value,
       // Using Function<Long, S> instead of LongFunction<S> to allow for method references that accept a Long value that may be null.
       Function<Long, S> constructorOrFactoryMethod) throws InvalidValueException;
 
@@ -766,6 +929,18 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
     LongTypeParserBuilder setRadixDecimal();
 
     /**
+     * Configures the type-parser to accept only the default decimal (base-10) digits {@code 0..9}.
+     *
+     * <p><b>Allowed digits</b></p>
+     * <pre>{@code
+     * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+     * }</pre>
+     *
+     * @return this builder
+     */
+    LongTypeParserBuilder allowBase10Numbers();
+
+    /**
      * Configures the type-parser to accept only the default base-16 digits and letters {@code 0..9A..F}. This method will automatically set the
      * type-parser to be case-insensitive replacing any prior configuration, thus also allowing values containing {@code a..f}. If you would like the
      * type parser to be case-sensitive then you should call {@link #caseSensitive()} after calling this method.
@@ -776,6 +951,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * }</pre>
      *
      * @return this builder
+     * @see #caseSensitive()
+     * @see #caseInsensitive()
      */
     LongTypeParserBuilder allowBase16Numbers();
 
@@ -791,6 +968,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * }</pre>
      *
      * @return this builder
+     * @see #caseSensitive()
+     * @see #caseInsensitive()
      */
     LongTypeParserBuilder allowBase32Numbers();
 
@@ -807,6 +986,8 @@ public interface LongTypeParser extends NumericTypeParser<Long, LongType> {
      * }</pre>
      *
      * @return this builder
+     * @see #caseSensitive()
+     * @see #caseInsensitive()
      */
     LongTypeParserBuilder allowBase36Numbers();
 

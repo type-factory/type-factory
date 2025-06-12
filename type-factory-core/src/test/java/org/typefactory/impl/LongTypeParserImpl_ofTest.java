@@ -15,294 +15,306 @@
 */
 package org.typefactory.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.typefactory.assertions.Assertions.assertThat;
 
+import java.io.Serial;
 import java.math.BigInteger;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.typefactory.InvalidValueException;
+import org.typefactory.LongType;
 import org.typefactory.LongTypeParser;
 
 class LongTypeParserImpl_ofTest {
 
+  static final LongTypeParser INCLUSIVE_LONG_TYPE_PARSER = LongTypeParser.builder()
+      .minValueInclusive(Long.MIN_VALUE)
+      .maxValueInclusive(Long.MAX_VALUE)
+      .build();
+
+  static final LongTypeParser EXCLUSIVE_LONG_TYPE_PARSER = LongTypeParser.builder()
+      .minValueExclusive(Long.MIN_VALUE)
+      .maxValueExclusive(Long.MAX_VALUE)
+      .build();
+
   @Test
-  void of_nullShouldReturnNull() {
+  void of_nullShouldReturnNull_whenParsingToLong() {
     final var longTypeParser = LongTypeParser.builder().build();
 
-    assertThatObject(longTypeParser.of((Short) null)).isNull();
-    assertThatObject(longTypeParser.of((Integer) null)).isNull();
-    assertThatObject(longTypeParser.of((Long) null)).isNull();
-    assertThatObject(longTypeParser.of((BigInteger) null)).isNull();
+    assertThat(longTypeParser.of((Short) null)).isNull();
+    assertThat(longTypeParser.of((Integer) null)).isNull();
+    assertThat(longTypeParser.of((Long) null)).isNull();
+    assertThat(longTypeParser.of((BigInteger) null)).isNull();
+  }
+
+  @Test
+  void of_nullShouldReturnNull_whenParsingToLongType() {
+    final var longTypeParser = LongTypeParser.builder().build();
+
+    assertThat(longTypeParser.of((Short) null, SomeLongType::new)).isNull();
+    assertThat(longTypeParser.of((Integer) null, SomeLongType::new)).isNull();
+    assertThat(longTypeParser.of((Long) null, SomeLongType::new)).isNull();
+    assertThat(longTypeParser.of((BigInteger) null, SomeLongType::new)).isNull();
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-      TYPE       |                VALUE |             EXPECTED
-      Short      |               -32768 |               -32768
-      Short      |                32767 |                32767
-      Short      |                    0 |                    0
-      Integer    |          -2147483648 |          -2147483648
-      Integer    |           2147483647 |           2147483647
-      Integer    |                    0 |                    0
-      Long       | -9223372036854775808 | -9223372036854775808
-      Long       |  9223372036854775807 |  9223372036854775807
-      Long       |                    0 |                    0
-      BigInteger | -9223372036854775808 | -9223372036854775808
-      BigInteger |  9223372036854775807 |  9223372036854775807
-      BigInteger |                    0 |                    0
-      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void of_valueShouldSucceedWithInclusiveMinMax(
-      final String type, final long value, final long expected) {
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideShortValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLong(
+      final Short value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(Long.MIN_VALUE)
-        .maxValueInclusive(Long.MAX_VALUE)
-        .build();
-
-    switch (type) {
-      case "Short":
-        assertThat(longTypeParser.of((short) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
-        // fall-thru
-      case "Integer":
-        assertThat(longTypeParser.of((int) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Integer.valueOf((int) value))).isEqualTo(expected);
-        // fall-thru
-      case "Long":
-        assertThat(longTypeParser.of(value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
-        // fall-thru
-      case "BigInteger":
-      default:
-        assertThat(longTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
-        break;
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value.shortValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value.shortValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
     }
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-      TYPE       |                VALUE |             EXPECTED
-      Short      |               -32767 |               -32767
-      Short      |                32766 |                32766
-      Short      |                    0 |                    0
-      Integer    |          -2147483647 |          -2147483647
-      Integer    |           2147483646 |           2147483646
-      Integer    |                    0 |                    0
-      Long       | -9223372036854775807 | -9223372036854775807
-      Long       |  9223372036854775806 |  9223372036854775806
-      Long       |                    0 |                    0
-      BigInteger | -9223372036854775807 | -9223372036854775807
-      BigInteger |  9223372036854775806 |  9223372036854775806
-      BigInteger |                    0 |                    0
-      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
-  void of_valueShouldSucceedWithExclusiveMinMax(
-      final String type, final long value, final long expected) {
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideShortValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLong(
+      final Short value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueExclusive(Long.MIN_VALUE)
-        .maxValueExclusive(Long.MAX_VALUE)
-        .build();
-
-    switch (type) {
-      case "Short":
-        assertThat(longTypeParser.of((short) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Short.valueOf((short) value))).isEqualTo(expected);
-        // fall-thru
-      case "Integer":
-        assertThat(longTypeParser.of((int) value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Integer.valueOf((int) value))).isEqualTo(expected);
-        // fall-thru
-      case "Long":
-        assertThat(longTypeParser.of(value)).isEqualTo(expected);
-        assertThat(longTypeParser.of(Long.valueOf(value))).isEqualTo(expected);
-        // fall-thru
-      case "BigInteger":
-      default:
-        assertThat(longTypeParser.of(BigInteger.valueOf(value))).isEqualTo(expected);
-        break;
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value.shortValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value.shortValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
     }
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-             INCLUSIVE_MIN |       INCLUSIVE_MAX | VALUE_TYPE |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | BigInteger | -9223372036854775809 | Invalid value - must be greater than or equal to -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 | BigInteger |  9223372036854775808 | Invalid value - must be less than or equal to 9,223,372,036,854,775,807.
-      -9223372036854775807 | 9223372036854775807 | Long       | -9223372036854775808 | Invalid value - must be greater than or equal to -9,223,372,036,854,775,807.
-      -9223372036854775808 | 9223372036854775806 | Long       |  9223372036854775807 | Invalid value - must be less than or equal to 9,223,372,036,854,775,806.
-               -2147483648 |          2147483647 | Long       |          -2147483649 | Invalid value - must be greater than or equal to -2,147,483,648.
-               -2147483648 |          2147483647 | Long       |           2147483648 | Invalid value - must be less than or equal to 2,147,483,647.
-               -2147483647 |          2147483647 | Integer    |          -2147483648 | Invalid value - must be greater than or equal to -2,147,483,647.
-               -2147483648 |          2147483646 | Integer    |           2147483647 | Invalid value - must be less than or equal to 2,147,483,646.
-                    -32768 |               32767 | Integer    |               -32769 | Invalid value - must be greater than or equal to -32,768.
-                    -32768 |               32767 | Integer    |                32768 | Invalid value - must be less than or equal to 32,767.
-                    -32767 |               32767 | Short      |               -32768 | Invalid value - must be greater than or equal to -32,767.
-                    -32768 |               32766 | Short      |                32767 | Invalid value - must be less than or equal to 32,766.
-                         0 |                   0 | Short      |                   -1 | Invalid value - must be greater than or equal to 0.
-                         0 |                   0 | Short      |                    1 | Invalid value - must be less than or equal to 0.
-                        -1 |                   1 | Short      |                   -2 | Invalid value - must be greater than or equal to -1.
-                        -1 |                   1 | Short      |                    2 | Invalid value - must be less than or equal to 1.
-                       -20 |                 -10 | Short      |                  -21 | Invalid value - must be greater than or equal to -20.
-                       -20 |                 -10 | Short      |                   -9 | Invalid value - must be less than or equal to -10.
-                        10 |                  20 | Short      |                    9 | Invalid value - must be greater than or equal to 10.
-                        10 |                  20 | Short      |                   21 | Invalid value - must be less than or equal to 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void of_outsideInclusiveMinMaxThrowsException(
-      final long min, final long max,
-      final String valueType, final BigInteger value,
-      final String expectedMessage) {
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideShortValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLongType(
+      final Short value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueInclusive(min)
-        .maxValueInclusive(max)
-        .build();
-
-    switch (valueType) {
-      case "Short":
-        final var shortPrimitive = value.shortValue();
-        final var shortObject = Integer.valueOf(shortPrimitive);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortObject))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "Integer":
-        final var integerPrimitive = value.intValue();
-        final var integerObject = Integer.valueOf(integerPrimitive);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerObject))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "Long":
-        final var longPrimitive = value.longValue();
-        final var longObject = Long.valueOf(longPrimitive);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longObject))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "BigInteger":
-      default:
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
-            .withMessageStartingWith(expectedMessage);
-
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
-            .withMessageStartingWith(expectedMessage);
-        break;
+    if (expectedExceptionMessage == null) {
+      assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
     }
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-             EXCLUSIVE_MIN |       EXCLUSIVE_MAX | VALUE_TYPE |                VALUE | EXPECTED_MESSAGE
-      -9223372036854775808 | 9223372036854775807 | BigInteger | -9223372036854775808 | Invalid value - must be greater than -9,223,372,036,854,775,808.
-      -9223372036854775808 | 9223372036854775807 | BigInteger |  9223372036854775807 | Invalid value - must be less than 9,223,372,036,854,775,807.
-      -9223372036854775807 | 9223372036854775807 | Long       | -9223372036854775807 | Invalid value - must be greater than -9,223,372,036,854,775,807.
-      -9223372036854775808 | 9223372036854775806 | Long       |  9223372036854775806 | Invalid value - must be less than 9,223,372,036,854,775,806.
-               -2147483648 |          2147483647 | Long       |          -2147483648 | Invalid value - must be greater than -2,147,483,648.
-               -2147483648 |          2147483647 | Long       |           2147483647 | Invalid value - must be less than 2,147,483,647.
-               -2147483647 |          2147483647 | Integer    |          -2147483647 | Invalid value - must be greater than -2,147,483,647.
-               -2147483648 |          2147483646 | Integer    |           2147483646 | Invalid value - must be less than 2,147,483,646.
-                    -32768 |               32767 | Integer    |               -32768 | Invalid value - must be greater than -32,768.
-                    -32768 |               32767 | Integer    |                32767 | Invalid value - must be less than 32,767.
-                    -32767 |               32767 | Short      |               -32767 | Invalid value - must be greater than -32,767.
-                    -32768 |               32766 | Short      |                32766 | Invalid value - must be less than 32,766.
-                         0 |                   0 | Short      |                   -1 | Invalid value - must be greater than 0.
-                         0 |                   0 | Short      |                    1 | Invalid value - must be less than 0.
-                        -1 |                   1 | Short      |                   -2 | Invalid value - must be greater than -1.
-                        -1 |                   1 | Short      |                    2 | Invalid value - must be less than 1.
-                       -20 |                 -10 | Short      |                  -21 | Invalid value - must be greater than -20.
-                       -20 |                 -10 | Short      |                   -9 | Invalid value - must be less than -10.
-                        10 |                  20 | Short      |                    9 | Invalid value - must be greater than 10.
-                        10 |                  20 | Short      |                   21 | Invalid value - must be less than 20.
-      """,
-      delimiter = '|',
-      useHeadersInDisplayName = true)
-  void of_outsideExclusiveMinMaxThrowsException(
-      final long min, final long max,
-      final String valueType, final BigInteger value,
-      final String expectedMessage) {
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideShortValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLongType(
+      final Short value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-    final var longTypeParser = LongTypeParser.builder()
-        .minValueExclusive(min)
-        .maxValueExclusive(max)
-        .build();
+    if (expectedExceptionMessage == null) {
+      assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
-    switch (valueType) {
-      case "Short":
-        final var shortPrimitive = value.shortValue();
-        final var shortObject = Integer.valueOf(shortPrimitive);
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideIntegerValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLong(
+      final Integer value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortPrimitive))
-            .withMessageStartingWith(expectedMessage);
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value.intValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value.intValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(shortObject))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "Integer":
-        final var integerPrimitive = value.intValue();
-        final var integerObject = Integer.valueOf(integerPrimitive);
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideIntegerValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLong(
+      final Integer value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerPrimitive))
-            .withMessageStartingWith(expectedMessage);
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value.intValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value.intValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(integerObject))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "Long":
-        final var longPrimitive = value.longValue();
-        final var longObject = Long.valueOf(longPrimitive);
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideIntegerValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLongType(
+      final Integer value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longPrimitive))
-            .withMessageStartingWith(expectedMessage);
+    if (expectedExceptionMessage == null) {
+      assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
 
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(longObject))
-            .withMessageStartingWith(expectedMessage);
-        // fall-thru
-      case "BigInteger":
-      default:
-        assertThatExceptionOfType(InvalidValueException.class)
-            .isThrownBy(() -> longTypeParser.of(value))
-            .withMessageStartingWith(expectedMessage);
-        break;
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideIntegerValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLongType(
+      final Integer value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideLongValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLong(
+      final Long value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value.longValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value.longValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideLongValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLong(
+      final Long value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value.longValue())).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value.longValue())))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideLongValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLongType(
+      final Long value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideLongValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLongType(
+      final Long value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideBigIntegerValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLong(
+      final BigInteger value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideBigIntegerValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLong(
+      final BigInteger value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      Assertions.assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value)).isEqualTo(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideBigIntegerValuesToTestInclusiveLongParsers")
+  void of_valueShouldSucceedWithInclusiveMinMax_whenParsingToLongType(
+      final BigInteger value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      assertThat(INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> INCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("org.typefactory.testutils.NumericValueScenarios#provideBigIntegerValuesToTestExclusiveLongParsers")
+  void of_valueShouldSucceedWithExclusiveMinMax_whenParsingToLongType(
+      final BigInteger value, final Long expectedValue, final String expectedExceptionMessage, final String expectedInvalidValue) {
+
+    if (expectedExceptionMessage == null) {
+      assertThat(EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)).hasValue(expectedValue);
+    } else {
+      assertThat(catchThrowableOfType(InvalidValueException.class, () -> EXCLUSIVE_LONG_TYPE_PARSER.of(value, SomeLongType::new)))
+          .hasMessage(expectedExceptionMessage)
+          .hasInvalidValue(expectedInvalidValue);
+    }
+  }
+
+  private static class SomeLongType extends LongType {
+
+    @Serial
+    private static final long serialVersionUID = 2908753028297789833L;
+
+    protected SomeLongType(final Long value) {
+      super(value);
     }
   }
 

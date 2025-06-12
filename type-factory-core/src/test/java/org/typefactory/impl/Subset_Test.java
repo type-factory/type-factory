@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.CodePointRange;
 import org.typefactory.Subset.SubsetBuilder;
@@ -48,6 +49,11 @@ class Subset_Test {
 
       @Override
       public boolean contains(int codePoint) {
+        return false;
+      }
+
+      @Override
+      public boolean includes(Category category) {
         return false;
       }
 
@@ -88,6 +94,11 @@ class Subset_Test {
       }
 
       @Override
+      public boolean includes(Category category) {
+        return false;
+      }
+
+      @Override
       public int numberOfCodePointRanges() {
         return 0;
       }
@@ -121,6 +132,11 @@ class Subset_Test {
       @Override
       public boolean contains(int codePoint) {
         return containsValue;
+      }
+
+      @Override
+      public boolean includes(Category category) {
+        return false;
       }
 
       @Override
@@ -162,6 +178,11 @@ class Subset_Test {
 
       @Override
       public boolean contains(int codePoint) {
+        return false;
+      }
+
+      @Override
+      public boolean includes(Category category) {
         return false;
       }
 

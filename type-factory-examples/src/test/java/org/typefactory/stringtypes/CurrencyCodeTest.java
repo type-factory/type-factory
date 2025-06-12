@@ -30,40 +30,31 @@ class CurrencyCodeTest {
 
   @ParameterizedTest
   @NullSource
-  void of_shouldReturnNull(final String value) {
-    final CurrencyCode actual = CurrencyCode.of(value);
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
   @EmptySource
-  @ValueSource(strings = "  ")
+  @ValueSource(strings = {" ", "   ", "\t\t", "\n\n", "\r\r", "\t\n\r"})
   void of_shouldReturnEmpty(final String value) {
     final CurrencyCode actual = CurrencyCode.of(value);
-    assertThat((CharSequence) actual).isEmpty();
+    assertThat((CharSequence) actual).isNull();
   }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      Raw-value | Expected value() | Expected toString()
-      ''        | ''               | ''
-      '  '      | ''               | ''
+      VALUE     | EXPECTED-value() | EXPECTED-toString()
       AUD       | AUD              | AUD
-      ' AUD '   | AUD              | AUD
-      '  AUD  ' | AUD              | AUD
+      ' aud '   | AUD              | AUD
+      '\tAUD\t' | AUD              | AUD
       uSd       | USD              | USD
       Nzd       | NZD              | NZD
       eur       | EUR              | EUR
       """,
-      delimiter = '|', nullValues = "null",
-      useHeadersInDisplayName = true)
+      delimiter = '|', useHeadersInDisplayName = true)
   void of_shouldCreateCurrencyCodeInstancesAsExpected(
-      final String value, final String expectedValue, final String expectedString) {
+      final String value, final String expectedValue, final String expectedToString) {
 
     final CurrencyCode actual = CurrencyCode.of(value);
 
     assertThat(actual.value()).isEqualTo(expectedValue);
-    assertThatObject(actual).hasToString(expectedString);
+    assertThatObject(actual).hasToString(expectedToString);
   }
 
   @ParameterizedTest
@@ -73,10 +64,13 @@ class CurrencyCodeTest {
       USAD | Invalid value - too long, maximum length is 3.
       61D  | Invalid value - invalid character '6' U+0036 DIGIT SIX.
       """, delimiter = '|')
-  void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
+  void of_shouldThrowExceptionForInvalidValues(
+      final String value, final String expectedExceptionMessage) {
+
     assertThatThrownBy(() -> CurrencyCode.of(value))
         .isInstanceOf(InvalidValueException.class)
-        .hasMessage("must be a 3-character ISO 4217 alpha currency code. " + expectedExceptionMessage)
-        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage);
+        .hasMessage(CurrencyCode.ERROR_MESSAGE.message() + ". " + expectedExceptionMessage)
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedExceptionMessage)
+        .hasFieldOrPropertyWithValue("messageCode", CurrencyCode.ERROR_MESSAGE.code());
   }
 }
