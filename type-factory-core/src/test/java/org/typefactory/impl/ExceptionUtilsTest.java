@@ -120,7 +120,7 @@ class ExceptionUtilsTest {
     assertThat(actual)
         .isInstanceOf(InvalidValueException.class)
         .satisfies(exception -> assertThat(exception.getMessage())
-            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - invalid character or unexpected multiple decimal points found '.'."));
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - invalid character or unexpected multiple decimal points found . U+002E FULL STOP."));
   }
 
   @Test
@@ -130,7 +130,7 @@ class ExceptionUtilsTest {
     assertThat(actual)
         .isInstanceOf(InvalidValueException.class)
         .satisfies(exception -> assertThat(exception.getMessage())
-            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers '.'."));
+            .isEqualTo(MESSAGE_CODE.defaultMessage() + ". Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers . U+002E FULL STOP."));
   }
 
   @ParameterizedTest
@@ -138,7 +138,7 @@ class ExceptionUtilsTest {
       VALUE | DECIMAL_SEPARATORS | EXPECTED_MESSAGE
       1.23  | null               | Invalid value - expected a whole number with no decimal places and no decimal point character expected.
       3.45  | []                 | Invalid value - expected a whole number with no decimal places and no decimal point character expected.
-      3.45  | [.]                | Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character '.'.
+      3.45  | [.]                | Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character . U+002E FULL STOP.
       """)
   void forExpectingWholeNumber_noDecimalSeparatorsProvided(
       final String value,

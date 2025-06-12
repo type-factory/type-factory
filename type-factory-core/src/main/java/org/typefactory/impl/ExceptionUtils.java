@@ -355,7 +355,7 @@ class ExceptionUtils {
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_MULTIPLE_DECIMAL_POINTS)
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
-            new String(new int[]{invalidCodePoint}, 0, 1))
+            unicodeHexCode(invalidCodePoint))
         .build();
   }
 
@@ -372,7 +372,7 @@ class ExceptionUtils {
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS)
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
-            new String(new int[]{invalidCodePoint}, 0, 1))
+            unicodeHexCode(invalidCodePoint))
         .build();
   }
 
@@ -396,7 +396,7 @@ class ExceptionUtils {
           .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER)
           .addParserMessageCodeArg(
               ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
-              new String(new int[]{decimalSeparatorCodePoints[0]}, 0, 1))
+              unicodeHexCode(decimalSeparatorCodePoints[0]))
           .build();
     }
   }

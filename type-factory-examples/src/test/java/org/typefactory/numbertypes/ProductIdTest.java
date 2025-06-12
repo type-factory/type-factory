@@ -57,7 +57,7 @@ class ProductIdTest {
       8                     | Invalid value - must be greater than or equal to 1,000,000,000,000,000.
       888888888888888       | Invalid value - must be greater than or equal to 1,000,000,000,000,000.
       8888-8888-8888-888    | Invalid value - must be greater than or equal to 1,000,000,000,000,000.
-      8888.8888.8888.8888   | Invalid value - invalid character or unexpected multiple decimal points found '.'.
+      8888.8888.8888.8888   | Invalid value - invalid character or unexpected multiple decimal points found . U+002E FULL STOP.
       8888_8888_8888_8888   | Invalid value - invalid character _ U+005F LOW LINE.
       88888888888888888     | Invalid value - must be less than or equal to 9,999,999,999,999,999.
       99999999999999999     | Invalid value - must be less than or equal to 9,999,999,999,999,999.

@@ -44,7 +44,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <junit-jupiter.version>5.13.0</junit-jupiter.version>
-    <junit-platform-reporting.version>1.11.4</junit-platform-reporting.version>
+    <junit-platform-reporting.version>1.13.0-M3</junit-platform-reporting.version>
     <assertj-core.version>3.27.3</assertj-core.version>
     <mockito-bom.version>5.17.0</mockito-bom.version>
     <icu4j.version>77.1</icu4j.version>

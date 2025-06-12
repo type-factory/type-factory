@@ -417,13 +417,16 @@ public class InvalidValueException extends IllegalArgumentException {
 
     ParserMessageCode INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS = Factory.parserMessageCode(
         "invalid_value_decimal_point_not_permitted_for_non_base_ten_numbers",
-        "Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers ''{0}''.");
+        "Invalid value - not expecting a fractional part, decimal point is not permitted for non base-10 numbers {0}.");
+
     ParserMessageCode INVALID_VALUE_MULTIPLE_DECIMAL_POINTS = Factory.parserMessageCode(
         "invalid_value_multiple_decimal_points",
-        "Invalid value - invalid character or unexpected multiple decimal points found ''{0}''.");
+        "Invalid value - invalid character or unexpected multiple decimal points found {0}.");
+
     ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER = Factory.parserMessageCode(
         "invalid_value_expecting_whole_number",
-        "Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character ''{0}''.");
+        "Invalid value - expected a whole number with no decimal places, or decimal places of zero, after the decimal point character {0}.");
+
     ParserMessageCode INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART = Factory.parserMessageCode(
         "invalid_value_expecting_whole_number",
         "Invalid value - expected a whole number with no decimal places and no decimal point character expected.");
