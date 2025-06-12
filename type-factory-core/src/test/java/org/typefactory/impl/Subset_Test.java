@@ -155,7 +155,7 @@ class Subset_Test {
 
   @Test
   void builder_returnsSubsetBuilder() {
-    final Subset.SubsetBuilder actual = Subset.builder();
+    final SubsetBuilder actual = Subset.builder();
     assertThat(actual)
         .isNotNull()
         .isInstanceOf(SubsetBuilder.class)

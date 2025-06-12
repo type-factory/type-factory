@@ -390,21 +390,27 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN = Factory.parserMessageCode(
         "invalid_value_does_not_match_regex_pattern",
         "Invalid value - does not match regular-expression pattern {0}");
+
     ParserMessageCode INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION = Factory.parserMessageCode(
         "invalid_value_does_not_pass_custom_validation",
         "Invalid value - does not pass custom validation criteria.");
+
     ParserMessageCode INVALID_VALUE_INVALID_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_character",
         "Invalid value - invalid character {0}.");
+
     ParserMessageCode INVALID_VALUE_INVALID_CONTROL_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_control_character",
         "Invalid value - invalid control character {0}.");
+
     ParserMessageCode INVALID_VALUE_INVALID_FORMAT_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_format_character",
         "Invalid value - invalid format character {0}.");
+
     ParserMessageCode INVALID_VALUE_INVALID_QUOTE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_quote_character",
         "Invalid value - invalid quote character {0}.");
+
     ParserMessageCode INVALID_VALUE_INVALID_WHITESPACE_CHARACTER = Factory.parserMessageCode(
         "invalid_value_invalid_whitespace_character",
         "Invalid value - invalid white-space character {0}.");
@@ -463,6 +469,7 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_TOO_LONG = Factory.parserMessageCode(
         "invalid_value_too_long",
         "Invalid value - too long, maximum length is {0,number,integer}.");
+
     ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");

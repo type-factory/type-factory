@@ -45,10 +45,10 @@ class TypeParser_LanguageGermanTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE            | ERROR_DESCRIPTION                        | COMMENT
-      das Εichhörnchen | 'Ε' U+0395 GREEK CAPITAL LETTER EPSILON. | German 'Squirrel' with Greek 'Ε' epsilon
-      der Ηirsch       | 'Η' U+0397 GREEK CAPITAL LETTER ETA.     | German 'Deer' with Greek 'Η' ita
-      die Weiße Τaube  | 'Τ' U+03A4 GREEK CAPITAL LETTER TAU.     | German 'Dove' with Greek 'Τ' taf
+      VALUE            | ERROR_DESCRIPTION                      | COMMENT
+      das Εichhörnchen | Ε U+0395 GREEK CAPITAL LETTER EPSILON. | German 'Squirrel' with Greek 'Ε' epsilon
+      der Ηirsch       | Η U+0397 GREEK CAPITAL LETTER ETA.     | German 'Deer' with Greek 'Η' ita
+      die Weiße Τaube  | Τ U+03A4 GREEK CAPITAL LETTER TAU.     | German 'Dove' with Greek 'Τ' taf
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_german_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

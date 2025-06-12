@@ -187,7 +187,19 @@ class TypeParserBuilderExceptionTest {
   }
 
   @Test
-  void toString_createsExpectedString() {
+  void toString_withoutCauseCreatesExpectedString() {
+
+    final var actual = TypeParserBuilderException.builder()
+        .messageCode(ERROR_MESSAGE_CODE_WITH_ARGS)
+        .addMessageCodeArg("invalidCodePoint", "A")
+        .build();
+
+    assertThat(actual).hasToString("""
+        TypeParserBuilderException{message='some default error message because of A', messageCode='some.error.code', defaultErrorMessage='some default error message because of {0}', invalidCodePoint='A'}""");
+  }
+
+  @Test
+  void toString_withCauseCreatesExpectedString() {
 
     when(cause.getMessage()).thenReturn("some exception message");
 

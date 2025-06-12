@@ -63,11 +63,11 @@ class ExceptionUtilsTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      ` `  | some value                          | U+0020 SPACE                      | Some default message. Invalid value - invalid white-space character U+0020 SPACE.
-      `\b` | some value \b with backspace        | U+0008 BACKSPACE                  | Some default message. Invalid value - invalid control character U+0008 BACKSPACE.
-      '    | some 'value' with single quotes     | ' U+0027 APOSTROPHE              | Some default message. Invalid value - invalid quote character ' U+0027 APOSTROPHE.
-      e    | some value                          | 'e' U+0065 LATIN SMALL LETTER E   | Some default message. Invalid value - invalid character 'e' U+0065 LATIN SMALL LETTER E.
-      🈂    | some value 🈂 triple byte codepoint | '🈂' U+01F202 SQUARED KATAKANA SA | Some default message. Invalid value - invalid character '🈂' U+01F202 SQUARED KATAKANA SA.
+      ` `  | some value                          | U+0020 SPACE                    | Some default message. Invalid value - invalid white-space character U+0020 SPACE.
+      `\b` | some value \b with backspace        | U+0008 BACKSPACE                | Some default message. Invalid value - invalid control character U+0008 BACKSPACE.
+      '    | some 'value' with single quotes     | ' U+0027 APOSTROPHE             | Some default message. Invalid value - invalid quote character ' U+0027 APOSTROPHE.
+      e    | some value                          | e U+0065 LATIN SMALL LETTER E   | Some default message. Invalid value - invalid character e U+0065 LATIN SMALL LETTER E.
+      🈂    | some value 🈂 triple byte codepoint | 🈂 U+01F202 SQUARED KATAKANA SA | Some default message. Invalid value - invalid character 🈂 U+01F202 SQUARED KATAKANA SA.
       """, delimiter = '|', quoteCharacter = '`')
   void forInvalidCodePoint(
       final String invalidCodePointAsString,
@@ -230,9 +230,9 @@ class ExceptionUtilsTest {
       0x2029     | Invalid value - invalid white-space character U+2029 PARAGRAPH SEPARATOR. | Space character
       0x00A0     | Invalid value - invalid white-space character U+00A0 NO-BREAK SPACE.      | Space character
       0x0027     | Invalid value - invalid quote character ' U+0027 APOSTROPHE.              | Quote character
-      0x0065     | Invalid value - invalid character 'e' U+0065 LATIN SMALL LETTER E.        | Latin character
-      0x005A     | Invalid value - invalid character 'Z' U+005A LATIN CAPITAL LETTER Z.      | Latin character
-      0x01F202   | Invalid value - invalid character '🈂' U+01F202 SQUARED KATAKANA SA.       | Japanese codepoint requiring two 16-bit high and low surrogates
+      0x0065     | Invalid value - invalid character e U+0065 LATIN SMALL LETTER E.          | Latin character
+      0x005A     | Invalid value - invalid character Z U+005A LATIN CAPITAL LETTER Z.        | Latin character
+      0x01F202   | Invalid value - invalid character 🈂 U+01F202 SQUARED KATAKANA SA.         | Japanese codepoint requiring two 16-bit high and low surrogates
       0x0E0023   | Invalid value - invalid format character U+0E0023 TAG NUMBER SIGN.        | Codepoint in the Unicode Format Category requiring two 16-bit high and low surrogates
       0xD83D     | Invalid value - invalid character U+D83D HIGH SURROGATE.                  | Dangling high surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03
       0xDE03     | Invalid value - invalid character U+DE03 LOW SURROGATE.                   | Dangling low surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03
@@ -265,9 +265,9 @@ class ExceptionUtilsTest {
       0x0008     | U+0008 BACKSPACE                      | Control character
       0x0020     | U+0020 SPACE                          | Space character
       0x0027     | ' U+0027 APOSTROPHE                   | Quote character
-      0x0065     | 'e' U+0065 LATIN SMALL LETTER E       | Latin character
-      0x005A     | 'Z' U+005A LATIN CAPITAL LETTER Z     | Latin character
-      0x01F202   | '🈂' U+01F202 SQUARED KATAKANA SA      | Japanese codepoint requiring two 16-bit high and low surrogates
+      0x0065     | e U+0065 LATIN SMALL LETTER E         | Latin character
+      0x005A     | Z U+005A LATIN CAPITAL LETTER Z       | Latin character
+      0x01F202   | 🈂 U+01F202 SQUARED KATAKANA SA        | Japanese codepoint requiring two 16-bit high and low surrogates
       0x0E0023   | U+0E0023 TAG NUMBER SIGN              | Codepoint in the Unicode Format Category requiring two 16-bit high and low surrogates
       0xD83D     | U+D83D HIGH SURROGATE                 | Dangling high surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03
       0xDE03     | U+DE03 LOW SURROGATE                  | Dangling low surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03

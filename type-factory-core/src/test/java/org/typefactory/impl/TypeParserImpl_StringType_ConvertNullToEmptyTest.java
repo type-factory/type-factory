@@ -49,10 +49,10 @@ class TypeParserImpl_StringType_ConvertNullToEmptyTest {
       VALUE   | EXPECTED_EXCEPTION_MESSAGE
       ' '     | Invalid value - invalid white-space character U+0020 SPACE.
       '\t'    | Invalid value - invalid white-space character U+0009 CHARACTER TABULATION.
-      .       | Invalid value - invalid character '.' U+002E FULL STOP.
-      0       | Invalid value - invalid character '0' U+0030 DIGIT ZERO.
-      A       | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      ABCDEFG | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      .       | Invalid value - invalid character . U+002E FULL STOP.
+      0       | Invalid value - invalid character 0 U+0030 DIGIT ZERO.
+      A       | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      ABCDEFG | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parseToStringType_withConvertNullToEmpty_throwsExceptionForNonEmptyValue(
       final String value, final String expectedExceptionMessage) {
@@ -116,10 +116,10 @@ class TypeParserImpl_StringType_ConvertNullToEmptyTest {
       VALUE   | EXPECTED_EXCEPTION_MESSAGE
       ' '     | Invalid value - invalid white-space character U+0020 SPACE.
       '\t'    | Invalid value - invalid white-space character U+0009 CHARACTER TABULATION.
-      .       | Invalid value - invalid character '.' U+002E FULL STOP.
-      0       | Invalid value - invalid character '0' U+0030 DIGIT ZERO.
-      A       | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      ABCDEFG | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      .       | Invalid value - invalid character . U+002E FULL STOP.
+      0       | Invalid value - invalid character 0 U+0030 DIGIT ZERO.
+      A       | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      ABCDEFG | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parseToStringType_withConvertNullToEmpty_andForbidWhitespace_throwsExceptionForNonEmptyValue(
       final String value, final String expectedExceptionMessage) {
@@ -184,10 +184,10 @@ class TypeParserImpl_StringType_ConvertNullToEmptyTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
       VALUE   | EXPECTED_EXCEPTION_MESSAGE
-      .       | Invalid value - invalid character '.' U+002E FULL STOP.
-      0       | Invalid value - invalid character '0' U+0030 DIGIT ZERO.
-      A       | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      ABCDEFG | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      .       | Invalid value - invalid character . U+002E FULL STOP.
+      0       | Invalid value - invalid character 0 U+0030 DIGIT ZERO.
+      A       | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      ABCDEFG | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parseToStringType_withConvertNullToEmpty_andPreserveWhitespace_throwsExceptionForNonEmptyValue(
       final String value, final String expectedExceptionMessage) {
@@ -254,10 +254,10 @@ class TypeParserImpl_StringType_ConvertNullToEmptyTest {
   @ParameterizedTest
   @CsvSource(textBlock = """
       VALUE   | EXPECTED_EXCEPTION_MESSAGE
-      .       | Invalid value - invalid character '.' U+002E FULL STOP.
-      0       | Invalid value - invalid character '0' U+0030 DIGIT ZERO.
-      A       | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      ABCDEFG | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      .       | Invalid value - invalid character . U+002E FULL STOP.
+      0       | Invalid value - invalid character 0 U+0030 DIGIT ZERO.
+      A       | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      ABCDEFG | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void parseToStringType_withConvertNullToEmpty_andRemoveAllWhitespace_throwsExceptionForNonEmptyValue(
       final String value, final String expectedExceptionMessage) {

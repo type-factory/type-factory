@@ -45,10 +45,10 @@ class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE   | ERROR_DESCRIPTION                        | COMMENT
-      Εşşək   | 'Ε' U+0395 GREEK CAPITAL LETTER EPSILON. | Azeri 'Donkey' with Greek 'Ε' epsilon
-      Κəpənək | 'Κ' U+039A GREEK CAPITAL LETTER KAPPA.   | Azeri 'Butterfly' with Greek 'Κ' kappa
-      Ζürafə  | 'Ζ' U+0396 GREEK CAPITAL LETTER ZETA.    | Azeri 'Girrafe' with Greek 'Ζ' zita
+      VALUE   | ERROR_DESCRIPTION                      | COMMENT
+      Εşşək   | Ε U+0395 GREEK CAPITAL LETTER EPSILON. | Azeri 'Donkey' with Greek 'Ε' epsilon
+      Κəpənək | Κ U+039A GREEK CAPITAL LETTER KAPPA.   | Azeri 'Butterfly' with Greek 'Κ' kappa
+      Ζürafə  | Ζ U+0396 GREEK CAPITAL LETTER ZETA.    | Azeri 'Girrafe' with Greek 'Ζ' zita
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_azeri_latin_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

@@ -26,11 +26,11 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
   
   @ParameterizedTest
   @CsvSource(textBlock = """
-      Café au lait                           | Some type must be alpha characters. | Invalid value - invalid character 'é' U+00E9 LATIN SMALL LETTER E WITH ACUTE.
-      Apple-tart                             | Some type must be alpha characters. | Invalid value - invalid character '-' U+002D HYPHEN-MINUS.
-      Apple tart with a really very long name| Some type must be alpha characters. | Invalid value - invalid white-space character U+0020 SPACE.
+      Café au lait                            | Invalid value - invalid character é U+00E9 LATIN SMALL LETTER E WITH ACUTE.
+      Apple-tart                              | Invalid value - invalid character - U+002D HYPHEN-MINUS.
+      Apple tart with a really very long name | Invalid value - invalid white-space character U+0020 SPACE.
       """, delimiter = '|')
-  void should_throw_exception_when_invalid_character(final String value, final String expectedErrorMessage, final String expectedParserMessage) {
+  void should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -41,15 +41,15 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidValueException.class)
-        .hasMessage(expectedErrorMessage + " " + expectedParserMessage)
-        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserMessage);
+        .hasMessage("Some type must be alpha characters. " + expectedParserErrorMessage)
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 
   @ParameterizedTest
-  @CsvSource(textBlock = """
-      Τίγρη | Some type must be alpha characters. | Invalid value - invalid character 'ί' U+03AF GREEK SMALL LETTER IOTA WITH TONOS.
-      """, delimiter = '|')
-  void greek_range_should_throw_exception_when_invalid_character(final String value, final String expectedErrorMessage, final String expectedParserMessage) {
+  @CsvSource(value = {
+      "Τίγρη | Invalid value - invalid character ί U+03AF GREEK SMALL LETTER IOTA WITH TONOS.", // Greek iota-with-tonos (diacritic) is not in the accepted character range
+  }, delimiter = '|')
+  void greek_range_should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =
         TypeParser.builder()
@@ -61,7 +61,7 @@ class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
 
     Assertions.assertThatThrownBy(() -> typeParser.parseToString(value))
         .isInstanceOf(InvalidValueException.class)
-        .hasMessage(expectedErrorMessage + " " + expectedParserMessage)
-        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserMessage);
+        .hasMessage("Some type must be alpha characters. " + expectedParserErrorMessage)
+        .hasFieldOrPropertyWithValue("parserErrorMessage", expectedParserErrorMessage);
   }
 }

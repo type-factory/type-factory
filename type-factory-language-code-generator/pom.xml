@@ -30,14 +30,14 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.11.4</version>
+      <version>5.13.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.26.3</version>
+      <version>3.27.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -62,7 +62,7 @@
       <!-- Required by exec plugin below -->
       <groupId>org.relaxng</groupId>
       <artifactId>trang</artifactId>
-      <version>20220510</version>
+      <version>20241231</version>
     </dependency>
 
     <dependency>
@@ -102,7 +102,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
         <executions>
           <execution>
             <id>convert-unicode-relax-ng-schema-to-xsd-schema</id>

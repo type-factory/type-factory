@@ -53,16 +53,16 @@ class InvoiceNumberTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      0            | Invalid value - must be greater than or equal to 100,000,000.
-      00000000     | Invalid value - must be greater than or equal to 100,000,000.
-      0000-00-00   | Invalid value - must be greater than or equal to 100,000,000.
-      0000.00.00   | Invalid value - invalid character or unexpected multiple decimal points found '.'.
-      0000_00_00   | Invalid value - invalid character '_' U+005F LOW LINE.
-      0000000000   | Invalid value - must be greater than or equal to 100,000,000.
-      9999999999   | Invalid value - must be less than or equal to 999,999,999.
-      8888-000-000 | Invalid value - must be less than or equal to 999,999,999.
-      00000000A    | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
-      A            | Invalid value - invalid character 'A' U+0041 LATIN CAPITAL LETTER A.
+      0            | Invalid value - too short, minimum length is 9.
+      00000000     | Invalid value - too short, minimum length is 9.
+      0000-00-00   | Invalid value - too short, minimum length is 9.
+      0000.00.00   | Invalid value - invalid character . U+002E FULL STOP.
+      0000_00_00   | Invalid value - invalid character _ U+005F LOW LINE.
+      0000000000   | Invalid value - too long, maximum length is 9.
+      9999999999   | Invalid value - too long, maximum length is 9.
+      0000-000-000 | Invalid value - too long, maximum length is 9.
+      00000000A    | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      A            | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> InvoiceNumber.of(value))

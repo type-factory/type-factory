@@ -45,10 +45,10 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE         | ERROR_DESCRIPTION                              | COMMENT
-      björη         | 'η' U+03B7 GREEK SMALL LETTER ETA.             | Icelandic 'Bear' with Greek 'η' ita
-      mörðυr        | 'υ' U+03C5 GREEK SMALL LETTER UPSILON.         | Icelandic 'Marten' with Greek 'υ' upsilon
-      hvίtabjörninn | 'ί' U+03AF GREEK SMALL LETTER IOTA WITH TONOS. | Icelandic 'Polar Bear' with Greek 'ί' iοta
+      VALUE         | ERROR_DESCRIPTION                            | COMMENT
+      björη         | η U+03B7 GREEK SMALL LETTER ETA.             | Icelandic 'Bear' with Greek 'η' ita
+      mörðυr        | υ U+03C5 GREEK SMALL LETTER UPSILON.         | Icelandic 'Marten' with Greek 'υ' upsilon
+      hvίtabjörninn | ί U+03AF GREEK SMALL LETTER IOTA WITH TONOS. | Icelandic 'Polar Bear' with Greek 'ί' iοta
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_icelandic_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

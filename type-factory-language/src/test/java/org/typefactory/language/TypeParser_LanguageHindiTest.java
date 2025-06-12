@@ -49,10 +49,10 @@ class TypeParser_LanguageHindiTest extends AbstractTypeParserTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      VALUE            | ERROR_DESCRIPTION              | COMMENT
-      \uD805\uDE13ल्लू   | '𑘓' U+011613 MODI LETTER CA.   | Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead of 'उ' (u) from the Devanagari script
-      बा\uD805\uDE11    | '𑘑' U+011611 MODI LETTER GHA.  | Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead of 'घ' (gha) from the Devanagari script
-      कबू\uD805\uDE1Dर   | '𑘝' U+01161D MODI LETTER TA.   | Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead of 'त' (ta) from the Devanagari script
+      VALUE            | ERROR_DESCRIPTION            | COMMENT
+      \uD805\uDE13ल्लू   | 𑘓 U+011613 MODI LETTER CA.   | Hindi 'उल्लू' (Owl) with '𑘓' (ca) from the Modi script instead of 'उ' (u) from the Devanagari script
+      बा\uD805\uDE11    | 𑘑 U+011611 MODI LETTER GHA.  | Hindi 'बाघ' (Tiger) with '𑘑' (gha) from the Modi script instead of 'घ' (gha) from the Devanagari script
+      कबू\uD805\uDE1Dर   | 𑘝 U+01161D MODI LETTER TA.   | Hindi 'कबूतर' (Pigeon) with '𑘝' (ta) from the Modi script instead of 'त' (ta) from the Devanagari script
       """, delimiter = '|', useHeadersInDisplayName = true)
   void should_throw_exception_with_non_hindi_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)

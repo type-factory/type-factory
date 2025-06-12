@@ -142,7 +142,59 @@ public interface TypeParser {
    * @see #parseToStringType(CharSequence, Function)
    */
   String parseToString(CharSequence value) throws InvalidValueException;
-  
+
+  /**
+   * <p>Parses the provided {@code value} replacing any invalid characters with a Unicode replacement character � {@code (U+FFFD)}
+   * and returns the result into a {@link ParseResult} that contains a parsed-value as well as flags to indicate whether the parsed
+   * value is valid or not, and the array of invalid code-points if the parsed value was invalid.</p>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the
+   * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REPLACEMENT} column:</p>
+   *
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   *
+   * @param value the value to parse into a {@link ParseResult}.
+   * @return a {@link ParseResult} containing the parsed string and any parsing errors.
+   * @see #parseToStringRemovingInvalidCharacters(CharSequence)
+   * @see #parseToString(CharSequence)
+   */
+  ParseResult parseToStringReplacingInvalidCharacters(CharSequence value);
+
+  /**
+   * <p>Parses the provided {@code value} removing any invalid characters and returns the result into a {@link ParseResult} that
+   * contains a parsed-value as well as flags to indicate whether the parsed value is valid or not, and the array of invalid
+   * code-points if the parsed value was invalid.</p>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the
+   * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REMOVAL} column:</p>
+   *
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   *
+   * @param value the value to parse into a {@link ParseResult}.
+   * @return a {@link ParseResult} containing the parsed string and any parsing errors.
+   * @see #parseToStringReplacingInvalidCharacters(CharSequence)
+   * @see #parseToString(CharSequence)
+   */
+  ParseResult parseToStringRemovingInvalidCharacters(CharSequence value);
+
 
   /**
    * A builder that can create immutable, threadsafe {@link TypeParser} instances.
@@ -743,6 +795,64 @@ public interface TypeParser {
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
 
     /**
+     * <p>Configures the type-parser to convert any Unicode decimal digit in the input sequence to a digit starting with the {@code zeroDigitChar}.</p>
+     *
+     * <p>For example, for the following {@code zeroDigitChar} values, the type-parser will parse the following input values to the parsed values:</p>
+     * <pre>{@code
+     * ZERO_DIGIT | INPUT_VALUE |  PARSED_VALUE
+     * 0          | 0123456789  |  0123456789
+     * 0          | 9876543210  |  9876543210
+     * 0          | 01234ABCDE  |  01234ABCDE
+     * 0          | ０１２３４５６７８９ | 0123456789  // full-width digits in input-value
+     * 0          | ０１２３４ＡＢＣＤＥ | 01234ＡＢＣＤＥ  // full-width digits in input-value
+     * ०          | 0123456789  | ०१२३४५६७८९  // Devanagari zero-digit parsed to Devanagari digits
+     * ൦          | 0123456789  | ൦൧൨൩൪൫൬൭൮൯  // Malayalam zero-digit parsed to Malayalam digits
+     * ०          | ०१२३४५६७८९  | ०१२३४५६७८९
+     * 0          | ०१२३४५६७८९  | 0123456789  // Western Arabic zero-digit parsed to Western Arabic digits
+     * ०          | ०१२३४56789  | ०१२३४५६७८९
+     * 0          | ०१२३४56789  | 0123456789
+     * 0          | ൦൧൨൩൪൫൬൭൮൯ | 0123456789 // Western Arabic zero-digit parsed to Western Arabic digits
+     * ൦          | ൦൧൨൩൪൫൬൭൮൯ | ൦൧൨൩൪൫൬൭൮൯
+     * ൦          | ൦൧൨൩൪56789  | ൦൧൨൩൪൫൬൭൮൯
+     * 0          | ൦൧൨൩൪56789  | 0123456789
+     * }</pre>
+     *
+     * @param zeroDigitChar the character to use as the zero digit.
+     * @return this {@code TypeParserBuilder}.
+     */
+    default TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final char zeroDigitChar) {
+      return convertAnyDecimalDigitsToDigitsStartingWithZeroDigit((int) zeroDigitChar);
+    }
+
+    /**
+     * <p>Configures the type-parser to convert any Unicode decimal digit in the input sequence to a digit starting with the {@code zeroDigitCodePoint}.</p>
+     *
+     * <p>For example, for the following {@code zeroDigitCodePoint} values, the type-parser will parse the following input values to the parsed values:</p>
+     * <pre>{@code
+     * ZERO_DIGIT | INPUT_VALUE |  PARSED_VALUE
+     * 0          | 0123456789  |  0123456789
+     * 0          | 9876543210  |  9876543210
+     * 0          | 01234ABCDE  |  01234ABCDE
+     * 0          | ０１２３４５６７８９ | 0123456789  // full-width digits in input-value
+     * 0          | ０１２３４ＡＢＣＤＥ | 01234ＡＢＣＤＥ  // full-width digits in input-value
+     * ०          | 0123456789  | ०१२३४५६७८९  // Devanagari zero-digit parsed to Devanagari digits
+     * ൦          | 0123456789  | ൦൧൨൩൪൫൬൭൮൯  // Malayalam zero-digit parsed to Malayalam digits
+     * ०          | ०१२३४५६७८९  | ०१२३४५६७८९
+     * 0          | ०१२३४५६७८९  | 0123456789  // Western Arabic zero-digit parsed to Western Arabic digits
+     * ०          | ०१२३४56789  | ०१२३४५६७८९
+     * 0          | ०१२३४56789  | 0123456789
+     * 0          | ൦൧൨൩൪൫൬൭൮൯ | 0123456789 // Western Arabic zero-digit parsed to Western Arabic digits
+     * ൦          | ൦൧൨൩൪൫൬൭൮൯ | ൦൧൨൩൪൫൬൭൮൯
+     * ൦          | ൦൧൨൩൪56789  | ൦൧൨൩൪൫൬൭൮൯
+     * 0          | ൦൧൨൩൪56789  | 0123456789
+     * }</pre>
+     *
+     * @param zeroDigitCodePoint the code-point to use as the zero digit.
+     * @return this {@code TypeParserBuilder}.
+     */
+    TypeParserBuilder convertAnyDecimalDigitsToDigitsStartingWithZeroDigit(final int zeroDigitCodePoint);
+
+    /**
      * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
      *
      * <p>Character conversions and char-sequence conversions take precedence over Category conversions. So for the code:</p>
@@ -1166,6 +1276,20 @@ public interface TypeParser {
     TypeParserBuilder acceptAllUnicodeLetters();
 
     /**
+     * <p>A convenience method that is the same as calling:</p>
+     * <pre>{@code
+     *   acceptUnicodeCategory(Category.DECIMAL_DIGIT_NUMBER)
+     * }</pre>
+     *
+     * <p>Essentially it accepts all characters/code-points found in the {@link Category#DECIMAL_DIGIT_NUMBER} composite category.</p>
+     *
+     * @return this {@code TypeParserBuilder}.
+     * @see #acceptUnicodeCategory(Category)
+     * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
+     */
+    TypeParserBuilder acceptAllUnicodeDecimalDigits();
+
+    /**
      * <p>Configures the type parser to accepts all letters [a-zA-Z] that are in the <a href="https://unicode.org/charts/PDF/U0000.pdf">Basic
      * Latin</a> Unicode block which is equivalent to the ASCII character set.</p>
      *
@@ -1503,5 +1627,108 @@ public interface TypeParser {
      * @return an immutable, threadsafe {@link TypeParser} instance.
      */
     TypeParser build();
+  }
+
+  /**
+   * <p>Represents the result of parsing a value. It contains the parsed value, whether it was valid or invalid, and any invalid code points
+   * encountered during parsing.</p>
+   *
+   * <p>A valid parsed value will have met the requirements of the configured {@link TypeParser}.</p>
+   *
+   * <p>An invalid parsed value will have either had invalid characters removed or replaced with the Unicode Replacement Character � {@code (U+FFFD)}.
+   * If this is the case, the invalid characters will be listed in the {@link #invalidCodePoints()} array. The removal or replacement will depend on
+   * which of the following two methods were invoked.</p>
+   *
+   * <ul>
+   *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+   *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+   * </ul>
+   *
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric),
+   * then for the following input values the parsed value will be as shown below:</p>
+   *
+   * <pre>{@code
+   * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+   * abc123                        | abc123                        | abc123
+   * abc 123                       | abc�123                       | abc123
+   * abc-123                       | abc�123                       | abc123
+   * abc_123                       | abc�123                       | abc123
+   * abc123!                       | abc123�                       | abc123
+   * abc123!@#                     | abc123���                     | abc123
+   * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+   * }</pre>
+   *
+   * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+   * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+   */
+  interface ParseResult {
+
+    /**
+     * <p>Returns a parsed value that may be valid or invalid. The {@link #parsedValueWasValid()} and {@link #parsedValueWasInvalid()} methods indicate
+     * validity.</p>
+     *
+     * <p>A valid parsed value will have met the requirements of the configured {@link TypeParser}.</p>
+     *
+     * <p>An invalid parsed value will have either had invalid characters removed or replaced with the Unicode Replacement Character �
+     * {@code (U+FFFD)}. If this is the case, the invalid characters will be listed in the {@link #invalidCodePoints()} array. The removal or
+     * replacement will depend on which of the following two methods were invoked.</p>
+     *
+     * <ul>
+     *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+     *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+     * </ul>
+     *
+     * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric),
+     * then for the following input values the parsed value will be as shown below:</p>
+     *
+     * <pre>{@code
+     * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
+     * abc123                        | abc123                        | abc123
+     * abc 123                       | abc�123                       | abc123
+     * abc-123                       | abc�123                       | abc123
+     * abc_123                       | abc�123                       | abc123
+     * abc123!                       | abc123�                       | abc123
+     * abc123!@#                     | abc123���                     | abc123
+     * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
+     * }</pre>
+     *
+     * @return a parsed value that may be valid or invalid. A valid value will be intact. An invalid value will have had all invalid characters either
+     * removed or replaced with the Unicode Replacement Character � {@code (U+FFFD)}.
+     * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+     * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+     */
+    String parsedValue();
+
+    /**
+     * <p>Indicates whether the parsed value was valid according to the configured {@link TypeParser}.</p>
+     *
+     * @return {@code true} if the parsed value was valid, {@code false} otherwise.
+     */
+    boolean parsedValueWasValid();
+
+    /**
+     * <p>Indicates whether the parsed value was invalid according to the configured {@link TypeParser}.</p>
+     *
+     * @return {@code true} if the parsed value was invalid, {@code false} otherwise.
+     */
+    boolean parsedValueWasInvalid();
+
+    /**
+     * <p>Returns an array of invalid code points encountered during parsing.</p>
+     *
+     * <p>These code points would have either removed or replaced in the parsed value depending on which of the two following methods were invoked:</p>
+     *
+     * <ul>
+     *   <li>{@link TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)}</li>
+     *   <li>{@link TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)}</li>
+     * </ul>
+     *
+     * <p>If the parsed value was valid, this will return an empty array.</p>
+     *
+     * @return an array of invalid code points, or an empty array if the parsed value was valid.
+     * @see TypeParser#parseToStringRemovingInvalidCharacters(CharSequence)
+     * @see TypeParser#parseToStringReplacingInvalidCharacters(CharSequence)
+     */
+    int[] invalidCodePoints();
   }
 }

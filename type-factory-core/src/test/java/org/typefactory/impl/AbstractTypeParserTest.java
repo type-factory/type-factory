@@ -149,50 +149,66 @@ abstract class AbstractTypeParserTest {
    */
   protected enum CorruptCharSequence implements CharSequence {
 
-    SEQUENCE_WITH_ONLY_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
+    CHAR_SEQUENCE_WITH_ONLY_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
         INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE.defaultMessage().replace("{0}", "U+D801 HIGH SURROGATE"),
+        "�",
+        Constants.EMPTY_STRING,
         CAUCASIAN_ALBANIAN_LETTER_CAR_HIGH_SURROGATE_CHAR),
 
-    SEQUENCE_WITH_ONLY_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
+    CHAR_SEQUENCE_WITH_ONLY_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
         INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE.defaultMessage().replace("{0}", "U+DD42 LOW SURROGATE"),
+        "�",
+        Constants.EMPTY_STRING,
         CAUCASIAN_ALBANIAN_LETTER_CAR_LOW_SURROGATE_CHAR),
 
-    SEQUENCE_STARTING_WITH_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
+    CHAR_SEQUENCE_STARTING_WITH_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
         INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE.defaultMessage().replace("{0}", "U+D801 HIGH SURROGATE"),
+        "�" + CAUCASIAN_ALBANIAN_LETTER_ALT,
+        CAUCASIAN_ALBANIAN_LETTER_ALT,
         CAUCASIAN_ALBANIAN_LETTER_CAR_HIGH_SURROGATE_CHAR,
         CAUCASIAN_ALBANIAN_LETTER_ALT.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_ALT.charAt(1)),
 
-    SEQUENCE_STARTING_WITH_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
+    CHAR_SEQUENCE_STARTING_WITH_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
         INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE.defaultMessage().replace("{0}", "U+DD42 LOW SURROGATE"),
+        "�" + CAUCASIAN_ALBANIAN_LETTER_ALT,
+        CAUCASIAN_ALBANIAN_LETTER_ALT,
         CAUCASIAN_ALBANIAN_LETTER_CAR_LOW_SURROGATE_CHAR,
         CAUCASIAN_ALBANIAN_LETTER_ALT.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_ALT.charAt(1)),
 
-    SEQUENCE_CONTAINING_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
+    CHAR_SEQUENCE_CONTAINING_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
         INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE.defaultMessage().replace("{0}", "U+D801 HIGH SURROGATE"),
+        CAUCASIAN_ALBANIAN_LETTER_BET + "�" + CAUCASIAN_ALBANIAN_LETTER_GIM,
+        CAUCASIAN_ALBANIAN_LETTER_BET + CAUCASIAN_ALBANIAN_LETTER_GIM,
         CAUCASIAN_ALBANIAN_LETTER_BET.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_BET.charAt(1),
         CAUCASIAN_ALBANIAN_LETTER_CAR_HIGH_SURROGATE_CHAR,
         CAUCASIAN_ALBANIAN_LETTER_GIM.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_GIM.charAt(1)),
 
-    SEQUENCE_CONTAINING_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
+    CHAR_SEQUENCE_CONTAINING_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
         INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE.defaultMessage().replace("{0}", "U+DD42 LOW SURROGATE"),
+        CAUCASIAN_ALBANIAN_LETTER_BET + "�" + CAUCASIAN_ALBANIAN_LETTER_GIM,
+        CAUCASIAN_ALBANIAN_LETTER_BET + CAUCASIAN_ALBANIAN_LETTER_GIM,
         CAUCASIAN_ALBANIAN_LETTER_BET.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_BET.charAt(1),
         CAUCASIAN_ALBANIAN_LETTER_CAR_LOW_SURROGATE_CHAR,
         CAUCASIAN_ALBANIAN_LETTER_GIM.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_GIM.charAt(1)),
 
-    SEQUENCE_ENDING_WITH_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
+    CHAR_SEQUENCE_ENDING_WITH_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE(
         INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE.defaultMessage().replace("{0}", "U+D801 HIGH SURROGATE"),
+        CAUCASIAN_ALBANIAN_LETTER_DAT + "�",
+        CAUCASIAN_ALBANIAN_LETTER_DAT,
         CAUCASIAN_ALBANIAN_LETTER_DAT.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_DAT.charAt(1),
         CAUCASIAN_ALBANIAN_LETTER_CAR_HIGH_SURROGATE_CHAR),
 
-    SEQUENCE_ENDING_WITH_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
+    CHAR_SEQUENCE_ENDING_WITH_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE(
         INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE.defaultMessage().replace("{0}", "U+DD42 LOW SURROGATE"),
+        CAUCASIAN_ALBANIAN_LETTER_DAT + "�",
+        CAUCASIAN_ALBANIAN_LETTER_DAT,
         CAUCASIAN_ALBANIAN_LETTER_DAT.charAt(0),
         CAUCASIAN_ALBANIAN_LETTER_DAT.charAt(1),
         CAUCASIAN_ALBANIAN_LETTER_CAR_LOW_SURROGATE_CHAR),
@@ -202,13 +218,31 @@ abstract class AbstractTypeParserTest {
 
     private final String expectedErrorMessage;
 
-    CorruptCharSequence(final String expectedErrorMessage, final char... chars) {
+    private final String expectedValueWithInvalidCharacterReplacement;
+
+    private final String expectedValueWithInvalidCharacterRemoval;
+
+    CorruptCharSequence(
+        final String expectedErrorMessage,
+        final String expectedValueWithInvalidCharacterReplacement,
+        final String expectedValueWithInvalidCharacterRemoval,
+        final char... chars) {
       this.expectedErrorMessage = expectedErrorMessage;
+      this.expectedValueWithInvalidCharacterReplacement = expectedValueWithInvalidCharacterReplacement;
+      this.expectedValueWithInvalidCharacterRemoval = expectedValueWithInvalidCharacterRemoval;
       this.chars = chars;
     }
 
     public String getExpectedErrorMessage() {
       return expectedErrorMessage;
+    }
+
+    public String getExpectedValueWithInvalidCharacterReplacement() {
+      return expectedValueWithInvalidCharacterReplacement;
+    }
+
+    public String getExpectedValueWithInvalidCharacterRemoval() {
+      return expectedValueWithInvalidCharacterRemoval;
     }
 
     @Override

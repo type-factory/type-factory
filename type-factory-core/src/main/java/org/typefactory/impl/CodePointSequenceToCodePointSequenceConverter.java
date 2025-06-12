@@ -75,7 +75,8 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
   }
 
   public boolean isEmpty() {
-    return rootTreeNode.isEmpty();
+    return (rootTreeNode == null || rootTreeNode.isEmpty())
+           && (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty());
   }
 
   /**
@@ -89,20 +90,20 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
    * Will return {@code true} if a conversion is required with the conversion information set into the {@code converterResults} object that was passed
    * in as an argument.
    *
-   * @param currentCodePoint
-   * @param currentIndex
-   * @param converterResults
+   * @param currentCodePoint the current code-point being parsed
+   * @param currentIndex the current index of the code-point being parsed in the character sequence
+   * @param converterResults the {@link ConverterResults} object that will receive the conversion information if a conversion is required.
    * @return {@code true} if a conversion is required with the conversion information set into the {@code converterResults} object that was passed in
    * as an argument.
    */
-  public boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+  public boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
     if (converterResults instanceof ConverterResultsImpl converterResultsImpl) {
-      return isCodePointConversionRequired(currentCodePoint, currentIndex, converterResultsImpl);
+      return codePointConversionIsRequired(currentCodePoint, currentIndex, converterResultsImpl);
     }
     throw new IllegalArgumentException("Invalid argument - 'converterResults' must be of type " + ConverterResultsImpl.class.getName());
   }
 
-  private boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
+  private boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
     boolean result = false;
     TreeNode foundTreeNode = null;
     TreeNode treeNodeInPlay = null;

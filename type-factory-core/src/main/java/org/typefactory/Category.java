@@ -372,6 +372,18 @@ public enum Category {
 
   /**
    * <p>Checks if the specified code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.</p>
+   *
+   * <p>Example – check if a code point is in the Unicode letter or decimal digit category:</p>
+   * <pre>{@code
+   * // Create the bit flags once as a static constant.
+   * static final long LETTER_DIGIT_CATEGORY_BIT_FLAGS = Category.getCategoryBitFlags(
+   *         Category.LETTER, Category.DECIMAL_DIGIT_NUMBER);
+   *
+   * // Elsewhere in your code, check if a code point is in the letter or number category.
+   * boolean isLetterOrDigit = Category.codePointIsInOneOfTheCategories(
+   *         codePoint, LETTER_DIGIT_CATEGORY_BIT_FLAGS);
+   * }</pre>
+   *
    * @param codePoint the code point to check.
    * @param categoryBitFlags the category bit flags to check.
    * @return {@code true} if the code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.
