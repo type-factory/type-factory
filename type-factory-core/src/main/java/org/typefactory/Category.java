@@ -342,4 +342,43 @@ public enum Category {
   public int[] getCharacterCategories() {
     return Arrays.copyOf(characterCategories, characterCategories.length);
   }
+
+  /**
+   * <p>Returns the category bit flags in a {@code long} value where each bit represents one Unicode Category.</p>
+   * @param categories the categories to get the bit flags for.
+   * @return the category bit flags.
+   * @see #codePointIsInOneOfTheCategories(int, long)
+   */
+  public static long getCategoryBitFlags(final Category... categories) {
+    long categoryBitFlags = 0;
+    for (Category category : categories) {
+      categoryBitFlags |= category.bitMask;
+    }
+    return categoryBitFlags;
+  }
+
+  /**
+   * <p>Checks if the specified code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.</p>
+   *
+   * <p>Example – check if a code point is in the Unicode letter or decimal digit category:</p>
+   * <pre>{@code
+   * // Create the bit flags once as a static constant.
+   * static final long LETTER_DIGIT_CATEGORY_BIT_FLAGS = Category.getCategoryBitFlags(
+   *         Category.LETTER, Category.DECIMAL_DIGIT_NUMBER);
+   *
+   * // Elsewhere in your code, check if a code point is in the letter or number category.
+   * boolean isLetterOrDigit = Category.codePointIsInOneOfTheCategories(
+   *         codePoint, LETTER_DIGIT_CATEGORY_BIT_FLAGS);
+   * }</pre>
+   *
+   * @param codePoint the code point to check.
+   * @param categoryBitFlags the category bit flags to check.
+   * @return {@code true} if the code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.
+   * @see #getCategoryBitFlags(Category...)
+   * @see Category#DECIMAL_DIGIT_NUMBER
+   */
+  public static boolean codePointIsInOneOfTheCategories(final int codePoint, final long categoryBitFlags) {
+    return (categoryBitFlags & (0x1L << Character.getType(codePoint))) > 0;
+  }
+
 }

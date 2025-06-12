@@ -60,13 +60,13 @@ class InvoiceNumberTest {
       0            | Invalid value - too short, minimum length is 9.
       00000000     | Invalid value - too short, minimum length is 9.
       0000-00-00   | Invalid value - too short, minimum length is 9.
-      0000.00.00   | Invalid value - invalid character '.'.
-      0000_00_00   | Invalid value - invalid character '_'.
+      0000.00.00   | Invalid value - invalid character . U+002E FULL STOP.
+      0000_00_00   | Invalid value - invalid character _ U+005F LOW LINE.
       0000000000   | Invalid value - too long, maximum length is 9.
       9999999999   | Invalid value - too long, maximum length is 9.
       0000-000-000 | Invalid value - too long, maximum length is 9.
-      00000000A    | Invalid value - invalid character 'A'.
-      A            | Invalid value - invalid character 'A'.
+      00000000A    | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
+      A            | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       """, delimiter = '|')
   void of_shouldThrowExceptionForInvalidValues(final String value, final String expectedExceptionMessage) {
     assertThatThrownBy(() -> InvoiceNumber.of(value))

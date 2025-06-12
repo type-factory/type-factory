@@ -17,9 +17,10 @@ package org.typefactory.language;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
@@ -43,15 +44,16 @@ class TypeParser_LanguageVietnameseTest extends AbstractTypeParserTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "Cοn gấu", // Vietnamese 'Bear' with Greek 'ο' omicron
-      "Con hươυ cao cổ", // Vietnamese 'Giraffe' with Greek 'υ' upsilon
-      "Con Κhỉ", // Vietnamese 'Monkey' with Greek 'Κ' kappa
-  })
-  void should_throw_exception_with_non_vietnamese_letters(final String value) {
+  @CsvSource(textBlock = """
+      VALUE           | ERROR_DESCRIPTION                    | COMMENT
+      Cοn gấu         | ο U+03BF GREEK SMALL LETTER OMICRON. | Vietnamese 'Bear' with Greek 'ο' omicron
+      Con hươυ cao cổ | υ U+03C5 GREEK SMALL LETTER UPSILON. | Vietnamese 'Giraffe' with Greek 'υ' upsilon
+      Con Κhỉ         | Κ U+039A GREEK CAPITAL LETTER KAPPA. | Vietnamese 'Monkey' with Greek 'Κ' kappa
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void should_throw_exception_with_non_vietnamese_letters(final String value, final String expectedErrorDescription) {
     Assertions.assertThatExceptionOfType(InvalidValueException.class)
         .isThrownBy(() -> TYPE_PARSER.parseToString(value))
-        .withMessageMatching("Must be made up of Vietnamese letters only. Invalid value - invalid character '[^']+'.");
+        .withMessage("Must be made up of Vietnamese letters only. Invalid value - invalid character " + expectedErrorDescription);
   }
 
 }

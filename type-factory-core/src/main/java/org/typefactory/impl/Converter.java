@@ -18,19 +18,30 @@ package org.typefactory.impl;
 interface Converter {
 
   /**
+   * Indicates whether there are any configured conversions.
+   *
+   * @return {@code true} if there are no conversions configured, {@code false} otherwise.
+   */
+  boolean isEmpty();
+
+  /**
    * The maximum number of code-points that a single code-point could be converted to.
    */
   int getMaxConvertedLength();
 
   /**
    * Creates a reusable {@link ConverterResults} instance that should be used with the
-   * {@link #isCodePointConversionRequired(int, int, ConverterResults)} method.
+   * {@link #codePointConversionIsRequired(int, int, ConverterResults)} method.
    *
    * @return a reusable {@link ConverterResults} instance.
    */
   ConverterResults createConverterResults();
 
-  boolean isCodePointConversionRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults);
+  boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults);
+
+  default boolean codePointConversionIsNotRequired(final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+    return !codePointConversionIsRequired(currentCodePoint, currentIndex, converterResults);
+  }
 
   static ConverterBuilder builder() {
     return new ConverterBuilder();
@@ -40,11 +51,7 @@ interface Converter {
 
     int getConvertFromIndex();
 
-    void setConvertFromIndex(int convertFromIndex);
-
     int[] getConvertToCodePointSequence();
-
-    void setConvertToCodePointSequence(int[] convertToCodePointSequence);
   }
 
 }

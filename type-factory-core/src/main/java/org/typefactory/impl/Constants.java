@@ -22,6 +22,8 @@ final class Constants {
 
   static final String EMPTY_STRING = "";
 
+  static final char REPLACEMENT_CHARACTER = '\uFFFD';
+
   static final int BYTE_MASK = 0xFF;
 
   static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -29,6 +31,16 @@ final class Constants {
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
-  static final String LINE_SEPARATOR = System.lineSeparator();
+  static final String SYSTEM_LINE_SEPARATOR = System.lineSeparator();
+
+  /**
+   * <p>The Unicode code point for a line separator.</p>
+   */
+  static final int UNICODE_LINE_SEPARATOR = '\u2028';
+
+  /**
+   * <p>The Unicode code point for a paragraph separator.</p>
+   */
+  static final int UNICODE_PARAGRAPH_SEPARATOR = '\u2029';
 
 }

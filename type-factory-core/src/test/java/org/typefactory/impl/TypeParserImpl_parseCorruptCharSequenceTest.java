@@ -15,6 +15,7 @@
 */
 package org.typefactory.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,20 +25,39 @@ import org.typefactory.TypeParser;
 
 class TypeParserImpl_parseCorruptCharSequenceTest extends AbstractTypeParserTest {
 
+  static final TypeParser TYPE_PARSER = TypeParser.builder()
+      // Accepting code points in the Caucasian Albanian alphabet U+10530..U+10563.
+      // Each of these letters requires two chars in Java UTF-16.
+      // Note that the test values are all Caucasian Albanian char-sequences.
+      .acceptCodePoints(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
+      .removeAllWhitespace()
+      .build();
+
   @ParameterizedTest
   @EnumSource(CorruptCharSequence.class)
   void parseToString_throwsExceptionWhenHighOrLowSurrogateIsMissing(final CorruptCharSequence corruptCharSequence) {
-
-    final var typeParser = TypeParser.builder()
-        // Accepting code points in the Caucasian Albanian alphabet U+10530..U+10563.
-        // Each of these letters require two chars in Java UTF-16.
-        // Note that the test values are all Caucasian Albanian char-sequences.
-        .acceptCodePoints(CAUCASIAN_ALBANIAN_ALPHABET_CODE_POINTS)
-        .removeAllWhitespace()
-        .build();
-
     assertThatExceptionOfType(InvalidValueException.class)
-        .isThrownBy(() -> typeParser.parseToString(corruptCharSequence))
+        .isThrownBy(() -> TYPE_PARSER.parseToString(corruptCharSequence))
         .withMessage(corruptCharSequence.getExpectedErrorMessage());
+  }
+
+  @ParameterizedTest
+  @EnumSource(CorruptCharSequence.class)
+  void parseToStringReplacingInvalidCharacters_replacesOrphanHighOrLowSurrogates(final CorruptCharSequence corruptCharSequence) {
+    final var parseResult = TYPE_PARSER.parseToStringReplacingInvalidCharacters(corruptCharSequence);
+    assertThat(parseResult).isNotNull();
+    assertThat(parseResult.parsedValueWasValid()).isFalse();
+    assertThat(parseResult.parsedValueWasInvalid()).isTrue();
+    assertThat(parseResult.parsedValue()).isEqualTo(corruptCharSequence.getExpectedValueWithInvalidCharacterReplacement());
+  }
+
+  @ParameterizedTest
+  @EnumSource(CorruptCharSequence.class)
+  void parseToStringRemovingInvalidCharacters_removesOrphanHighOrLowSurrogates(final CorruptCharSequence corruptCharSequence) {
+    final var parseResult = TYPE_PARSER.parseToStringRemovingInvalidCharacters(corruptCharSequence);
+    assertThat(parseResult).isNotNull();
+    assertThat(parseResult.parsedValueWasValid()).isFalse();
+    assertThat(parseResult.parsedValueWasInvalid()).isTrue();
+    assertThat(parseResult.parsedValue()).isEqualTo(corruptCharSequence.getExpectedValueWithInvalidCharacterRemoval());
   }
 }
