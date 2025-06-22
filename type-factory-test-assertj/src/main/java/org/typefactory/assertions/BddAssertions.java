@@ -1,6 +1,13 @@
 package org.typefactory.assertions;
 
 import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.IntegerType;
+import org.typefactory.InvalidValueException;
+import org.typefactory.LongType;
+import org.typefactory.MessageCode;
+import org.typefactory.ShortType;
+import org.typefactory.StringType;
+import org.typefactory.Subset;
 
 /**
  * Entry point for BDD assertions of different data types.
@@ -14,7 +21,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static IntegerTypeAssert then(org.typefactory.IntegerType actual) {
+  public static IntegerTypeAssert then(IntegerType actual) {
     return new IntegerTypeAssert(actual);
   }
 
@@ -25,7 +32,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static InvalidValueExceptionAssert then(org.typefactory.InvalidValueException actual) {
+  public static InvalidValueExceptionAssert then(InvalidValueException actual) {
     return new InvalidValueExceptionAssert(actual);
   }
 
@@ -36,7 +43,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static LongTypeAssert then(org.typefactory.LongType actual) {
+  public static LongTypeAssert then(LongType actual) {
     return new LongTypeAssert(actual);
   }
 
@@ -47,7 +54,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static MessageCodeAssert then(org.typefactory.MessageCode actual) {
+  public static MessageCodeAssert then(MessageCode actual) {
     return new MessageCodeAssert(actual);
   }
 
@@ -58,7 +65,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static ShortTypeAssert then(org.typefactory.ShortType actual) {
+  public static ShortTypeAssert then(ShortType actual) {
     return new ShortTypeAssert(actual);
   }
 
@@ -69,7 +76,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static StringTypeAssert then(org.typefactory.StringType actual) {
+  public static StringTypeAssert then(StringType actual) {
     return new StringTypeAssert(actual);
   }
 
@@ -80,7 +87,7 @@ public class BddAssertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static SubsetAssert then(org.typefactory.Subset actual) {
+  public static SubsetAssert then(Subset actual) {
     return new SubsetAssert(actual);
   }
 

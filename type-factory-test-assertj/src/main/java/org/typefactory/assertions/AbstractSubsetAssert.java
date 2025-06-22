@@ -92,7 +92,7 @@ public abstract class AbstractSubsetAssert<SELF extends AbstractSubsetAssert<SEL
     return myself;
   }
 
-  public SELF containsAllCodepoint(final int... expectedCodePoints) {
+  public SELF containsAllCodepoints(final int... expectedCodePoints) {
     isNotEmpty();
     final StringBuilder expectedCodePointString = new StringBuilder();
     final StringBuilder codePointsNotInSubset = new StringBuilder();
@@ -103,8 +103,8 @@ public abstract class AbstractSubsetAssert<SELF extends AbstractSubsetAssert<SEL
       }
     }
     if (codePointsNotInSubset.length() > 0) {
-      codePointsNotInSubset.setLength(codePointsNotInSubset.length() - 1);
-      expectedCodePointString.setLength(expectedCodePointString.length() - 1);
+      codePointsNotInSubset.setLength(codePointsNotInSubset.length() - 1); // Remove trailing comma
+      expectedCodePointString.setLength(expectedCodePointString.length() - 1); // Remove trailing comma
       throw failure("Subset did not contain all expected code-points\nExpected to contain: %s\nContained only: %s",
           expectedCodePointString.toString(), codePointsNotInSubset.toString());
     }

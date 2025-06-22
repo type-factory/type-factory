@@ -1,5 +1,15 @@
 package org.typefactory.assertions;
 
+import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.CharSequenceType;
+import org.typefactory.IntegerType;
+import org.typefactory.InvalidValueException;
+import org.typefactory.LongType;
+import org.typefactory.MessageCode;
+import org.typefactory.ShortType;
+import org.typefactory.StringType;
+import org.typefactory.Subset;
+
 /**
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
@@ -12,8 +22,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static IntegerTypeAssert assertThat(org.typefactory.IntegerType actual) {
+  @CheckReturnValue
+  public static IntegerTypeAssert assertThat(IntegerType actual) {
     return new IntegerTypeAssert(actual);
   }
 
@@ -23,8 +33,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static InvalidValueExceptionAssert assertThat(org.typefactory.InvalidValueException actual) {
+  @CheckReturnValue
+  public static InvalidValueExceptionAssert assertThat(InvalidValueException actual) {
     return new InvalidValueExceptionAssert(actual);
   }
 
@@ -34,8 +44,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static LongTypeAssert assertThat(org.typefactory.LongType actual) {
+  @CheckReturnValue
+  public static LongTypeAssert assertThat(LongType actual) {
     return new LongTypeAssert(actual);
   }
 
@@ -45,8 +55,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static MessageCodeAssert assertThat(org.typefactory.MessageCode actual) {
+  @CheckReturnValue
+  public static MessageCodeAssert assertThat(MessageCode actual) {
     return new MessageCodeAssert(actual);
   }
 
@@ -56,8 +66,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static ShortTypeAssert assertThat(org.typefactory.ShortType actual) {
+  @CheckReturnValue
+  public static ShortTypeAssert assertThat(ShortType actual) {
     return new ShortTypeAssert(actual);
   }
 
@@ -67,9 +77,14 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static StringTypeAssert assertThat(org.typefactory.StringType actual) {
+  @CheckReturnValue
+  public static StringTypeAssert assertThat(StringType actual) {
     return new StringTypeAssert(actual);
+  }
+
+  @CheckReturnValue
+  public static <T extends CharSequenceType<T>> CharSequenceTypeAssert assertThat(T actual) {
+    return new CharSequenceTypeAssert(actual);
   }
 
   /**
@@ -78,8 +93,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
-  @org.assertj.core.util.CheckReturnValue
-  public static SubsetAssert assertThat(org.typefactory.Subset actual) {
+  @CheckReturnValue
+  public static SubsetAssert assertThat(Subset actual) {
     return new SubsetAssert(actual);
   }
 
