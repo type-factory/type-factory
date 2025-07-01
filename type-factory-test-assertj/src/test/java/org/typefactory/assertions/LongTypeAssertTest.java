@@ -75,6 +75,17 @@ class LongTypeAssertTest {
     assertThat(longTypeAssert.classNameOfActual()).isEqualTo(SomeLongType.class.getSimpleName());
   }
 
+  @Test
+  void hasValue_AcceptsPrimitiveLong() {
+    final var actual = new SomeLongType(1234L);
+    final var longTypeAssert = LongTypeAssert.assertThat(actual);
+
+    final var hasValueResult = longTypeAssert.hasValue(1234L);
+    assertThat(hasValueResult)
+        .isInstanceOf(LongTypeAssert.class)
+        .isSameAs(longTypeAssert);
+  }
+
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
       EXPECTED_VALUE | EXPECTED_EXCEPTION_MESSAGE

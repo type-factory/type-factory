@@ -75,6 +75,17 @@ class IntegerTypeAssertTest {
     assertThat(integerTypeAssert.classNameOfActual()).isEqualTo(SomeIntegerType.class.getSimpleName());
   }
 
+  @Test
+  void hasValue_AcceptsPrimitiveInteger() {
+    final var actual = new SomeIntegerType(1234);
+    final var integerTypeAssert = IntegerTypeAssert.assertThat(actual);
+
+    final var hasValueResult = integerTypeAssert.hasValue(1234);
+    assertThat(hasValueResult)
+        .isInstanceOf(IntegerTypeAssert.class)
+        .isSameAs(integerTypeAssert);
+  }
+
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
       EXPECTED_VALUE | EXPECTED_EXCEPTION_MESSAGE

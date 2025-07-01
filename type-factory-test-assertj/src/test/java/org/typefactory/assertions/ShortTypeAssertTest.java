@@ -75,6 +75,17 @@ class ShortTypeAssertTest {
     assertThat(shortTypeAssert.classNameOfActual()).isEqualTo(SomeShortType.class.getSimpleName());
   }
 
+  @Test
+  void hasValue_AcceptsPrimitiveShort() {
+    final var actual = new SomeShortType((short) 1234);
+    final var shortTypeAssert = ShortTypeAssert.assertThat(actual);
+
+    final var hasValueResult = shortTypeAssert.hasValue((short) 1234);
+    assertThat(hasValueResult)
+        .isInstanceOf(ShortTypeAssert.class)
+        .isSameAs(shortTypeAssert);
+  }
+
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
       EXPECTED_VALUE | EXPECTED_EXCEPTION_MESSAGE
