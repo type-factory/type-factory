@@ -15,13 +15,15 @@
 */
 package org.typefactory;
 
-public interface SubsetWithCategories extends Subset {
+import java.util.ListResourceBundle;
 
-  /**
-   * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
-   */
-  long unicodeCategoryBitFlags();
+public class Messages_de extends ListResourceBundle {
 
-  int numberOfUnicodeCategories();
-
+  @Override
+  protected Object[][] getContents() {
+    return new Object[][]{
+        {"some.code.a", "eine Nachricht"},
+        {"some.code.b", "eine Nachricht mit Wert {1}"},
+    };
+  }
 }
