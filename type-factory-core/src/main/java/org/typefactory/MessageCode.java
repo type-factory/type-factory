@@ -237,6 +237,7 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
     return equalsIgnoreCase(this, o);
   }
 
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
   static int compare(final MessageCode c1, final MessageCode c2) {
     if (c1 == c2) {
       // both are null or both are the same MessageCode instance
@@ -259,6 +260,7 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
     return code1.compareTo(code2);
   }
 
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
   static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
     if (c1 == c2) {
       // both are null or both are the same MessageCode instance
