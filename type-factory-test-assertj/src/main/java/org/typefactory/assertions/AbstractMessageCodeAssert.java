@@ -2,7 +2,6 @@ package org.typefactory.assertions;
 
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.typefactory.MessageCode;
 
@@ -23,13 +22,40 @@ public abstract class AbstractMessageCodeAssert<
     super(actual, selfType);
   }
 
+  protected static String messageArgsToString(final Object... args) {
+    if (args == null || args.length == 0) {
+      return "[]";
+    }
+    final StringBuilder result = new StringBuilder(128);
+    result.append('[');
+    final int stop = args.length - 1;
+    for (int i = 0; ; ++i) {
+      final Object arg = args[i];
+      if (arg == null) {
+        result.append("null");
+      } else if (arg.getClass().isArray()) {
+        result.append(messageArgsToString((Object[]) arg));
+      } else if (arg instanceof Number number)  {
+        result.append(number);
+      } else if (arg instanceof CharSequence charSequence) {
+        result.append('"').append(charSequence).append('"');
+      } else {
+        result.append(arg);
+      }
+      if (i == stop) {
+        return result.append(']').toString();
+      }
+      result.append(", ");
+    }
+  }
+
   public SELF hasCode(final CharSequence expected) {
     // check that actual MessageCode we want to make assertions on is not null.
     isNotNull();
 
     final String actualCode = actual.code();
     if (AssertionUtils.equals(actualCode, expected)) {
-       return myself;
+      return myself;
     }
     throw failure("%nExpected actual of type:  MessageCode%nto have code:  %s%nbut code was:  %s",
         AssertionUtils.valueOf(expected), AssertionUtils.valueOf(actualCode));
@@ -76,9 +102,7 @@ public abstract class AbstractMessageCodeAssert<
     isNotNull();
 
     final String actualMessage = actual.message(args);
-    final String argsString = '[' + (args == null ? "" : Arrays.stream(args)
-        .map(Object::toString)
-        .collect(Collectors.joining(", "))) + ']';
+    final String argsString = messageArgsToString(args);
 
     if (AssertionUtils.equals(actualMessage, expected)) {
       return myself;
@@ -92,9 +116,7 @@ public abstract class AbstractMessageCodeAssert<
     isNotNull();
 
     final String actualMessage = actual.message(locale, args);
-    final String argsString = '[' + (args == null ? "" : Arrays.stream(args)
-        .map(Object::toString)
-        .collect(Collectors.joining(", "))) + ']';
+    final String argsString = messageArgsToString(args);
 
     if (AssertionUtils.equals(actualMessage, expected)) {
       return myself;

@@ -12,7 +12,14 @@ import org.typefactory.Subset;
 /**
  * Entry point for BDD assertions of different data types.
  */
-public class BddAssertions {
+public class BDDAssertions extends org.assertj.core.api.BDDAssertions {
+
+  /**
+   * Creates a new <code>{@link BDDAssertions}</code>.
+   */
+  protected BDDAssertions() {
+    // empty
+  }
 
   /**
    * Creates a new instance of <code>{@link IntegerTypeAssert}</code>.
@@ -91,10 +98,4 @@ public class BddAssertions {
     return new SubsetAssert(actual);
   }
 
-  /**
-   * Creates a new <code>{@link BddAssertions}</code>.
-   */
-  protected BddAssertions() {
-    // empty
-  }
 }
