@@ -18,18 +18,18 @@ package org.typefactory.impl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.typefactory.MessageCode;
 import org.typefactory.InvalidValueException;
+import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
 
 class TypeParser_CharacterRangeTest extends AbstractTypeParserTest {
   
   @ParameterizedTest
-  @CsvSource(value = {
-      "Café au lait                            | Invalid value - invalid character é U+00E9 LATIN SMALL LETTER E WITH ACUTE.",
-      "Apple-tart                              | Invalid value - invalid character - U+002D HYPHEN-MINUS.",
-      "Apple tart with a really very long name | Invalid value - invalid white-space character U+0020 SPACE.",
-  }, delimiter = '|')
+  @CsvSource(textBlock = """
+      Café au lait                            | Invalid value - invalid character é U+00E9 LATIN SMALL LETTER E WITH ACUTE.
+      Apple-tart                              | Invalid value - invalid character - U+002D HYPHEN-MINUS.
+      Apple tart with a really very long name | Invalid value - invalid white-space character U+0020 SPACE.
+      """, delimiter = '|')
   void should_throw_exception_when_invalid_character(final String value, final String expectedParserErrorMessage) {
 
     final TypeParser typeParser =

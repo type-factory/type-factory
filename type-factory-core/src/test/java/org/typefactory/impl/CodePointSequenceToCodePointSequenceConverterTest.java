@@ -17,7 +17,7 @@ import org.typefactory.impl.Converter.ConverterResults;
 
 class CodePointSequenceToCodePointSequenceConverterTest {
 
-  private static Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
+  private static final Logger logger = Logger.getLogger(CodePointSequenceToCodePointSequenceConverter.class.getName());
 
   private PrimitiveHashMapOfIntKeyToIntArrayValue categoryToCodePointSequence;
 
@@ -53,7 +53,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   }
 
   @Test
-  void codePointConversionIsRequired_ShouldReturnTrue_WhenConversionIsIsRequired() {
+  void codePointConversionIsRequired_ShouldReturnTrue_WhenConversionIsRequired() {
     final var rootTreeNode = new RootTreeNode();
     rootTreeNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
     final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
@@ -65,7 +65,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
   }
 
   @Test
-  void codePointConversionIsRequired_ShouldReturnFalse_WhenConversionIsNotIsRequired() {
+  void codePointConversionIsRequired_ShouldReturnFalse_WhenConversionIsNotRequired() {
     final var rootTreeNode = new RootTreeNode();
     rootTreeNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
     final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
@@ -97,7 +97,7 @@ class CodePointSequenceToCodePointSequenceConverterTest {
       DECIMAL_DIGIT_NUMBER | a     | false               |
       DECIMAL_DIGIT_NUMBER | 1     | true                | x
       """)
-  void codePointConversionIsRequired_ShouldReturnTrue_WhenCategoryConversionIsIsRequired(
+  void codePointConversionIsRequired_ShouldReturnTrue_WhenCategoryConversionIsRequired(
       final Category category, final char value, final boolean requiresConversion, final String convertToCodePointSequence) {
 
     categoryToCodePointSequence = new PrimitiveHashMapOfIntKeyToIntArrayValue();
@@ -112,6 +112,28 @@ class CodePointSequenceToCodePointSequenceConverterTest {
       assertThat(results.getConvertFromIndex()).isZero();
       assertThat(results.getConvertToCodePointSequence()).containsExactly(convertToCodePointSequence.codePoints().toArray());
     }
+  }
+
+  @Test
+  void codePointConversionIsRequired_ShouldReturnTrue_WhenConversionIsIsRequired() {
+    final var rootTreeNode = new RootTreeNode();
+    rootTreeNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
+    final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
+    final ConverterResults results = converter.createConverterResults();
+    final boolean result = converter.codePointConversionIsRequired('a', 0, results);
+    assertThat(result).isTrue();
+    assertThat(results.getConvertFromIndex()).isZero();
+    assertThat(results.getConvertToCodePointSequence()).containsExactly('b');
+  }
+
+  @Test
+  void codePointConversionIsRequired_ShouldReturnFalse_WhenConversionIsNotIsRequired() {
+    final var rootTreeNode = new RootTreeNode();
+    rootTreeNode.add("a".codePoints().toArray(), "b".codePoints().toArray());
+    final var converter = new CodePointSequenceToCodePointSequenceConverter(rootTreeNode, categoryToCodePointSequence);
+    final ConverterResults results = converter.createConverterResults();
+    final boolean result = converter.codePointConversionIsRequired('c', 0, results);
+    assertThat(result).isFalse();
   }
 
   @Test

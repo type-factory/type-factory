@@ -36,8 +36,6 @@ class DepartmentIdTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      0000       | 0
-      0001       | 1
       1000       | 1000
       ' 1001 '   | 1001
       '  1002  ' | 1002
@@ -53,12 +51,12 @@ class DepartmentIdTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      0     | Invalid value - too short, minimum length is 4.
-      000   | Invalid value - too short, minimum length is 4.
-      111   | Invalid value - too short, minimum length is 4.
-      00000 | Invalid value - too long, maximum length is 4.
-      10000 | Invalid value - too long, maximum length is 4.
-      99999 | Invalid value - too long, maximum length is 4.
+      0     | Invalid value - must be greater than or equal to 1,000.
+      000   | Invalid value - must be greater than or equal to 1,000.
+      111   | Invalid value - must be greater than or equal to 1,000.
+      00000 | Invalid value - must be greater than or equal to 1,000.
+      10000 | Invalid value - must be less than or equal to 9,999.
+      99999 | Invalid value - must be less than or equal to 9,999.
       A     | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       AAAA  | Invalid value - invalid character A U+0041 LATIN CAPITAL LETTER A.
       111B  | Invalid value - invalid character B U+0042 LATIN CAPITAL LETTER B.

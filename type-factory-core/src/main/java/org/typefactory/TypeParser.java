@@ -16,8 +16,6 @@
 package org.typefactory;
 
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.typefactory.impl.Factory;
@@ -104,105 +102,8 @@ public interface TypeParser {
    */
   <T extends StringType> T parseToStringType(CharSequence value, Function<String, T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link ShortType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToShortType} method:</p>
-   *
-   * <pre>{@code
-   * public final class DepartmentId extends ShortType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private DepartmentId(final Short value) {
-   *     super(value);
-   *   }
-   *
-   *   public static DepartmentId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToShortType(value, DepartmentId::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToShort(CharSequence)} method to simply parse into a {@link Short} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link ShortType}
-   * @return a custom type instance that extends {@link ShortType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   */
-  <T extends ShortType> T parseToShortType(CharSequence value, Function<Short, T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link IntegerType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code InvoiceNumber} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToIntegerType} method:</p>
-   *
-   * <pre>{@code
-   * public final class InvoiceNumber extends IntegerType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private InvoiceNumber(final Integer value) {
-   *     super(value);
-   *   }
-   *
-   *   public static InvoiceNumber of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToIntegerType(value, InvoiceNumber::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToInteger(CharSequence)} method to simply parse into a {@link Integer} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link IntegerType}
-   * @return a custom type instance that extends {@link IntegerType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   */
-  <T extends IntegerType> T parseToIntegerType(CharSequence value, IntFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
 
-  /**
-   * <p>Parse the provided {@code value} into a custom type that extends {@link LongType} using the provided
-   * {@code constructorOrFactoryMethod}.</p>
-   *
-   * <p>For example, the {@code DepartmentId} type below uses a factory method,
-   * {@code of(CharSequence value)}, to create instances using the {@code parseToLongType} method:</p>
-   *
-   * <pre>{@code
-   * public final class ProductId extends LongType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   private ProductId(final Long value) {
-   *     super(value);
-   *   }
-   *
-   *   public static ProductId of(final CharSequence value) {
-   *     return TYPE_PARSER.parseToLongType(value, ProductId::new);
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> use the {@link #parseToLong(CharSequence)} method to simply parse into a {@link Long} value.</p>
-   *
-   * @param value                      the value to parse into a custom type.
-   * @param constructorOrFactoryMethod the functional interface that will be used to instantiate the custom type using the parsed value.
-   * @param <T>                        a custom type that extends {@link LongType}
-   * @return a custom type instance that extends {@link LongType}. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a custom type.
-   * @see #parseToString(CharSequence)
-   */
-  <T extends LongType> T parseToLongType(CharSequence value, LongFunction<T> constructorOrFactoryMethod) throws InvalidValueException;
 
   /**
    * <p>Parse the provided {@code value} into a {@link String} value.</p>
@@ -243,13 +144,13 @@ public interface TypeParser {
   String parseToString(CharSequence value) throws InvalidValueException;
 
   /**
-   * <p>Parses the provided {@code value} replacing any invalid characters with a Unicode replacement character � {@code (U+FFFD)} 
+   * <p>Parses the provided {@code value} replacing any invalid characters with a Unicode replacement character � {@code (U+FFFD)}
    * and returns the result into a {@link ParseResult} that contains a parsed-value as well as flags to indicate whether the parsed
    * value is valid or not, and the array of invalid code-points if the parsed value was invalid.</p>
    *
-   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the 
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the
    * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REPLACEMENT} column:</p>
-   * 
+   *
    * <pre>{@code
    * INPUT_VALUE                   | PARSED_VALUE_WITH_REPLACEMENT | PARSED_VALUE_WITH_REMOVAL
    * abc123                        | abc123                        | abc123
@@ -260,20 +161,20 @@ public interface TypeParser {
    * abc123!@#                     | abc123���                     | abc123
    * <body onload="alert('Boo!')"> | �body�onload��alert��Boo����� | bodyonloadalertBoo
    * }</pre>
-   * 
+   *
    * @param value the value to parse into a {@link ParseResult}.
    * @return a {@link ParseResult} containing the parsed string and any parsing errors.
-   * @see #parseToStringRemovingInvalidCharacters(CharSequence) 
+   * @see #parseToStringRemovingInvalidCharacters(CharSequence)
    * @see #parseToString(CharSequence)
    */
   ParseResult parseToStringReplacingInvalidCharacters(CharSequence value);
 
   /**
-   * <p>Parses the provided {@code value} removing any invalid characters and returns the result into a {@link ParseResult} that 
+   * <p>Parses the provided {@code value} removing any invalid characters and returns the result into a {@link ParseResult} that
    * contains a parsed-value as well as flags to indicate whether the parsed value is valid or not, and the array of invalid
    * code-points if the parsed value was invalid.</p>
    *
-   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the 
+   * <p>For example, if the type-parser is configured to accept all Unicode letters and decimal digits (alphanumeric), then for the
    * following input values the parsed value will be as shown below in the {@code PARSED_VALUE_WITH_REMOVAL} column:</p>
    *
    * <pre>{@code
@@ -289,126 +190,16 @@ public interface TypeParser {
    *
    * @param value the value to parse into a {@link ParseResult}.
    * @return a {@link ParseResult} containing the parsed string and any parsing errors.
-   * @see #parseToStringReplacingInvalidCharacters(CharSequence) 
-   * @see #parseToString(CharSequence) 
+   * @see #parseToStringReplacingInvalidCharacters(CharSequence)
+   * @see #parseToString(CharSequence)
    */
   ParseResult parseToStringRemovingInvalidCharacters(CharSequence value);
 
-  /**
-   * <p>Parse the provided {@code value} into a {@link Short} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Short} variable</b></p>
-   *
-   * <pre>{@code
-   * Short someVariable = TYPE_PARSER.parseToShort(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code DepartmentId} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code DepartmentId} instance:</p>
-   *
-   * <pre>{@code
-   * public final class DepartmentId extends ShortType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public DepartmentId(final Short value) {
-   *     super(TYPE_PARSER.parseToShortType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link ShortType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToShortType(CharSequence, Function)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Short}.
-   * @return parses the provided {@code value} into a {@link Short} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Short}.
-   * @see #parseToShortType(CharSequence, Function)
-   */
-  Short parseToShort(CharSequence value) throws InvalidValueException;
-
-  /**
-   * <p>Parse the provided {@code value} into a {@link Integer} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Integer} variable</b></p>
-   *
-   * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code InvoiceNumber} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code InvoiceNumber} instance:</p>
-   *
-   * <pre>{@code
-   * public final class InvoiceNumber extends IntegerType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public InvoiceNumber(final Integer value) {
-   *     super(TYPE_PARSER.parseToIntegerType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link IntegerType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Integer}.
-   * @return parses the provided {@code value} into a {@link Integer} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Integer}.
-   * @see #parseToIntegerType(CharSequence, IntFunction)
-   */
-  Integer parseToInteger(CharSequence value) throws InvalidValueException;
-
-  /**
-   * <p>Parse the provided {@code value} into a {@link Long} value.</p>
-   *
-   * <p><b>Example 1 – parse to a {@code Long} variable</b></p>
-   *
-   * <pre>{@code
-   * Integer someVariable = TYPE_PARSER.parseToInteger(value);
-   * }</pre>
-   *
-   * <p><b>Example 2 – parse to a custom type</b></p>
-   *
-   * <p>For example, the {@code ProductId} custom type below uses the type-parser directly in its
-   * constructor to parse the provided {@code value} to create the {@code ProductId} instance:</p>
-   *
-   * <pre>{@code
-   * public final class ProductId extends LongType {
-   *
-   *   private static final TypeParser TYPE_PARSER = TypeParser.builder()...build();
-   *
-   *   public ProductId(final Long value) {
-   *     super(TYPE_PARSER.parseToLongType(value));
-   *   }
-   * }
-   * }</pre>
-   *
-   * <p><b>Note:</b> instantiating directly into a constructor as above may create an instance with
-   * a null internal value. The instantiated object can be interrogated for a null internal value using {@link LongType#isNull() isNull()}. An
-   * alternative is to use a factory method using the example shown in {@link #parseToIntegerType(CharSequence, IntFunction)} instead.</p>
-   *
-   * @param value the value to parse into a {@link Long}.
-   * @return parses the provided {@code value} into a {@link Long} value. May return {@code null} if the {@link TypeParser} was configured to
-   * {@link TypeParserBuilder#preserveNullAndEmpty() preserveNullAndEmpty} or {@link TypeParserBuilder#convertEmptyToNull() convertEmptyToNull}.
-   * @throws InvalidValueException if the provided {@code value} cannot be parsed in into a {@link Long}.
-   * @see #parseToLongType(CharSequence, LongFunction)
-   */
-  Long parseToLong(CharSequence value) throws InvalidValueException;
 
   /**
    * A builder that can create immutable, threadsafe {@link TypeParser} instances.
    */
-  interface TypeParserBuilder {
+  interface TypeParserBuilder{
 
     // Todo add Javadoc if still required.
     TypeParserBuilder targetTypeClass(final Class<?> targetTypeClass);
@@ -452,7 +243,7 @@ public interface TypeParser {
      *   symbols and emoticons.</li>
      * </ul>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param minSize the minimum number of Unicode characters (code-points) that the parsed value must contain.
@@ -476,7 +267,7 @@ public interface TypeParser {
      * <p>If you create a data-type with {@code maxSize} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param maxSize the maximum number of Unicode characters (code-points) that the parsed value must contain.
@@ -503,7 +294,7 @@ public interface TypeParser {
      * <p>So be aware that if you create a data-type with fixed {@code size} of, say, 10 and allow for Unicode characters (like emoticons) in
      * the {@code U+010000..U+10FFFF} range that you may end up with a parsed string whose {@link String#length()} is greater than 10.</p>
      *
-     * <p>See the <a href='https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt'>Unicode Consortium blocks</a> reference for a full list of the
+     * <p>See the <a href="https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt">Unicode Consortium blocks</a> reference for a full list of the
      * blocks in the U+010000..U+10FFFF codepoint range.</p>
      *
      * @param size the fixed number of Unicode characters (code-points) that the parsed value must contain.
@@ -777,7 +568,7 @@ public interface TypeParser {
      * accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param ch the character to accept in the values to be parsed by the type-parser.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChars(char...)
      * @see #acceptCharRange(char, char)
      * @see #acceptCodePoint(int)
@@ -799,7 +590,7 @@ public interface TypeParser {
      * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param chars the characters to accept in the values to be parsed by the type-parser.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      * @see #acceptCharRange(char, char)
      * @see #acceptCodePoint(int)
@@ -825,7 +616,7 @@ public interface TypeParser {
      *
      * @param inclusiveFrom the inclusive 'from' char.
      * @param inclusiveTo   the inclusive 'to' char.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      * @see #acceptChars(char...)
      * @see #acceptCodePoint(int)
@@ -847,7 +638,7 @@ public interface TypeParser {
      * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param codePoint the code-point to accept in the values to be parsed by the type-parser.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      * @see #acceptChars(char...)
      * @see #acceptCharRange(char, char)
@@ -869,7 +660,7 @@ public interface TypeParser {
      * allow accepted characters/code-points or unicode character categories to be present in the value to parsed.</p>
      *
      * @param codePoints the code-point to accept in the values to be parsed by the type-parser.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      * @see #acceptChars(char...)
      * @see #acceptCharRange(char, char)
@@ -896,7 +687,7 @@ public interface TypeParser {
      *
      * @param inclusiveFrom the inclusive 'from' code-point.
      * @param inclusiveTo   the inclusive 'to' code-point.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      * @see #acceptChars(char...)
      * @see #acceptCharRange(char, char)
@@ -950,7 +741,7 @@ public interface TypeParser {
      *
      * @param fromChar the character to convert from
      * @param toChar   the character to convert to
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      */
     TypeParserBuilder convertChar(char fromChar, char toChar);
@@ -966,7 +757,7 @@ public interface TypeParser {
      *
      * @param fromChar       the character to convert from
      * @param toCharSequence the character sequence to convert to. May be {@code null} or empty.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptChar(char)
      */
     TypeParserBuilder convertChar(char fromChar, CharSequence toCharSequence);
@@ -982,7 +773,7 @@ public interface TypeParser {
      *
      * @param fromCodePoint the code-point to convert from
      * @param toCodePoint   the code-point to convert to
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptCodePoint(int)
      */
     TypeParserBuilder convertCodePoint(int fromCodePoint, int toCodePoint);
@@ -998,7 +789,7 @@ public interface TypeParser {
      *
      * @param fromCodePoint  the code-point to convert from
      * @param toCharSequence the character sequence to convert to. May be {@code null} or empty.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptCodePoint(int)
      */
     TypeParserBuilder convertCodePoint(int fromCodePoint, CharSequence toCharSequence);
@@ -1064,9 +855,23 @@ public interface TypeParser {
     /**
      * <p>Configures the type-parser to convert any code-point (character) in the Unicode {@code fromCategory} in the input sequence to a {@code toChar}.</p>
      *
+     * <p>Character conversions and char-sequence conversions take precedence over Category conversions. So for the code:</p>
+     * <pre>{@code
+     * static final TypeParser TYPE_PARSER = TypeParser.builder()
+     *    .acceptLettersAtoZ()
+     *    .acceptDigits0to9()
+     *    .convertChar('1', '0')
+     *    .convertAnyInCategory(Category.DECIMAL_DIGIT_NUMBER, '*')
+     *    .build();
+     *
+     * TYPE_PARSER.parseToString("123") // ⟶ "0**" because the convertChar('1', '0') conversion takes precedence.
+     * TYPE_PARSER.parseToString("234") // ⟶ "***" because the convertAnyInCategory(Category.DECIMAL_DIGIT_NUMBER, '*') converts and digits.
+     * TYPE_PARSER.parseToString("abc") // ⟶ "abc" because no conversions are applied.
+     * }</pre>
+     *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toChar the character to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInCategory(final Category fromCategory, final char toChar);
 
@@ -1075,7 +880,7 @@ public interface TypeParser {
      *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toCodePoint the code-point to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInCategory(final Category fromCategory, final int toCodePoint);
 
@@ -1084,7 +889,7 @@ public interface TypeParser {
      *
      * @param fromCategory the Unicode {@code fromCategory} to convert from.
      * @param toCharSequence the char-sequence to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInCategory(final Category fromCategory, final CharSequence toCharSequence);
 
@@ -1093,7 +898,7 @@ public interface TypeParser {
      *
      * @param fromSubset the {@link Subset} containing code-points to convert from.
      * @param toChar the character to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final char toChar);
 
@@ -1102,7 +907,7 @@ public interface TypeParser {
      *
      * @param fromSubset the {@link Subset} containing code-points to convert from.
      * @param toCodePoint the code-point to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final int toCodePoint);
 
@@ -1111,7 +916,7 @@ public interface TypeParser {
      *
      * @param fromSubset the {@link Subset} containing code-points to convert from.
      * @param toCharSequence the char-sequence to convert to.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      */
     TypeParserBuilder convertAnyInSubset(final Subset fromSubset, final CharSequence toCharSequence);
 
@@ -1154,7 +959,7 @@ public interface TypeParser {
      *
      * @param fromCharSequence the character sequence to convert from
      * @param toCharSequence   the character sequence to convert to. May be {@code null} or empty.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptCodePoints(int...)
      */
     TypeParserBuilder convertCharSequence(CharSequence fromCharSequence, CharSequence toCharSequence);
@@ -1182,7 +987,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param ch the character you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -1212,7 +1017,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param chars the characters you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -1245,7 +1050,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param charSequence the char-sequence you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllCharSequences(CharSequence...)
      */
     TypeParserBuilder removeAllCharSequences(CharSequence charSequence);
@@ -1276,7 +1081,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param charSequences the char-sequences you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllCharSequences(CharSequence)
      */
     TypeParserBuilder removeAllCharSequences(CharSequence... charSequences);
@@ -1304,7 +1109,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param codePoint the code-point you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char...)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -1334,7 +1139,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param codePoints the code-points you want the type-parser to remove from the parsed value
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -1366,7 +1171,7 @@ public interface TypeParser {
      *     .build();
      * }</pre>
      *
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #removeAllChars(char)
      * @see #removeAllCodePoints(int)
      * @see #removeAllCodePoints(int...)
@@ -1382,7 +1187,7 @@ public interface TypeParser {
      * They can be defined once and reused where needed.</p>
      *
      * @param subset the collection of characters/code-points to accept in the input sequence.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see Subset
      * @see Subset#builder()
      * @see #acceptSubsets(Subset...)
@@ -1398,7 +1203,7 @@ public interface TypeParser {
      * They can be defined once and reused where needed.</p>
      *
      * @param subsets multiple subsets containing the characters/code-points to accept in the input sequence.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see Subset
      * @see Subset#builder()
      * @see #acceptSubset(Subset)
@@ -1421,7 +1226,7 @@ public interface TypeParser {
      * {@link Category#OTHER_LETTER OTHER_LETTER}. In the Unicode documentation this is expressed as {@code L = Lu | Ll | Lt | Lm | Lo}.</p>
      *
      * @param category the Unicode general character category that defines the characters/code-points to accept in the input sequence.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptUnicodeCategory(Category...)
      * @see #acceptSubset(Subset)
      * @see #acceptSubsets(Subset...)
@@ -1443,7 +1248,7 @@ public interface TypeParser {
      * {@link Category#OTHER_LETTER OTHER_LETTER}. In the Unicode documentation this is expressed as {@code L = Lu | Ll | Lt | Lm | Lo}.</p>
      *
      * @param categories the Unicode general character category that defines the characters/code-points to accept in the input sequence.
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptUnicodeCategory(Category)
      * @see #acceptSubset(Subset)
      * @see #acceptSubsets(Subset...)
@@ -1464,7 +1269,7 @@ public interface TypeParser {
      * {@link Category#MODIFIER_LETTER MODIFIER_LETTER}, and {@link Category#OTHER_LETTER OTHER_LETTER} categories. In the Unicode documentation the
      * {@code LETTER} category is often expressed as {@code L = Lu | Ll | Lt | Lm | Lo}.</p>
      *
-     * @return this {@code TypeParserBuilder}.
+     * @return this builder.
      * @see #acceptUnicodeCategory(Category)
      * @see <a href="https://unicode.org/reports/tr44/#General_Category_Values">Unicode General Character Categories</a>
      */
@@ -1505,7 +1310,7 @@ public interface TypeParser {
      * <p>This convenience method exists because many of the International Organization for Standardization (ISO) standards specify codes
      * using these characters.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #acceptUnicodeCategory(Category)
      * @see Category#LETTER
      * @see #toLowerCase()
@@ -1532,7 +1337,7 @@ public interface TypeParser {
      *   .build;
      * }</pre>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #acceptUnicodeCategory(Category)
      * @see Category#DECIMAL_DIGIT_NUMBER
      */
@@ -1542,7 +1347,7 @@ public interface TypeParser {
      * <p>Accepts all a dash or hyphen punctuation mark characters that are defined to be in the {@code Pd}, {@code Dash_Punctuation} unicode
      * category.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#DASH_PUNCTUATION
      * @see <a href="https://unicode.org/reports/tr18/#General_Category_Property">General Category Property – unicode.org</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">List of Unicode Characters of Category “Dash Punctuation” – compart.com</a>
@@ -1564,7 +1369,7 @@ public interface TypeParser {
      * may wish to preserve language specific dashes. For example, for an Armenian data-type, perhaps preserving the Armenian Hyphen
      * {@code '֊' (U+058A)} might make more sense than converting it to a hyphen.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#DASH_PUNCTUATION
      * @see <a href="https://unicode.org/reports/tr18/#General_Category_Property">General Category Property – unicode.org</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">List of Unicode Characters of Category “Dash Punctuation” – compart.com</a>
@@ -1575,7 +1380,7 @@ public interface TypeParser {
     /**
      * <p>Synonym for {@link #convertAllDashesToHyphen()}.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see #convertAllDashesToHyphen()
      */
     TypeParserBuilder acceptHyphenAndConvertAllDashesToHyphen();
@@ -1595,7 +1400,7 @@ public interface TypeParser {
      * {@code '֊' (U+058A)} might make more sense than converting it to a hyphen.</p>
      *
      * @param toChar the character that you wish to convert any dash or hyphen punctuation mark characters to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#DASH_PUNCTUATION
      * @see <a href="https://unicode.org/reports/tr18/#General_Category_Property">General Category Property – unicode.org</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">List of Unicode Characters of Category “Dash Punctuation” – compart.com</a>
@@ -1614,7 +1419,7 @@ public interface TypeParser {
      * <p>This method implicitly configures the builder to accept the specified {@code toCodePoint} argument.</p>
      *
      * @param toCodePoint the code-point that you wish to convert any dash or hyphen punctuation mark characters to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#DASH_PUNCTUATION
      * @see <a href="https://unicode.org/reports/tr18/#General_Category_Property">General Category Property – unicode.org</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">List of Unicode Characters of Category “Dash Punctuation” – compart.com</a>
@@ -1636,7 +1441,7 @@ public interface TypeParser {
      * is comprised of a letter followed by letter-modifiers. It may look on the screen to be a single character, but is actually a sequence.</p>
      *
      * @param toCharSequence the code-point that you wish to convert any dash or hyphen punctuation mark characters to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#DASH_PUNCTUATION
      * @see <a href="https://unicode.org/reports/tr18/#General_Category_Property">General Category Property – unicode.org</a>
      * @see <a href="https://www.compart.com/en/unicode/category/Pd">List of Unicode Characters of Category “Dash Punctuation” – compart.com</a>
@@ -1647,7 +1452,7 @@ public interface TypeParser {
     /**
      * <p>Forbids any character is designated to be whitespace as per the {@link Character#isWhitespace(int)} method.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1656,19 +1461,19 @@ public interface TypeParser {
     /**
      * <p>Removes any character or code-point that is designated to be whitespace as per the {@link Character#isWhitespace(int)} method.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
     TypeParserBuilder removeAllWhitespace();
 
     /**
-     * <p>Removes all leading and trailing whitespace, then replaces all other contiguous blocks of whitespace with a single space {' ' (U+0020)}
-     * character.</p>
+     * <p>Removes all leading and trailing whitespace, then replaces all other contiguous blocks of whitespace with a
+     * single space {@code ' '} {@code (U+0020)} character.</p>
      *
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1681,7 +1486,7 @@ public interface TypeParser {
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *
      * @param toChar the character that you wish to convert any contiguous blocks of whitespace to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1694,7 +1499,7 @@ public interface TypeParser {
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *
      * @param toCodePoint the code-point that you wish to convert any contiguous blocks of whitespace to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1710,7 +1515,7 @@ public interface TypeParser {
      * is comprised of a letter followed by letter-modifiers. It may look on the screen to be a single character, but is actually a sequence.</p>
      *
      * @param toCharSequence the char-sequence that you wish to convert any contiguous blocks of whitespace to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1721,7 +1526,7 @@ public interface TypeParser {
      *
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1734,7 +1539,7 @@ public interface TypeParser {
      *
      * <p>Whitespace is determined using the {@link Character#isWhitespace(int)} method.</p>
      *
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Character#isWhitespace(char)
      * @see Character#isWhitespace(int)
      */
@@ -1767,7 +1572,7 @@ public interface TypeParser {
      * }</pre>
      *
      * @param regex the regular expression that the fully parsed value should conform to.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Pattern
      */
     TypeParserBuilder matchesRegex(Pattern regex);
@@ -1809,10 +1614,12 @@ public interface TypeParser {
      * @param validationFunction a static function, or a functional interface, that accepts the fully parsed value as a {@link String} argument and
      *                           returns a boolean value indicating {@code true} if the provided value is <em>valid</em>. It can either return
      *                           {@code false} or throw an exception to indicate that the provided value is <em>invalid</em>.
-     * @return this {@code TypeParserBuilder}
+     * @return this builder
      * @see Predicate
      */
     TypeParserBuilder customValidator(Predicate<String> validationFunction);
+
+
 
     /**
      * Creates an immutable, threadsafe {@link TypeParser} instance.

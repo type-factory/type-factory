@@ -103,6 +103,8 @@ public interface Subset {
     return !contains((int) ch);
   }
 
+  boolean includes(final Category category);
+
   /**
    * <p>An iterable of code-point ranges in this subset.</p>
    *
