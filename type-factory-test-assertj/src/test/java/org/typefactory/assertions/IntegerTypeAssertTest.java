@@ -48,6 +48,20 @@ class IntegerTypeAssertTest {
   }
 
   @Test
+  void actualHasNullValue_returnsFalseForNullActual() {
+    final var someActual = (SomeIntegerType) null;
+    final var integerTypeAssert = IntegerTypeAssert.assertThat(someActual);
+    assertThat(integerTypeAssert.actualHasNullValue()).isFalse();
+  }
+
+  @Test
+  void actualHasNullValue_returnsTrueForForIntegerTypeWithNullValue() {
+    final var someActual = new SomeIntegerType(null);
+    final var integerTypeAssert = IntegerTypeAssert.assertThat(someActual);
+    assertThat(integerTypeAssert.actualHasNullValue()).isTrue();
+  }
+
+  @Test
   void classNameOfActual_returnsExtendsIntegerTypeForNullActual() {
     final var someActual = (SomeIntegerType) null;
     final var integerTypeAssert = IntegerTypeAssert.assertThat(someActual);
@@ -182,6 +196,15 @@ class IntegerTypeAssertTest {
       assertThatNoException()
           .isThrownBy(integerTypeAssert::isNotNull);
     }
+  }
+
+  @Test
+  void hasNullValue_throwsExceptionForNullActual() {
+    final var actual = (SomeIntegerType) null;
+    final var integerTypeAssert = IntegerTypeAssert.assertThat(actual);
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(integerTypeAssert::hasNullValue)
+        .withMessage("\nExpected actual of type:  <? extends IntegerType>\nto not be null and have value:   null\nbut actual was:  null.\nConsider using '.isNullOrHasNullValue()' if that is what you want to test.");
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")

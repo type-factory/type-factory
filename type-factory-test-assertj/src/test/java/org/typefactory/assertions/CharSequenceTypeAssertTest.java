@@ -47,6 +47,20 @@ class CharSequenceTypeAssertTest {
   }
 
   @Test
+  void actualHasNullValue_returnsFalseForNullActual() {
+    final var someActual = (SomeCharSequenceType) null;
+    final var charSequenceTypeAssert = CharSequenceTypeAssert.assertThat(someActual);
+    assertThat(charSequenceTypeAssert.actualHasNullValue()).isFalse();
+  }
+
+  @Test
+  void actualHasNullValue_returnsTrueForForShortTypeWithNullValue() {
+    final var someActual = new SomeCharSequenceType(null);
+    final var charSequenceTypeAssert = CharSequenceTypeAssert.assertThat(someActual);
+    assertThat(charSequenceTypeAssert.actualHasNullValue()).isTrue();
+  }
+
+  @Test
   void classNameOfActual_returnsExtendsStringTypeForNullActual() {
     final var someActual = (SomeCharSequenceType) null;
     final var charSequenceTypeAssert = CharSequenceTypeAssert.assertThat(someActual);
@@ -167,6 +181,15 @@ class CharSequenceTypeAssertTest {
 
     assertThatNoException()
         .isThrownBy(charSequenceTypeAssert::isNotNull);
+  }
+
+  @Test
+  void hasNullValue_throwsExceptionForNullActual() {
+    final var actual = (SomeCharSequenceType) null;
+    final var charSequenceTypeAssert = CharSequenceTypeAssert.assertThat(actual);
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(charSequenceTypeAssert::hasNullValue)
+        .withMessage("\nExpected actual of type:  <? extends CharSequenceType>\nto not be null and have value:   null\nbut actual was:  null.\nConsider using '.isNullOrHasNullValue()' if that is what you want to test.");
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")

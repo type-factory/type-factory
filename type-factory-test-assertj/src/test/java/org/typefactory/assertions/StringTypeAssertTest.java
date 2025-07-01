@@ -48,6 +48,20 @@ class StringTypeAssertTest {
   }
 
   @Test
+  void actualHasNullValue_returnsFalseForNullActual() {
+    final var someActual = (SomeStringType) null;
+    final var stringTypeAssert = StringTypeAssert.assertThat(someActual);
+    assertThat(stringTypeAssert.actualHasNullValue()).isFalse();
+  }
+
+  @Test
+  void actualHasNullValue_returnsTrueForForShortTypeWithNullValue() {
+    final var someActual = new SomeStringType(null);
+    final var stringTypeAssert = StringTypeAssert.assertThat(someActual);
+    assertThat(stringTypeAssert.actualHasNullValue()).isTrue();
+  }
+
+  @Test
   void classNameOfActual_returnsExtendsStringTypeForNullActual() {
     final var someActual = (SomeStringType) null;
     final var stringTypeAssert = StringTypeAssert.assertThat(someActual);
@@ -168,6 +182,15 @@ class StringTypeAssertTest {
 
     assertThatNoException()
         .isThrownBy(stringTypeAssert::isNotNull);
+  }
+
+  @Test
+  void hasNullValue_throwsExceptionForNullActual() {
+    final var actual = (SomeStringType) null;
+    final var stringTypeAssert = StringTypeAssert.assertThat(actual);
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(stringTypeAssert::hasNullValue)
+        .withMessage("\nExpected actual of type:  <? extends StringType>\nto not be null and have value:   null\nbut actual was:  null.\nConsider using '.isNullOrHasNullValue()' if that is what you want to test.");
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")

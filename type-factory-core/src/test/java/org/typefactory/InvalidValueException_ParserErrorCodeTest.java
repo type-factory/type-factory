@@ -15,7 +15,7 @@
 */
 package org.typefactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.assertThat;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -41,9 +41,10 @@ class InvalidValueException_ParserMessageCodeTest {
       final String expectedCode,
       final String expectedDefaultMessage) {
 
-    assertThat(messageCode).isNotNull();
-    assertThat(messageCode.code()).isEqualTo(expectedCode);
-    assertThat(messageCode.defaultMessage()).isEqualTo(expectedDefaultMessage);
+    assertThat(messageCode)
+        .isNotNull()
+        .hasCode(expectedCode)
+        .hasDefaultMessage(expectedDefaultMessage);
   }
 
 }

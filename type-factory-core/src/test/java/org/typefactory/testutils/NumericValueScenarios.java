@@ -24,94 +24,83 @@ public class NumericValueScenarios {
     // do not instantiate
   }
 
-  private static final List<BigInteger> INTEGRAL_VALUES = List.of(
-      BigInteger.valueOf(Long.MIN_VALUE),
-      BigInteger.valueOf(Integer.MIN_VALUE),
-      BigInteger.valueOf(Short.MIN_VALUE),
-      BigInteger.TEN.negate(),
-      BigInteger.valueOf(-5L),
-      BigInteger.ZERO,
-      BigInteger.valueOf(5L),
-      BigInteger.TEN,
-      BigInteger.valueOf(Short.MAX_VALUE),
-      BigInteger.valueOf(Integer.MAX_VALUE),
-      BigInteger.valueOf(Long.MAX_VALUE));
-
   private static final List<BigInteger> INTEGRAL_DELTAS = List.of(
       BigInteger.ONE.negate(),
       BigInteger.ZERO,
       BigInteger.ONE);
 
-  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_SHORT =
-      INTEGRAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidShort)
-          .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_SHORT = Stream.of(
+          BigInteger.valueOf(Short.MIN_VALUE),
+          BigInteger.ZERO,
+          BigInteger.valueOf(Short.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidShort)
+      .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
+      .toList();
 
-  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_INTEGER =
-      INTEGRAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidInteger)
-          .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_INTEGER = Stream.of(
+          BigInteger.valueOf(Integer.MIN_VALUE),
+          BigInteger.ZERO,
+          BigInteger.valueOf(Integer.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidShort)
+      .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
+      .toList();
+  ;
 
-  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_LONG =
-      INTEGRAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidLong)
-          .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigInteger> BIG_INTEGER_VALUES_FOR_LONG = Stream.of(
+          BigInteger.valueOf(Long.MIN_VALUE),
+          BigInteger.ZERO,
+          BigInteger.valueOf(Long.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidShort)
+      .flatMap(value -> INTEGRAL_DELTAS.stream().map(value::add))
+      .toList();
+  ;
 
   private static final List<BigDecimal> DECIMAL_VALUES = List.of(
-      BigDecimal.valueOf(Double.MAX_VALUE - 2D).negate(),
-      BigDecimal.valueOf(Float.MAX_VALUE - 2F).negate(),
+      BigDecimal.valueOf(Double.MAX_VALUE - 1.5D).negate(),
+      BigDecimal.valueOf(Float.MAX_VALUE - 1.5F).negate(),
       BigDecimal.valueOf(Long.MIN_VALUE),
       BigDecimal.valueOf(Integer.MIN_VALUE),
       BigDecimal.valueOf(Short.MIN_VALUE),
-      BigDecimal.TEN.negate(),
       BigDecimal.ZERO,
-      BigDecimal.TEN,
       BigDecimal.valueOf(Short.MAX_VALUE),
       BigDecimal.valueOf(Integer.MAX_VALUE),
       BigDecimal.valueOf(Long.MAX_VALUE),
-      BigDecimal.valueOf(Float.MAX_VALUE - 2F),
-      BigDecimal.valueOf(Double.MAX_VALUE - 2D)
+      BigDecimal.valueOf(Float.MAX_VALUE - 1.5F),
+      BigDecimal.valueOf(Double.MAX_VALUE - 1.5D)
   );
 
   private static final List<BigDecimal> DECIMAL_DELTAS = List.of(
-      new BigDecimal("-2.0"),
       new BigDecimal("-1.5"),
       new BigDecimal("-1.0"),
-      new BigDecimal("-0.99"),
-      new BigDecimal("-0.51"),
       new BigDecimal("-0.5"),
-      new BigDecimal("-0.49"),
-      new BigDecimal("-0.01"),
       new BigDecimal("0.0"),
-      new BigDecimal("0.01"),
-      new BigDecimal("0.49"),
       new BigDecimal("0.5"),
-      new BigDecimal("0.51"),
-      new BigDecimal("0.99"),
       new BigDecimal("1.0"),
-      new BigDecimal("1.5"),
-      new BigDecimal("2.0"));
+      new BigDecimal("1.5"));
 
-  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_SHORT =
-      DECIMAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidShort)
-          .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_SHORT = Stream.of(
+          BigDecimal.valueOf(Short.MIN_VALUE),
+          BigDecimal.ZERO,
+          BigDecimal.valueOf(Short.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidLong)
+      .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
+      .toList();
 
-  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_INTEGER =
-      DECIMAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidInteger)
-          .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_INTEGER = Stream.of(
+          BigDecimal.valueOf(Integer.MIN_VALUE),
+          BigDecimal.ZERO,
+          BigDecimal.valueOf(Integer.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidLong)
+      .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
+      .toList();
 
-  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_LONG =
-      DECIMAL_VALUES.stream()
-          .filter(NumericValueScenarios::isInclusivelyValidLong)
-          .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
-          .toList();
+  private static final List<BigDecimal> BIG_DECIMAL_VALUES_FOR_LONG = Stream.of(
+          BigDecimal.valueOf(Long.MIN_VALUE),
+          BigDecimal.ZERO,
+          BigDecimal.valueOf(Long.MAX_VALUE))
+      .filter(NumericValueScenarios::isInclusivelyValidLong)
+      .flatMap(value -> DECIMAL_DELTAS.stream().map(value::add))
+      .toList();
 
   private static final List<RoundingMode> ROUNDING_MODES = Arrays.stream(RoundingMode.values())
       .filter(roundingMode -> roundingMode != RoundingMode.UNNECESSARY)

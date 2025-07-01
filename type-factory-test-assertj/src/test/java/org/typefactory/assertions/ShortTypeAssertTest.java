@@ -48,6 +48,20 @@ class ShortTypeAssertTest {
   }
 
   @Test
+  void actualHasNullValue_returnsFalseForNullActual() {
+    final var someActual = (SomeShortType) null;
+    final var shortTypeAssert = ShortTypeAssert.assertThat(someActual);
+    assertThat(shortTypeAssert.actualHasNullValue()).isFalse();
+  }
+
+  @Test
+  void actualHasNullValue_returnsTrueForForShortTypeWithNullValue() {
+    final var someActual = new SomeShortType(null);
+    final var shortTypeAssert = ShortTypeAssert.assertThat(someActual);
+    assertThat(shortTypeAssert.actualHasNullValue()).isTrue();
+  }
+
+  @Test
   void classNameOfActual_returnsExtendsShortTypeForNullActual() {
     final var someActual = (SomeShortType) null;
     final var shortTypeAssert = ShortTypeAssert.assertThat(someActual);
@@ -182,6 +196,15 @@ class ShortTypeAssertTest {
       assertThatNoException()
           .isThrownBy(shortTypeAssert::isNotNull);
     }
+  }
+
+  @Test
+  void hasNullValue_throwsExceptionForNullActual() {
+    final var actual = (SomeShortType) null;
+    final var shortTypeAssert = ShortTypeAssert.assertThat(actual);
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(shortTypeAssert::hasNullValue)
+        .withMessage("\nExpected actual of type:  <? extends ShortType>\nto not be null and have value:   null\nbut actual was:  null.\nConsider using '.isNullOrHasNullValue()' if that is what you want to test.");
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")

@@ -48,6 +48,20 @@ class LongTypeAssertTest {
   }
 
   @Test
+  void actualHasNullValue_returnsFalseForNullActual() {
+    final var someActual = (SomeLongType) null;
+    final var longTypeAssert = LongTypeAssert.assertThat(someActual);
+    assertThat(longTypeAssert.actualHasNullValue()).isFalse();
+  }
+
+  @Test
+  void actualHasNullValue_returnsTrueForForLongTypeWithNullValue() {
+    final var someActual = new SomeLongType(null);
+    final var longTypeAssert = LongTypeAssert.assertThat(someActual);
+    assertThat(longTypeAssert.actualHasNullValue()).isTrue();
+  }
+
+  @Test
   void classNameOfActual_returnsExtendsLongTypeForNullActual() {
     final var someActual = (SomeLongType) null;
     final var longTypeAssert = LongTypeAssert.assertThat(someActual);
@@ -182,6 +196,15 @@ class LongTypeAssertTest {
       assertThatNoException()
           .isThrownBy(longTypeAssert::isNotNull);
     }
+  }
+
+  @Test
+  void hasNullValue_throwsExceptionForNullActual() {
+    final var actual = (SomeLongType) null;
+    final var longTypeAssert = LongTypeAssert.assertThat(actual);
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(longTypeAssert::hasNullValue)
+        .withMessage("\nExpected actual of type:  <? extends LongType>\nto not be null and have value:   null\nbut actual was:  null.\nConsider using '.isNullOrHasNullValue()' if that is what you want to test.");
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")

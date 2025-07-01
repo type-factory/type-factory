@@ -129,7 +129,7 @@ public abstract class AbstractCharSequenceTypeAssert<
    */
   public SELF hasNullValue() {
     if (actualIsNull()) {
-      throw failure("%nExpected actual of type:  %s%nto not be null and have value:   %s%nbut actual was:  null",
+      throw failure("%nExpected actual of type:  %s%nto not be null and have value:   %s%nbut actual was:  null.%nConsider using '.isNullOrHasNullValue()' if that is what you want to test.",
           classNameOfActual(), NULL_VALUE);
     }
     if (actualHasNullValue()) {

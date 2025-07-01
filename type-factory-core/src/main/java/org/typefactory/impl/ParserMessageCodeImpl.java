@@ -36,7 +36,7 @@ class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode
     if (!(o instanceof ParserMessageCode other)) {
       return false;
     }
-    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(code, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
   }
 
   @Override

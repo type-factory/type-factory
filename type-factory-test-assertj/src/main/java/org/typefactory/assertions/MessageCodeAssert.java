@@ -9,7 +9,7 @@ import org.typefactory.MessageCode;
  * Although this class is not final to allow Soft assertions proxy, if you wish to extend it, 
  * extend {@link AbstractMessageCodeAssert} instead.
  */
-public class MessageCodeAssert extends AbstractMessageCodeAssert<MessageCodeAssert, MessageCode> {
+public class MessageCodeAssert extends AbstractMessageCodeAssert<MessageCodeAssert> {
 
   /**
    * Creates a new <code>{@link MessageCodeAssert}</code> to make assertions on actual MessageCode.

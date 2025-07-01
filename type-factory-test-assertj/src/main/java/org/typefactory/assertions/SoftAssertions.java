@@ -1,6 +1,13 @@
 package org.typefactory.assertions;
 
 import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.IntegerType;
+import org.typefactory.InvalidValueException;
+import org.typefactory.LongType;
+import org.typefactory.MessageCode;
+import org.typefactory.ShortType;
+import org.typefactory.StringType;
+import org.typefactory.Subset;
 
 /**
  * Entry point for soft assertions of different data types.
@@ -14,8 +21,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public IntegerTypeAssert assertThat(org.typefactory.IntegerType actual) {
-    return proxy(IntegerTypeAssert.class, org.typefactory.IntegerType.class, actual);
+  public IntegerTypeAssert assertThat(IntegerType actual) {
+    return proxy(IntegerTypeAssert.class, IntegerType.class, actual);
   }
 
   /**
@@ -25,8 +32,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public InvalidValueExceptionAssert assertThat(org.typefactory.InvalidValueException actual) {
-    return proxy(InvalidValueExceptionAssert.class, org.typefactory.InvalidValueException.class, actual);
+  public InvalidValueExceptionAssert assertThat(InvalidValueException actual) {
+    return proxy(InvalidValueExceptionAssert.class, InvalidValueException.class, actual);
   }
 
   /**
@@ -36,8 +43,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public LongTypeAssert assertThat(org.typefactory.LongType actual) {
-    return proxy(LongTypeAssert.class, org.typefactory.LongType.class, actual);
+  public LongTypeAssert assertThat(LongType actual) {
+    return proxy(LongTypeAssert.class, LongType.class, actual);
   }
 
   /**
@@ -47,8 +54,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public MessageCodeAssert assertThat(org.typefactory.MessageCode actual) {
-    return proxy(MessageCodeAssert.class, org.typefactory.MessageCode.class, actual);
+  public MessageCodeAssert assertThat(MessageCode actual) {
+    return proxy(MessageCodeAssert.class, MessageCode.class, actual);
   }
 
   /**
@@ -58,8 +65,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public ShortTypeAssert assertThat(org.typefactory.ShortType actual) {
-    return proxy(ShortTypeAssert.class, org.typefactory.ShortType.class, actual);
+  public ShortTypeAssert assertThat(ShortType actual) {
+    return proxy(ShortTypeAssert.class, ShortType.class, actual);
   }
 
   /**
@@ -69,8 +76,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public StringTypeAssert assertThat(org.typefactory.StringType actual) {
-    return proxy(StringTypeAssert.class, org.typefactory.StringType.class, actual);
+  public StringTypeAssert assertThat(StringType actual) {
+    return proxy(StringTypeAssert.class, StringType.class, actual);
   }
 
   /**
@@ -80,8 +87,8 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
    * @return the created "soft" assertion object.
    */
   @CheckReturnValue
-  public SubsetAssert assertThat(org.typefactory.Subset actual) {
-    return proxy(SubsetAssert.class, org.typefactory.Subset.class, actual);
+  public SubsetAssert assertThat(Subset actual) {
+    return proxy(SubsetAssert.class, Subset.class, actual);
   }
 
 }

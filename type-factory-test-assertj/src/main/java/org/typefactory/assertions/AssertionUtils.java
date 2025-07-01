@@ -3,6 +3,7 @@ package org.typefactory.assertions;
 import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
 import org.typefactory.Category;
+import org.typefactory.CharSequenceUtils;
 
 final class AssertionUtils {
 
@@ -17,6 +18,40 @@ final class AssertionUtils {
           Category.SPACE_SEPARATOR,
           Category.LINE_SEPARATOR,
           Category.PARAGRAPH_SEPARATOR);
+
+  static final String NULL_VALUE = "null";
+  static final String EMPTY_VALUE = "\"\" (empty)";
+
+  static boolean equals(final CharSequence a, final CharSequence b) {
+    if (a == b) {
+      return true;
+    }
+    if (a == null || b == null) {
+      return false;
+    }
+    if (a.length() != b.length()) {
+      return false;
+    }
+    for (int i = 0; i < a.length(); i++) {
+      if (a.charAt(i) != b.charAt(i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static String valueOf(final CharSequence value) {
+    if (value == null) {
+      return NULL_VALUE;
+    }
+    if (value.isEmpty()) {
+      return EMPTY_VALUE;
+    }
+    if (CharSequenceUtils.isBlank(value)) {
+      return "\"" + value + "\" (blank)";
+    }
+    return "\"" + value + "\"";
+  }
 
   static String unicodeHexCode(final int codePoint) {
     if (Character.isDefined(codePoint)) {
