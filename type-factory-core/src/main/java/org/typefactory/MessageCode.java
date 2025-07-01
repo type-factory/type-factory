@@ -19,10 +19,11 @@ import static org.typefactory.MessageUtils.TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Objects;
 import org.typefactory.impl.Factory;
 
 /**
- * <p>Message codes are keys for messages provided by locale=specific {@link java.util.ResourceBundle resource bundles}
+ * <p>Message codes are keys for messages provided by locale-specific {@link java.util.ResourceBundle resource bundles}
  * with base name {@code org.typefactory.Messages}. Type factory builders and parsers use message codes when creating exceptions for parser and
  * builder errors. Every {@code MessageCode} instance provides a default error message.</p>
  *
@@ -225,64 +226,62 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    */
   @Override
   default int compareTo(final MessageCode o) {
-    if (this == o) {
+    return compare(this, o);
+  }
+
+  default int compareToIgnoreCase(final MessageCode o) {
+    return compareIgnoreCase(this, o);
+  }
+
+  default boolean equalsIgnoreCase(final MessageCode o) {
+    return equalsIgnoreCase(this, o);
+  }
+
+  static int compare(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same MessageCode instance
       return 0;
     }
-    if (o == null) {
-      return 1;
-    }
-    final String code1 = code();
-    final String code2 = o.code();
-    if (code1 == null) {
-      if (code2 == null) {
-        return 0;
-      }
+    if (c1 == null) {
+      // c1 is null, therefore c2 is not
       return -1;
     }
-    if (code2 == null) {
-      return 1;
+    final String code1 = c1.code();
+    final String code2 = c2.code();
+    if (code1 == code2) {
+      // both are null or both are the same String instance
+      return 0;
+    }
+    if (code1 == null) {
+      // code1 is null, therefore code2 is not
+      return -1;
     }
     return code1.compareTo(code2);
   }
 
-  default int compareToIgnoreCase(final MessageCode o) {
-    if (this == o) {
+  static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same MessageCode instance
       return 0;
     }
-    if (o == null) {
-      return 1;
-    }
-    final String code1 = code();
-    final String code2 = o.code();
-    if (code1 == null) {
-      if (code2 == null) {
-        return 0;
-      }
+    if (c1 == null) {
+      // c1 is null, therefore c2 is not
       return -1;
     }
-    if (code2 == null) {
-      return 1;
+    final String code1 = c1.code();
+    final String code2 = c2.code();
+    if (code1 == code2) {
+      // both are null or both are the same String instance
+      return 0;
+    }
+    if (code1 == null) {
+      // code1 is null, therefore code2 is not
+      return -1;
     }
     return code1.compareToIgnoreCase(code2);
   }
 
-  default boolean equalsIgnoreCase(final MessageCode o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null) {
-      return false;
-    }
-    return this.compareToIgnoreCase(o) == 0;
-  }
-
   static <T extends MessageCode> boolean equalsIgnoreCase(final T value1, final T value2) {
-    if (value1 == value2) {
-      return true;
-    }
-    if (value1 == null) {
-      return false;
-    }
-    return value1.equalsIgnoreCase(value2);
+    return compareIgnoreCase(value1, value2) == 0;
   }
 }
