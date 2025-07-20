@@ -30,8 +30,13 @@ class MessageCodeImpl implements MessageCode {
   protected final String defaultMessage;
 
   MessageCodeImpl(final String code, final String defaultMessage) {
-    this.code = code == null || code.isBlank() ? EMPTY_STRING : code;
-    this.defaultMessage = defaultMessage == null || defaultMessage.isBlank() ? EMPTY_STRING : defaultMessage;
+    if (code == null || code.isBlank()) {
+      this.code = EMPTY_STRING;
+      this.defaultMessage = EMPTY_STRING;
+    } else {
+      this.code = code;
+      this.defaultMessage = defaultMessage == null || defaultMessage.isBlank() ? EMPTY_STRING : defaultMessage;
+    }
   }
 
   @Override
@@ -57,11 +62,11 @@ class MessageCodeImpl implements MessageCode {
     if (!(o instanceof MessageCode other)) {
       return false;
     }
-    return Objects.equals(code, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(code, other.code());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, defaultMessage);
+    return Objects.hash(code);
   }
 }

@@ -35,7 +35,7 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getCause()).isEqualTo(cause);
     assertThat(actual.getMessage()).isNull();
     assertThat(actual.getLocalizedMessage()).isNotNull().isEmpty();
-    assertThat(actual.getMessageCode()).isNotNull().isEmpty();
+    assertThat(actual.getErrorCode()).isNotNull().isEmpty();
     assertThat(actual.getErrorMessage()).isNotNull().isEmpty();
     assertThat(actual.getErrorMessage(Locale.FRENCH)).isNotNull().isEmpty();
   }
@@ -47,7 +47,7 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getCause()).isEqualTo(cause);
     assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
+    assertThat(actual.getErrorCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
     assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
   }
@@ -62,7 +62,7 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getCause()).isEqualTo(cause);
     assertThat(actual.getMessage()).isNull();
     assertThat(actual.getLocalizedMessage()).isNotNull().isEmpty();
-    assertThat(actual.getMessageCode()).isNotNull().isEmpty();
+    assertThat(actual.getErrorCode()).isNotNull().isEmpty();
     assertThat(actual.getErrorMessage()).isNotNull().isEmpty();
     assertThat(actual.getErrorMessage(Locale.FRENCH)).isNotNull().isEmpty();
   }
@@ -77,7 +77,7 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getCause()).isEqualTo(cause);
     assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
+    assertThat(actual.getErrorCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
     assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
   }

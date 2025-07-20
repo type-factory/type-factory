@@ -22,11 +22,17 @@ final class AssertionUtils {
   static final String NULL_VALUE = "null";
   static final String EMPTY_VALUE = "\"\" (empty)";
 
+  static boolean notEquals(final CharSequence a, final CharSequence b) {
+    return !equals(a, b);
+  }
+
   static boolean equals(final CharSequence a, final CharSequence b) {
     if (a == b) {
+      // Both are null or the same reference, so they are equal
       return true;
     }
     if (a == null || b == null) {
+      // a is null or b is null, but not both, so they are not equal
       return false;
     }
     if (a.length() != b.length()) {

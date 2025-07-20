@@ -1,12 +1,15 @@
 package org.typefactory.assertions;
 
-import static org.assertj.core.util.introspection.FieldSupport.EXTRACTION;
+import static org.typefactory.assertions.AssertionUtils.valueOf;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.Assertions;
 import org.typefactory.InvalidValueException;
 import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.MessageCode;
@@ -15,353 +18,542 @@ import org.typefactory.MessageCode;
  * Abstract base class for {@link InvalidValueException} specific assertions.
  */
 @SuppressWarnings("java:S119") // Generic parameter naming
-public abstract class AbstractInvalidValueExceptionAssert<SELF extends AbstractInvalidValueExceptionAssert<SELF, ACTUAL>, ACTUAL extends InvalidValueException>
+public abstract class AbstractInvalidValueExceptionAssert<
+    SELF extends AbstractInvalidValueExceptionAssert<SELF, ACTUAL>,
+    ACTUAL extends InvalidValueException>
     extends AbstractThrowableAssert<SELF, ACTUAL> {
 
   /**
    * Creates a new <code>{@link AbstractInvalidValueExceptionAssert}</code> to make assertions on actual InvalidValueException.
+   *
    * @param actual the InvalidValueException we want to make assertions on.
    */
   protected AbstractInvalidValueExceptionAssert(ACTUAL actual, Class<SELF> selfType) {
     super(actual, selfType);
   }
 
+  protected String classNameOfActual() {
+    return actual == null ? "<? extends InvalidValueException>" : actual.getClass().getSimpleName();
+  }
+
+  protected static <T> boolean isEmpty(final T[] array) {
+    return array == null || array.length == 0;
+  }
+
+  protected static String parserErrorPropertiesString(final Map<String, Serializable> properties) {
+    return "[\n  " + properties.entrySet().stream()
+        .map(entry ->
+            '"' + entry.getKey() + "\": " +
+            (entry.getValue() == null
+                ? "null"
+                : entry.getValue() instanceof Number
+                    ? String.valueOf(entry.getValue())
+                    : '"' + String.valueOf(entry.getValue()) + '"'))
+        .collect(Collectors.joining(",\n  ")) + ']';
+  }
+
+  protected static String parserErrorArgsString(final Serializable[] args) {
+    return args == null || args.length == 0 ? "[] (empty)" : parserErrorArgsString(List.of(args));
+  }
+
+  protected static String parserErrorArgsString(final Collection<Serializable> args) {
+    if (args == null || args.isEmpty()) {
+      return "[] (empty)";
+    }
+    return "[\n  " + args.stream()
+        .map(arg ->
+            arg == null ? "null"
+                : (arg instanceof Number)
+                    ? String.valueOf(arg)
+                    : '"' + String.valueOf(arg) + '"')
+        .collect(Collectors.joining(",\n  ")) + ']';
+  }
+
+
   /**
-   * Verifies that the actual InvalidValueException's errorMessage is equal to the given one.
-   * @param errorMessage the given errorMessage to compare the actual InvalidValueException's errorMessage to.
+   * Verifies that the actual InvalidValueException's targetTypeClass is equal to the given one.
+   *
+   * @param expected the given targetTypeClass to compare the actual InvalidValueException's targetTypeClass to.
    * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's errorMessage is not equal to the given one.
+   * @throws AssertionError - if the actual InvalidValueException's targetTypeClass is not equal to the given one.
    */
-  public SELF hasErrorMessage(String errorMessage) {
+  public SELF hasTargetTypeClass(Class<?> expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting errorMessage of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualTargetTypeClass = actual.getTargetTypeClass();
 
-    // null safe check
-    String actualErrorMessage = actual.getErrorMessage();
-    if (!Objects.equals(actualErrorMessage, errorMessage)) {
-      failWithMessage(assertjErrorMessage, actual, errorMessage, actualErrorMessage);
+    if (actualTargetTypeClass == expected) {
+      // both are null, or the same instance
+      return myself;
+    }
+    if (actualTargetTypeClass == null) {
+      throw failure("%nExpected actual of type:  %s%nto have targetTypeClass:  %s%nbut targetTypeClass was:  null",
+          classNameOfActual(), expected.getName());
+    }
+    if (expected == null) {
+      throw failure("%nExpected actual of type:  %s%nto have targetTypeClass:  null%nbut targetTypeClass was:  %s",
+          classNameOfActual(), actualTargetTypeClass.getName());
+    }
+    throw failure("%nExpected actual of type:  %s%nto have targetTypeClass:  %s%nbut targetTypeClass was:  %s",
+        classNameOfActual(), expected.getName(), actualTargetTypeClass.getName());
+  }
+
+  /**
+   * Verifies that the actual {@link InvalidValueException#getErrorCode()} is equal to the given {@code errorCode}.
+   *
+   * @param expected the given {@code errorCode} to compare to the actual {@link InvalidValueException#getErrorCode()} .
+   * @return this assertion object.
+   * @throws AssertionError - if the actual {@link InvalidValueException#getErrorCode()} is not equal to the given one.
+   */
+  public SELF hasErrorCode(final MessageCode expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualErrorCode = actual.getErrorCode();
+
+    if (MessageCode.notEquals(actualErrorCode, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have errorCode:  %s%nbut errorCode was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualErrorCode));
     }
 
-    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's messageCode is equal to the given one.
+   *
+   * @param expected the given messageCode to compare the actual InvalidValueException's messageCode to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's messageCode is not equal to the given one.
+   */
+  public SELF hasErrorCodeAsString(final String expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualErrorCode = actual.getErrorCodeAsString();
+
+    if (AssertionUtils.notEquals(actualErrorCode, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have errorCode:  %s%nbut errorCode was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualErrorCode));
+    }
+
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's errorMessage is equal to the given one.
+   *
+   * @param expected the given errorMessage to compare the actual InvalidValueException's errorMessage to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's errorMessage is not equal to the given one.
+   */
+  public SELF hasErrorMessage(String expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualErrorMessage = actual.getErrorMessage();
+
+    if (AssertionUtils.notEquals(actualErrorMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have errorMessage:  %s%nbut errorMessage was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualErrorMessage));
+    }
+
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's errorMessage is equal to the given one for the specified locale.
+   *
+   * @param expected the expected error message to compare the actual InvalidValueException's errorMessage to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's errorMessage is not equal to the given one.
+   */
+  public SELF hasErrorMessage(final Locale locale, final String expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualErrorMessage = actual.getErrorMessage(locale);
+
+    if (AssertionUtils.notEquals(actualErrorMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have errorMessage:  %s%nfor locale:  %s%nbut errorMessage was:  %s",
+          classNameOfActual(), valueOf(expected), locale.toLanguageTag(), valueOf(actualErrorMessage));
+    }
+
     return myself;
   }
 
   /**
    * Verifies that the actual InvalidValueException's invalidValue is equal to the given one.
-   * @param invalidValue the given invalidValue to compare the actual InvalidValueException's invalidValue to.
+   *
+   * @param expected the given invalidValue to compare the actual InvalidValueException's invalidValue to.
    * @return this assertion object.
    * @throws AssertionError - if the actual InvalidValueException's invalidValue is not equal to the given one.
    */
-  public SELF hasInvalidValue(String invalidValue) {
+  public SELF hasInvalidValue(String expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting invalidValue of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualInvalidValue = actual.getInvalidValue();
 
-    // null safe check
-    String actualInvalidValue = actual.getInvalidValue();
-    if (!Objects.equals(actualInvalidValue, invalidValue)) {
-      failWithMessage(assertjErrorMessage, actual, invalidValue, actualInvalidValue);
+    if (AssertionUtils.notEquals(actualInvalidValue, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have invalidValue:  %s%nbut invalidValue was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualInvalidValue));
     }
 
-    // return the current assertion for method chaining
     return myself;
   }
 
   /**
    * Verifies that the actual InvalidValueException's localizedMessage is equal to the given one.
-   * @param localizedMessage the given localizedMessage to compare the actual InvalidValueException's localizedMessage to.
+   *
+   * @param expected the given localizedMessage to compare the actual InvalidValueException's localizedMessage to.
    * @return this assertion object.
    * @throws AssertionError - if the actual InvalidValueException's localizedMessage is not equal to the given one.
    */
-  public SELF hasLocalizedMessage(String localizedMessage) {
+  public SELF hasLocalizedMessage(String expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting localizedMessage of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualLocalizedMessage = actual.getLocalizedMessage();
 
-    // null safe check
-    String actualLocalizedMessage = actual.getLocalizedMessage();
-    if (!Objects.equals(actualLocalizedMessage, localizedMessage)) {
-      failWithMessage(assertjErrorMessage, actual, localizedMessage, actualLocalizedMessage);
+    if (AssertionUtils.notEquals(actualLocalizedMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have localizedMessage:  %s%nfor locale:  %s%nbut localizedMessage was:  %s",
+          classNameOfActual(), valueOf(expected), Locale.getDefault().toLanguageTag(), valueOf(actualLocalizedMessage));
     }
 
-    // return the current assertion for method chaining
     return myself;
   }
 
   /**
-   * Verifies that the actual InvalidValueException's messageCode is equal to the given one.
-   * @param messageCode the given messageCode to compare the actual InvalidValueException's messageCode to.
+   * Verifies that the actual InvalidValueException's localizedMessage is equal to the given one.
+   *
+   * @param expected the given localizedMessage to compare the actual InvalidValueException's localizedMessage to.
    * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's messageCode is not equal to the given one.
+   * @throws AssertionError - if the actual InvalidValueException's localizedMessage is not equal to the given one.
    */
-  public SELF hasMessageCode(String messageCode) {
+  public SELF hasLocalizedMessage(final Locale locale, String expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting messageCode of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualLocalizedMessage = actual.getLocalizedMessage(locale);
 
-    // null safe check
-    String actualMessageCode = actual.getMessageCode();
-    if (!Objects.equals(actualMessageCode, messageCode)) {
-      failWithMessage(assertjErrorMessage, actual, messageCode, actualMessageCode);
+    if (AssertionUtils.notEquals(actualLocalizedMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have localizedMessage:  %s%nfor locale:  %s%nbut localizedMessage was:  %s",
+          classNameOfActual(), valueOf(expected), locale.toLanguageTag(), valueOf(actualLocalizedMessage));
     }
 
-    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorCode is equal to the given one.
+   *
+   * @param expected the given parserErrorCode to compare the actual InvalidValueException's parserErrorCode to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorCode is not equal to the given one.
+   */
+  public SELF hasParserErrorCode(ParserMessageCode expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorCode = actual.getParserErrorCode();
+
+    if (MessageCode.notEquals(actualParserErrorCode, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorCode:  %s%nbut parserErrorCode was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualParserErrorCode));
+    }
+
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorCode is equal to the given one.
+   *
+   * @param expected the given parserErrorCode to compare the actual InvalidValueException's parserErrorCode to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorCode is not equal to the given one.
+   */
+  public SELF hasParserErrorCodeAsString(final String expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorCodeAsString = actual.getParserErrorCodeAsString();
+
+    if (AssertionUtils.notEquals(actualParserErrorCodeAsString, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorCode:  %s%nbut parserErrorCode was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualParserErrorCodeAsString));
+    }
+
     return myself;
   }
 
   /**
    * Verifies that the actual InvalidValueException's parserErrorMessage is equal to the given one.
-   * @param parserErrorMessage the given parserErrorMessage to compare the actual InvalidValueException's parserErrorMessage to.
+   *
+   * @param expected the given parserErrorMessage to compare the actual InvalidValueException's parserErrorMessage to.
    * @return this assertion object.
    * @throws AssertionError - if the actual InvalidValueException's parserErrorMessage is not equal to the given one.
    */
-  public SELF hasParserErrorMessage(String parserErrorMessage) {
+  public SELF hasParserErrorMessage(String expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting parserErrorMessage of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualParserErrorMessage = actual.getParserErrorMessage();
 
-    // null safe check
-    String actualParserErrorMessage = actual.getParserErrorMessage();
-    if (!Objects.equals(actualParserErrorMessage, parserErrorMessage)) {
-      failWithMessage(assertjErrorMessage, actual, parserErrorMessage, actualParserErrorMessage);
+    if (AssertionUtils.notEquals(actualParserErrorMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorMessage:  %s%nbut parserErrorMessage was:  %s",
+          classNameOfActual(), valueOf(expected), valueOf(actualParserErrorMessage));
     }
 
-    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorMessage is equal to the given one.
+   *
+   * @param expected the given parserErrorMessage to compare the actual InvalidValueException's parserErrorMessage to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorMessage is not equal to the given one.
+   */
+  public SELF hasParserErrorMessage(final Locale locale, final String expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorMessage = actual.getParserErrorMessage(locale);
+
+    if (AssertionUtils.notEquals(actualParserErrorMessage, expected)) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorMessage:  %s%nfor locale:  %s%nbut parserErrorMessage was:  %s",
+          classNameOfActual(), valueOf(expected), locale.toLanguageTag(), valueOf(actualParserErrorMessage));
+    }
+
+    return myself;
+  }
+
+  public SELF hasParserErrorProperties() {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorProperties = actual.getParserErrorProperties();
+
+    if (actualParserErrorProperties.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nto have non-empty parserErrorProperties%nbut parserErrorProperties was:  [] (empty)",
+          classNameOfActual());
+    }
+
+    return myself;
+
+  }
+
+  public SELF hasNoParserErrorProperties() {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorProperties = actual.getParserErrorProperties();
+
+    if (!actualParserErrorProperties.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nto have no parserErrorProperties%nbut parserErrorProperties contained:  %s",
+          classNameOfActual(), parserErrorPropertiesString(actualParserErrorProperties));
+    }
+
+    return myself;
+
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorProperties is equal to the given one.
+   *
+   * @param expected the given parserErrorProperties to compare the actual InvalidValueException's parserErrorProperties to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorProperties is not equal to the given one.
+   */
+  public SELF hasParserErrorPropertiesContainingAllEntriesOf(Map<String, Serializable> expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorProperties = actual.getParserErrorProperties();
+
+    if (expected == null) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorProperties:  null%nbut parserErrorProperties was:  %s",
+          classNameOfActual(), parserErrorPropertiesString(actualParserErrorProperties));
+
+    }
+
+    final var actualParserErrorPropertiesEntries = actualParserErrorProperties.entrySet();
+    final var didNotContainExpectedProperties = expected.entrySet().stream()
+        .filter(entry -> !actualParserErrorPropertiesEntries.contains(entry))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+    if (!didNotContainExpectedProperties.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nwith parserErrorProperties:  %s%nto contain all entries:  %s%nbut could not find:  %s",
+          classNameOfActual(),
+          parserErrorPropertiesString(actualParserErrorProperties),
+          parserErrorPropertiesString(expected),
+          parserErrorPropertiesString(didNotContainExpectedProperties));
+    }
+
     return myself;
   }
 
   /**
    * Verifies that the actual InvalidValueException's parserErrorProperties is equal to the given one.
-   * @param parserErrorProperties the given parserErrorProperties to compare the actual InvalidValueException's parserErrorProperties to.
+   *
+   * @param expected the given parserErrorProperties to compare the actual InvalidValueException's parserErrorProperties to.
    * @return this assertion object.
    * @throws AssertionError - if the actual InvalidValueException's parserErrorProperties is not equal to the given one.
    */
-  public SELF hasParserErrorProperties(Map<String, Serializable> parserErrorProperties) {
+  public SELF hasParserErrorPropertiesContainingExactlyEntriesOf(Map<String, Serializable> expected) {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting parserErrorProperties of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
+    final var actualParserErrorProperties = actual.getParserErrorProperties();
 
-    // null safe check
-    Map<String, Serializable> actualParserErrorProperties = actual.getParserErrorProperties();
-    if (!Objects.equals(actualParserErrorProperties, parserErrorProperties)) {
-      failWithMessage(assertjErrorMessage, actual, parserErrorProperties, actualParserErrorProperties);
+    if (expected == null) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorProperties:  null%nbut parserErrorProperties was:  %s",
+          classNameOfActual(), parserErrorPropertiesString(actualParserErrorProperties));
+
     }
 
-    // return the current assertion for method chaining
-    return myself;
-  }
+    final var actualParserErrorPropertiesEntries = actualParserErrorProperties.entrySet();
+    final var didNotContainExpectedProperties = expected.entrySet().stream()
+        .filter(entry -> !actualParserErrorPropertiesEntries.contains(entry))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    final var extraParserErrorProperties = actualParserErrorPropertiesEntries.stream()
+        .filter(entry -> !expected.containsKey(entry.getKey()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCode is equal to the given one.
-   * @param expected the given parserMessageCode to compare the actual InvalidValueException's parserMessageCode to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's parserMessageCode is not equal to the given one.
-   */
-  public SELF hasParserMessageCode(String expected) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting parserMessageCode of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
-
-    // null safe check
-    String actualParserMessageCode = actual.getParserMessageCode();
-    if (!Objects.equals(actualParserMessageCode, expected)) {
-      failWithMessage(assertjErrorMessage, actual, expected, actualParserMessageCode);
+    if (!didNotContainExpectedProperties.isEmpty() && !extraParserErrorProperties.isEmpty()) {
+      throw failure(
+          "%nExpected actual of type:  %s%nwith parserErrorProperties:  %s%nto contain exactly entries:  %s%nbut could not find:  %s%nand found extra entries:  %s",
+          classNameOfActual(),
+          parserErrorPropertiesString(actualParserErrorProperties),
+          parserErrorPropertiesString(expected),
+          parserErrorPropertiesString(didNotContainExpectedProperties),
+          parserErrorPropertiesString(extraParserErrorProperties));
+    } else if (!didNotContainExpectedProperties.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nwith parserErrorProperties:  %s%nto contain exactly entries:  %s%nbut could not find:  %s",
+          classNameOfActual(),
+          parserErrorPropertiesString(actualParserErrorProperties),
+          parserErrorPropertiesString(expected),
+          parserErrorPropertiesString(didNotContainExpectedProperties));
+    } else if (!extraParserErrorProperties.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nwith parserErrorProperties:  %s%nto contain exactly entries:  %s%nbut found extra entries:  %s",
+          classNameOfActual(),
+          parserErrorPropertiesString(actualParserErrorProperties),
+          parserErrorPropertiesString(expected),
+          parserErrorPropertiesString(extraParserErrorProperties));
     }
 
-    // return the current assertion for method chaining
     return myself;
   }
 
   /**
-   * Verifies that the actual InvalidValueException's targetTypeClass is equal to the given one.
-   * @param targetTypeClass the given targetTypeClass to compare the actual InvalidValueException's targetTypeClass to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's targetTypeClass is not equal to the given one.
-   */
-  public SELF hasTargetTypeClass(Class<?> targetTypeClass) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting targetTypeClass of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
-
-    // null safe check
-    Class<?> actualTargetTypeClass = actual.getTargetTypeClass();
-    if (!Objects.equals(actualTargetTypeClass, targetTypeClass)) {
-      failWithMessage(assertjErrorMessage, actual, targetTypeClass, actualTargetTypeClass);
-    }
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's messageCode is equal to the given one.
-   * @param messageCode the given messageCode to compare the actual InvalidValueException's messageCode to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's messageCode is not equal to the given one.
-   */
-  public SELF hasMessageCode(MessageCode messageCode) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting messageCode of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
-
-    // null safe check
-    MessageCode actualMessageCode = EXTRACTION.fieldValue("messageCode", MessageCode.class, actual);
-    if (!Objects.equals(actualMessageCode, messageCode)) {
-      failWithMessage(assertjErrorMessage, actual, messageCode, actualMessageCode);
-    }
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCode is equal to the given one.
-   * @param parserMessageCode the given parserMessageCode to compare the actual InvalidValueException's parserMessageCode to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's parserMessageCode is not equal to the given one.
-   */
-  public SELF hasParserMessageCode(ParserMessageCode parserMessageCode) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting parserMessageCode of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
-
-    // null safe check
-    ParserMessageCode actualParserMessageCode = EXTRACTION.fieldValue("parserMessageCode", ParserMessageCode.class, actual);
-    if (!Objects.equals(actualParserMessageCode, parserMessageCode)) {
-      failWithMessage(assertjErrorMessage, actual, parserMessageCode, actualParserMessageCode);
-    }
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCodeArgs is equal to the given one.
-   * @param parserMessageCodeArgs the given parserMessageCodeArgs to compare the actual InvalidValueException's parserMessageCodeArgs to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's parserMessageCodeArgs is not equal to the given one.
-   */
-  public SELF hasParserMessageCodeArgs(Map<String, Serializable> parserMessageCodeArgs) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting parserMessageCodeArgs of:\n  %s\nto be:\n  %s\nbut was:\n  %s";
-
-    // null safe check
-    Map<String, Serializable> actualParserMessageCodeArgs = EXTRACTION.fieldValue("parserMessageCodeArgs", Map.class, actual);
-    if (!Objects.equals(actualParserMessageCodeArgs, parserMessageCodeArgs)) {
-      failWithMessage(assertjErrorMessage, actual, parserMessageCodeArgs, actualParserMessageCodeArgs);
-    }
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCodeArgsValues contains the given java.io.Serializable elements.
-   * @param parserMessageCodeArgsValues the given elements that should be contained in actual InvalidValueException's parserMessageCodeArgsValues.
-   * @return this assertion object.
-   * @throws AssertionError if the actual InvalidValueException's parserMessageCodeArgsValues does not contain all given java.io.Serializable elements.
-   */
-  public SELF hasParserMessageCodeArgsValues(Serializable... parserMessageCodeArgsValues) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // check that given java.io.Serializable varargs is not null.
-    if (parserMessageCodeArgsValues == null) failWithMessage("Expecting parserMessageCodeArgsValues parameter not to be null.");
-
-    // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(EXTRACTION.fieldValue("parserMessageCodeArgsValues", Serializable[].class, actual)).contains(parserMessageCodeArgsValues);
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCodeArgsValues contains <b>only</b> the given java.io.Serializable elements and nothing else in whatever order.
+   * Verifies that the actual InvalidValueException's has some parserErrorArgs.
    *
-   * @param parserMessageCodeArgsValues the given elements that should be contained in actual InvalidValueException's parserMessageCodeArgsValues.
    * @return this assertion object.
-   * @throws AssertionError if the actual InvalidValueException's parserMessageCodeArgsValues does not contain all given java.io.Serializable elements and nothing else.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorArgs is empty.
    */
-  public SELF hasOnlyParserMessageCodeArgsValues(Serializable... parserMessageCodeArgsValues) {
+  public SELF hasParserErrorArgs() {
     // check that actual InvalidValueException we want to make assertions on is not null.
     isNotNull();
 
-    // check that given java.io.Serializable varargs is not null.
-    if (parserMessageCodeArgsValues == null) failWithMessage("Expecting parserMessageCodeArgsValues parameter not to be null.");
+    final var actualParserErrorArgs = actual.getParserErrorArgs();
 
-    // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(EXTRACTION.fieldValue("parserMessageCodeArgsValues", Serializable[].class, actual)).containsOnly(parserMessageCodeArgsValues);
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserMessageCodeArgsValues does not contain the given java.io.Serializable elements.
-   *
-   * @param parserMessageCodeArgsValues the given elements that should not be in actual InvalidValueException's parserMessageCodeArgsValues.
-   * @return this assertion object.
-   * @throws AssertionError if the actual InvalidValueException's parserMessageCodeArgsValues contains any given java.io.Serializable elements.
-   */
-  public SELF doesNotHaveParserMessageCodeArgsValues(Serializable... parserMessageCodeArgsValues) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // check that given java.io.Serializable varargs is not null.
-    if (parserMessageCodeArgsValues == null) failWithMessage("Expecting parserMessageCodeArgsValues parameter not to be null.");
-
-    // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(EXTRACTION.fieldValue("parserMessageCodeArgsValues", Serializable[].class, actual)).doesNotContain(parserMessageCodeArgsValues);
-
-    // return the current assertion for method chaining
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException has no parserMessageCodeArgsValues.
-   * @return this assertion object.
-   * @throws AssertionError if the actual InvalidValueException's parserMessageCodeArgsValues is not empty.
-   */
-  public SELF hasNoParserMessageCodeArgsValues() {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting :\n  %s\nnot to have parserMessageCodeArgsValues but had :\n  %s";
-
-    // check that it is not empty
-    if (EXTRACTION.fieldValue("parserMessageCodeArgsValues", Serializable[].class, actual).length > 0)  {
-      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(
-          EXTRACTION.fieldValue("parserMessageCodeArgsValues", Serializable[].class, actual)));
+    if (isEmpty(actualParserErrorArgs)) {
+      throw failure("%nExpected actual of type:  %s%nto have non-empty parserErrorArgs%nbut parserErrorArgs was:  [] (empty)",
+          classNameOfActual());
     }
 
-    // return the current assertion for method chaining
     return myself;
   }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorArgs contains all arg values in the expected array.
+   *
+   * @param expected the expected parser error args that we expect to find on the actual InvalidValueException's parserErrorArgs.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorArgs does not contain one or more of the expected values.
+   */
+  public SELF hasParserErrorArgsContainingAllOf(Serializable... expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorArgs = actual.getParserErrorArgs();
+
+    if (expected == null) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorArgs:  null%nbut parserErrorArgs was:  %s",
+          classNameOfActual(), parserErrorArgsString(actualParserErrorArgs));
+    }
+
+    final var actualParserErrorArgsList = List.of(actualParserErrorArgs);
+    final var didNotContainExpectedArgs = Stream.of(expected)
+        .filter(arg -> !actualParserErrorArgsList.contains(arg))
+        .toList();
+
+    if (!didNotContainExpectedArgs.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nwith parserErrorArgs:  %s%nto contain all entries:  %s%nbut could not find:  %s",
+          classNameOfActual(),
+          parserErrorArgsString(actualParserErrorArgs),
+          parserErrorArgsString(expected),
+          parserErrorArgsString(didNotContainExpectedArgs));
+    }
+
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual InvalidValueException's parserErrorArgs contains all arg values in the expected array.
+   *
+   * @param expected the expected parser error args that we expect to find on the actual InvalidValueException's parserErrorArgs.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual InvalidValueException's parserErrorArgs does not contain one or more of the expected values.
+   */
+  public SELF hasParserErrorArgsContainingExactly(Serializable... expected) {
+    // check that actual InvalidValueException we want to make assertions on is not null.
+    isNotNull();
+
+    final var actualParserErrorArgs = actual.getParserErrorArgs();
+
+    if (expected == null) {
+      throw failure("%nExpected actual of type:  %s%nto have parserErrorArgs:  null%nbut parserErrorArgs was:  %s",
+          classNameOfActual(), parserErrorArgsString(actualParserErrorArgs));
+    }
+
+    final var actualParserErrorArgsList = List.of(actualParserErrorArgs);
+    final var expectedParserArgsList = List.of(expected);
+    final var didNotContainExpectedArgs = Stream.of(expected)
+        .filter(arg -> !actualParserErrorArgsList.contains(arg))
+        .toList();
+    final var extraParserErrorArgs = actualParserErrorArgsList.stream()
+        .filter(arg -> !expectedParserArgsList.contains(arg))
+        .toList();
+
+    if (!didNotContainExpectedArgs.isEmpty() && !extraParserErrorArgs.isEmpty()) {
+      throw failure(
+          "%nExpected actual of type:  %s%nwith parserErrorArgs:  %s%nto contain exactly:  %s%nbut could not find:  %s%nand found extra values:  %s",
+          classNameOfActual(),
+          parserErrorArgsString(actualParserErrorArgs),
+          parserErrorArgsString(expected),
+          parserErrorArgsString(didNotContainExpectedArgs),
+          parserErrorArgsString(extraParserErrorArgs));
+    } else if (!didNotContainExpectedArgs.isEmpty()) {
+      throw failure("%nExpected actual of type:  %s%nwith parserErrorArgs:  %s%nto contain exactly:  %s%nbut could not find:  %s",
+          classNameOfActual(),
+          parserErrorArgsString(actualParserErrorArgs),
+          parserErrorArgsString(expected),
+          parserErrorArgsString(didNotContainExpectedArgs));
+    } else if (!extraParserErrorArgs.isEmpty()) {
+      throw failure(
+          "%nExpected actual of type:  %s%nwith parserErrorArgs:  %s%nto contain exactly:  %s%nbut found extra values:  %s",
+          classNameOfActual(),
+          parserErrorArgsString(actualParserErrorArgs),
+          parserErrorArgsString(expected),
+          parserErrorArgsString(extraParserErrorArgs));
+    }
+
+    return myself;
+  }
+
 
 
 }

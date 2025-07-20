@@ -13,8 +13,10 @@ import org.typefactory.impl.SubsetWithCategories;
  * Abstract base class for {@link Subset} specific assertions.
  */
 @SuppressWarnings("java:S119") // Generic parameter naming
-public abstract class AbstractSubsetAssert<SELF extends AbstractSubsetAssert<SELF, ACTUAL>, ACTUAL extends Subset> extends
-    AbstractObjectAssert<SELF, ACTUAL> {
+public abstract class AbstractSubsetAssert<
+    SELF extends AbstractSubsetAssert<SELF, ACTUAL>,
+    ACTUAL extends Subset>
+    extends AbstractObjectAssert<SELF, ACTUAL> {
 
   /**
    * Creates a new <code>{@link AbstractSubsetAssert}</code> to make assertions on actual Subset.

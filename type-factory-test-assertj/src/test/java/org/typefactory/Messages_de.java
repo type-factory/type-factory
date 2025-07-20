@@ -22,6 +22,7 @@ public class Messages_de extends ListResourceBundle {
   @Override
   protected Object[][] getContents() {
     return new Object[][]{
+        {"some.code", "eine Nachricht"},
         {"some.code.a", "eine Nachricht"},
         {"some.code.b", "eine Nachricht mit Wert {1}"},
     };

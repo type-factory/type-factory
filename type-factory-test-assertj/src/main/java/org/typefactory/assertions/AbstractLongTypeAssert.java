@@ -7,8 +7,10 @@ import org.typefactory.LongType;
  * Abstract base class for {@link LongType} specific assertions.
  */
 @SuppressWarnings("java:S119") // Generic parameter naming
-public abstract class AbstractLongTypeAssert<SELF extends AbstractLongTypeAssert<SELF, ACTUAL>, ACTUAL extends LongType> extends
-    AbstractComparableAssert<SELF, ACTUAL> {
+public abstract class AbstractLongTypeAssert<
+    SELF extends AbstractLongTypeAssert<SELF, ACTUAL>,
+    ACTUAL extends LongType>
+    extends AbstractComparableAssert<SELF, ACTUAL> {
 
   /**
    * Creates a new <code>{@link AbstractLongTypeAssert}</code> to make assertions on actual LongType.

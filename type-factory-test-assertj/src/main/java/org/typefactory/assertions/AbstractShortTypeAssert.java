@@ -7,8 +7,10 @@ import org.typefactory.ShortType;
  * Abstract base class for {@link ShortType} specific assertions.
  */
 @SuppressWarnings("java:S119") // Generic parameter naming
-public abstract class AbstractShortTypeAssert<SELF extends AbstractShortTypeAssert<SELF, ACTUAL>, ACTUAL extends ShortType> extends
-    AbstractComparableAssert<SELF, ACTUAL> {
+public abstract class AbstractShortTypeAssert<
+    SELF extends AbstractShortTypeAssert<SELF, ACTUAL>,
+    ACTUAL extends ShortType>
+    extends AbstractComparableAssert<SELF, ACTUAL> {
 
   /**
    * Creates a new <code>{@link AbstractShortTypeAssert}</code> to make assertions on actual ShortType.

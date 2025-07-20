@@ -21,14 +21,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class ParserParserMessageCodeImplTest {
+class ParserMessageCodeImplTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
       null | null | ''   | ''
       null | ''   | ''   | ''
       null | '  ' | ''   | ''
-      null | AABB | ''   | AABB
+      null | AABB | ''   | ''
       ''   | null | ''   | ''
       '  ' | null | ''   | ''
       AABB | null | AABB | ''
@@ -72,7 +72,7 @@ class ParserParserMessageCodeImplTest {
       null | ''   | null | ''   | true
       null | '  ' | null | '  ' | true
       null | AABB | null | AABB | true
-      null | AABB | null | CCDD | false
+      null | AABB | null | CCDD | true
       ''   | null | ''   | null | true
       '  ' | null | '  ' | null | true
       AABB | null | AABB | null | true

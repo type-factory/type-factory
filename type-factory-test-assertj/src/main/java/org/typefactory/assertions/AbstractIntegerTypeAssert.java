@@ -7,8 +7,10 @@ import org.typefactory.IntegerType;
  * Abstract base class for {@link IntegerType} specific assertions.
  */
 @SuppressWarnings("java:S119") // Generic parameter naming
-public abstract class AbstractIntegerTypeAssert<SELF extends AbstractIntegerTypeAssert<SELF, ACTUAL>, ACTUAL extends IntegerType> extends
-    AbstractComparableAssert<SELF, ACTUAL> {
+public abstract class AbstractIntegerTypeAssert<
+    SELF extends AbstractIntegerTypeAssert<SELF, ACTUAL>,
+    ACTUAL extends IntegerType>
+    extends AbstractComparableAssert<SELF, ACTUAL> {
 
   /**
    * Creates a new <code>{@link AbstractIntegerTypeAssert}</code> to make assertions on actual IntegerType.
@@ -135,7 +137,8 @@ public abstract class AbstractIntegerTypeAssert<SELF extends AbstractIntegerType
    */
   public SELF hasNullValue() {
     if (actualIsNull()) {
-      throw failure("%nExpected actual of type:  %s%nto not be null and have value:   null%nbut actual was:  null.%nConsider using '.isNullOrHasNullValue()' if that is what you want to test.",
+      throw failure(
+          "%nExpected actual of type:  %s%nto not be null and have value:   null%nbut actual was:  null.%nConsider using '.isNullOrHasNullValue()' if that is what you want to test.",
           classNameOfActual());
     }
     if (actualHasNullValue()) {

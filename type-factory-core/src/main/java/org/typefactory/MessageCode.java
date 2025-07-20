@@ -19,7 +19,6 @@ import static org.typefactory.MessageUtils.TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.Objects;
 import org.typefactory.impl.Factory;
 
 /**
@@ -49,8 +48,9 @@ import org.typefactory.impl.Factory;
 public interface MessageCode extends CharSequence, Comparable<MessageCode>, Serializable {
 
   /**
-   * Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
+   * <p>Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.</p>
    *
+   * <p>This should always return an empty string if instantiated with null, empty or blank values.</p>
    * @return the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
    */
   String code();
@@ -121,17 +121,13 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    *
    * <p>If the provided {@code messageCode} argument is {@code null} then this method will return {@code false}.</p>
    *
-   * @param messageCode the message code instance to test.
+   * @param other the message code instance to test.
    * @return {@code true} if the provided {@code messageCode.code()} equals {@link #code()}, and {@code false} otherwise.
+   * @deprecated Use {@code #equals(MessageCode)} instead – two message codes are considered equal if their {@link #code()} values are equal.
    */
-  default boolean hasSameCodeAs(final MessageCode messageCode) {
-    if (messageCode == null) {
-      return false;
-    }
-    if (code() == null) {
-      return messageCode.code() == null;
-    }
-    return code().equals(messageCode.code());
+  @Deprecated(since = "2024-07-01", forRemoval = true)
+  default boolean hasSameCodeAs(final MessageCode other) {
+    return compare(this, other) == 0;
   }
 
   /**
@@ -140,15 +136,20 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    * @return {@code true} if both the {@link #code()} and {@link #defaultMessage()} are blank and {@code false} otherwise.
    */
   default boolean isBlank() {
-    return (code() == null || code().isBlank()) && (defaultMessage() == null || defaultMessage().isBlank());
+    return code() == null || code().isBlank();
   }
+
+  static boolean isBlank(final MessageCode c) {
+    return (c == null || c.isBlank());
+  }
+
 
   /**
    * <p>Returns the message-code as a string which can be used as a key to retrieve messages from a resource-bundle.</p>
    *
    * <p>It does not return the default error message associated with the message-code.</p>
    *
-   * @return {@code true} if the {@link #code()} is empty or blank and {@code false} otherwise.
+   * @return the message-code as a string which can be used as a key to retrieve messages from a resource-bundle.
    */
   @Override
   String toString();
@@ -226,64 +227,90 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    */
   @Override
   default int compareTo(final MessageCode o) {
-    return compare(this, o);
+    if (o == this) {
+      return 0; // both are null or both are the same instance
+    }
+    if (o == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    final String c1 = code() == null ? "" : code();
+    final String c2 = o.code() == null ? "" : o.code();
+    return c1.compareTo(c2);
+  }
+
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
+  static int compare(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same instance
+      return 0;
+    }
+    if (c1 == null) {
+      return -1; // null is less than any non-null
+    }
+    if (c2 == null) {
+      return 1; // any non-null is greater than null
+    }
+    return c1.compareTo(c2);
   }
 
   default int compareToIgnoreCase(final MessageCode o) {
-    return compareIgnoreCase(this, o);
+    if (o == this) {
+      return 0; // both are null or both are the same instance
+    }
+    if (o == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    final String c1 = code() == null ? "" : code();
+    final String c2 = o.code() == null ? "" : o.code();
+    return c1.compareToIgnoreCase(c2);
+  }
+
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
+  static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same instance
+      return 0;
+    }
+    if (c1 == null) {
+      return -1; // null is less than any non-null instance
+    }
+    if (c2 == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    return c1.compareToIgnoreCase(c2);
+  }
+
+  /**
+   * <p>Returns {@code true} if the character sequence represented by this instance is the same as the
+   * character sequence of the other message code character sequence.</p>
+   *
+   * @return {@code true} if the character sequence represented by this instance is the same as the
+   * character sequence of the other message code character sequence, otherwise returns {@code false}.
+   */
+  @Override
+  boolean equals(final Object other);
+
+  default boolean equals(final MessageCode other) {
+    return compareTo(other) == 0;
+  }
+
+  static <T extends MessageCode> boolean equals(final T value1, final T value2) {
+    return compare(value1, value2) == 0;
+  }
+
+  static <T extends MessageCode> boolean notEquals(final T value1, final T value2) {
+    return !equals(value1, value2);
   }
 
   default boolean equalsIgnoreCase(final MessageCode o) {
     return equalsIgnoreCase(this, o);
   }
 
-  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
-  static int compare(final MessageCode c1, final MessageCode c2) {
-    if (c1 == c2) {
-      // both are null or both are the same MessageCode instance
-      return 0;
-    }
-    if (c1 == null) {
-      // c1 is null, therefore c2 is not
-      return -1;
-    }
-    final String code1 = c1.code();
-    final String code2 = c2.code();
-    if (code1 == code2) {
-      // both are null or both are the same String instance
-      return 0;
-    }
-    if (code1 == null) {
-      // code1 is null, therefore code2 is not
-      return -1;
-    }
-    return code1.compareTo(code2);
-  }
-
-  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
-  static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
-    if (c1 == c2) {
-      // both are null or both are the same MessageCode instance
-      return 0;
-    }
-    if (c1 == null) {
-      // c1 is null, therefore c2 is not
-      return -1;
-    }
-    final String code1 = c1.code();
-    final String code2 = c2.code();
-    if (code1 == code2) {
-      // both are null or both are the same String instance
-      return 0;
-    }
-    if (code1 == null) {
-      // code1 is null, therefore code2 is not
-      return -1;
-    }
-    return code1.compareToIgnoreCase(code2);
-  }
-
   static <T extends MessageCode> boolean equalsIgnoreCase(final T value1, final T value2) {
     return compareIgnoreCase(value1, value2) == 0;
+  }
+
+  static <T extends MessageCode> boolean notEqualsIgnoreCase(final T value1, final T value2) {
+    return !equalsIgnoreCase(value1, value2);
   }
 }

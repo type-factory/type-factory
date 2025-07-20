@@ -47,9 +47,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_TOO_SHORT)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_TOO_SHORT)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.MIN_LENGTH,
             minLength)
         .build();
@@ -64,9 +64,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_TOO_LONG)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_TOO_LONG)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.MAX_LENGTH,
             maxLength)
         .build();
@@ -98,9 +98,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(parserMessageCode)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(parserMessageCode)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
         .build();
@@ -115,9 +115,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
         .build();
@@ -132,9 +132,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
         .build();
@@ -149,9 +149,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.REGEX_PATTERN,
             regex.toString())
         .build();
@@ -167,8 +167,8 @@ public class ExceptionUtils {
         .cause(cause)
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
         .build();
   }
 
