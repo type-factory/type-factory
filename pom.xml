@@ -70,6 +70,7 @@
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
     <module>type-factory-core</module>
+    <module>type-factory-test-assertj</module>
     <module>type-factory-bom</module>
   </modules>
 
@@ -109,6 +110,13 @@
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-language</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-test-assertj</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>

@@ -122,8 +122,12 @@ public class TypeParserBuilderException extends RuntimeException  {
   }
 
 
-  public String getMessageCode() {
+  public String getErrorCode() {
     return messageCode.code();
+  }
+
+  public String getMessageCode() {
+    return getErrorCode();
   }
 
   public String getErrorMessage() {

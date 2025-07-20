@@ -23,22 +23,22 @@ public class UnicodeException extends RuntimeException {
 
   public UnicodeException(final Error error, final String messageArgument) {
     super(error.getErrorMessage(messageArgument));
-    this.messageCode = error.getMessageCode();
+    this.messageCode = error.getErrorCode();
   }
 
   public UnicodeException(final Error error, final String messageArgument, Throwable cause) {
     super(error.getErrorMessage(messageArgument), cause);
-    this.messageCode = error.getMessageCode();
+    this.messageCode = error.getErrorCode();
   }
 
   public UnicodeException(final Error error, final File messageArgument) {
     super(error.getErrorMessage(messageArgument.toString()));
-    this.messageCode = error.getMessageCode();
+    this.messageCode = error.getErrorCode();
   }
 
   public UnicodeException(final Error error, final File messageArgument, Throwable cause) {
     super(error.getErrorMessage(messageArgument.toString()), cause);
-    this.messageCode = error.getMessageCode();
+    this.messageCode = error.getErrorCode();
   }
 
   public int getMessageCode() {

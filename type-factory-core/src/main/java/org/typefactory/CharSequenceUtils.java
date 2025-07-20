@@ -1,5 +1,7 @@
 package org.typefactory;
 
+import org.typefactory.impl.ExceptionUtils;
+
 public class CharSequenceUtils {
 
   private CharSequenceUtils() {
@@ -15,12 +17,29 @@ public class CharSequenceUtils {
     final int length = value.length();
     int i = 0;
     while (i < length) {
-      int codePoint = value.charAt(i++);
-      if (Character.isSurrogate((char) codePoint) && i < length) {
-        codePoint = Character.toCodePoint((char) codePoint, value.charAt(i++));
-      }
-      if (!Character.isWhitespace(codePoint)) {
+      final char ch = value.charAt(i++);
+      if (Character.isHighSurrogate(ch)) {
+        if (i < length) {
+          final char lowCh = value.charAt(i++);
+          if (Character.isLowSurrogate(lowCh)) {
+            if (!Character.isWhitespace(Character.toCodePoint(ch, lowCh))) {
+              return false;
+            }
+          } else {
+            // Consider a high surrogate without a low surrogate to not be a blank character
+            return false;
+          }
+        } else {
+          // Consider a high surrogate without a low surrogate to not be a blank character
+          return false;
+        }
+      } else if (Character.isLowSurrogate(ch)) {
+        // Consider a low surrogate without a high surrogate to not be a blank character
         return false;
+      } else {
+        if (ch != ' ' && ch != '\t' && !Character.isWhitespace(ch)) {
+          return false;
+        }
       }
     }
     return true;
