@@ -447,6 +447,10 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");
+
+    ParserMessageCode INVALID_VALUE_MUST_BE_NUMERICALLY_COMPARABLE = Factory.parserMessageCode(
+        "invalid_value_must_be_numerically_comparable",
+        "Invalid value - must be numerically comparable, invalid character ''{0}''.");
   }
 
 }
