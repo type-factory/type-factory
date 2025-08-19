@@ -23,6 +23,11 @@ import java.util.Deque;
 import java.util.List;
 import org.typefactory.TypeParser;
 
+/**
+ * <p>A {@link Converter} that converts a code-point sequence to another code-point sequence.</p>
+ *
+ * <p>It is designed to be used when parsing a code-point sequence one code-point at a time as the {@link TypeParser} does.</p>
+ */
 final class CodePointSequenceToCodePointSequenceConverter implements Converter {
 
   /**
@@ -73,7 +78,7 @@ final class CodePointSequenceToCodePointSequenceConverter implements Converter {
     return (rootTreeNode == null || rootTreeNode.isEmpty())
            && (categoryToCodePointSequence == null || categoryToCodePointSequence.isEmpty());
   }
-  
+
   /**
    * The maximum number of code-points that a single code-point could be converted to.
    */

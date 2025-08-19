@@ -44,6 +44,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <junit-jupiter.version>5.13.1</junit-jupiter.version>
+    <junit-platform-reporting.version>1.13.0-M3</junit-platform-reporting.version>
     <assertj-core.version>3.27.3</assertj-core.version>
     <mockito-bom.version>5.18.0</mockito-bom.version>
     <icu4j.version>77.1</icu4j.version>
@@ -53,12 +54,12 @@
 
     <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
 
-    <!-- SonarQube - Constructors should not have too many parameters -
+    <!-- SonarCloud - Constructors should not have too many parameters -
          We employ builders to create classed which results in constructors with many parameters -->
     <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
 
-    <!-- SonarQube - Cognitive Complexity of methods should not be too high -
+    <!-- SonarCloud - Cognitive Complexity of methods should not be too high -
          Where there is "cognitive complexity", I believe it is justified.
          I have take care to ensure that the code is readable and understandable. -->
     <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S3776</sonar.issue.ignore.multicriteria.e2.ruleKey>
@@ -70,6 +71,7 @@
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
     <module>type-factory-core</module>
+    <module>type-factory-test-assertj</module>
     <module>type-factory-bom</module>
   </modules>
 
@@ -112,15 +114,31 @@
       </dependency>
 
       <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-test-assertj</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-params</artifactId>
         <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-reporting</artifactId>
+        <version>${junit-platform-reporting.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -135,6 +153,7 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
         <version>${assertj-core.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -263,12 +282,15 @@
             <include>**/*TestCase.java</include>
             <include>**/*TestCases.java</include>
           </includes>
-          <systemProperties>
-            <property>
-              <name>java.util.logging.config.file</name>
-              <value>${project.basedir}/src/test/resources/logging.properties</value>
-            </property>
-          </systemProperties>
+          <systemPropertyVariables>
+            <java.util.logging.config.file>${project.basedir}/src/test/resources/logging.properties</java.util.logging.config.file>
+          </systemPropertyVariables>
+          <properties>
+            <configurationParameters>
+              junit.platform.reporting.open.xml.enabled=true
+              junit.platform.reporting.output.dir=${project.build.directory}/surefire-reports
+            </configurationParameters>
+          </properties>
         </configuration>
       </plugin>
 

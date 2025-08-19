@@ -78,7 +78,7 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Azerbaijani_alphabet" target="_blank">Azerbaijani alphabet
                – Wikipedia</a> provided information about the Azerbaijani alphabet and what
                diacritics are supported.
-               
+          
           @see <a href="https://azerbaijan.az/en/information/107" target="_blank">Azerbaijani language
                – Azerbaijan.az</a> provided information about the Azerbaijani language and alphabet."""),
 
@@ -99,7 +99,7 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Danish_orthography" target="_blank">Danish
                Orthography – Wikipedia</a> provided information about the Danish alphabet and what
                diacritics are supported.
-               
+          
           @see <a href="https://www.danishnet.com/culture/danish-alphabet" target="_blank">Danish
                Alphabet – Danishnet.com</a> provided information about the Danish alphabet.""",
       SEE_ALSO_ALPHABETS_LETTERS_AND_DIACRITICS_IN_EUROPEAN_LANGUAGES),
@@ -138,7 +138,7 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Greek_alphabet" target="_blank">Greek
                Alphabet – Wikipedia</a> provided information about the Greek alphabet and what
                diacritics are supported.
-               
+          
           @see <a href="https://unicode.org/charts/PDF/U0370.pdf" target="_blank">Greek and Coptic
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Greek and Coptic scripts."""),
@@ -153,7 +153,7 @@ public enum LettersData {
       """
           @see <a href="https://en.wikipedia.org/wiki/English_alphabet" target="_blank">English
                Alphabet – Wikipedia</a> provided information about the English alphabet.
-               
+          
           @see <a href="https://unicode.org/charts/PDF/U0000.pdf" target="_blank">Controls and Basic Latin
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Basic Latin scripts.""",
@@ -235,15 +235,15 @@ public enum LettersData {
       """
           @see <a href="https://en.wikipedia.org/wiki/Hindi" target="_blank">Hindi
                – Wikipedia</a> provided information about the Hindi alphabet.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Devanagari" target="_blank">Devanagari
                – Wikipedia</a> provided information about the Devanagari script and what
                dependant vowel sounds and diacritic signs are used.
-                    
+          
           @see <a href="https://www.careerpower.in/hindi-alphabet-varnamala.html" target="_blank">Hindi
                Alphabet – Career Power, India</a> provided information about the Hindi alphabet and what
                dependant vowel sounds and diacritic signs are used.
-               
+          
           @see <a href="https://unicode.org/charts/PDF/U0900.pdf" target="_blank">Devanagari
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Devanagari script."""),
@@ -276,19 +276,19 @@ public enum LettersData {
       """
           @see <a href="https://en.wikipedia.org/wiki/Nepalese_scripts" target="_blank">Nepalese Scripts
                – Wikipedia</a> provided information about the Nepalese scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Devanagari" target="_blank">Devanagari
                – Wikipedia</a> provided information about the Devanagari script and what
                dependant vowel sounds and diacritic signs are used.
-                    
+          
           @see <a href="https://nepalilanguage.org/alphabet/" target="_blank">Nepali
                Alphabet – Nepali Language Resource Center</a> provided information about the Nepalese alphabet and what
                dependant vowel sounds and diacritic signs are used.
-               
+          
           @see <a href="https://www.easynepalityping.com/nepali-alphabet" target="_blank">Nepali
                Alphabet – Easy Nepali Typing</a> provided information about the Nepalese alphabet and what
                dependant vowel sounds and diacritic signs are used.
-               
+          
           @see <a href="https://unicode.org/charts/PDF/U0900.pdf" target="_blank">Devanagari
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Devanagari script."""),
@@ -344,7 +344,7 @@ public enum LettersData {
           @see <a href="https://www.thinkinitalian.com/the-italian-alphabet" target="_blank">The Italian alphabet
                – Think in Italian</a> provided information about the Italian alphabet and confirmed Wikipedia
                information about which letters are not in the official alphabet but are often found in loan-words.
-               
+          
           @see <a href="https://accademiadellacrusca.it/it/consulenza/denominazione-e-genere-delle-lettere-straniere-j-k-w-x-y/84"
                target="_blank">Denominazione e genere delle lettere straniere (J, K, W, X, Y)
                – Accademia della Crusca</a> provided information about the Italian alphabet and confirmed the official
@@ -365,7 +365,7 @@ public enum LettersData {
       """
           @see <a href="https://en.wikipedia.org/wiki/Hiragana" target="_blank">Hiragana
                – Wikipedia</a> provided information about the Hiragana script.
-               
+          
           @see <a href="https://unicode.org/charts/PDF/U3040.pdf" target="_blank">Hiragana
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Hiragana script."""),
@@ -381,7 +381,7 @@ public enum LettersData {
       """
           @see <a href="https://en.wikipedia.org/wiki/Katakana" target="_blank">Katakana
                – Wikipedia</a> provided information about the Katakana script.
-                    
+          
           @see <a href="https://unicode.org/charts/PDF/U30A0.pdf" target="_blank">Katakana
                Unicode Chart – Unicode Standard v14</a> provided information about
                the Unicode encodings for characters in the Katakana script."""),
@@ -397,14 +397,14 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
                – Wikipedia</a> provided information about the Kanji script and its relationship to
                the Chinese family of scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Han_unification" target="_blank">Han
                Unification – Wikipedia</a> provided information about the unified Unicode
                Hanzi, Kanji, Hanja scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Chinese_family_of_scripts" target="_blank">Chinese
                family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/List_of_CJK_fonts" target="_blank">List of CJK
                fonts – Wikipedia</a> provided information about some of the notable set of fonts for
                rendering CJK fonts.
@@ -412,7 +412,7 @@ public enum LettersData {
           @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
                FAQs – Unicode Org</a> provided information about
                the Unicode Unified CJK encodings.
-               
+          
           @see <a href="doc-files/JAPANESE_ja_Hani.html" target="_blank">JAPANESE_ja_Hani</a>
                for code points in this language set."""),
 
@@ -424,23 +424,23 @@ public enum LettersData {
       LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
       LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
       """
-          @see <a href="https://en.wikipedia.org/wiki/Jinmeiy%C5%8D_kanji" target="_blank">Jinmeiyō 
+          @see <a href="https://en.wikipedia.org/wiki/Jinmeiy%C5%8D_kanji" target="_blank">Jinmeiyō
                kanji – Wikipedia</a> provided information about the Jinmeiyō kanji which are approved
                characters for use in personal names.
 
-          @see <a href="https://www.moj.go.jp/MINJI/minji86.html" target="_blank">Kanji characters 
+          @see <a href="https://www.moj.go.jp/MINJI/minji86.html" target="_blank">Kanji characters
                that can be used for a child's name – Ministry of Justice</a> provided link to
-               document of approved <a href="https://www.moj.go.jp/content/001131003.pdf">list of Kanji 
+               document of approved <a href="https://www.moj.go.jp/content/001131003.pdf">list of Kanji
                for personal names</a>.
 
           @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
                – Wikipedia</a> provided information about the Kanji script and its relationship to
                the Chinese family of scripts.
-                    
+          
           @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
                FAQs – Unicode Org</a> provided information about
                the Unicode Unified CJK encodings.
-               
+          
           @see <a href='./doc-files/JAPANESE_ja_Hani_jinmeiyo.txt'>JAPANESE_ja_Hani_jinmeiyo</a>
                for code points in this language set."""
   ),
@@ -453,17 +453,17 @@ public enum LettersData {
       LANGUAGE_ALPHABET_NOT_INCLUDED_JAVADOC,
       LANGUAGE_ALPHABET_IF_YOU_SEE_A_MISTAKE_JAVADOC,
       """
-          @see <a href="https://en.wikipedia.org/wiki/List_of_jōyō_kanji" target="_blank">Jōyō 
+          @see <a href="https://en.wikipedia.org/wiki/List_of_jōyō_kanji" target="_blank">Jōyō
                kanji – Wikipedia</a> provided information about the Jōyō kanji.
 
           @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
                – Wikipedia</a> provided information about the Kanji script and its relationship to
                the Chinese family of scripts.
-                    
+          
           @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
                FAQs – Unicode Org</a> provided information about
                the Unicode Unified CJK encodings.
-               
+          
           @see <a href='./doc-files/JAPANESE_ja_Hani_joyo.txt'>JAPANESE_ja_Hani_joyo</a>
                for code points in this language set."""
   ),
@@ -478,8 +478,8 @@ public enum LettersData {
           by the Ideographic Research Group (IRG) and are designated
           in the Unicode Group Data via the
           <a href='http://www.unicode.org/reports/tr38/tr38-30.html#kIRG_JSource'><tt>kIRG_JSource</tt> property</a>.</p>
-                    
-          <ul>      
+          
+          <ul>
             <li>J0 JIS X 0208-1990</li>
             <li>J1 JIS X 0212-1990</li>
             <li>J4 JIS X 0213:2004 level-4</li>
@@ -502,14 +502,14 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Kanji" target="_blank">Kanji
                – Wikipedia</a> provided information about the Kanji script and its relationship to
                the Chinese family of scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Han_unification" target="_blank">Han
                Unification – Wikipedia</a> provided information about the unified Unicode
                Hanzi, Kanji, Hanja scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Chinese_family_of_scripts" target="_blank">Chinese
                family of scripts – Wikipedia</a> provided information about the Chinese family of scripts.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/List_of_CJK_fonts" target="_blank">List of CJK
                fonts – Wikipedia</a> provided information about some of the notable set of fonts for
                rendering CJK fonts.
@@ -517,7 +517,7 @@ public enum LettersData {
           @see <a href="https://unicode.org/faq/han_cjk.html" target="_blank">Chinese and Japanese
                FAQs – Unicode Org</a> provided information about
                the Unicode Unified CJK encodings.
-               
+          
           @see <a href="http://www.unicode.org/reports/tr38/tr38-30.html" target="_blank">Unicode
             Han Database (UNIHAN), Proposed Update Unicode® Standard Annex #38</a>
                for information on Ideographic Research Group (IRG), and in particular the
@@ -549,7 +549,7 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
                orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
                diacritics are supported.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Bokmål" target="_blank">Bokmål
                – Wikipedia</a> provided information about the Norwegian Bokmål alphabet and what
                diacritics are supported.""",
@@ -575,7 +575,7 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Norwegian_orthography" target="_blank">Norwegian
                orthography – Wikipedia</a> provided information about the Norwegian alphabet and what
                diacritics are supported.
-                    
+          
           @see <a href="https://en.wikipedia.org/wiki/Nynorsk" target="_blank">Nynorsk
                – Wikipedia</a> provided information about the Norwegian Nynorsk alphabet and what
                diacritics are supported.""",
@@ -626,9 +626,9 @@ public enum LettersData {
           @see <a href="https://en.wikipedia.org/wiki/Swedish_orthography" target="_blank">Swedish
                Orthography – Wikipedia</a> provided information about the Swedish alphabet and what
                diacritics are supported.
-               
+          
           @see <a href="https://learningswedish.se/courses/1/pages/the-alphabet" target="_blank">Swedish
-               Alphabet– Swedish Institute</a> provided by the Svenska institutet (Swedish 
+               Alphabet– Swedish Institute</a> provided by the Svenska institutet (Swedish
                Institute) as part of their Learning Swedish course.""",
       SEE_ALSO_ALPHABETS_LETTERS_AND_DIACRITICS_IN_EUROPEAN_LANGUAGES),
 
@@ -752,12 +752,12 @@ public enum LettersData {
   }
 
   public String getLocaleLanguageTag() {
-    return locale.toLanguageTag().replaceAll("[\s_-]+", "_");
+    return locale.toLanguageTag().replaceAll("[ _-]+", "_");
   }
 
   public String getTargetEnumName() {
     return String.format("%s_%s",
-        getLocaleDisplayLanguage().toUpperCase().replaceAll("[\s_-]+", "_"),
+        getLocaleDisplayLanguage().toUpperCase().replaceAll("[ _-]+", "_"),
         getLocaleLanguageTag());
   }
 

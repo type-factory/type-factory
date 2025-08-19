@@ -17,6 +17,8 @@ package org.typefactory.impl;
 
 import static org.typefactory.impl.RangedSubsetImpl.EMPTY_SUBSET;
 
+import org.typefactory.Category;
+
 public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
 
   private final RangedSubsetImpl wrapped;
@@ -33,6 +35,11 @@ public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
   @Override
   public boolean contains(int codePoint) {
     return wrapped.contains(codePoint);
+  }
+
+  @Override
+  public boolean includes(Category category) {
+    return wrapped.includes(category);
   }
 
   @Override

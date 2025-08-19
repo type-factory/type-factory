@@ -207,7 +207,7 @@ class MessageUtilsTest {
       xx | xx_x | some parser error message-X with value {0}. | []     | some parser error message-X with value {0}.
       xx | yyyy | some parser error message-Y with value {0}. | [null] | some parser error message-Y with value null.
       xx | zzzz | some parser error message-Z with value {0}. | [JJKK] | some parser error message-Z with value JJKK.
-            
+      
       es | ss   | some parser error message-S.                | null   | algún mensaje de error del analizador-S.
       es | tt   | some parser error message-T.                | []     | algún mensaje de error del analizador-T.
       es | uu.u | some parser error message-U.                | [null] | algún mensaje de error del analizador-U.
@@ -216,7 +216,7 @@ class MessageUtilsTest {
       es | xx_x | some parser error message-X with value {0}. | []     | algún mensaje de error del analizador-X con valor {0}.
       es | yyyy | some parser error message-Y with value {0}. | [null] | algún mensaje de error del analizador-Y con valor null.
       es | zzzz | some parser error message-Z with value {0}. | [JJKK] | algún mensaje de error del analizador-Z con valor JJKK.
-            
+      
       de | ss   | some parser error message-S.                | null   | einige Parser-Fehlermeldungen-S.
       de | tt   | some parser error message-T.                | []     | einige Parser-Fehlermeldungen-T.
       de | uu.u | some parser error message-U.                | [null] | einige Parser-Fehlermeldungen-U.
@@ -257,7 +257,7 @@ class MessageUtilsTest {
       xx | xx_x | some parser error message-X with value {0}. | some parser error message-X with value {0}.
       xx | yyyy | some parser error message-Y with value {0}. | some parser error message-Y with value {0}.
       xx | zzzz | some parser error message-Z with value {0}. | some parser error message-Z with value {0}.
-            
+      
       es | jj   |                                             | jj
       es | kk   | some parser error message-K.                | some parser error message-K.
       es | ss   | some parser error message-S.                | algún mensaje de error del analizador-S.
@@ -268,7 +268,7 @@ class MessageUtilsTest {
       es | xx_x | some parser error message-X with value {0}. | algún mensaje de error del analizador-X con valor {0}.
       es | yyyy | some parser error message-Y with value {0}. | algún mensaje de error del analizador-Y con valor {0}.
       es | zzzz | some parser error message-Z with value {0}. | algún mensaje de error del analizador-Z con valor {0}.
-            
+      
       de | jj   |                                             | jj
       de | kk   | some parser error message-K.                | some parser error message-K.
       de | ss   | some parser error message-S.                | einige Parser-Fehlermeldungen-S.
@@ -302,7 +302,7 @@ class MessageUtilsTest {
       yy | pp   | null                                        | pp
       yy | qq.q | ''                                          | qq.q
       yy | rr-r | '  '                                        | rr-r
-            
+      
       xx | ss   | some parser error message-S.                | some parser error message-S.
       xx | tt   | some parser error message-T.                | some parser error message-T.
       xx | uu.u | some parser error message-U.                | some parser error message-U.
@@ -311,7 +311,7 @@ class MessageUtilsTest {
       xx | xx_x | some parser error message-X with value {0}. | some parser error message-X with value {0}.
       xx | yyyy | some parser error message-Y with value {0}. | some parser error message-Y with value {0}.
       xx | zzzz | some parser error message-Z with value {0}. | some parser error message-Z with value {0}.
-            
+      
       es | ss   | some parser error message-S.                | some parser error message-S.
       es | tt   | some parser error message-T.                | some parser error message-T.
       es | uu.u | some parser error message-U.                | some parser error message-U.
@@ -320,7 +320,7 @@ class MessageUtilsTest {
       es | xx_x | some parser error message-X with value {0}. | some parser error message-X with value {0}.
       es | yyyy | some parser error message-Y with value {0}. | some parser error message-Y with value {0}.
       es | zzzz | some parser error message-Z with value {0}. | some parser error message-Z with value {0}.
-            
+      
       de | ss   | some parser error message-S.                | some parser error message-S.
       de | tt   | some parser error message-T.                | some parser error message-T.
       de | uu.u | some parser error message-U.                | some parser error message-U.

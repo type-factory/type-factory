@@ -212,4 +212,40 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual).hasToString("""
         TypeParserBuilderException{message='some default error message because of A', messageCode='some.error.code', defaultErrorMessage='some default error message because of {0}', invalidCodePoint='A', cause='Exception - some exception message'}""");
   }
+
+
+  private static final class SomeClass {
+
+  }
+
+  private static final class SomeCharSequence implements CharSequence {
+
+    private final char[] chars;
+
+    public SomeCharSequence(final char[] chars) {
+      this.chars = chars == null ? new char[0] : chars;
+    }
+
+    @Override
+    public int length() {
+      return chars.length;
+    }
+
+    @Override
+    public char charAt(int index) {
+      return chars[index];
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+      final char[] result = new char[end - start];
+      System.arraycopy(chars, start, result, 0, result.length);
+      return new TypeParserBuilderExceptionTest.SomeCharSequence(result);
+    }
+
+    @Override
+    public String toString() {
+      return new String(chars);
+    }
+  }
 }

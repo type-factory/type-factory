@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Type Factory Example Spring Boot Application</title>
+  <!--
+  Original source location – https://unpkg.com/@stoplight/elements/web-components.min.js
+  -->
+  <script src="./stoplight/elements/7.7.10/web-components.min.js"></script>
+  <!--
+  Original source location – https://unpkg.com/@stoplight/elements/styles.min.css
+  -->
+  <link rel="stylesheet" href="./stoplight/elements/7.7.10/styles.min.css">
+  <!--
+    Some stylesheet overrides or our own. We use CSS classes because most HTML attributes are
+    sanitized (removed) by the Stoplight Elements OpenAPI UI renderer.
+  -->
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+<!-- Stoplight Elements renders the OpenAPI UI into the '<elements-api>' below using the Web Component JS imported above -->
+<elements-api id="open-api-docs" router="hash" layout="sidebar"></elements-api>
+
+<script>
+  (async () => {
+    // We use a URL query parameter 'url' to hold the desired OpenAPI specification location
+    const urlQueryParams = new URLSearchParams(window.top.location.search);
+    const openApiDocsUrl = urlQueryParams.has('url') ? urlQueryParams.get('url') : ''
+    // Find the '<elements-api>' element identified by id
+    const docsElement = document.getElementById('open-api-docs');
+    // Configure the 'apiDescriptionUrl' attribute of the '<elements-api>' element to be the OpenAPI docs url from the URL query parameter.
+    docsElement.apiDescriptionUrl = openApiDocsUrl;
+  })();
+</script>
+
+</body>
+</html>

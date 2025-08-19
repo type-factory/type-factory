@@ -15,23 +15,27 @@
 */
 package org.typefactory.numbertypes;
 
-import org.typefactory.MessageCode;
+import java.io.Serial;
 import org.typefactory.IntegerType;
-import org.typefactory.TypeParser;
+import org.typefactory.IntegerTypeParser;
+import org.typefactory.MessageCode;
 
 public final class InvoiceNumber extends IntegerType {
+
+  @Serial
+  private static final long serialVersionUID = 8672243696039324825L;
 
   private static final MessageCode ERROR_MESSAGE =
       MessageCode.of("invalid.invoice.number", "must be a 9-digit invoice-number");
 
-  private static final TypeParser TYPE_PARSER =
-      TypeParser.builder()
+  private static final IntegerTypeParser TYPE_PARSER =
+      IntegerTypeParser.builder()
           .messageCode(ERROR_MESSAGE)
-          .removeAllWhitespace()
-          .removeAllChars('-')
-          .convertEmptyToNull()
-          .acceptDigits0to9()
-          .fixedSize(9)
+          .minValueInclusive(100_000_000)
+          .maxValueInclusive(999_999_999)
+          .allowBase10Numbers()
+          .ignoreAllWhitespace()
+          .ignoreAllOccurrencesOfChar('-')
           .build();
 
   private InvoiceNumber(final Integer value) {
@@ -39,6 +43,6 @@ public final class InvoiceNumber extends IntegerType {
   }
 
   public static InvoiceNumber of(final CharSequence value) {
-    return TYPE_PARSER.parseToIntegerType(value, InvoiceNumber::new);
+    return TYPE_PARSER.parse(value, InvoiceNumber::new);
   }
 }

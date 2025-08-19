@@ -16,51 +16,13 @@
 package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.ShortType;
-import org.typefactory.TypeParser;
-import org.typefactory.testutils.CodePointArrayConverter;
-import org.typefactory.testutils.CodePointConverter;
 import org.typefactory.testutils.CodePointSequenceConverter;
 
 class TypeParserImpl_Test {
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = "  ")
-  void parseToShortType_withPreserveNullAndEmpty_returnsNullForNullValue(final String value) {
-
-    final var parser = TypeParser.builder()
-        .preserveNullAndEmpty()
-        .removeAllWhitespace()
-        .build();
-
-    final var actual = parser.parseToShortType(value, SomeShortType::new);
-
-    assertThatObject(actual).isNull();
-  }
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @ValueSource(strings = "  ")
-  void parseToShortType_withConvertEmptyToNull_returnsNullForNullValue(final String value) {
-
-    final var parser = TypeParser.builder()
-        .convertEmptyToNull()
-        .removeAllWhitespace()
-        .build();
-
-    final var actual = parser.parseToShortType(value, SomeShortType::new);
-
-    assertThatObject(actual).isNull();
-  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -77,7 +39,7 @@ class TypeParserImpl_Test {
       ' \tEE\t '     | 2 | 4
       '\t \tFF\t \t' | 3 | 5
       """, delimiter = '|', nullValues = "null")
-  void parseToShortType_withPreserveNullAndEmpty_returnsAsExpected(
+  void endAndStartIndex_returnAsExpected(
       @ConvertWith(CodePointSequenceConverter.class) final int[] codePointSequence,
       final int expectedInclusiveStartIndex, final int expectedExclusiveEndIndex) {
 
@@ -86,11 +48,5 @@ class TypeParserImpl_Test {
 
     assertThat(actualEndIndex).isEqualTo(expectedExclusiveEndIndex);
     assertThat(actualStartIndex).isEqualTo(expectedInclusiveStartIndex);
-  }
-
-  static class SomeShortType extends ShortType {
-    public SomeShortType(Short value) {
-      super(value);
-    }
   }
 }

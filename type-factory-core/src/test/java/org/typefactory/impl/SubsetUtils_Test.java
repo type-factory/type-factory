@@ -27,11 +27,11 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.Subset.CodePointRange;
-import org.typefactory.testutils.RangeAsIntegerConverter;
-import org.typefactory.testutils.RangesAsIntegerArrayConverter;
 import org.typefactory.testutils.RangeAsCharConverter;
-import org.typefactory.testutils.RangesAsCharArrayConverter;
+import org.typefactory.testutils.RangeAsIntegerConverter;
 import org.typefactory.testutils.RangeAsLongConverter;
+import org.typefactory.testutils.RangesAsCharArrayConverter;
+import org.typefactory.testutils.RangesAsIntegerArrayConverter;
 import org.typefactory.testutils.RangesAsLongArrayConverter;
 
 class SubsetUtils_Test {

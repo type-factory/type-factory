@@ -22,7 +22,7 @@ package org.typefactory.impl;
  * <p>This implementation is only slightly modified from the Dual-Pivot Quicksort by Vladimir Yaroslavskiy and documented in his original research
  * paper:</p>
  * <ul>
- *   <li><a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a></li>
+ *   <li><a href="https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a></li>
  * </ul>
  *
  * <blockquote>
@@ -33,7 +33,7 @@ package org.typefactory.impl;
  * @author Vladimir Yaroslavskiy
  * @author Evan Toliopoulos
  *
- * @see <a href="codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a>
+ * @see <a href="https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf">Dual-Pivot Quicksort by Vladimir Yaroslavskiy (PDF)</a>
  */
 public final class UnsignedIntegerSort {
 
@@ -70,6 +70,7 @@ public final class UnsignedIntegerSort {
   private static void unsignedIntegerDualPivotQuicksort(final int[] a, final int left, final int right, int div) {
 
     final int len = right - left;
+
     if (len < 27) { // insertion sort for tiny array
       for (int i = left + 1; i <= right; i++) {
         for (int j = i;
@@ -80,16 +81,23 @@ public final class UnsignedIntegerSort {
       }
       return;
     }
+
     final int third = len / div;
+
     // "medians"
     int m1 = left + third;
     int m2 = right - third;
+
+    // Cannot happen with insertion sort above for tiny array because a 'third' will never be zero – left here for completeness
     if (m1 <= left) {
       m1 = left + 1;
     }
+
+    // Cannot happen with insertion sort above for tiny array because a 'third' will never be zero – left here for completeness
     if (m2 >= right) {
       m2 = right - 1;
     }
+
     if ((0x00000000_ffffffffL & a[m1]) < (0x00000000_ffffffffL & a[m2])) {
       swap(a, m1, left);
       swap(a, m2, right);

@@ -17,6 +17,7 @@ package org.typefactory.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -56,9 +57,75 @@ class PrimitiveSortedSetOfIntTest {
     for (int value : values) {
       primitiveSortedSetOfInt.add(value);
     }
-    final var actual = primitiveSortedSetOfInt.toArray();
-    assertThat(actual)
+
+    assertThat(primitiveSortedSetOfInt.size()).isEqualTo(expected.length);
+
+    assertThat(primitiveSortedSetOfInt.toArray())
         .hasSize(expected.length)
         .containsExactly(expected);
   }
+
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      INITIAL_VALUES                     | VALUES_TO_REMOVE     | EXPECTED
+      [3]                                | [3, 77]              | []
+      [3,  3]                            | [3, 77]              | []
+      [2,  3]                            | [2, 77]              | [3]
+      [3,  2]                            | [3, 77]              | [2]
+      [2,  2,  3]                        | [2, 77]              | [3]
+      [2,  3,  3]                        | [3, 77]              | [2]
+      [2,  3, 90]                        | [3, 77]              | [2, 90]
+      [3,  2, 90]                        | [3, 77]              | [2, 90]
+      [3, 90,  2]                        | [3, 77]              | [2, 90]
+      [90, 2,  3]                        | [3, 77]              | [2, 90]
+      [90, 3,  2]                        | [3, 77]              | [2, 90]
+      [3, 88,  2, 90]                    | [90, 77]             | [2, 3, 88]
+      [3, 88, 44,  2, 90]                | [44, 77]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90,  3]            | [44, 77]             | [2, 3, 88, 90]
+      [3, 88, 44, 88,  2, 90]            | [44, 77]             | [2, 3, 88, 90]
+      [3, 88, 44,  2,  2, 90]            | [44, 77]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90, 90]            | [44, 77]             | [2, 3, 88, 90]
+      [3, 88, 44,  2, 90,  4]            | [44, 77]             | [2, 3,  4, 88, 90]
+      [3, 88, 44, 45,  2, 90,  4]        | [44, 88, 77]         | [2, 3,  4, 45, 90]
+      [3, 88, 44, 45, 55,  2, 90,  4]    | [44, 55, 77]         | [2, 3,  4, 45, 88, 90]
+      [3, 88, 44, 45, 55, 54,  2, 90, 4] | [44, 55, 77]         | [2, 3,  4, 45, 54, 88, 90]
+      """, delimiter = '|', useHeadersInDisplayName = true)
+  void removeContainsAllRemainingValuesSorted(
+      @ConvertWith(IntArrayConverter.class) final int [] values,
+      @ConvertWith(IntArrayConverter.class) final int [] valuesToRemove,
+      @ConvertWith(IntArrayConverter.class) final int [] expected) {
+
+    final var primitiveSortedSetOfInt = new PrimitiveSortedSetOfInt();
+    for (int value : values) {
+      primitiveSortedSetOfInt.add(value);
+    }
+    for (int valueToRemove : valuesToRemove) {
+      final boolean removeResult = primitiveSortedSetOfInt.remove(valueToRemove);
+      if (valueToRemove == 77) {
+        assertThat(removeResult).isFalse();
+      } else {
+        assertThat(removeResult).isTrue();
+      }
+    }
+
+    assertThat(primitiveSortedSetOfInt.size()).isEqualTo(expected.length);
+
+    assertThat(primitiveSortedSetOfInt.toArray())
+        .hasSize(expected.length)
+        .containsExactly(expected)
+        .doesNotContain(valuesToRemove);
+  }
+
+  @Test
+  void remove_NonExistingValue_ReturnsFalse() {
+    final var set = new PrimitiveSortedSetOfInt();
+    set.add(1);
+    set.add(3);
+
+    boolean result = set.remove(2);
+
+    assertThat(result).isFalse();
+    assertThat(set.toArray()).containsExactly(1, 3);
+  }
+
 }

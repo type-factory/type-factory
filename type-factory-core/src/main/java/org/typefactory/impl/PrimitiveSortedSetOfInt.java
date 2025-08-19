@@ -32,6 +32,12 @@ final class PrimitiveSortedSetOfInt {
     return size;
   }
 
+  /**
+   * Adds a value to the set.
+   *
+   * @param value the value to add
+   * @return {@code true} if the value was added, {@code false} if the value was already present
+   */
   boolean add(final int value) {
     ensureCapacity();
     if (size < 5) {
@@ -54,6 +60,32 @@ final class PrimitiveSortedSetOfInt {
     }
     integers[size++] = value;
     return true;
+  }
+
+  /**
+   * Removes a value from the set.
+   *
+   * @param value the value to remove
+   * @return {@code true} if the value was removed, {@code false} if the value was not present
+   */
+  boolean remove(final int value) {
+    if (size < 5) {
+      for (int i = 0; i < size; ++i) {
+        if (integers[i] == value) {
+          System.arraycopy(integers, i + 1, integers, i, size - i - 1);
+          size--;
+          return true;
+        }
+      }
+    } else {
+      int index = Arrays.binarySearch(integers, 0, size, value);
+      if (index >= 0) {
+        System.arraycopy(integers, index + 1, integers, index, size - index - 1);
+        size--;
+        return true;
+      }
+    }
+    return false;
   }
 
   private void ensureCapacity() {

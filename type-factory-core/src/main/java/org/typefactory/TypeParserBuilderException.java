@@ -233,9 +233,33 @@ public class TypeParserBuilderException extends RuntimeException  {
       // don't instantiate me
     }
 
+    public static final MessageCode INVALID_CUSTOM_RADIX_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_custom_radix",
+        "An invalid numeric-base has been configured for the numeric type parser – provide at least two characters for a radix of two or greater in your parser.");
+
+    public static final MessageCode DUPLICATE_CUSTOM_RADIX_CHARACTER_EXCEPTION_MESSAGE = Factory.messageCode(
+        "duplicate_custom_radix_character",
+        "Custom numeric-base character-set must not contain duplicates – check both your custom base character-set and case-sensitivity of the parser.");
+
     public static final MessageCode INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE = Factory.messageCode(
         "invalid_zero_digit",
         "An invalid zero digit has been configured for the type parser – the zero digit character must represent zero and the subsequent nine characters must be valid unicode decimal digits.");
+
+    public static final MessageCode INVALID_SHORT_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_short_min_value",
+        "An invalid minimum value has been configured for the ShortTypeParser – minimum value must greater-than or equal to Short.MIN_VALUE.");
+
+    public static final MessageCode INVALID_SHORT_MAX_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_short_max_value",
+        "An invalid maximum value has been configured for the ShortTypeParser – maximum value must be less-than or equal to Short.MAX_VALUE.");
+
+    public static final MessageCode INVALID_INTEGER_MIN_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_integer_min_value",
+        "An invalid minimum value has been configured for the IntegerTypeParser – minimum value must greater-than or equal to Integer.MIN_VALUE.");
+
+    public static final MessageCode INVALID_INTEGER_MAX_VALUE_EXCEPTION_MESSAGE = Factory.messageCode(
+        "invalid_integer_max_value",
+        "An invalid maximum value has been configured for the IntegerTypeParser – maximum value must be less-than or equal to Integer.MAX_VALUE.");
   }
 
 }

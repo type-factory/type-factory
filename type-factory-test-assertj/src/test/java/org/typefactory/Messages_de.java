@@ -13,13 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package org.typefactory.impl;
+package org.typefactory;
 
-enum WhiteSpace {
-  FORBID_WHITESPACE,
-  PRESERVE_WHITESPACE,
-  PRESERVE_AND_CONVERT_WHITESPACE,
-  NORMALIZE_WHITESPACE,
-  NORMALIZE_AND_CONVERT_WHITESPACE,
-  REMOVE_WHITESPACE,
+import java.util.ListResourceBundle;
+
+public class Messages_de extends ListResourceBundle {
+
+  @Override
+  protected Object[][] getContents() {
+    return new Object[][]{
+        {"some.code.a", "eine Nachricht"},
+        {"some.code.b", "eine Nachricht mit Wert {1}"},
+    };
+  }
 }

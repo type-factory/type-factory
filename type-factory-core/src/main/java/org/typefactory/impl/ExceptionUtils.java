@@ -17,6 +17,7 @@ package org.typefactory.impl;
 
 import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
+import java.math.RoundingMode;
 import java.util.regex.Pattern;
 import org.typefactory.Category;
 import org.typefactory.InvalidValueException;
@@ -24,7 +25,7 @@ import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.MessageCode;
 import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
 
-public class ExceptionUtils {
+class ExceptionUtils {
 
   private static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
       Category.getCategoryBitFlags(
@@ -72,6 +73,175 @@ public class ExceptionUtils {
         .build();
   }
 
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minExclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeGreaterThanMinValue(messageCode, targetTypeClass, invalidValue, minExclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minExclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
+        .build();
+  }
+
+
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeGreaterThanOrEqualToMinValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long minInclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeGreaterThanOrEqualToMinValue(messageCode, targetTypeClass, invalidValue, minInclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MIN_VALUE,
+            minInclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxExclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxExclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxExclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeLessThanMaxValue(messageCode, targetTypeClass, invalidValue, maxExclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxExclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxInclusiveValue) {
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxInclusiveValue)
+        .build();
+  }
+
+  static <T> InvalidValueException forValueMustBeLessThanOrEqualToMaxValue(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final T invalidValue,
+      final long maxInclusiveValue,
+      final RoundingMode roundingMode) {
+
+    if (roundingMode == null) {
+      return forValueMustBeLessThanOrEqualToMaxValue(messageCode, targetTypeClass, invalidValue, maxInclusiveValue);
+    }
+
+    return InvalidValueException.builder()
+        .invalidValue(invalidValue)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MUST_BE_LESS_THAN_OR_EQUAL_TO_USING_ROUNDING_MODE)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.MAX_VALUE,
+            maxInclusiveValue)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.ROUNDING_MODE,
+            roundingMode)
+        .build();
+  }
+
   static InvalidValueException forInvalidCodePoint(
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
@@ -110,7 +280,7 @@ public class ExceptionUtils {
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int invalidCodePoint) {
+      final char invalidChar) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
@@ -119,7 +289,7 @@ public class ExceptionUtils {
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
-            unicodeHexCode(invalidCodePoint))
+            unicodeHexCode(invalidChar))
         .build();
   }
 
@@ -127,7 +297,7 @@ public class ExceptionUtils {
       final MessageCode messageCode,
       final Class<?> targetTypeClass,
       final CharSequence value,
-      final int invalidCodePoint) {
+      final char invalidChar) {
 
     return InvalidValueException.builder()
         .invalidValue(value)
@@ -136,7 +306,7 @@ public class ExceptionUtils {
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
         .addParserMessageCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
-            unicodeHexCode(invalidCodePoint))
+            unicodeHexCode(invalidChar))
         .build();
   }
 
@@ -170,6 +340,65 @@ public class ExceptionUtils {
         .messageCode(messageCode)
         .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
         .build();
+  }
+
+  static InvalidValueException forMultipleDecimalPoints(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_MULTIPLE_DECIMAL_POINTS)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            unicodeHexCode(invalidCodePoint))
+        .build();
+  }
+
+  static InvalidValueException forDecimalPointNotPermittedForNonBaseTenNumbers(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int invalidCodePoint) {
+
+    return InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode)
+        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DECIMAL_POINT_NOT_PERMITTED_FOR_NON_BASE_TEN_NUMBERS)
+        .addParserMessageCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
+            unicodeHexCode(invalidCodePoint))
+        .build();
+  }
+
+  static InvalidValueException forExpectingWholeNumber(
+      final MessageCode messageCode,
+      final Class<?> targetTypeClass,
+      final CharSequence value,
+      final int[] decimalSeparatorCodePoints) {
+
+    final var builder = InvalidValueException.builder()
+        .invalidValue(value)
+        .targetTypeClass(targetTypeClass)
+        .messageCode(messageCode);
+
+    if (decimalSeparatorCodePoints == null || decimalSeparatorCodePoints.length == 0) {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER_NO_DECIMAL_PART)
+          .build();
+    } else {
+      return builder
+          .parserMessageCode(ParserMessageCode.INVALID_VALUE_EXPECTING_WHOLE_NUMBER)
+          .addParserMessageCodeArg(
+              ParserMessageCodeArgKeys.DECIMAL_SEPARATOR,
+              unicodeHexCode(decimalSeparatorCodePoints[0]))
+          .build();
+    }
   }
 
   static String unicodeHexCode(final int codePoint) {

@@ -18,6 +18,9 @@ package org.typefactory.impl;
 
 import org.typefactory.TypeParser;
 
+/**
+ * <p>A converter that converts a single code-point to a sequence of code-points.</p>
+ */
 final class CodePointToCodePointSequenceConverter implements Converter {
 
   /**
@@ -86,8 +89,8 @@ final class CodePointToCodePointSequenceConverter implements Converter {
   private boolean codePointConversionIsRequired(final int currentCodePoint, final int currentIndex, final ConverterResultsImpl converterResults) {
     int[] toCodePointSequence = getCodePointConversion(currentCodePoint);
     if (toCodePointSequence != null) {
-      converterResults.setConvertFromIndex(currentIndex);
-      converterResults.setConvertToCodePointSequence(toCodePointSequence);
+      converterResults.convertFromIndex = currentIndex;
+      converterResults.convertToCodePointSequence = toCodePointSequence;
       return true;
     }
     return false;

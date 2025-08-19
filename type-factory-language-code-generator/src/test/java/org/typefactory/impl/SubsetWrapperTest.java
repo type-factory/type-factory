@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 
@@ -123,6 +124,11 @@ class SubsetWrapperTest {
 
     @Override
     public boolean contains(int codePoint) {
+      return false;
+    }
+
+    @Override
+    public boolean includes(Category category) {
       return false;
     }
 
