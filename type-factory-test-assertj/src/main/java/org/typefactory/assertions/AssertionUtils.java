@@ -22,10 +22,6 @@ final class AssertionUtils {
   static final String NULL_VALUE = "null";
   static final String EMPTY_VALUE = "\"\" (empty)";
 
-  static boolean notEquals(final CharSequence a, final CharSequence b) {
-    return !equals(a, b);
-  }
-
   static boolean equals(final CharSequence a, final CharSequence b) {
     if (a == b) {
       // Both are null or the same reference, so they are equal
@@ -46,6 +42,10 @@ final class AssertionUtils {
     return true;
   }
 
+  static boolean notEquals(final CharSequence a, final CharSequence b) {
+    return !equals(a, b);
+  }
+
   static String valueOf(final CharSequence value) {
     if (value == null) {
       return NULL_VALUE;
@@ -57,6 +57,14 @@ final class AssertionUtils {
       return "\"" + value + "\" (blank)";
     }
     return "\"" + value + "\"";
+  }
+
+  static <T> boolean isEmpty(final T[] array) {
+    return array == null || array.length == 0;
+  }
+
+  static <T> boolean isNotEmpty(final T[] array) {
+    return !isEmpty(array);
   }
 
   static String unicodeHexCode(final int codePoint) {

@@ -36,10 +36,6 @@ public abstract class AbstractInvalidValueExceptionAssert<
     return actual == null ? "<? extends InvalidValueException>" : actual.getClass().getSimpleName();
   }
 
-  protected static <T> boolean isEmpty(final T[] array) {
-    return array == null || array.length == 0;
-  }
-
   protected static String parserErrorPropertiesString(final Map<String, Serializable> properties) {
     return "[\n  " + properties.entrySet().stream()
         .map(entry ->
@@ -459,7 +455,7 @@ public abstract class AbstractInvalidValueExceptionAssert<
 
     final var actualParserErrorArgs = actual.getParserErrorArgs();
 
-    if (isEmpty(actualParserErrorArgs)) {
+    if (AssertionUtils.isEmpty(actualParserErrorArgs)) {
       throw failure("%nExpected actual of type:  %s%nto have non-empty parserErrorArgs%nbut parserErrorArgs was:  [] (empty)",
           classNameOfActual());
     }
