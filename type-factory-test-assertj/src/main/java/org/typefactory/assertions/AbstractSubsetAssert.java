@@ -18,6 +18,10 @@ public abstract class AbstractSubsetAssert<
     ACTUAL extends Subset>
     extends AbstractObjectAssert<SELF, ACTUAL> {
 
+  private static final String U_08X = "U+%08X";
+  private static final String U_06X = "U+%06X";
+  private static final String U_04X = "U+%04X";
+
   /**
    * Creates a new <code>{@link AbstractSubsetAssert}</code> to make assertions on actual Subset.
    *
@@ -27,6 +31,13 @@ public abstract class AbstractSubsetAssert<
     super(actual, selfType);
   }
 
+  protected String classNameOfActual() {
+    return actual == null ? "<? extends ShortType>" : actual.getClass().getSimpleName();
+  }
+
+  protected boolean actualIsNull() {
+    return actual == null;
+  }
 
   /**
    * Verifies that the actual Subset is empty.
@@ -37,7 +48,7 @@ public abstract class AbstractSubsetAssert<
   public SELF isEmpty() {
     isNotNull();
     if (actual.isNotEmpty()) {
-      throw failure("Expecting that actual Subset is empty but it is not.");
+      throw failure("%nExpecting that actual Subset is empty but it is not.");
     }
     return myself;
   }
@@ -50,8 +61,8 @@ public abstract class AbstractSubsetAssert<
    */
   public SELF isNotEmpty() {
     isNotNull();
-    if (!actual.isNotEmpty()) {
-      throw failure("Expecting that actual Subset is not empty but it is.");
+    if (actual.isEmpty()) {
+      throw failure("%nExpecting that actual Subset is not empty but it is.");
     }
     return myself;
   }
@@ -60,87 +71,72 @@ public abstract class AbstractSubsetAssert<
   public SELF containsCharacter(final char expectedCharacter) {
     isNotEmpty();
     if (!actual.contains(expectedCharacter)) {
-      throw failure("Subset did not contain expected character\nExpected to contain: %s",
-          AssertionUtils.unicodeHexCode(expectedCharacter));
+      throw failure("%nExpected actual Subset:  %nto contain character:  %s%nbut no such character was found in the Subset.",
+          codePointToString(expectedCharacter));
     }
     return myself;
   }
 
   public SELF containsAllCharacters(final char... expectedCharacters) {
     isNotEmpty();
-    final StringBuilder expectedCharactersString = new StringBuilder();
-    final StringBuilder charactersNotInSubset = new StringBuilder();
-    for (char expectedCharacter : expectedCharacters) {
-      expectedCharactersString.append(expectedCharacter).append(",");
-      if (!actual.contains(expectedCharacter)) {
-        charactersNotInSubset.append(expectedCharacter).append(",");
+    final var subsetContainsResult = new SubsetContainsResult(actual, expectedCharacters);
+    if (!subsetContainsResult.notFoundInSubset.isEmpty()) {
+      if (subsetContainsResult.foundInSubset.isEmpty()) {
+        throw failure(
+            "%nExpected actual Subset:  %nto contain all characters:  [%s]%nmissing expected characters:  [%s]",
+            subsetContainsResult.expectedCodePoints,
+            subsetContainsResult.notFoundInSubset);
+      } else {
+        throw failure(
+            "%nExpected actual Subset:  %nto contain all characters:  [%s]%ncontained expected characters:  [%s]%nmissing expected characters:  [%s]",
+            subsetContainsResult.expectedCodePoints,
+            subsetContainsResult.foundInSubset,
+            subsetContainsResult.notFoundInSubset);
       }
-    }
-    if (charactersNotInSubset.length() > 0) {
-      charactersNotInSubset.setLength(charactersNotInSubset.length() - 1);
-      expectedCharactersString.setLength(expectedCharactersString.length() - 1);
-      throw failure("Subset did not contain all expected characters\nExpected to contain: %s\nContained only: %s",
-          expectedCharactersString.toString(), charactersNotInSubset.toString());
     }
     return myself;
   }
 
-  public SELF containsCodepoint(final int expectedCodePoint) {
+  public SELF containsCodePoint(final int expectedCodePoint) {
     isNotEmpty();
     if (!actual.contains(expectedCodePoint)) {
-      throw failure("Subset did not contain expected code-point\nExpected to contain: %s",
-          AssertionUtils.unicodeHexCode(expectedCodePoint));
+      throw failure("%nExpected actual Subset:  %nto contain code-point:  %s%nbut no such code-point was found in the Subset.",
+          codePointToString(expectedCodePoint));
     }
     return myself;
   }
 
-  public SELF containsAllCodepoints(final int... expectedCodePoints) {
+  public SELF containsAllCodePoints(final int... expectedCodePoints) {
     isNotEmpty();
-    final StringBuilder expectedCodePointString = new StringBuilder();
-    final StringBuilder codePointsNotInSubset = new StringBuilder();
-    for (int expectedCodePoint : expectedCodePoints) {
-      expectedCodePointString.appendCodePoint(expectedCodePoint).append(",");
-      if (!actual.contains(expectedCodePoint)) {
-        codePointsNotInSubset.appendCodePoint(expectedCodePoint).append(",");
+    final var subsetContainsResult = new SubsetContainsResult(actual, expectedCodePoints);
+    if (!subsetContainsResult.notFoundInSubset.isEmpty()) {
+      if (subsetContainsResult.foundInSubset.isEmpty()) {
+        throw failure(
+            "%nExpected actual Subset:  %nto contain all code-points:  [%s]%nmissing expected code-points:  [%s]",
+            subsetContainsResult.expectedCodePoints,
+            subsetContainsResult.notFoundInSubset);
+      } else {
+        throw failure(
+            "%nExpected actual Subset:  %nto contain all code-points:  [%s]%ncontained expected code-points:  [%s]%nmissing expected code-points:  [%s]",
+            subsetContainsResult.expectedCodePoints,
+            subsetContainsResult.foundInSubset,
+            subsetContainsResult.notFoundInSubset);
       }
     }
-    if (codePointsNotInSubset.length() > 0) {
-      codePointsNotInSubset.setLength(codePointsNotInSubset.length() - 1); // Remove trailing comma
-      expectedCodePointString.setLength(expectedCodePointString.length() - 1); // Remove trailing comma
-      throw failure("Subset did not contain all expected code-points\nExpected to contain: %s\nContained only: %s",
-          expectedCodePointString.toString(), codePointsNotInSubset.toString());
+    return myself;
+  }
+
+  public SELF containsCategory(final Category expectedCategory) {
+    isNotNull();
+    final Set<Category> actualSubsetCategories = getActualSubsetCategories();
+    if (!actualSubsetCategories.contains(expectedCategory)) {
+      throw failure("%nExpected actual Subset:  %nto contain category:  %s%nbut no such category was found in the Subset.",
+          expectedCategory);
     }
     return myself;
   }
 
-//  public SELF includesCategory(final Category expectedCategory) {
-//    isNotNull();
-//    if (!actual.includes(expectedCategory)) {
-//      throw failure("Subset did not contain expected category\nExpected to contain: %s", expectedCategory.name());
-//    }
-//    return myself;
-//  }
-//
-//  public SELF includesAllCategories(final Category... expectedCategories) {
-//    isNotNull();
-//    final StringBuilder expectedCategoriesString = new StringBuilder();
-//    final StringBuilder categoriesNotInSubset = new StringBuilder();
-//    for (Category expectedCategory : expectedCategories) {
-//      expectedCategoriesString.append(expectedCategory.name()).append(",");
-//      if (!actual.includes(expectedCategory)) {
-//        categoriesNotInSubset.append(expectedCategory.name()).append(",");
-//      }
-//    }
-//    if (categoriesNotInSubset.length() > 0) {
-//      categoriesNotInSubset.setLength(categoriesNotInSubset.length() - 1);
-//      expectedCategoriesString.setLength(expectedCategoriesString.length() - 1);
-//      throw failure("Subset did not contain all expected categories\nExpected to contain: %s\nContained only: %s",
-//          expectedCategoriesString.toString(), categoriesNotInSubset.toString());
-//    }
-//    return myself;
-//  }
-
-  public SELF includesExactlyCategories(final Category... expectedCategories) {
+  public SELF containsExactlyCategories(final Category... expectedCategories) {
     isNotNull();
     final Set<Category> actualSubsetCategories = getActualSubsetCategories();
     final Set<Category> contained = new HashSet<>();
@@ -173,6 +169,89 @@ public abstract class AbstractSubsetAssert<
       }
     }
     return result;
+  }
+
+  protected static int[] charArrayToCodePointArray(final char[] characterArray) {
+    if (characterArray == null) {
+      return new int[0];
+    }
+    final var result = new int[characterArray.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = characterArray[i];
+    }
+    return result;
+  }
+
+  protected static String codePointToString(final int codePoint) {
+    if (!Character.isDefined(codePoint)) {
+      if (codePoint > 0xFFFFFFL) {
+        return String.format(U_08X, codePoint);
+      } else if (codePoint > 0xFFFF) {
+        return String.format(U_06X, codePoint);
+      } else {
+        return String.format(U_04X, codePoint);
+      }
+    }
+
+    if (Category.codePointIsInOneOfTheCategories(codePoint, Category.getCategoryBitFlags(
+        Category.CONTROL,
+        Category.FORMAT,
+        Category.SPACE_SEPARATOR,
+        Category.LINE_SEPARATOR,
+        Category.PARAGRAPH_SEPARATOR))) {
+      return codePoint > 0xFFFF
+          ? String.format(U_06X, codePoint)
+          : String.format(U_04X, codePoint);
+    }
+    if (codePoint > 0xFFFF) {
+      return Character.toString(codePoint);
+    } else {
+      if (Character.isHighSurrogate((char) codePoint) || Character.isLowSurrogate((char) codePoint)) {
+        return String.format(U_04X, codePoint);
+      } else {
+        return Character.toString(codePoint);
+      }
+    }
+  }
+
+  protected static final class SubsetContainsResult {
+
+    final String expectedCodePoints;
+    final String foundInSubset;
+    final String notFoundInSubset;
+
+    SubsetContainsResult(final Subset actual, char... expectedCharacters) {
+      this(actual, charArrayToCodePointArray(expectedCharacters));
+    }
+
+    SubsetContainsResult(final Subset actual, int... expectedCodepoints) {
+      final var expectedStringBuilder = new StringBuilder();
+      final var foundStringBuilder = new StringBuilder();
+      final var notFoundStringBuilder = new StringBuilder();
+      if (expectedCodepoints != null) {
+        for (int expectedCodepoint : expectedCodepoints) {
+          final var codePointAsString = codePointToString(expectedCodepoint);
+          expectedStringBuilder.append(codePointAsString).append(",");
+          if (actual.contains(expectedCodepoint)) {
+            foundStringBuilder.append(codePointAsString).append(",");
+          } else {
+            notFoundStringBuilder.append(codePointAsString).append(",");
+          }
+        }
+      }
+      if (!expectedStringBuilder.isEmpty()) {
+        expectedStringBuilder.setLength(expectedStringBuilder.length() - 1);
+      }
+      if (!foundStringBuilder.isEmpty()) {
+        foundStringBuilder.setLength(foundStringBuilder.length() - 1);
+      }
+      if (!notFoundStringBuilder.isEmpty()) {
+        notFoundStringBuilder.setLength(notFoundStringBuilder.length() - 1);
+      }
+      this.expectedCodePoints = expectedStringBuilder.toString();
+      this.foundInSubset = foundStringBuilder.toString();
+      this.notFoundInSubset = notFoundStringBuilder.toString();
+    }
   }
 
 }
