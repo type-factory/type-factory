@@ -16,7 +16,6 @@
 package org.typefactory.impl;
 
 import org.typefactory.Category;
-import org.typefactory.SubsetWithCategories;
 
 class OptimalHashedRangedSubsetWithCategoriesImpl extends OptimalHashedRangedSubsetImpl implements SubsetWithCategories {
 

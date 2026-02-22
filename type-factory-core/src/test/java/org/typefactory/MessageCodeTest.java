@@ -15,7 +15,7 @@
 */
 package org.typefactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.assertThat;
 
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
@@ -25,6 +25,41 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.testutils.StringArrayConverter;
 
 class MessageCodeTest {
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(textBlock = """
+      CODE      | DEFAULT_MESSAGE | IS_EMPTY | EXPECTED_CODE | EXPECTED_DEFAULT_MESSAGE | EXPECTED_MESSAGE
+      null      | null            | true     | ''            | ''                       | ''
+      null      | ''              | true     | ''            | ''                       | ''
+      null      | '  '            | true     | ''            | ''                       | ''
+      null      | some message    | true     | ''            | ''                       | ''
+      ''        | null            | true     | ''            | ''                       | ''
+      ''        | ''              | true     | ''            | ''                       | ''
+      '  '      | '  '            | true     | ''            | ''                       | ''
+      '  '      | some message    | true     | ''            | ''                       | ''
+      some.code | null            | false    | some.code     | ''                       | some.code
+      some.code | ''              | false    | some.code     | ''                       | some.code
+      some.code | '  '            | false    | some.code     | ''                       | some.code
+      some.code | some message    | false    | some.code     | some message             | some message
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  void of_returnsAsExpected(
+      final String code, final String defaultMessage,
+      final boolean expectedIsEmpty, final String expectedCode,
+      final String expectedDefaultMessage, final String expectedMessage) {
+
+    final var messageCode = MessageCode.of(code, defaultMessage);
+
+    assertThat(messageCode)
+        .hasCode(expectedCode)
+        .hasDefaultMessage(expectedDefaultMessage)
+        .hasMessage(expectedMessage);
+
+    if (expectedIsEmpty) {
+      assertThat(messageCode).isEmpty();
+    } else {
+      assertThat(messageCode).isNotEmpty();
+    }
+  }
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -83,7 +118,7 @@ class MessageCodeTest {
       xx | xx_x | some parser error message-X with value {0}. | some parser error message-X with value {0}.
       xx | yyyy | some parser error message-Y with value {0}. | some parser error message-Y with value {0}.
       xx | zzzz | some parser error message-Z with value {0}. | some parser error message-Z with value {0}.
-            
+      
       es | ss   | some parser error message-S.                | algún mensaje de error del analizador-S.
       es | tt   | some parser error message-T.                | algún mensaje de error del analizador-T.
       es | uu.u | some parser error message-U.                | algún mensaje de error del analizador-U.
@@ -92,7 +127,7 @@ class MessageCodeTest {
       es | xx_x | some parser error message-X with value {0}. | algún mensaje de error del analizador-X con valor {0}.
       es | yyyy | some parser error message-Y with value {0}. | algún mensaje de error del analizador-Y con valor {0}.
       es | zzzz | some parser error message-Z with value {0}. | algún mensaje de error del analizador-Z con valor {0}.
-            
+      
       de | ss   | some parser error message-S.                | einige Parser-Fehlermeldungen-S.
       de | tt   | some parser error message-T.                | einige Parser-Fehlermeldungen-T.
       de | uu.u | some parser error message-U.                | einige Parser-Fehlermeldungen-U.
@@ -129,7 +164,7 @@ class MessageCodeTest {
       xx | xx_x | some parser error message-X with value {0}. | []     | some parser error message-X with value {0}.
       xx | yyyy | some parser error message-Y with value {0}. | [null] | some parser error message-Y with value null.
       xx | zzzz | some parser error message-Z with value {0}. | [JJKK] | some parser error message-Z with value JJKK.
-            
+      
       es | ss   | some parser error message-S.                | null   | algún mensaje de error del analizador-S.
       es | tt   | some parser error message-T.                | []     | algún mensaje de error del analizador-T.
       es | uu.u | some parser error message-U.                | [null] | algún mensaje de error del analizador-U.
@@ -138,7 +173,7 @@ class MessageCodeTest {
       es | xx_x | some parser error message-X with value {0}. | []     | algún mensaje de error del analizador-X con valor {0}.
       es | yyyy | some parser error message-Y with value {0}. | [null] | algún mensaje de error del analizador-Y con valor null.
       es | zzzz | some parser error message-Z with value {0}. | [JJKK] | algún mensaje de error del analizador-Z con valor JJKK.
-            
+      
       de | ss   | some parser error message-S.                | null   | einige Parser-Fehlermeldungen-S.
       de | tt   | some parser error message-T.                | []     | einige Parser-Fehlermeldungen-T.
       de | uu.u | some parser error message-U.                | [null] | einige Parser-Fehlermeldungen-U.
@@ -169,20 +204,35 @@ class MessageCodeTest {
   }
 
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-      null | null | true
-      null | ''   | false
-      null | '  ' | false
-      ''   | null | false
-      ''   | ''   | true
-      '  ' | '  ' | true
-      AA   | AA   | true
-      AA   | null | false
-      AA   | BB   | false
-      null | BB   | false
-      BB   | AA   | false
-      """, delimiter = '|', nullValues = "null")
+      CODE_1     | CODE_2     | EXPECTED_EQUALS | NOTES
+      null       | null       | true            |
+      null       | ''         | true            |
+      null       | '  '       | false           | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      null       | some.code  | false           |
+      null       | other.code | false           |
+      ''         | null       | true            |
+      ''         | ''         | true            |
+      ''         | '  '       | false           | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      ''         | some.code  | false           |
+      ''         | other.code | false           |
+      '  '       | null       | false           | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      '  '       | ''         | false           | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      '  '       | '  '       | true            |
+      '  '       | some.code  | false           |
+      '  '       | other.code | false           |
+      some.code  | null       | false           |
+      some.code  | ''         | false           |
+      some.code  | '  '       | false           |
+      some.code  | some.code  | true            |
+      some.code  | other.code | false           |
+      other.code | null       | false           |
+      other.code | ''         | false           |
+      other.code | '  '       | false           |
+      other.code | some.code  | false           |
+      other.code | other.code | true            |
+     """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void hasSameCodeAs_returnsAsExpected(
       final String code1, final String code2,
       final boolean expected) {
@@ -193,24 +243,32 @@ class MessageCodeTest {
     assertThat(messageCode1.hasSameCodeAs(messageCode2)).isEqualTo(expected);
   }
 
-  @ParameterizedTest
+  @Test
+  void isBlank_returnsAsExpectedForNull() {
+    final MessageCode messageCode = null;
+    assertThat(MessageCode.isBlank(messageCode)).isTrue();
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-      null | null | true
-      null | ''   | true
-      null | '  ' | true
-      ''   | null | true
-      ''   | ''   | true
-      '  ' | '  ' | true
-      AA   | null | false
-      AA   | ''   | false
-      AA   | '  ' | false
-      null | AA   | false
-      ''   | AA   | false
-      '  ' | AA   | false
-      AA   | AA   | false
-      AA   | BB   | false
-      BB   | AA   | false
-      """, delimiter = '|', nullValues = "null")
+      CODE      | DEFAULT_MESSAGE | EXPECTED
+      null      | null            | true
+      null      | ''              | true
+      null      | '  '            | true
+      null      | some message    | true
+      ''        | null            | true
+      ''        | ''              | true
+      ''        | '  '            | true
+      ''        | some message    | true
+      '  '      | null            | true
+      '  '      | ''              | true
+      '  '      | '  '            | true
+      '  '      | some message    | true
+      some.code | null            | false
+      some.code | ''              | false
+      some.code | '  '            | false
+      some.code | some message    | false
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void isBlank_returnsAsExpected(
       final String code, final String defaultMessage,
       final boolean expected) {
@@ -218,35 +276,38 @@ class MessageCodeTest {
     final var messageCode = new SomeMessageCode(code, defaultMessage);
 
     assertThat(messageCode.isBlank()).isEqualTo(expected);
+    assertThat(MessageCode.isBlank(messageCode)).isEqualTo(expected);
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-      null | null | '' | ''
-      null | ''   | '' | ''
-      null | '  ' | '' | ''
-      ''   | null | '' | ''
-      ''   | ''   | '' | ''
-      '  ' | '  ' | '' | ''
-      AA   | null | AA | ''
-      AA   | ''   | AA | ''
-      AA   | '  ' | AA | ''
-      null | AA   | '' | AA
-      ''   | AA   | '' | AA
-      '  ' | AA   | '' | AA
-      AA   | AA   | AA | AA
-      AA   | BB   | AA | BB
-      BB   | AA   | BB | AA
-      """, delimiter = '|', nullValues = "null")
-  void of_returnsAsExpected(
+      CODE      | DEFAULT_MESSAGE | EXPECTED | NOTES
+      null      | null            | 0        |
+      null      | ''              | 0        |
+      null      | '  '            | 0        |
+      null      | some message    | 0        |
+      ''        | null            | 0        |
+      ''        | ''              | 0        |
+      ''        | '  '            | 0        |
+      ''        | some message    | 0        |
+      '  '      | null            | 2        | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      '  '      | ''              | 2        | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      '  '      | '  '            | 2        | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      '  '      | some message    | 2        | Not equal because we are testing default method of some other implementation and not the MessageCodeImpl
+      some.code | null            | 9        |
+      some.code | ''              | 9        |
+      some.code | '  '            | 9        |
+      some.code | some message    | 9        |
+      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  void length_returnsAsExpected(
       final String code, final String defaultMessage,
-      final String expectedCode, final String expectedDefaultMessage) {
+      final int expected) {
 
-    final var messageCode = MessageCode.of(code, defaultMessage);
+    final var messageCode = new SomeMessageCode(code, defaultMessage);
 
-    assertThat(messageCode.code()).isEqualTo(expectedCode);
-    assertThat(messageCode.defaultMessage()).isEqualTo(expectedDefaultMessage);
+    assertThat(messageCode.length()).isEqualTo(expected);
   }
+
 
   record SomeMessageCode(String code, String defaultMessage) implements MessageCode {
   }

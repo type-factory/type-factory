@@ -1,0 +1,29 @@
+package org.typefactory.assertions;
+
+import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.MessageCode;
+
+/**
+ * <p>{@link MessageCode} specific assertions.</p>
+ */
+public class MessageCodeAssert extends AbstractMessageCodeAssert<MessageCodeAssert> {
+
+  /**
+   * Creates a new <code>{@link MessageCodeAssert}</code> to make assertions on actual MessageCode.
+   * @param actual the MessageCode we want to make assertions on.
+   */
+  public MessageCodeAssert(MessageCode actual) {
+    super(actual, MessageCodeAssert.class);
+  }
+
+  /**
+   * An entry point for MessageCodeAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
+   * With a static import, one can write directly: <code>assertThat(myMessageCode)</code> and get specific assertion with code completion.
+   * @param actual the MessageCode we want to make assertions on.
+   * @return a new <code>{@link MessageCodeAssert}</code>
+   */
+  @CheckReturnValue
+  public static MessageCodeAssert assertThat(MessageCode actual) {
+    return new MessageCodeAssert(actual);
+  }
+}

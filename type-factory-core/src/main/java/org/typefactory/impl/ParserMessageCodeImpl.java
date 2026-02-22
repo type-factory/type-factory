@@ -24,8 +24,8 @@ class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode
   @Serial
   private static final long serialVersionUID = -344851934396452075L;
 
-  ParserMessageCodeImpl(final String messageCode, final String defaultMessage) {
-    super(messageCode, defaultMessage);
+  ParserMessageCodeImpl(final String code, final String defaultMessage) {
+    super(code, defaultMessage);
   }
 
   @Override
@@ -36,7 +36,7 @@ class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode
     if (!(o instanceof ParserMessageCode other)) {
       return false;
     }
-    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(code, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
   }
 
   @Override

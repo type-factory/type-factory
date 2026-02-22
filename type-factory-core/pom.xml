@@ -48,5 +48,33 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <!-- Add the Type Factory AssertJ-style assertions as a test source.
+                 This is so that the assertions can be used in the unit tests
+                 for the core library.
+                 It is not possible to depend on the type-factory-test-assertj module as
+                 this would create a circular dependency. -->
+            <id>add-type-factory-assertj-assertion-classes</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/../type-factory-test-assertj/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

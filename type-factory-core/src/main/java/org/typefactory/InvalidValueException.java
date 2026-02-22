@@ -17,6 +17,7 @@ package org.typefactory;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -43,34 +44,44 @@ import org.typefactory.impl.Factory;
  */
 public class InvalidValueException extends IllegalArgumentException {
 
+
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
 
+  /**
+   * An immutable empty string constant.
+   */
   private static final String EMPTY_STRING = "";
 
   /**
-   * Immutable empty array.
+   * An immutable empty {@link MessageCode} constant.
    */
-  private static final Serializable[] EMPTY_PARSER_MESSAGE_ARGS = new Serializable[0];
-
   private static final MessageCode EMPTY_MESSAGE_CODE = Factory.messageCode(EMPTY_STRING, EMPTY_STRING);
 
+  /**
+   * An immutable empty {@link ParserMessageCode} constant.
+   */
   private static final ParserMessageCode EMPTY_PARSER_MESSAGE_CODE = Factory.parserMessageCode(EMPTY_STRING, EMPTY_STRING);
 
   /**
-   * Immutable empty map.
+   * Immutable empty map for parser error properties.
    */
   private static final Map<String, Serializable> EMPTY_PARSER_ERROR_PROPERTIES = Map.of();
 
+  /**
+   * Immutable empty array for parser message arguments.
+   */
+  private static final Serializable[] EMPTY_PARSER_MESSAGE_ARGS = new Serializable[0];
+
   private final Class<?> targetTypeClass;
 
-  private final MessageCode messageCode;
+  private final MessageCode errorCode;
 
-  private final ParserMessageCode parserMessageCode;
+  private final ParserMessageCode parserErrorCode;
 
-  private final Map<String, Serializable> parserMessageCodeArgs;
+  private final Map<String, Serializable> parserErrorCodeArgs;
 
-  private final Serializable[] parserMessageCodeArgsValues;
+  private final Serializable[] parserErrorCodeArgsValues;
 
   private final String invalidValue;
 
@@ -91,37 +102,52 @@ public class InvalidValueException extends IllegalArgumentException {
    * @param invalidValue          the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom
    *                              type.
    * @param targetTypeClass       an optional target custom type class. Pass {@code null} if the target type class is not known.
-   * @param messageCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
+   * @param errorCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
    *                              If no error message is found in the resource-bundle or properties file then this value will be used as the error
    *                              message.
-   * @param parserMessageCode     the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
+   * @param parserErrorCode     the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
    *                              file. If no parser error message is found in the resource-bundle or properties file then this value will be used as
    *                              the error message.
-   * @param parserMessageCodeArgs the message arguments to supply to the message formatter used to create the error message.
+   * @param parserErrorCodeArgs the message arguments to supply to the message formatter used to create the error message.
    * @see #builder()
    */
   protected InvalidValueException(
       final Throwable cause,
       final CharSequence invalidValue,
       final Class<?> targetTypeClass,
-      final MessageCode messageCode,
-      final ParserMessageCode parserMessageCode,
-      final LinkedHashMap<String, Serializable> parserMessageCodeArgs) {
-    super(combineMessagesIntoSentences(messageCode, parserMessageCode,
-            parserMessageCodeArgs == null
+      final MessageCode errorCode,
+      final ParserMessageCode parserErrorCode,
+      final LinkedHashMap<String, Serializable> parserErrorCodeArgs) {
+    super(combineMessagesIntoSentences(errorCode, parserErrorCode,
+            parserErrorCodeArgs == null
                 ? EMPTY_PARSER_MESSAGE_ARGS
-                : parserMessageCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
+                : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
         cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
     this.targetTypeClass = targetTypeClass;
-    this.messageCode = messageCode == null ? EMPTY_MESSAGE_CODE : messageCode;
-    this.parserMessageCode = parserMessageCode == null ? EMPTY_PARSER_MESSAGE_CODE : parserMessageCode;
-    this.parserMessageCodeArgs = parserMessageCodeArgs == null
+    this.errorCode = errorCode == null ? EMPTY_MESSAGE_CODE : errorCode;
+    this.parserErrorCode = parserErrorCode == null ? EMPTY_PARSER_MESSAGE_CODE : parserErrorCode;
+    this.parserErrorCodeArgs = parserErrorCodeArgs == null
         ? EMPTY_PARSER_ERROR_PROPERTIES
-        : parserMessageCodeArgs;
-    this.parserMessageCodeArgsValues = parserMessageCodeArgs == null
+        : parserErrorCodeArgs;
+    this.parserErrorCodeArgsValues = parserErrorCodeArgs == null
         ? EMPTY_PARSER_MESSAGE_ARGS
-        : parserMessageCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
+        : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
+  }
+
+  /**
+   * <p>Provides the message associated with this exception.</p>
+   *
+   * <p>The message is a combination of the custom error message and the parser error message
+   * provided by {@link #getErrorMessage()} and {@link #getParserErrorMessage()}.</p>
+   *
+   * @return the message associated with this exception.
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   */
+  @Override
+  public String getMessage() {
+    return super.getMessage();
   }
 
   /**
@@ -148,8 +174,8 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   public String getLocalizedMessage(final Locale locale) {
     return combineMessagesIntoSentences(
-        messageCode.message(locale),
-        parserMessageCode.message(locale, parserMessageCodeArgsValues));
+        errorCode.message(locale),
+        parserErrorCode.message(locale, parserErrorCodeArgsValues));
   }
 
 
@@ -157,34 +183,266 @@ public class InvalidValueException extends IllegalArgumentException {
     return targetTypeClass;
   }
 
+
+  /**
+   * <p>Provides the error code for the custom type as a {@link MessageCode} instance.</p>
+   *
+   * <p>{@code MessageCode} values can be used in most places that a string value can be used
+   * as it implements {@link CharSequence}. If an actual string value is required then use {@link #getErrorCodeAsString()}.</p>
+   *
+   * <p>Use {@link #getErrorMessage()} to return the message associated with this error code.</p>
+   *
+   * @return the error code for the custom type.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
+  public MessageCode getErrorCode() {
+    return errorCode;
+  }
+
+  /**
+   * <p>Provides the error code for the custom type as a string.</p>
+   *
+   * <p>Use {@link #getErrorCode()} to return the error code as a {@link MessageCode} instance
+   * which can be used in most places that a string value can, as it implements {@link CharSequence}</p>
+   *
+   * <p>Use {@link #getErrorMessage()} to return the message associated with this error code.</p>
+   *
+   * @return the error code for the custom type as a string.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
+  public String getErrorCodeAsString() {
+    return errorCode.code();
+  }
+
+  /**
+   * <p>Provides the error code for the custom type. <b>Deprecated</b>, use {@link #getErrorCode()} instead.</p>
+   *
+   * <p>Use {@link #getErrorMessage()} to return the message associated with this error code.</p>
+   *
+   * @return the error message for the custom type.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   * @deprecated use {@link #getErrorCode()} or {@link #getErrorCodeAsString()} instead.
+   */
+  @Deprecated(since = "1.1", forRemoval = true)
   public String getMessageCode() {
-    return messageCode.code();
+    return getErrorCodeAsString();
   }
 
+  /**
+   * <p>Provides the error message associated with the error code that is provided by {@link #getErrorCode()}.</p>
+   *
+   * <p>The result differs from the {@link #getMessage()} method in that {@code getMessage()} returns a
+   * complete error message combining the two messages provided by {@code getErrorMessage()} and {@link #getParserErrorMessage()}.</p>
+   *
+   * <p>Use {@link #getErrorMessage(Locale)} to return the message localized to the specified locale.</p>
+   *
+   * @return the error message for the custom type.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorMessage(Locale)
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
   public String getErrorMessage() {
-    return messageCode.message();
+    return errorCode.message();
   }
 
+  /**
+   * <p>Provides the localized error message associated with the error code that is provided by {@link #getErrorCode()}.</p>
+   *
+   * <p>The result differs from the {@link #getLocalizedMessage(Locale)} method in that {@code getLocalizedMessage(Locale)}
+   * returns a complete error message combining the two messages provided by {@link #getErrorMessage(Locale)} and
+   * {@link #getParserErrorMessage(Locale)}.</p>
+   *
+   * @param locale the locale that you wish the message to be localized into.
+   * @return the error message for the custom type localized to the specified locale.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
   public String getErrorMessage(final Locale locale) {
-    return messageCode.message(locale);
+    return errorCode.message(locale);
   }
 
+  /**
+   * <p>Provides the parser error code as a {@link ParserMessageCode} instance.</p>
+   *
+   * <p>{@code ParserMessageCode} values can be used in most places that a string value can be used
+   * as it implements {@link CharSequence}. If an actual string value is required then use {@link #getParserErrorCodeAsString()}.</p>
+   *
+   * <p>Use {@link #getParserErrorMessage()} to return the parser error message associated with this parser error code.</p>
+   *
+   * @return the parser error code.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
+  public ParserMessageCode getParserErrorCode() {
+    return parserErrorCode;
+  }
+
+  /**
+   * <p>Provides the parser error code as a string.</p>
+   *
+   * <p>Use {@link #getParserErrorCode()} to return the parser error code as a {@link ParserMessageCode} instance
+   * which can be used in most places that a string value can, as it implements {@link CharSequence}</p>
+   *
+   * <p>Use {@link #getParserErrorMessage()} to return the parser error message associated with this parser error code.</p>
+   *
+   * @return the parser error code as a string.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   */
+  public String getParserErrorCodeAsString() {
+    return parserErrorCode.code();
+  }
+
+  /**
+   * <p>Provides the parser error code as a string. <b>Deprecated</b>, use {@link #getParserErrorCode()} instead.</p>
+   *
+   * <p>Use {@link #getParserErrorMessage()} to return the parser error message associated with this parser error code.</p>
+   *
+   * @return the parser error code as a string.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   * @see #getParserErrorMessage(Locale)
+   * @deprecated use {@link #getParserErrorCode()} or {@link #getParserErrorCodeAsString()} instead.
+   */
+  @Deprecated(since = "1.1", forRemoval = true)
   public String getParserMessageCode() {
-    return parserMessageCode.code();
+    return parserErrorCode.code();
   }
 
+  /**
+   * <p>Provides the parser error message associated with the parser error code that is provided by {@link #getParserErrorCode()}.</p>
+   *
+   * <p>The result differs from the {@link #getMessage()} method in that {@code getMessage()} returns a
+   * complete error message combining the two messages provided by {@link #getErrorMessage()} and
+   * {@code #getParserErrorMessage()}.</p>
+   *
+   * <p>Use {@link #getParserErrorMessage(Locale)} to return the parser error message localized to the specified locale.</p>
+   *
+   * @return the parser error message.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage(Locale)
+   */
   public String getParserErrorMessage() {
-    return parserMessageCode.message(parserMessageCodeArgsValues);
+    return parserErrorCode.message(parserErrorCodeArgsValues);
   }
 
+  /**
+   * <p>Provides the parser error message associated with the parser error code that is provided by {@link #getParserErrorCode()}.</p>
+   *
+   * <p>The result differs from the {@link #getLocalizedMessage(Locale)} method in that {@code getLocalizedMessage(Locale)}
+   * returns a complete error message combining the two messages provided by {@link #getErrorMessage(Locale)} and
+   * {@code #getParserErrorMessage(Locale)}.</p>
+   *
+   * @param locale the locale that you wish the message to be localized into.
+   * @return the parser error message localized to the specified locale.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   * @see #getLocalizedMessage(Locale)
+   * @see #getErrorCode()
+   * @see #getErrorCodeAsString()
+   * @see #getErrorMessage(Locale)
+   * @see #getErrorMessage()
+   * @see #getParserErrorCode()
+   * @see #getParserErrorMessage()
+   */
   public String getParserErrorMessage(final Locale locale) {
-    return parserMessageCode.message(locale, parserMessageCodeArgsValues);
+    return parserErrorCode.message(locale, parserErrorCodeArgsValues);
   }
 
+  /**
+   * <p>Provides the parser error properties which can be interrogated or logged as needs.
+   * Internally, the entry order is maintained so that the values can be used as arguments
+   * to the message formatter.</p>
+   *
+   * @return the parser error properties that were used to create the parser error message.
+   */
   public Map<String, Serializable> getParserErrorProperties() {
-    return parserMessageCodeArgs;
+    return new LinkedHashMap<>(parserErrorCodeArgs);
   }
 
+  /**
+   * <p>Provides the parser error arguments which are used as arguments
+   * to the message formatter.</p>
+   *
+   * @return the parser error arguments that were used to create the parser error message.
+   */
+  public Serializable [] getParserErrorArgs() {
+    return Arrays.copyOf(parserErrorCodeArgsValues, parserErrorCodeArgsValues.length, Serializable[].class);
+  }
+
+  /**
+   * <p>Provides the value considered invalid by the {@link TypeParser}.</p>
+   *
+   * <p>This value is not presented in the {@link InvalidValueException} message as it may contain sensitive, secret or personal information.
+   * It is captured solely to enable any exception-handlers meaningful access to the invalid value.</p>
+   *
+   * @return the value that was considered invalid by the {@link TypeParser}.
+   */
   public String getInvalidValue() {
     return invalidValue;
   }
@@ -196,10 +454,10 @@ public class InvalidValueException extends IllegalArgumentException {
 
     private Throwable cause;
     private Class<?> targetTypeClass;
-    private MessageCode messageCode;
-    private ParserMessageCode parserMessageCode;
+    private MessageCode errorCode;
+    private ParserMessageCode parserErrorCode;
 
-    private final LinkedHashMap<String, Serializable> parserMessageCodeArgs = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Serializable> parserErrorCodeArgs = new LinkedHashMap<>();
     private String invalidValue;
 
     /**
@@ -208,7 +466,7 @@ public class InvalidValueException extends IllegalArgumentException {
      * @return an {@link InvalidValueException} instance.
      */
     public InvalidValueException build() {
-      return new InvalidValueException(cause, invalidValue, targetTypeClass, messageCode, parserMessageCode, parserMessageCodeArgs);
+      return new InvalidValueException(cause, invalidValue, targetTypeClass, errorCode, parserErrorCode, parserErrorCodeArgs);
     }
 
     /**
@@ -237,26 +495,56 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * Set the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param messageCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
+     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
+     *                  error message is found in the resource-bundle or properties file then the value you provide here will be used as the error
+     *                  message.
+     * @return this builder
+     */
+    public InvalidValueExceptionBuilder errorCode(final MessageCode errorCode) {
+      this.errorCode = errorCode;
+      return this;
+    }
+
+    /**
+     * Set the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
+     *
+     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
      *                    error message is found in the resource-bundle or properties file then the value you provide here will be used as the error
      *                    message.
      * @return this builder
+     * @deprecated use {@link #errorCode(MessageCode)} instead.
      */
-    public InvalidValueExceptionBuilder messageCode(final MessageCode messageCode) {
-      this.messageCode = messageCode;
+    @Deprecated(since = "1.1", forRemoval = true)
+    public InvalidValueExceptionBuilder messageCode(final MessageCode errorCode) {
+      this.errorCode = errorCode;
       return this;
     }
 
     /**
      * Set the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param parserMessageCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
+     * @param parserErrorCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
      *                          file. If no parser error message is found in the resource-bundle or properties file then the value you provide here
      *                          will be used as the error message.
      * @return this builder
      */
-    public InvalidValueExceptionBuilder parserMessageCode(final ParserMessageCode parserMessageCode) {
-      this.parserMessageCode = parserMessageCode;
+    public InvalidValueExceptionBuilder parserErrorCode(final ParserMessageCode parserErrorCode) {
+      this.parserErrorCode = parserErrorCode;
+      return this;
+    }
+
+    /**
+     * Set the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
+     *
+     * @param parserErrorCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
+     *                          file. If no parser error message is found in the resource-bundle or properties file then the value you provide here
+     *                          will be used as the error message.
+     * @return this builder
+     * @deprecated use {@link #parserErrorCode(ParserMessageCode)} instead.
+     */
+    @Deprecated(since = "1.1", forRemoval = true)
+    public InvalidValueExceptionBuilder parserMessageCode(final ParserMessageCode parserErrorCode) {
+      this.parserErrorCode = parserErrorCode;
       return this;
     }
 
@@ -272,9 +560,30 @@ public class InvalidValueException extends IllegalArgumentException {
      * @param <V>   message argument values must be serializable because the {@link InvalidValueException} class is serializable.
      * @return this builder
      */
+    public <V extends Serializable> InvalidValueExceptionBuilder addParserErrorCodeArg(final String key, final V value) {
+      if (key != null && !key.isBlank()) {
+        this.parserErrorCodeArgs.put(key, value);
+      }
+      return this;
+    }
+
+    /**
+     * <p>Add message arguments to supply to the message formatter used to create the parser error message.</p>
+     *
+     * <p>Note: this method will silently ignore attempts to add parser message arguments that are provided with a null or blank {@code key}.</p>
+     *
+     * @param key   the message argument name. Note that this is ignored for purposes of message creation by the message formatter which uses argument
+     *              index only. It is captured solely to enable any exception handlers meaningful access to argument name-value pairs. This method
+     *              will silently ignore attempts to add parser message arguments that are provided with a null or blank {@code key}.
+     * @param value the message argument value.
+     * @param <V>   message argument values must be serializable because the {@link InvalidValueException} class is serializable.
+     * @return this builder
+     * @deprecated use {@link #addParserErrorCodeArg(String, Serializable)} instead.
+     */
+    @Deprecated(since = "1.1", forRemoval = true)
     public <V extends Serializable> InvalidValueExceptionBuilder addParserMessageCodeArg(final String key, final V value) {
       if (key != null && !key.isBlank()) {
-        this.parserMessageCodeArgs.put(key, value);
+        this.parserErrorCodeArgs.put(key, value);
       }
       return this;
     }
@@ -350,11 +659,11 @@ public class InvalidValueException extends IllegalArgumentException {
     s.append(this.getClass().getSimpleName())
         .append("{")
         .append("message='").append(getMessage()).append('\'')
-        .append(", messageCode='").append(messageCode.code()).append('\'')
-        .append(", defaultErrorMessage='").append(messageCode.defaultMessage()).append('\'')
-        .append(", parserMessageCode='").append(parserMessageCode.code()).append('\'')
-        .append(", defaultParserErrorMessage='").append(parserMessageCode.defaultMessage()).append('\'');
-    for (Map.Entry<String, Serializable> entry : parserMessageCodeArgs.entrySet()) {
+        .append(", messageCode='").append(errorCode.code()).append('\'')
+        .append(", defaultErrorMessage='").append(errorCode.defaultMessage()).append('\'')
+        .append(", parserMessageCode='").append(parserErrorCode.code()).append('\'')
+        .append(", defaultParserErrorMessage='").append(parserErrorCode.defaultMessage()).append('\'');
+    for (Map.Entry<String, Serializable> entry : parserErrorCodeArgs.entrySet()) {
       s.append(", ").append(entry.getKey()).append("='").append(entry.getValue()).append('\'');
     }
     if (targetTypeClass != null) {
@@ -403,11 +712,10 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
      * <blockquote>
-     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
-     *   where a pair of surrogate code units (a
-     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
-     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
-     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16, where a pair of surrogate code units (a
+     * <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     * followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>) “stand in” for a <a
+     * href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
      * </blockquote>
      *
      * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>
@@ -423,11 +731,10 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * In the <a href="https://www.unicode.org/glossary/">Unicode documentation</a>, a surrogate code point is:
      * <blockquote>
-     *   A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16,
-     *   where a pair of surrogate code units (a
-     *   <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
-     *   followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>)
-     *   “stand in” for a <a href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
+     * A Unicode code point in the range U+D800..U+DFFF. Reserved for use by UTF-16, where a pair of surrogate code units (a
+     * <a href="https://www.unicode.org/glossary/#high_surrogate_code_unit">high surrogate</a>
+     * followed by a <a href="https://www.unicode.org/glossary/#low_surrogate_code_unit">low surrogate</a>) “stand in” for a <a
+     * href="https://www.unicode.org/glossary/#supplementary_code_point">supplementary code point</a>.
      * </blockquote>
      *
      * @see <a href="https://www.unicode.org/glossary/#surrogate_code_point">Surrogate code point</a>

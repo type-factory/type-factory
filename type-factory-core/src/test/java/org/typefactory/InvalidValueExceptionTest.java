@@ -15,8 +15,8 @@
 */
 package org.typefactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.typefactory.assertions.Assertions.assertThat;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -37,9 +37,10 @@ import org.typefactory.impl.Factory;
 class InvalidValueExceptionTest {
 
   static final String INVALID_VALUE = "Some invalid value";
-  static final MessageCode ERROR_MESSAGE = MessageCode.of("some.error.code", "some default error message.");
+  static final MessageCode ERROR_MESSAGE_CODE = MessageCode.of("some.error.code", "some default error message.");
 
-  static final ParserMessageCode PARSER_ERROR_MESSAGE = Factory.parserMessageCode("some.parser.error.code", "some default parser error message.");
+  static final ParserMessageCode PARSER_ERROR_MESSAGE_CODE = Factory.parserMessageCode("some.parser.error.code",
+      "some default parser error message.");
 
   static final LinkedHashMap<String, Serializable> parserErrorArgs = new LinkedHashMap<>(Map.of("invalidCodePoint", "A"));
 
@@ -50,90 +51,117 @@ class InvalidValueExceptionTest {
   @Test
   void constructor_constructsExceptionWithoutParserErrorArgs() {
 
-    final var actual = new InvalidValueException(cause, INVALID_VALUE, SomeClass.class, ERROR_MESSAGE, PARSER_ERROR_MESSAGE, null);
+    final var expectedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage_fr = ERROR_MESSAGE_CODE.message(Locale.FRENCH) + ' ' + PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH);
 
-    assertThat(actual.getCause()).isEqualTo(cause);
-    assertThat(actual.getInvalidValue()).isEqualTo(INVALID_VALUE);
-    assertThat(actual.getTargetTypeClass()).isEqualTo(SomeClass.class);
-    assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserMessageCode()).isEqualTo(PARSER_ERROR_MESSAGE.code());
-    assertThat(actual.getParserErrorMessage()).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorMessage(Locale.FRENCH)).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorProperties()).isNotNull().isEmpty();
+    final var actual = new InvalidValueException(cause, INVALID_VALUE, SomeClass.class, ERROR_MESSAGE_CODE, PARSER_ERROR_MESSAGE_CODE, null);
+
+    assertThat(actual)
+        .hasCause(cause)
+        .hasInvalidValue(INVALID_VALUE)
+        .hasTargetTypeClass(SomeClass.class)
+        .hasMessage(expectedMessage)
+        .hasLocalizedMessage(expectedLocalizedMessage)
+        .hasLocalizedMessage(Locale.FRENCH, expectedLocalizedMessage_fr)
+        .hasErrorCode(ERROR_MESSAGE_CODE)
+        .hasErrorMessage(ERROR_MESSAGE_CODE.defaultMessage())
+        .hasErrorMessage(Locale.FRENCH, ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .hasParserErrorMessage(PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorMessage(Locale.FRENCH, PARSER_ERROR_MESSAGE_CODE.defaultMessage())
+        .hasNoParserErrorProperties();
   }
 
   @Test
   void constructor_constructsExceptionWithParserErrorArgs() {
 
-    final var actual = new InvalidValueException(cause, INVALID_VALUE, SomeClass.class, ERROR_MESSAGE, PARSER_ERROR_MESSAGE, parserErrorArgs);
+    final var expectedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage_fr = ERROR_MESSAGE_CODE.message(Locale.FRENCH) + ' ' + PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH);
 
-    assertThat(actual.getCause()).isEqualTo(cause);
-    assertThat(actual.getInvalidValue()).isEqualTo(INVALID_VALUE);
-    assertThat(actual.getTargetTypeClass()).isEqualTo(SomeClass.class);
-    assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserMessageCode()).isEqualTo(PARSER_ERROR_MESSAGE.code());
-    assertThat(actual.getParserErrorMessage()).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorMessage(Locale.FRENCH)).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorProperties()).containsAllEntriesOf(parserErrorArgs);
+    final var actual = new InvalidValueException(cause, INVALID_VALUE, SomeClass.class, ERROR_MESSAGE_CODE, PARSER_ERROR_MESSAGE_CODE,
+        parserErrorArgs);
+
+    assertThat(actual)
+        .hasCause(cause)
+        .hasInvalidValue(INVALID_VALUE)
+        .hasTargetTypeClass(SomeClass.class)
+        .hasMessage(expectedMessage)
+        .hasLocalizedMessage(expectedLocalizedMessage)
+        .hasLocalizedMessage(Locale.FRENCH, expectedLocalizedMessage_fr)
+        .hasErrorCode(ERROR_MESSAGE_CODE)
+        .hasErrorMessage(ERROR_MESSAGE_CODE.defaultMessage())
+        .hasErrorMessage(Locale.FRENCH, ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .hasParserErrorMessage(PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorMessage(Locale.FRENCH, PARSER_ERROR_MESSAGE_CODE.defaultMessage())
+        .hasParserErrorPropertiesContainingAllEntriesOf(parserErrorArgs)
+        .hasParserErrorPropertiesContainingExactlyEntriesOf(parserErrorArgs);
   }
 
   @Test
   void builder_constructsExceptionWithoutParserErrorArgs() {
 
+    final var expectedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage_fr = ERROR_MESSAGE_CODE.message(Locale.FRENCH) + ' ' + PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH);
+
     final var actual = InvalidValueException.builder()
         .cause(cause)
         .invalidValue(INVALID_VALUE)
         .targetTypeClass(SomeClass.class)
-        .messageCode(ERROR_MESSAGE)
-        .parserMessageCode(PARSER_ERROR_MESSAGE)
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
         .build();
 
-    assertThat(actual.getCause()).isEqualTo(cause);
-    assertThat(actual.getInvalidValue()).isEqualTo(INVALID_VALUE);
-    assertThat(actual.getTargetTypeClass()).isEqualTo(SomeClass.class);
-    assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserMessageCode()).isEqualTo(PARSER_ERROR_MESSAGE.code());
-    assertThat(actual.getParserErrorMessage()).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorMessage(Locale.FRENCH)).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorProperties()).isNotNull().isEmpty();
+    assertThat(actual)
+        .hasCause(cause)
+        .hasInvalidValue(INVALID_VALUE)
+        .hasTargetTypeClass(SomeClass.class)
+        .hasMessage(expectedMessage)
+        .hasLocalizedMessage(expectedLocalizedMessage)
+        .hasLocalizedMessage(Locale.FRENCH, expectedLocalizedMessage_fr)
+        .hasErrorCode(ERROR_MESSAGE_CODE)
+        .hasErrorMessage(ERROR_MESSAGE_CODE.defaultMessage())
+        .hasErrorMessage(Locale.FRENCH, ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .hasParserErrorMessage(PARSER_ERROR_MESSAGE_CODE.defaultMessage())
+        .hasParserErrorMessage(Locale.FRENCH, PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasNoParserErrorProperties();
   }
 
   @Test
   void builder_constructsExceptionWithParserErrorArgs() {
 
+    final var expectedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage = ERROR_MESSAGE_CODE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE_CODE.defaultMessage();
+    final var expectedLocalizedMessage_fr = ERROR_MESSAGE_CODE.message(Locale.FRENCH) + ' ' + PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH);
+
     final var actual = InvalidValueException.builder()
         .cause(cause)
         .invalidValue(INVALID_VALUE)
         .targetTypeClass(SomeClass.class)
-        .messageCode(ERROR_MESSAGE)
-        .parserMessageCode(PARSER_ERROR_MESSAGE)
-        .addParserMessageCodeArg("invalidCodePoint", "A")
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .addParserErrorCodeArg("invalidCodePoint", "A")
         .build();
 
-    assertThat(actual.getCause()).isEqualTo(cause);
-    assertThat(actual.getInvalidValue()).isEqualTo(INVALID_VALUE);
-    assertThat(actual.getTargetTypeClass()).isEqualTo(SomeClass.class);
-    assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage() + ' ' + PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserMessageCode()).isEqualTo(PARSER_ERROR_MESSAGE.code());
-    assertThat(actual.getParserErrorMessage()).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorMessage(Locale.FRENCH)).isEqualTo(PARSER_ERROR_MESSAGE.defaultMessage());
-    assertThat(actual.getParserErrorProperties()).containsAllEntriesOf(parserErrorArgs);
+    assertThat(actual)
+        .hasCause(cause)
+        .hasInvalidValue(INVALID_VALUE)
+        .hasTargetTypeClass(SomeClass.class)
+        .hasMessage(expectedMessage)
+        .hasLocalizedMessage(expectedLocalizedMessage)
+        .hasLocalizedMessage(Locale.FRENCH, expectedLocalizedMessage_fr)
+        .hasErrorCode(ERROR_MESSAGE_CODE)
+        .hasErrorMessage(ERROR_MESSAGE_CODE.defaultMessage())
+        .hasErrorMessage(Locale.FRENCH, ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .hasParserErrorMessage(PARSER_ERROR_MESSAGE_CODE.defaultMessage())
+        .hasParserErrorMessage(Locale.FRENCH, PARSER_ERROR_MESSAGE_CODE.message(Locale.FRENCH))
+        .hasParserErrorPropertiesContainingAllEntriesOf(parserErrorArgs)
+        .hasParserErrorPropertiesContainingExactlyEntriesOf(parserErrorArgs);
   }
 
   @ParameterizedTest
@@ -142,20 +170,20 @@ class InvalidValueExceptionTest {
   void builder_constructsExceptionIgnoringNullOrBlankArgKey(final String argKey) {
 
     final var actual = InvalidValueException.builder()
-        .addParserMessageCodeArg(argKey, "A")
+        .addParserErrorCodeArg(argKey, "A")
         .build();
 
-    assertThat(actual.getParserErrorProperties()).isEmpty();
+    assertThat(actual).hasNoParserErrorProperties();
   }
 
   @Test
   void builder_constructsExceptionWithNonBlankArgKey() {
 
     final var actual = InvalidValueException.builder()
-        .addParserMessageCodeArg("A", "B")
+        .addParserErrorCodeArg("A", "B")
         .build();
 
-    assertThat(actual.getParserErrorProperties()).containsAllEntriesOf(Map.of("A", "B"));
+    assertThat(actual).hasParserErrorPropertiesContainingAllEntriesOf(Map.of("A", "B"));
   }
 
   @Test
@@ -165,7 +193,7 @@ class InvalidValueExceptionTest {
         .invalidValue(null)
         .build();
 
-    assertThat(actual.getInvalidValue()).isNull();
+    assertThat(actual).hasInvalidValue(null);
   }
 
   @Test
@@ -175,7 +203,7 @@ class InvalidValueExceptionTest {
         .invalidValue("AABB")
         .build();
 
-    assertThat(actual.getInvalidValue()).isNotNull().isEqualTo("AABB");
+    assertThat(actual).hasInvalidValue("AABB");
   }
 
   @Test
@@ -185,7 +213,7 @@ class InvalidValueExceptionTest {
         .invalidValue(new SomeCharSequence(new char[]{'A', 'Z'}))
         .build();
 
-    assertThat(actual.getInvalidValue()).isNotNull().isEqualTo("AZ");
+    assertThat(actual).hasInvalidValue("AZ");
   }
 
   @ParameterizedTest
@@ -208,18 +236,13 @@ class InvalidValueExceptionTest {
     final var messageCode = MessageCode.of(messageCodeString, messageCodeMessage);
     final var parserMessageCode = Factory.parserMessageCode(parserMessageCodeString, parserMessageCodeMessage);
 
-    final var invalidValueException = InvalidValueException.builder()
-        .messageCode(messageCode)
-        .parserMessageCode(parserMessageCode)
-        .addParserMessageCodeArg("some-arg", parserErrorMessageArg)
+    final var actual = InvalidValueException.builder()
+        .errorCode(messageCode)
+        .parserErrorCode(parserMessageCode)
+        .addParserErrorCodeArg("some-arg", parserErrorMessageArg)
         .build();
 
-    final var actual = invalidValueException.getMessage();
-
-    assertThat(actual)
-        .isNotNull()
-        .isNotEmpty()
-        .isEqualTo(expectedMessage);
+    assertThat(actual).hasMessage(expectedMessage);
   }
 
   @ParameterizedTest
@@ -232,7 +255,7 @@ class InvalidValueExceptionTest {
       xx | ff_f | some error message-F. | xx_x | some parser error message-X with value {0}. | ''   | some error message-F. some parser error message-X with value .
       xx | gggg | some error message-G. | yyyy | some parser error message-Y with value {0}. | '  ' | some error message-G. some parser error message-Y with value   .
       xx | hhhh | some error message-H. | zzzz | some parser error message-Z with value {0}. | JJKK | some error message-H. some parser error message-Z with value JJKK.
-
+      
       es | aa   | some error message-A. | ss   | some parser error message-S.                | null | algún mensaje de error-A. algún mensaje de error del analizador-S.
       es | bb   | some error message-B. | tt   | some parser error message-T.                | ''   | algún mensaje de error-B. algún mensaje de error del analizador-T.
       es | cc.c | some error message-C. | uu.u | some parser error message-U.                | '  ' | algún mensaje de error-C. algún mensaje de error del analizador-U.
@@ -241,7 +264,7 @@ class InvalidValueExceptionTest {
       es | ff_f | some error message-F. | xx_x | some parser error message-X with value {0}. | ''   | algún mensaje de error-F. algún mensaje de error del analizador-X con valor .
       es | gggg | some error message-G. | yyyy | some parser error message-Y with value {0}. | '  ' | algún mensaje de error-G. algún mensaje de error del analizador-Y con valor   .
       es | hhhh | some error message-H. | zzzz | some parser error message-Z with value {0}. | JJKK | algún mensaje de error-H. algún mensaje de error del analizador-Z con valor JJKK.
-
+      
       de | aa   | some error message-A. | ss   | some parser error message-S.                | null | einige Fehlermeldung-A. einige Parser-Fehlermeldungen-S.
       de | bb   | some error message-B. | tt   | some parser error message-T.                | ''   | einige Fehlermeldung-B. einige Parser-Fehlermeldungen-T.
       de | cc.c | some error message-C. | uu.u | some parser error message-U.                | '  ' | einige Fehlermeldung-C. einige Parser-Fehlermeldungen-U.
@@ -262,18 +285,13 @@ class InvalidValueExceptionTest {
     final var messageCode = MessageCode.of(messageCodeString, messageCodeMessage);
     final var parserMessageCode = Factory.parserMessageCode(parserMessageCodeString, parserMessageCodeMessage);
 
-    final var invalidValueException = InvalidValueException.builder()
-        .messageCode(messageCode)
-        .parserMessageCode(parserMessageCode)
-        .addParserMessageCodeArg("some-arg", parserErrorMessageArg)
+    final var actual = InvalidValueException.builder()
+        .errorCode(messageCode)
+        .parserErrorCode(parserMessageCode)
+        .addParserErrorCodeArg("some-arg", parserErrorMessageArg)
         .build();
 
-    final var actual = invalidValueException.getLocalizedMessage(locale);
-
-    assertThat(actual)
-        .isNotNull()
-        .isNotEmpty()
-        .isEqualTo(expectedMessage);
+    assertThat(actual).hasLocalizedMessage(locale, expectedMessage);
   }
 
   @ParameterizedTest
@@ -282,22 +300,22 @@ class InvalidValueExceptionTest {
       null        | null               | ''
       null        | null               | ''
       null        | null               | ''
-
+      
       a           | null               | a
       a           | null               | a
       a.          | null               | a.
       a.          | null               | a.
-
+      
       null        | b                  | b
       null        | b.                 | b.
       null        | b                  | b
       null        | b.                 | b.
-
+      
       a           | b                  | a. b
       a           | b.                 | a. b.
       a.          | b                  | a. b
       a.          | b.                 | a. b.
-
+      
       a sentence  | another sentence   | a sentence. another sentence
       a sentence  | another sentence.  | a sentence. another sentence.
       a sentence. | another sentence   | a sentence. another sentence
@@ -320,9 +338,9 @@ class InvalidValueExceptionTest {
         .cause(cause)
         .invalidValue(INVALID_VALUE)
         .targetTypeClass(SomeClass.class)
-        .messageCode(ERROR_MESSAGE)
-        .parserMessageCode(PARSER_ERROR_MESSAGE)
-        .addParserMessageCodeArg("invalidCodePoint", "A")
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .addParserErrorCodeArg("invalidCodePoint", "A")
         .build();
 
     assertThat(actual).hasToString("""
@@ -354,7 +372,7 @@ class InvalidValueExceptionTest {
 
     @Override
     public CharSequence subSequence(int start, int end) {
-      final char [] result = new char [end - start];
+      final char[] result = new char[end - start];
       System.arraycopy(chars, start, result, 0, result.length);
       return new SomeCharSequence(result);
     }

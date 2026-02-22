@@ -1,0 +1,29 @@
+package org.typefactory.assertions;
+
+import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.InvalidValueException;
+
+/**
+ * <p>{@link InvalidValueException} specific assertions.</p>
+ */
+public class InvalidValueExceptionAssert extends AbstractInvalidValueExceptionAssert<InvalidValueExceptionAssert, InvalidValueException> {
+
+  /**
+   * Creates a new <code>{@link InvalidValueExceptionAssert}</code> to make assertions on actual InvalidValueException.
+   * @param actual the InvalidValueException we want to make assertions on.
+   */
+  public InvalidValueExceptionAssert(InvalidValueException actual) {
+    super(actual, InvalidValueExceptionAssert.class);
+  }
+
+  /**
+   * An entry point for InvalidValueExceptionAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
+   * With a static import, one can write directly: <code>assertThat(myInvalidValueException)</code> and get specific assertion with code completion.
+   * @param actual the InvalidValueException we want to make assertions on.
+   * @return a new <code>{@link InvalidValueExceptionAssert}</code>
+   */
+  @CheckReturnValue
+  public static InvalidValueExceptionAssert assertThat(InvalidValueException actual) {
+    return new InvalidValueExceptionAssert(actual);
+  }
+}

@@ -1,0 +1,33 @@
+package org.typefactory.assertions;
+
+import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.IntegerType;
+
+/**
+ * {@link IntegerType} specific assertions.
+ */
+public class IntegerTypeAssert extends AbstractIntegerTypeAssert<IntegerTypeAssert, IntegerType> {
+
+  /**
+   * Creates a new <code>{@link IntegerTypeAssert}</code> to make assertions on actual IntegerType.
+   *
+   * @param actual the IntegerType we want to make assertions on.
+   */
+  public IntegerTypeAssert(IntegerType actual) {
+    super(actual, IntegerTypeAssert.class);
+  }
+
+  /**
+   * An entry point for IntegerTypeAssert to follow AssertJ standard <code>assertThat()</code> statements.<br> With a static import, one can write
+   * directly: <code>assertThat(myIntegerType)</code> and get specific assertion with code completion.
+   *
+   * @param actual the IntegerType we want to make assertions on.
+   * @return a new <code>{@link IntegerTypeAssert}</code>
+   */
+  @CheckReturnValue
+  public static IntegerTypeAssert assertThat(IntegerType actual) {
+    return new IntegerTypeAssert(actual);
+  }
+
+
+}

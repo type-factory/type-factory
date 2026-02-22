@@ -22,31 +22,35 @@ import java.util.Locale;
 import org.typefactory.impl.Factory;
 
 /**
- * <p>Message code instances provide both a message code and a default message.</p>
+ * <p>Message codes are keys for messages provided by locale-specific {@link java.util.ResourceBundle resource bundles}
+ * with base name {@code org.typefactory.Messages}. Type factory builders and parsers use message codes when creating exceptions for parser and
+ * builder errors. Every {@code MessageCode} instance provides a default error message.</p>
  *
- * <p>The message code should be a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
- * Messages can be localized by providing language specific resource bundles. The resource bundles can be either:</p>
+ * <p>{@code MessageCode} instances implement {@link CharSequence} with the character sequence representing
+ * the message code providing the key to the message in the resource bundles.</p>
+ *
+ * <p>The resource bundles can be either:</p>
  *
  * <ul>
  *   <li>Java properties files.</li>
  *   <li>Java classes that implement {@link java.util.ResourceBundle}.</li>
  * </ul>
  *
- * <p>For example, the following are valid examples of localization properties files and classes for providing localized error messages:</p>
+ * <p>Examples of property-files and classes for providing localized error messages are:</p>
  * <pre>
  *   org/typefactory/Messages.properties
  *   org/typefactory/Messages_en.properties
  *   org/typefactory/Messages_en_US.properties
- *   class org.typefactory.Messages_fr extends java.util.ListResourceBundle
+ *   class org.typefactory.Messages_fr    extends java.util.ListResourceBundle
  *   class org.typefactory.Messages_fr_CA extends java.util.ListResourceBundle
  * </pre>
  */
-public interface MessageCode extends Serializable {
-
+public interface MessageCode extends CharSequence, Comparable<MessageCode>, Serializable {
 
   /**
-   * Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
+   * <p>Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.</p>
    *
+   * <p>This should always return an empty string if instantiated with null, empty or blank values.</p>
    * @return the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
    */
   String code();
@@ -63,7 +67,8 @@ public interface MessageCode extends Serializable {
    *
    * <p><b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.</p>
    *
-   * @param messageCode    the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
+   * @param messageCode    the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name
+   *                       {@code org.typefactory.Messages}.
    *                       <b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.
    * @param defaultMessage the default message that will be used if no entry in a resource bundle can be found.
    *                       <b>Note</b>, null, empty or blank values will be accepted and converted to an empty string.
@@ -116,17 +121,13 @@ public interface MessageCode extends Serializable {
    *
    * <p>If the provided {@code messageCode} argument is {@code null} then this method will return {@code false}.</p>
    *
-   * @param messageCode the message code instance to test.
+   * @param other the message code instance to test.
    * @return {@code true} if the provided {@code messageCode.code()} equals {@link #code()}, and {@code false} otherwise.
+   * @deprecated Use {@code #equals(MessageCode)} instead – two message codes are considered equal if their {@link #code()} values are equal.
    */
-  default boolean hasSameCodeAs(final MessageCode messageCode) {
-    if (messageCode == null) {
-      return false;
-    }
-    if (code() == null) {
-      return messageCode.code() == null;
-    }
-    return code().equals(messageCode.code());
+  @Deprecated(since = "2024-07-01", forRemoval = true)
+  default boolean hasSameCodeAs(final MessageCode other) {
+    return compare(this, other) == 0;
   }
 
   /**
@@ -135,7 +136,181 @@ public interface MessageCode extends Serializable {
    * @return {@code true} if both the {@link #code()} and {@link #defaultMessage()} are blank and {@code false} otherwise.
    */
   default boolean isBlank() {
-    return (code() == null || code().isBlank()) && (defaultMessage() == null || defaultMessage().isBlank());
+    return code() == null || code().isBlank();
   }
 
+  static boolean isBlank(final MessageCode c) {
+    return (c == null || c.isBlank());
+  }
+
+
+  /**
+   * <p>Returns the message-code as a string which can be used as a key to retrieve messages from a resource-bundle.</p>
+   *
+   * <p>It does not return the default error message associated with the message-code.</p>
+   *
+   * @return the message-code as a string which can be used as a key to retrieve messages from a resource-bundle.
+   */
+  @Override
+  String toString();
+
+  /**
+   * <p>Returns the length of this message code character sequence.  The length is the number
+   * of 16-bit {@code char}s in the sequence.</p>
+   *
+   * @return the number of {@code char}s in this message code character sequence
+   */
+  @Override
+  default int length() {
+    return code() == null ? 0 : code().length();
+  }
+
+  /**
+   * <p>Returns the {@code char} value at the specified index of the message code character sequence.
+   * An index ranges from zero to {@code length() - 1}.  The first {@code char} value of the
+   * message code character sequence is at index zero, the next at index one, and so on, as for array
+   * indexing.</p>
+   *
+   * <p>If the {@code char} value specified by the index is a
+   * <a href="{@docRoot}/java.base/java/lang/Character.html#unicode">surrogate</a>, the surrogate
+   * value is returned.</p>
+   *
+   * @param   index   the index of the {@code char} value to be returned
+   * @return  the specified {@code char} value
+   * @throws  IndexOutOfBoundsException if the {@code index} argument is negative or not less than {@code length()}
+   */  @Override
+  default char charAt(int index) {
+    if (isEmpty()) {
+      throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+    }
+    return code().charAt(index);
+  }
+
+  /**
+   * <p>Returns a new {@code CharSequence} that is a subsequence of this message code character sequence.</p>
+   *
+   * <p>The subsequence starts with the {@code char} value at the specified {@code start} and ends with the
+   * {@code char} value at index {@code end - 1}.  The length (in {@code char}s) of the
+   * subsequence is {@code end - start}, so if {@code start == end} then an empty sequence is returned.</p>
+   *
+   * @param start the start index, inclusive
+   * @param end the end index, exclusive
+   * @return the specified subsequence
+   * @throws IndexOutOfBoundsException if {@code start} or {@code end} are negative, or if {@code end}
+   *         is greater than {@code length()}, or if {@code start} is greater than {@code end}
+   */
+  @Override
+  default CharSequence subSequence(int start, int end) {
+    if (isEmpty()) {
+      throw new StringIndexOutOfBoundsException(
+          "begin " + start + ", end " + end + ", length " + length());
+    }
+    return code().subSequence(start, end);
+  }
+
+  /**
+   * <p>Lexicographically compares this message code character sequence with the specified message
+   * code character sequence {@code o}.</p>
+   *
+   * <p>Returns zero if the message code character sequence {@code o} contains a character sequence
+   * that is Lexicographically the same as this message code character sequence, or if both
+   * message code character sequences are empty.</p>
+   *
+   * <p>Otherwise, returns a negative or positive integer depending on whether the character sequence
+   * represented by this message code character sequence is lexicographically less than or
+   * greater than the character sequence represented by {@code o}.</p>
+   *
+   * <p>Will return a positive integer if {@code o} is null.</p>
+   *
+   * @return a negative integer, zero, or a positive integer as this object
+   *         is less than, equal to, or greater than the specified object.
+   */
+  @Override
+  default int compareTo(final MessageCode o) {
+    if (o == this) {
+      return 0; // both are null or both are the same instance
+    }
+    if (o == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    final String c1 = code() == null ? "" : code();
+    final String c2 = o.code() == null ? "" : o.code();
+    return c1.compareTo(c2);
+  }
+
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
+  static int compare(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same instance
+      return 0;
+    }
+    if (c1 == null) {
+      return -1; // null is less than any non-null
+    }
+    if (c2 == null) {
+      return 1; // any non-null is greater than null
+    }
+    return c1.compareTo(c2);
+  }
+
+  default int compareToIgnoreCase(final MessageCode o) {
+    if (o == this) {
+      return 0; // both are null or both are the same instance
+    }
+    if (o == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    final String c1 = code() == null ? "" : code();
+    final String c2 = o.code() == null ? "" : o.code();
+    return c1.compareToIgnoreCase(c2);
+  }
+
+  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
+  static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
+    if (c1 == c2) {
+      // both are null or both are the same instance
+      return 0;
+    }
+    if (c1 == null) {
+      return -1; // null is less than any non-null instance
+    }
+    if (c2 == null) {
+      return 1; // any non-null instance is greater than null
+    }
+    return c1.compareToIgnoreCase(c2);
+  }
+
+  /**
+   * <p>Returns {@code true} if the character sequence represented by this instance is the same as the
+   * character sequence of the other message code character sequence.</p>
+   *
+   * @return {@code true} if the character sequence represented by this instance is the same as the
+   * character sequence of the other message code character sequence, otherwise returns {@code false}.
+   */
+  @Override
+  boolean equals(final Object other);
+
+  default boolean equals(final MessageCode other) {
+    return compareTo(other) == 0;
+  }
+
+  static <T extends MessageCode> boolean equals(final T value1, final T value2) {
+    return compare(value1, value2) == 0;
+  }
+
+  static <T extends MessageCode> boolean notEquals(final T value1, final T value2) {
+    return !equals(value1, value2);
+  }
+
+  default boolean equalsIgnoreCase(final MessageCode o) {
+    return equalsIgnoreCase(this, o);
+  }
+
+  static <T extends MessageCode> boolean equalsIgnoreCase(final T value1, final T value2) {
+    return compareIgnoreCase(value1, value2) == 0;
+  }
+
+  static <T extends MessageCode> boolean notEqualsIgnoreCase(final T value1, final T value2) {
+    return !equalsIgnoreCase(value1, value2);
+  }
 }

@@ -13,7 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package org.typefactory;
+package org.typefactory.impl;
+
+import org.typefactory.Category;
+import org.typefactory.Subset;
 
 public interface SubsetWithCategories extends Subset {
 

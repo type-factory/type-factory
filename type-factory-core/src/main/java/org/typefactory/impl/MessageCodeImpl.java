@@ -26,22 +26,32 @@ class MessageCodeImpl implements MessageCode {
   @Serial
   private static final long serialVersionUID = -2182286351618585098L;
 
-  protected final String messageCode;
+  protected final String code;
   protected final String defaultMessage;
 
-  MessageCodeImpl(final String messageCode, final String defaultMessage) {
-    this.messageCode = messageCode == null || messageCode.isBlank() ? EMPTY_STRING : messageCode;
-    this.defaultMessage = defaultMessage == null || defaultMessage.isBlank() ? EMPTY_STRING : defaultMessage;
+  MessageCodeImpl(final String code, final String defaultMessage) {
+    if (code == null || code.isBlank()) {
+      this.code = EMPTY_STRING;
+      this.defaultMessage = EMPTY_STRING;
+    } else {
+      this.code = code;
+      this.defaultMessage = defaultMessage == null || defaultMessage.isBlank() ? EMPTY_STRING : defaultMessage;
+    }
   }
 
   @Override
   public final String code() {
-    return messageCode;
+    return code;
   }
 
   @Override
   public final String defaultMessage() {
     return defaultMessage;
+  }
+
+  @Override
+  public String toString() {
+    return code;
   }
 
   @Override
@@ -52,11 +62,11 @@ class MessageCodeImpl implements MessageCode {
     if (!(o instanceof MessageCode other)) {
       return false;
     }
-    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return Objects.equals(code, other.code());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(messageCode, defaultMessage);
+    return Objects.hash(code);
   }
 }
