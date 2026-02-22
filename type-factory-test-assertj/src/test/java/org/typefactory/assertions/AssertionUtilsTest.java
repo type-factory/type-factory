@@ -53,8 +53,15 @@ class AssertionUtilsTest {
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void equals_returnsExpectedResult(
       final String value1, final String value2, final boolean expected) {
+
     assertThat(AssertionUtils.equals(value1, value2)).isEqualTo(expected);
     assertThat(AssertionUtils.notEquals(value1, value2)).isNotEqualTo(expected);
+
+    final var charSequenceValue1 = SomeCharSequenceType.of(value1);
+    final var charSequenceValue2 = SomeCharSequenceType.of(value2);
+
+    assertThat(AssertionUtils.equals(charSequenceValue1, charSequenceValue2)).isEqualTo(expected);
+    assertThat(AssertionUtils.notEquals(charSequenceValue1, charSequenceValue2)).isNotEqualTo(expected);
   }
 
   @ParameterizedTest(name = "[{index}] {arguments}")
@@ -69,5 +76,25 @@ class AssertionUtilsTest {
    """, delimiter = '|', nullValues = "_null_", useHeadersInDisplayName = true)
   void valueOf_returnsExpectedRepresentation(final String value, final String expected) {
    assertThat(AssertionUtils.valueOf(value)).isEqualTo(expected);
+  }
+
+  private record SomeCharSequenceType(String value) implements CharSequence {
+    @Override
+    public int length() {
+      return value.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+      return value.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+      return value.subSequence(start, end);
+    }
+    static SomeCharSequenceType of(String value) {
+      return value == null ? null : new SomeCharSequenceType(value);
+    }
   }
 }
