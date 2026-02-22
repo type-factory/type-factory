@@ -1,7 +1,5 @@
 package org.typefactory;
 
-import org.typefactory.impl.ExceptionUtils;
-
 public class CharSequenceUtils {
 
   private CharSequenceUtils() {

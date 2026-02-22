@@ -32,23 +32,24 @@ class AssertionUtilsTest {
 
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-      VALUE_1    | VALUE_2    | EXPECTED
-      null       | null       | true
-      null       | ''         | false
-      null       | ' '        | false
-      null       | some-value | false
-      ''         | null       | false
-      ''         | ''         | true
-      ''         | ' '        | false
-      ''         | some-value | false
-      ' '        | null       | false
-      ' '        | ''         | false
-      ' '        | ' '        | true
-      ' '        | some-value | false
-      some-value | null       | false
-      some-value | ''         | false
-      some-value | ' '        | false
-      some-value | some-value | true
+      VALUE_1    | VALUE_2     | EXPECTED
+      null       | null        | true
+      null       | ''          | false
+      null       | ' '         | false
+      null       | some-value  | false
+      ''         | null        | false
+      ''         | ''          | true
+      ''         | ' '         | false
+      ''         | some-value  | false
+      ' '        | null        | false
+      ' '        | ''          | false
+      ' '        | ' '         | true
+      ' '        | some-value  | false
+      some-value | null        | false
+      some-value | ''          | false
+      some-value | ' '         | false
+      some-value | other-value | false
+      some-value | some-value  | true
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void equals_returnsExpectedResult(
       final String value1, final String value2, final boolean expected) {
@@ -56,4 +57,17 @@ class AssertionUtilsTest {
     assertThat(AssertionUtils.notEquals(value1, value2)).isNotEqualTo(expected);
   }
 
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(textBlock = """
+   VALUE  | EXPECTED
+   _null_ | 'null'
+   ''     | '"" (empty)'
+   ' '    | '" " (blank)'
+   '\t'   | '"\t" (blank)'
+   'abc'  | '"abc"'
+   ' a '  | '" a "'
+   """, delimiter = '|', nullValues = "_null_", useHeadersInDisplayName = true)
+  void valueOf_returnsExpectedRepresentation(final String value, final String expected) {
+   assertThat(AssertionUtils.valueOf(value)).isEqualTo(expected);
+  }
 }

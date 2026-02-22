@@ -1,6 +1,5 @@
 package org.typefactory.assertions;
 
-import org.typefactory.Category;
 import org.typefactory.CharSequenceUtils;
 
 final class AssertionUtils {
