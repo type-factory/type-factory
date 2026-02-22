@@ -48,7 +48,7 @@ class AssertionUtilsTest {
       some-value | null        | false
       some-value | ''          | false
       some-value | ' '         | false
-      some-value | other-value | false
+      some-value | diff-value  | false
       some-value | some-value  | true
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void equals_returnsExpectedResult(
