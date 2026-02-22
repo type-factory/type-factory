@@ -1,5 +1,7 @@
 package org.typefactory.assertions;
 
+import static org.typefactory.assertions.AssertionUtils.codePointToString;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -180,38 +182,6 @@ public abstract class AbstractSubsetAssert<
       result[i] = characterArray[i];
     }
     return result;
-  }
-
-  protected static String codePointToString(final int codePoint) {
-    if (!Character.isDefined(codePoint)) {
-      if (codePoint > 0xFFFFFFL) {
-        return String.format(U_08X, codePoint);
-      } else if (codePoint > 0xFFFF) {
-        return String.format(U_06X, codePoint);
-      } else {
-        return String.format(U_04X, codePoint);
-      }
-    }
-
-    if (Category.codePointIsInOneOfTheCategories(codePoint, Category.getCategoryBitFlags(
-        Category.CONTROL,
-        Category.FORMAT,
-        Category.SPACE_SEPARATOR,
-        Category.LINE_SEPARATOR,
-        Category.PARAGRAPH_SEPARATOR))) {
-      return codePoint > 0xFFFF
-          ? String.format(U_06X, codePoint)
-          : String.format(U_04X, codePoint);
-    }
-    if (codePoint > 0xFFFF) {
-      return Character.toString(codePoint);
-    } else {
-      if (Character.isHighSurrogate((char) codePoint) || Character.isLowSurrogate((char) codePoint)) {
-        return String.format(U_04X, codePoint);
-      } else {
-        return Character.toString(codePoint);
-      }
-    }
   }
 
   protected static final class SubsetContainsResult {
