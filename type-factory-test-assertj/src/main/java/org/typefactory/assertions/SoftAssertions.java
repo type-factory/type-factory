@@ -1,6 +1,7 @@
 package org.typefactory.assertions;
 
 import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.CharSequenceType;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
@@ -78,6 +79,17 @@ public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
   @CheckReturnValue
   public StringTypeAssert assertThat(StringType actual) {
     return proxy(StringTypeAssert.class, StringType.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link CharSequenceTypeAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  @CheckReturnValue
+  public <T extends CharSequenceType<T>> CharSequenceTypeAssert assertThat(T actual) {
+    return proxy(CharSequenceTypeAssert.class, CharSequenceType.class, actual);
   }
 
   /**

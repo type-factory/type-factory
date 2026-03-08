@@ -1,6 +1,7 @@
 package org.typefactory.assertions;
 
 import org.assertj.core.util.CheckReturnValue;
+import org.typefactory.CharSequenceType;
 import org.typefactory.IntegerType;
 import org.typefactory.InvalidValueException;
 import org.typefactory.LongType;
@@ -86,6 +87,18 @@ public class BDDAssertions extends org.assertj.core.api.BDDAssertions {
   public static StringTypeAssert then(StringType actual) {
     return new StringTypeAssert(actual);
   }
+
+  /**
+   * Creates a new instance of <code>{@link CharSequenceTypeAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  @CheckReturnValue
+  public static <T extends CharSequenceType<T>> CharSequenceTypeAssert then(T actual) {
+    return new CharSequenceTypeAssert(actual);
+  }
+
 
   /**
    * Creates a new instance of <code>{@link SubsetAssert}</code>.

@@ -82,6 +82,12 @@ public class Assertions extends org.assertj.core.api.Assertions {
     return new StringTypeAssert(actual);
   }
 
+  /**
+   * Creates a new instance of <code>{@link CharSequenceTypeAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
   @CheckReturnValue
   public static <T extends CharSequenceType<T>> CharSequenceTypeAssert assertThat(T actual) {
     return new CharSequenceTypeAssert(actual);
