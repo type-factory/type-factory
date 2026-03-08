@@ -234,7 +234,7 @@ class MessageCodeTest {
 
     assertThatExceptionOfType(StringIndexOutOfBoundsException.class)
         .isThrownBy(() -> messageCode.subSequence(0, 1))
-        .withMessage("String index out of range: 0");
+        .withMessage("begin 0, end 1, length 0");
   }
 
   @ParameterizedTest(name = "[{index}] code={0}, start={1}, end={2}, expected={3}")
