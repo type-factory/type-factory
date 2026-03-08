@@ -43,8 +43,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <junit-jupiter.version>5.13.1</junit-jupiter.version>
-    <assertj-core.version>3.27.3</assertj-core.version>
+    <junit-jupiter.version>5.13.4</junit-jupiter.version>
+    <assertj-core.version>3.27.7</assertj-core.version>
     <mockito-bom.version>5.18.0</mockito-bom.version>
     <icu4j.version>77.1</icu4j.version>
 
@@ -180,7 +180,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>3.4.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -204,7 +204,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.11.2</version>
+        <version>3.12.0</version>
         <configuration>
           <nohelp>true</nohelp>
           <doclint>none</doclint>
@@ -283,7 +283,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.3</version>
         <executions>
           <execution>
             <!-- enable flattening -->
@@ -331,7 +331,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.7</version>
+            <version>3.2.8</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
