@@ -20,13 +20,14 @@ import java.util.Arrays;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
+import org.typefactory.Category;
 
-public class StringArrayConverter implements ArgumentConverter {
+public class CategoryArrayConverter implements ArgumentConverter {
 
-  private static final String [] EMPTY_STRING_ARRAY = new String[0];
+  private static final Category[] EMPTY_CATEGORY_ARRAY = new Category[0];
 
   @Override
-  public String[] convert(Object source, ParameterContext context) throws ArgumentConversionException {
+  public Category[] convert(Object source, ParameterContext context) throws ArgumentConversionException {
     try {
       if (source == null) {
         return null;
@@ -34,19 +35,20 @@ public class StringArrayConverter implements ArgumentConverter {
       String value = ((String) source).trim();
       if (!value.startsWith("[") || !value.endsWith("]")) {
         throw new IllegalArgumentException(
-            "The argument should be a string written as array of comma separate values all within square brackets. Invalid value: " + source);
+            "The argument should be a string written as array of comma separated Category enum values all within square brackets. Invalid value: " + source);
       }
       value = value.substring(1, value.length() - 1);
       if (value.isBlank()) {
-        return EMPTY_STRING_ARRAY;
+        return EMPTY_CATEGORY_ARRAY;
       }
       return Arrays.stream(value.split(",\\s*"))
           .map(v -> "null".equals(v.trim()) ? null : v)
+          .map(Category::valueOf)
           .toList()
-          .toArray(EMPTY_STRING_ARRAY);
+          .toArray(EMPTY_CATEGORY_ARRAY);
     } catch (Exception e) {
       throw new IllegalArgumentException(
-          "The argument should be a string written as array of comma separate values all within square brackets. Invalid value: " + source, e);
+          "The argument should be a string written as array of comma separated Category enum values all within square brackets. Invalid value: " + source, e);
     }
   }
 }

@@ -346,6 +346,55 @@ class SubsetAssertTest {
       [DECIMAL_DIGIT_NUMBER]                                   | [DECIMAL_DIGIT_NUMBER]
       [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER] | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER]
       """)
+  void containsCategories_doesNotThrowAssertionError(
+      @ConvertWith(CategoryArrayConverter.class) final Category[] subsetCategories,
+      @ConvertWith(CategoryArrayConverter.class) final Category[] categoriesToContain) {
+
+    final var someActual = Subset.builder()
+        .includeUnicodeCategories(subsetCategories)
+        .build();
+    final var subsetAssert = SubsetAssert.assertThat(someActual);
+
+    assertThatNoException()
+        .isThrownBy(() -> subsetAssert.containsCategories(categoriesToContain));
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      SUBSET_CATEGORIES                                        | ASSERT_CONTAINS_EXACTLY_CATEGORIES         | EXPECTED_ERROR_MESSAGE
+      [DECIMAL_DIGIT_NUMBER]                                   | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]'
+      [DECIMAL_DIGIT_NUMBER]                                   | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER]    | '\nExpected actual Subset:  \nto contain the categories:  [DECIMAL_DIGIT_NUMBER, UPPERCASE_LETTER]\ncontained expected categories:  [DECIMAL_DIGIT_NUMBER]\nmissing expected categories:  [UPPERCASE_LETTER]'
+      [CASED_LETTER]                                           | [CASED_LETTER,DECIMAL_DIGIT_NUMBER]        | '\nExpected actual Subset:  \nto contain the categories:  [CASED_LETTER, DECIMAL_DIGIT_NUMBER]\nwhich expands to the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, DECIMAL_DIGIT_NUMBER]\ncontained expected categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER]\nmissing expected categories:  [DECIMAL_DIGIT_NUMBER]'
+      [CASED_LETTER,DECIMAL_DIGIT_NUMBER]                      | [MODIFIER_LETTER]                          | '\nExpected actual Subset:  \nto contain the categories:  [MODIFIER_LETTER]\nmissing expected categories:  [MODIFIER_LETTER]'
+      [DECIMAL_DIGIT_NUMBER]                                   | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]'
+      [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER] | [DECIMAL_DIGIT_NUMBER,TITLECASE_LETTER]    | '\nExpected actual Subset:  \nto contain the categories:  [DECIMAL_DIGIT_NUMBER, TITLECASE_LETTER]\ncontained expected categories:  [DECIMAL_DIGIT_NUMBER]\nmissing expected categories:  [TITLECASE_LETTER]'
+      [UPPERCASE_LETTER]                                       | [UPPERCASE_LETTER,LOWERCASE_LETTER]        | '\nExpected actual Subset:  \nto contain the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER]\ncontained expected categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [LOWERCASE_LETTER]'
+      """)
+  void containsCategories_throwsAssertionError(
+      @ConvertWith(CategoryArrayConverter.class) final Category[] subsetCategories,
+      @ConvertWith(CategoryArrayConverter.class) final Category[] categoriesToContain,
+      final String expectedMessage) {
+
+    final var someActual = Subset.builder()
+        .includeUnicodeCategories(subsetCategories)
+        .build();
+    final var subsetAssert = SubsetAssert.assertThat(someActual);
+
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(() -> subsetAssert.containsCategories(categoriesToContain))
+        .withMessage(expectedMessage);
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      SUBSET_CATEGORIES                                        | ASSERT_CONTAINS_CATEGORY
+      [CASED_LETTER]                                           | [CASED_LETTER]
+      [CASED_LETTER]                                           | [UPPERCASE_LETTER,LOWERCASE_LETTER,TITLECASE_LETTER]
+      [LETTER,DECIMAL_DIGIT_NUMBER]                            | [LETTER,DECIMAL_DIGIT_NUMBER]
+      [LETTER,DECIMAL_DIGIT_NUMBER]                            | [CASED_LETTER,UPPERCASE_LETTER,LOWERCASE_LETTER,TITLECASE_LETTER,MODIFIER_LETTER,OTHER_LETTER,DECIMAL_DIGIT_NUMBER]
+      [DECIMAL_DIGIT_NUMBER]                                   | [DECIMAL_DIGIT_NUMBER]
+      [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER] | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER]
+      """)
   void containsExactlyCategories_doesNotThrowAssertionError(
       @ConvertWith(CategoryArrayConverter.class) final Category[] subsetCategories,
       @ConvertWith(CategoryArrayConverter.class) final Category[] categoriesToContain) {
@@ -359,4 +408,29 @@ class SubsetAssertTest {
         .isThrownBy(() -> subsetAssert.containsExactlyCategories(categoriesToContain));
   }
 
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      SUBSET_CATEGORIES                                        | ASSERT_CONTAINS_EXACTLY_CATEGORIES         | EXPECTED_ERROR_MESSAGE
+      [DECIMAL_DIGIT_NUMBER]                                   | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain exactly the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]\ncontained categories that were not expected:  [DECIMAL_DIGIT_NUMBER]'
+      [DECIMAL_DIGIT_NUMBER]                                   | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER]    | '\nExpected actual Subset:  \nto contain exactly the categories:  [DECIMAL_DIGIT_NUMBER, UPPERCASE_LETTER]\ncontained expected categories:  [DECIMAL_DIGIT_NUMBER]\nmissing expected categories:  [UPPERCASE_LETTER]'
+      [CASED_LETTER]                                           | [CASED_LETTER,DECIMAL_DIGIT_NUMBER]        | '\nExpected actual Subset:  \nto contain exactly the categories:  [CASED_LETTER, DECIMAL_DIGIT_NUMBER]\nwhich expands to the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, DECIMAL_DIGIT_NUMBER]\ncontained expected categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER]\nmissing expected categories:  [DECIMAL_DIGIT_NUMBER]'
+      [LETTER,DECIMAL_DIGIT_NUMBER]                            | [LETTER]                                   | '\nExpected actual Subset:  \nto contain exactly the categories:  [LETTER]\nwhich expands to the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, MODIFIER_LETTER, OTHER_LETTER]\ncontained expected categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, MODIFIER_LETTER, OTHER_LETTER]\ncontained categories that were not expected:  [DECIMAL_DIGIT_NUMBER]'
+      [DECIMAL_DIGIT_NUMBER]                                   | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain exactly the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]\ncontained categories that were not expected:  [DECIMAL_DIGIT_NUMBER]'
+      [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER,LOWERCASE_LETTER] | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER]    | '\nExpected actual Subset:  \nto contain exactly the categories:  [DECIMAL_DIGIT_NUMBER, UPPERCASE_LETTER]\ncontained expected categories:  [UPPERCASE_LETTER, DECIMAL_DIGIT_NUMBER]\ncontained categories that were not expected:  [LOWERCASE_LETTER]'
+      [UPPERCASE_LETTER]                                       | [UPPERCASE_LETTER,LOWERCASE_LETTER]        | '\nExpected actual Subset:  \nto contain exactly the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER]\ncontained expected categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [LOWERCASE_LETTER]'
+      """)
+  void containsExactlyCategories_throwsAssertionError(
+      @ConvertWith(CategoryArrayConverter.class) final Category[] subsetCategories,
+      @ConvertWith(CategoryArrayConverter.class) final Category[] categoriesToContain,
+      final String expectedMessage) {
+
+    final var someActual = Subset.builder()
+        .includeUnicodeCategories(subsetCategories)
+        .build();
+    final var subsetAssert = SubsetAssert.assertThat(someActual);
+
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(() -> subsetAssert.containsExactlyCategories(categoriesToContain))
+        .withMessage(expectedMessage);
+  }
 }

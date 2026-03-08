@@ -1,9 +1,17 @@
 package org.typefactory.assertions;
 
+import static java.lang.Math.max;
+import static java.util.Comparator.comparing;
+import static java.util.function.Predicate.not;
+import static org.typefactory.assertions.AssertionUtils.codePointToStringOrHexCode;
+
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.typefactory.Category;
 import org.typefactory.Subset;
@@ -17,18 +25,6 @@ public abstract class AbstractSubsetAssert<
     SELF extends AbstractSubsetAssert<SELF, ACTUAL>,
     ACTUAL extends Subset>
     extends AbstractObjectAssert<SELF, ACTUAL> {
-
-  private static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
-      Category.getCategoryBitFlags(
-          Category.CONTROL,
-          Category.FORMAT,
-          Category.SPACE_SEPARATOR,
-          Category.LINE_SEPARATOR,
-          Category.PARAGRAPH_SEPARATOR);
-
-  private static final String U_08X = "U+%08X";
-  private static final String U_06X = "U+%06X";
-  private static final String U_04X = "U+%04X";
 
   /**
    * Creates a new <code>{@link AbstractSubsetAssert}</code> to make assertions on actual Subset.
@@ -80,14 +76,14 @@ public abstract class AbstractSubsetAssert<
     isNotEmpty();
     if (!actual.contains(expectedCharacter)) {
       throw failure("%nExpected actual Subset:  %nto contain character:  %s%nbut no such character was found in the Subset.",
-          codePointToString(expectedCharacter));
+          codePointToStringOrHexCode(expectedCharacter));
     }
     return myself;
   }
 
   public SELF containsAllCharacters(final char... expectedCharacters) {
     isNotEmpty();
-    final var subsetContainsResult = new SubsetContainsResult(actual, expectedCharacters);
+    final var subsetContainsResult = new SubsetContainsCodePointResult(actual, expectedCharacters);
     if (!subsetContainsResult.notFoundInSubset.isEmpty()) {
       if (subsetContainsResult.foundInSubset.isEmpty()) {
         throw failure(
@@ -109,14 +105,14 @@ public abstract class AbstractSubsetAssert<
     isNotEmpty();
     if (!actual.contains(expectedCodePoint)) {
       throw failure("%nExpected actual Subset:  %nto contain code-point:  %s%nbut no such code-point was found in the Subset.",
-          codePointToString(expectedCodePoint));
+          codePointToStringOrHexCode(expectedCodePoint));
     }
     return myself;
   }
 
   public SELF containsAllCodePoints(final int... expectedCodePoints) {
     isNotEmpty();
-    final var subsetContainsResult = new SubsetContainsResult(actual, expectedCodePoints);
+    final var subsetContainsResult = new SubsetContainsCodePointResult(actual, expectedCodePoints);
     if (!subsetContainsResult.notFoundInSubset.isEmpty()) {
       if (subsetContainsResult.foundInSubset.isEmpty()) {
         throw failure(
@@ -136,47 +132,92 @@ public abstract class AbstractSubsetAssert<
 
   public SELF containsCategory(final Category expectedCategory) {
     isNotNull();
-    final Set<Category> actualSubsetCategories = getActualSubsetCategories();
-    if (!actualSubsetCategories.contains(expectedCategory)) {
+    final var subsetContainsResult = new SubsetContainsCategoryResult(actual, List.of(expectedCategory));
+    if (!subsetContainsResult.expectedAndNotContained.isBlank()) {
       throw failure("%nExpected actual Subset:  %nto contain category:  %s%nbut no such category was found in the Subset.",
           expectedCategory);
     }
     return myself;
   }
 
-  public SELF containsExactlyCategories(final Category... expectedCategories) {
+  public SELF containsCategories(final Category... expectedCategories) {
     isNotNull();
-    final Set<Category> actualSubsetCategories = getActualSubsetCategories();
-    final Set<Category> contained = new HashSet<>();
-    final Set<Category> notContained = new HashSet<>();
-    for (Category expectedCategory : expectedCategories) {
-      if (actualSubsetCategories.contains(expectedCategory)) {
-        contained.add(expectedCategory);
-      } else {
-        notContained.add(expectedCategory);
-      }
-    }
-    if (!notContained.isEmpty()) {
-      throw failureWithActualExpected(
-          actualSubsetCategories, List.of(expectedCategories),
-          "Subset did not contain exactly the expected categories\nContained only: %s\nDid not contain %s",
-          contained.stream().map(Enum::name).collect(Collectors.joining(", ")),
-          notContained.stream().map(Enum::name).collect(Collectors.joining(", ")));
+    final var subsetContainsResult = new SubsetContainsCategoryResult(actual, List.of(expectedCategories));
+    if (!subsetContainsResult.expectedAndNotContained.isBlank()) {
+      final var message = Stream.of(
+              String.format("%nExpected actual Subset:  "),
+              subsetContainsResult.expectedCategories.isBlank()
+                  ? ""
+                  : String.format("%nto contain the categories:  [%s]", subsetContainsResult.expectedCategories),
+              subsetContainsResult.expandedExpectedCategories.isBlank()
+                  ? ""
+                  : String.format("%nwhich expands to the categories:  [%s]", subsetContainsResult.expandedExpectedCategories),
+              subsetContainsResult.expectedAndContained.isBlank()
+                  ? ""
+                  : String.format("%ncontained expected categories:  [%s]", subsetContainsResult.expectedAndContained),
+              subsetContainsResult.expectedAndNotContained.isBlank()
+                  ? ""
+                  : String.format("%nmissing expected categories:  [%s]", subsetContainsResult.expectedAndNotContained))
+          .filter(not(String::isBlank))
+          .collect(Collectors.joining(""));
+
+      throw failure(message);
     }
     return myself;
   }
 
-  private Set<Category> getActualSubsetCategories() {
-    final HashSet<Category> result = new HashSet<>();
-    if (actual instanceof SubsetWithCategories subsetWithCategories) {
+  public SELF containsExactlyCategories(final Category... expectedCategories) {
+    isNotNull();
+    final var subsetContainsResult = new SubsetContainsCategoryResult(actual, List.of(expectedCategories));
+    if (!subsetContainsResult.expectedAndNotContained.isBlank() || !subsetContainsResult.containedAndNotExpected.isBlank()) {
+      final var message = Stream.of(
+              String.format("%nExpected actual Subset:  "),
+              subsetContainsResult.expectedCategories.isBlank()
+                  ? ""
+                  : String.format("%nto contain exactly the categories:  [%s]", subsetContainsResult.expectedCategories),
+              subsetContainsResult.expandedExpectedCategories.isBlank()
+                  ? ""
+                  : String.format("%nwhich expands to the categories:  [%s]", subsetContainsResult.expandedExpectedCategories),
+              subsetContainsResult.expectedAndContained.isBlank()
+                  ? ""
+                  : String.format("%ncontained expected categories:  [%s]", subsetContainsResult.expectedAndContained),
+              subsetContainsResult.expectedAndNotContained.isBlank()
+                  ? ""
+                  : String.format("%nmissing expected categories:  [%s]", subsetContainsResult.expectedAndNotContained),
+              subsetContainsResult.containedAndNotExpected.isBlank()
+                  ? ""
+                  : String.format("%ncontained categories that were not expected:  [%s]", subsetContainsResult.containedAndNotExpected))
+          .filter(not(String::isBlank))
+          .collect(Collectors.joining(""));
+
+      throw failure(message);
+    }
+    return myself;
+  }
+
+  private static SortedSet<Category> getActualSubsetCategories(final Subset subset) {
+    final var result = new TreeSet<>(comparing(Category::ordinal));
+    if (subset instanceof SubsetWithCategories subsetWithCategories) {
       final long subsetCategoryBitFlags = subsetWithCategories.unicodeCategoryBitFlags();
       for (Category category : Category.values()) {
-        if ((subsetCategoryBitFlags & category.bitMask) == category.bitMask) {
+        if (((subsetCategoryBitFlags & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
           result.add(category);
         }
       }
     }
     return result;
+  }
+
+  private static SortedSet<Category> getExpandedSubsetCategories(final Collection<Category> fromCategories) {
+    final var toCategories = new TreeSet<>(comparing(Category::ordinal));
+    for (Category fromCategory : fromCategories) {
+      for (Category category : Category.values()) {
+        if (((fromCategory.bitMask & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
+          toCategories.add(category);
+        }
+      }
+    }
+    return toCategories;
   }
 
   protected static int[] charArrayToCodePointArray(final char[] characterArray) {
@@ -190,50 +231,23 @@ public abstract class AbstractSubsetAssert<
     return result;
   }
 
-  protected static String codePointToString(final int codePoint) {
-    if (!Character.isDefined(codePoint)) {
-      if (codePoint > 0xFFFFFFL) {
-        return String.format(U_08X, codePoint);
-      } else if (codePoint > 0xFFFF) {
-        return String.format(U_06X, codePoint);
-      } else {
-        return String.format(U_04X, codePoint);
-      }
-    }
-
-    if (Category.codePointIsInOneOfTheCategories(codePoint, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
-      return codePoint > 0xFFFF
-          ? String.format(U_06X, codePoint)
-          : String.format(U_04X, codePoint);
-    }
-    if (codePoint > 0xFFFF) {
-      return Character.toString(codePoint);
-    } else {
-      if (Character.isHighSurrogate((char) codePoint) || Character.isLowSurrogate((char) codePoint)) {
-        return String.format(U_04X, codePoint);
-      } else {
-        return Character.toString(codePoint);
-      }
-    }
-  }
-
-  protected static final class SubsetContainsResult {
+  protected static final class SubsetContainsCodePointResult {
 
     final String expectedCodePoints;
     final String foundInSubset;
     final String notFoundInSubset;
 
-    SubsetContainsResult(final Subset actual, char... expectedCharacters) {
+    SubsetContainsCodePointResult(final Subset actual, char... expectedCharacters) {
       this(actual, charArrayToCodePointArray(expectedCharacters));
     }
 
-    SubsetContainsResult(final Subset actual, int... expectedCodepoints) {
+    SubsetContainsCodePointResult(final Subset actual, int... expectedCodepoints) {
       final var expectedStringBuilder = new StringBuilder();
       final var foundStringBuilder = new StringBuilder();
       final var notFoundStringBuilder = new StringBuilder();
       if (expectedCodepoints != null) {
         for (int expectedCodepoint : expectedCodepoints) {
-          final var codePointAsString = codePointToString(expectedCodepoint);
+          final var codePointAsString = codePointToStringOrHexCode(expectedCodepoint);
           expectedStringBuilder.append(codePointAsString).append(",");
           if (actual.contains(expectedCodepoint)) {
             foundStringBuilder.append(codePointAsString).append(",");
@@ -242,19 +256,65 @@ public abstract class AbstractSubsetAssert<
           }
         }
       }
-      if (!expectedStringBuilder.isEmpty()) {
-        expectedStringBuilder.setLength(expectedStringBuilder.length() - 1);
-      }
-      if (!foundStringBuilder.isEmpty()) {
-        foundStringBuilder.setLength(foundStringBuilder.length() - 1);
-      }
-      if (!notFoundStringBuilder.isEmpty()) {
-        notFoundStringBuilder.setLength(notFoundStringBuilder.length() - 1);
-      }
+
+      expectedStringBuilder.setLength(max(0, expectedStringBuilder.length() - 1));
+      foundStringBuilder.setLength(max(0, foundStringBuilder.length() - 1));
+      notFoundStringBuilder.setLength(max(0, notFoundStringBuilder.length() - 1));
+
       this.expectedCodePoints = expectedStringBuilder.toString();
       this.foundInSubset = foundStringBuilder.toString();
       this.notFoundInSubset = notFoundStringBuilder.toString();
     }
+  }
+
+  protected static final class SubsetContainsCategoryResult {
+
+    final String expectedCategories;
+    final String expandedExpectedCategories;
+    final String expectedAndContained;
+    final String expectedAndNotContained;
+    final String containedAndNotExpected;
+
+    SubsetContainsCategoryResult(final Subset actual, final List<Category> expectedCategories) {
+
+      final var actualSubsetCategories = getActualSubsetCategories(actual);
+      final var expectedCategoriesExpanded = getExpandedSubsetCategories(expectedCategories);
+
+      final var expandedExpectedCategoriesStringBuilder = new StringBuilder();
+      final var expectedAndContainedStringBuilder = new StringBuilder();
+      final var expectedAndNotContainedStringBuilder = new StringBuilder();
+      final var containedAndNotExpectedStringBuilder = new StringBuilder();
+
+      for (Category expectedCategory : expectedCategoriesExpanded) {
+        expandedExpectedCategoriesStringBuilder.append(expectedCategory).append(", ");
+        if (actualSubsetCategories.contains(expectedCategory)) {
+          expectedAndContainedStringBuilder.append(expectedCategory).append(", ");
+        } else {
+          expectedAndNotContainedStringBuilder.append(expectedCategory).append(", ");
+        }
+      }
+      for (Category actualCategory : actualSubsetCategories) {
+        if (!expectedCategoriesExpanded.contains(actualCategory)) {
+          containedAndNotExpectedStringBuilder.append(actualCategory).append(", ");
+        }
+      }
+
+      final var expectedAndExpandedExpectedCategoriesAreTheSame =
+          expectedCategories.size() == expectedCategoriesExpanded.size()
+          && new HashSet<>(expectedCategories).containsAll(expectedCategoriesExpanded);
+
+      expandedExpectedCategoriesStringBuilder.setLength(max(0, expandedExpectedCategoriesStringBuilder.length() - 2));
+      expectedAndContainedStringBuilder.setLength(max(0, expectedAndContainedStringBuilder.length() - 2));
+      expectedAndNotContainedStringBuilder.setLength(max(0, expectedAndNotContainedStringBuilder.length() - 2));
+      containedAndNotExpectedStringBuilder.setLength(max(0, containedAndNotExpectedStringBuilder.length() - 2));
+
+      this.expectedCategories = expectedCategories.stream().map(Category::name).collect(Collectors.joining(", "));
+      this.expandedExpectedCategories = expectedAndExpandedExpectedCategoriesAreTheSame ? "" : expandedExpectedCategoriesStringBuilder.toString();
+      this.containedAndNotExpected = containedAndNotExpectedStringBuilder.toString();
+      this.expectedAndContained = expectedAndContainedStringBuilder.toString();
+      this.expectedAndNotContained = expectedAndNotContainedStringBuilder.toString();
+    }
+
   }
 
 }

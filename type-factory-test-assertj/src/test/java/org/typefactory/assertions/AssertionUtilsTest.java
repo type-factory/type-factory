@@ -66,19 +66,40 @@ class AssertionUtilsTest {
 
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(textBlock = """
-   VALUE  | EXPECTED
-   _null_ | 'null'
-   ''     | '"" (empty)'
-   ' '    | '" " (blank)'
-   '\t'   | '"\t" (blank)'
-   'abc'  | '"abc"'
-   ' a '  | '" a "'
-   """, delimiter = '|', nullValues = "_null_", useHeadersInDisplayName = true)
+      VALUE  | EXPECTED
+      _null_ | 'null'
+      ''     | '"" (empty)'
+      ' '    | '" " (blank)'
+      '\t'   | '"\t" (blank)'
+      'abc'  | '"abc"'
+      ' a '  | '" a "'
+      """, delimiter = '|', nullValues = "_null_", useHeadersInDisplayName = true)
   void valueOf_returnsExpectedRepresentation(final String value, final String expected) {
-   assertThat(AssertionUtils.valueOf(value)).isEqualTo(expected);
+    assertThat(AssertionUtils.valueOf(value)).isEqualTo(expected);
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(delimiter = '|', textBlock = """
+      0x0378    | U+0378
+      0x110000  | U+110000
+      0x1000000 | U+01000000
+      0x0020    | U+0020
+      0x0009    | U+0009
+      0x200E    | U+200E
+      0x1F600   | 😀
+      0x0041    | A
+      0xD800    | U+D800
+      0xDC00    | U+DC00
+      """)
+  void codePointToStringOrHexCode_returnsExpectedValue(
+      final String hexCodePoint, final String expected) {
+
+    final int codePoint = Integer.decode(hexCodePoint);
+    assertThat(AssertionUtils.codePointToStringOrHexCode(codePoint)).isEqualTo(expected);
   }
 
   private record SomeCharSequenceType(String value) implements CharSequence {
+
     @Override
     public int length() {
       return value.length();
@@ -93,6 +114,7 @@ class AssertionUtilsTest {
     public CharSequence subSequence(int start, int end) {
       return value.subSequence(start, end);
     }
+
     static SomeCharSequenceType of(String value) {
       return value == null ? null : new SomeCharSequenceType(value);
     }

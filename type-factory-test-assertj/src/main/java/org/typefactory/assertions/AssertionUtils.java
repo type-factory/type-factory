@@ -1,5 +1,6 @@
 package org.typefactory.assertions;
 
+import org.typefactory.Category;
 import org.typefactory.CharSequenceUtils;
 
 final class AssertionUtils {
@@ -10,6 +11,20 @@ final class AssertionUtils {
 
   static final String NULL_VALUE = "null";
   static final String EMPTY_VALUE = "\"\" (empty)";
+
+  static final String U_08X = "U+%08X";
+  static final String U_06X = "U+%06X";
+  static final String U_04X = "U+%04X";
+
+  static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          Category.CONTROL,
+          Category.FORMAT,
+          Category.SPACE_SEPARATOR,
+          Category.LINE_SEPARATOR,
+          Category.PARAGRAPH_SEPARATOR);
+
+
 
   static boolean equals(final CharSequence a, final CharSequence b) {
     if (a == b) {
@@ -54,6 +69,33 @@ final class AssertionUtils {
 
   static <T> boolean isNotEmpty(final T[] array) {
     return !isEmpty(array);
+  }
+
+  static String codePointToStringOrHexCode(final int codePoint) {
+    if (!Character.isDefined(codePoint)) {
+      if (codePoint > 0xFFFFFFL) {
+        return String.format(U_08X, codePoint);
+      } else if (codePoint > 0xFFFF) {
+        return String.format(U_06X, codePoint);
+      } else {
+        return String.format(U_04X, codePoint);
+      }
+    }
+
+    if (Category.codePointIsInOneOfTheCategories(codePoint, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
+      return codePoint > 0xFFFF
+          ? String.format(U_06X, codePoint)
+          : String.format(U_04X, codePoint);
+    }
+    if (codePoint > 0xFFFF) {
+      return Character.toString(codePoint);
+    } else {
+      if (Character.isHighSurrogate((char) codePoint) || Character.isLowSurrogate((char) codePoint)) {
+        return String.format(U_04X, codePoint);
+      } else {
+        return Character.toString(codePoint);
+      }
+    }
   }
 
 }
