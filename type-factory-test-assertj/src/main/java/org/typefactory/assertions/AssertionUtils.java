@@ -1,7 +1,7 @@
 package org.typefactory.assertions;
 
 import org.typefactory.Category;
-import org.typefactory.CharSequenceUtils;
+import org.typefactory.Types;
 
 final class AssertionUtils {
 
@@ -57,7 +57,7 @@ final class AssertionUtils {
     if (value.isEmpty()) {
       return EMPTY_VALUE;
     }
-    if (CharSequenceUtils.isBlank(value)) {
+    if (Types.isBlank(value)) {
       return "\"" + value + "\" (blank)";
     }
     return "\"" + value + "\"";

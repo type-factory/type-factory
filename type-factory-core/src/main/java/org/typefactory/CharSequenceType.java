@@ -27,7 +27,7 @@ public interface CharSequenceType<T extends CharSequenceType<T>> extends Type<Ch
    * @see Character#isWhitespace(int)
    */
   default boolean isBlank() {
-    return isNull() || CharSequenceUtils.isBlank(value());
+    return isNull() || Types.isBlank(value());
   }
 
   static <T extends CharSequenceType<T>> boolean isEmpty(final T value) {

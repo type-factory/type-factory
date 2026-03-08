@@ -2,7 +2,7 @@ package org.typefactory.assertions;
 
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.typefactory.CharSequenceType;
-import org.typefactory.CharSequenceUtils;
+import org.typefactory.Types;
 
 /**
  * Abstract base class for {@link CharSequenceType} specific assertions.
@@ -36,7 +36,7 @@ public abstract class AbstractCharSequenceTypeAssert<
     if (actual.isEmpty()) {
       return EMPTY_VALUE;
     }
-    if (CharSequenceUtils.isBlank(actual)) {
+    if (Types.isBlank(actual)) {
       return String.format("\"%s\" (blank)", actual.value());
     }
     return '"' + actual.value().toString() + '"';
@@ -49,7 +49,7 @@ public abstract class AbstractCharSequenceTypeAssert<
     if (expected.isEmpty()) {
       return EMPTY_VALUE;
     }
-    if (CharSequenceUtils.isBlank(expected)) {
+    if (Types.isBlank(expected)) {
       return String.format("\"%s\" (blank)", expected);
     }
     return '"' + expected + '"';
