@@ -118,11 +118,7 @@ public class InvalidValueException extends IllegalArgumentException {
       final MessageCode errorCode,
       final ParserMessageCode parserErrorCode,
       final LinkedHashMap<String, Serializable> parserErrorCodeArgs) {
-    super(combineMessagesIntoSentences(errorCode, parserErrorCode,
-            parserErrorCodeArgs == null
-                ? EMPTY_PARSER_MESSAGE_ARGS
-                : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS)),
-        cause);
+    super(combineMessagesIntoSentences(errorCode, parserErrorCode, parserErrorCodeArgs), cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
     this.targetTypeClass = targetTypeClass;
     this.errorCode = errorCode == null ? EMPTY_MESSAGE_CODE : errorCode;
@@ -279,7 +275,7 @@ public class InvalidValueException extends IllegalArgumentException {
    * <p>Provides the localized error message associated with the error code that is provided by {@link #getErrorCode()}.</p>
    *
    * <p>The result differs from the {@link #getLocalizedMessage(Locale)} method in that {@code getLocalizedMessage(Locale)}
-   * returns a complete error message combining the two messages provided by {@link #getErrorMessage(Locale)} and
+   * returns a complete error message combining the two messages provided by {@code #getErrorMessage(Locale)} and
    * {@link #getParserErrorMessage(Locale)}.</p>
    *
    * @param locale the locale that you wish the message to be localized into.
@@ -609,9 +605,11 @@ public class InvalidValueException extends IllegalArgumentException {
   protected static String combineMessagesIntoSentences(
       final MessageCode messageCode1,
       final MessageCode messageCode2,
-      final Object[] messageCode2Args) {
+      final LinkedHashMap<String, Serializable> messageCode2Args) {
 
-    final Object[] message2Args = messageCode2Args == null ? EMPTY_PARSER_MESSAGE_ARGS : messageCode2Args;
+    final Object[] message2Args = messageCode2Args == null || messageCode2Args.isEmpty()
+        ? EMPTY_PARSER_MESSAGE_ARGS
+        : messageCode2Args.values().toArray();
     final String message1 = messageCode1 == null ? EMPTY_STRING : messageCode1.message();
     final String message2 = messageCode2 == null ? EMPTY_STRING : messageCode2.message(message2Args);
 

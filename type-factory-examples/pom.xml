@@ -30,8 +30,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
+      <groupId>org.typefactory</groupId>
+      <artifactId>type-factory-test-assertj</artifactId>
       <scope>test</scope>
     </dependency>
 
