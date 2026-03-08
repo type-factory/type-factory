@@ -19,6 +19,7 @@ import static org.typefactory.MessageUtils.TYPE_FACTORY_MESSAGES_RESOURCE_BUNDLE
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Objects;
 import org.typefactory.impl.Factory;
 
 /**
@@ -228,7 +229,7 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
   @Override
   default int compareTo(final MessageCode o) {
     if (o == this) {
-      return 0; // both are null or both are the same instance
+      return 0; // both are the same instance
     }
     if (o == null) {
       return 1; // any non-null instance is greater than null
@@ -238,7 +239,6 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
     return c1.compareTo(c2);
   }
 
-  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
   static int compare(final MessageCode c1, final MessageCode c2) {
     if (c1 == c2) {
       // both are null or both are the same instance
@@ -253,64 +253,30 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
     return c1.compareTo(c2);
   }
 
-  default int compareToIgnoreCase(final MessageCode o) {
-    if (o == this) {
-      return 0; // both are null or both are the same instance
-    }
-    if (o == null) {
-      return 1; // any non-null instance is greater than null
-    }
-    final String c1 = code() == null ? "" : code();
-    final String c2 = o.code() == null ? "" : o.code();
-    return c1.compareToIgnoreCase(c2);
-  }
-
-  @SuppressWarnings("java:S4973") // SonarQube false positive: Strings and Boxed types should be compared using "equals()"
-  static int compareIgnoreCase(final MessageCode c1, final MessageCode c2) {
-    if (c1 == c2) {
-      // both are null or both are the same instance
-      return 0;
-    }
-    if (c1 == null) {
-      return -1; // null is less than any non-null instance
-    }
-    if (c2 == null) {
-      return 1; // any non-null instance is greater than null
-    }
-    return c1.compareToIgnoreCase(c2);
-  }
-
   /**
-   * <p>Returns {@code true} if the character sequence represented by this instance is the same as the
-   * character sequence of the other message code character sequence.</p>
+   * <p>Returns {@code true} if the message code instances are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code this.}{@link #code()}.</p>
    *
-   * @return {@code true} if the character sequence represented by this instance is the same as the
-   * character sequence of the other message code character sequence, otherwise returns {@code false}.
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
    */
   @Override
   boolean equals(final Object other);
 
+  /**
+   * <p>Returns {@code true} if the message code instances are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}.</p>
+   *
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
+   */
   default boolean equals(final MessageCode other) {
-    return compareTo(other) == 0;
+    return other != null && Objects.equals(code(), other.code());
   }
 
   static <T extends MessageCode> boolean equals(final T value1, final T value2) {
-    return compare(value1, value2) == 0;
+    return Objects.equals(value1, value2);
   }
 
   static <T extends MessageCode> boolean notEquals(final T value1, final T value2) {
     return !equals(value1, value2);
-  }
-
-  default boolean equalsIgnoreCase(final MessageCode o) {
-    return equalsIgnoreCase(this, o);
-  }
-
-  static <T extends MessageCode> boolean equalsIgnoreCase(final T value1, final T value2) {
-    return compareIgnoreCase(value1, value2) == 0;
-  }
-
-  static <T extends MessageCode> boolean notEqualsIgnoreCase(final T value1, final T value2) {
-    return !equalsIgnoreCase(value1, value2);
   }
 }

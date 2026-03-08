@@ -195,31 +195,6 @@ public abstract class AbstractSubsetAssert<
     return myself;
   }
 
-  private static SortedSet<Category> getActualSubsetCategories(final Subset subset) {
-    final var result = new TreeSet<>(comparing(Category::ordinal));
-    if (subset instanceof SubsetWithCategories subsetWithCategories) {
-      final long subsetCategoryBitFlags = subsetWithCategories.unicodeCategoryBitFlags();
-      for (Category category : Category.values()) {
-        if (((subsetCategoryBitFlags & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
-          result.add(category);
-        }
-      }
-    }
-    return result;
-  }
-
-  private static SortedSet<Category> getExpandedSubsetCategories(final Collection<Category> fromCategories) {
-    final var toCategories = new TreeSet<>(comparing(Category::ordinal));
-    for (Category fromCategory : fromCategories) {
-      for (Category category : Category.values()) {
-        if (((fromCategory.bitMask & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
-          toCategories.add(category);
-        }
-      }
-    }
-    return toCategories;
-  }
-
   protected static int[] charArrayToCodePointArray(final char[] characterArray) {
     if (characterArray == null) {
       return new int[0];
@@ -315,6 +290,30 @@ public abstract class AbstractSubsetAssert<
       this.expectedAndNotContained = expectedAndNotContainedStringBuilder.toString();
     }
 
+    private static SortedSet<Category> getActualSubsetCategories(final Subset subset) {
+      final var result = new TreeSet<>(comparing(Category::ordinal));
+      if (subset instanceof SubsetWithCategories subsetWithCategories) {
+        final long subsetCategoryBitFlags = subsetWithCategories.unicodeCategoryBitFlags();
+        for (Category category : Category.values()) {
+          if (((subsetCategoryBitFlags & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
+            result.add(category);
+          }
+        }
+      }
+      return result;
+    }
+
+    private static SortedSet<Category> getExpandedSubsetCategories(final Collection<Category> fromCategories) {
+      final var toCategories = new TreeSet<>(comparing(Category::ordinal));
+      for (Category fromCategory : fromCategories) {
+        for (Category category : Category.values()) {
+          if (((fromCategory.bitMask & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
+            toCategories.add(category);
+          }
+        }
+      }
+      return toCategories;
+    }
   }
 
 }

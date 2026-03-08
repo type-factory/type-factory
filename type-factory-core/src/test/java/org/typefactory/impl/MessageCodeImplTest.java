@@ -15,105 +15,165 @@
 */
 package org.typefactory.impl;
 
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.typefactory.CharSequenceUtils.isBlank;
 import static org.typefactory.assertions.Assertions.assertThat;
 
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.MessageCode;
 
 class MessageCodeImplTest {
 
-  @ParameterizedTest(name = "[{index}] {arguments}")
-  @CsvSource(textBlock = """
-      CODE      | DEFAULT_MESSAGE | IS_EMPTY | EXPECTED_CODE | EXPECTED_DEFAULT_MESSAGE | EXPECTED_MESSAGE
-      null      | null            | true     | ''            | ''                       | ''
-      null      | ''              | true     | ''            | ''                       | ''
-      null      | '  '            | true     | ''            | ''                       | ''
-      null      | some message    | true     | ''            | ''                       | ''
-      ''        | null            | true     | ''            | ''                       | ''
-      ''        | ''              | true     | ''            | ''                       | ''
-      '  '      | '  '            | true     | ''            | ''                       | ''
-      '  '      | some message    | true     | ''            | ''                       | ''
-      some.code | null            | false    | some.code     | ''                       | some.code
-      some.code | ''              | false    | some.code     | ''                       | some.code
-      some.code | '  '            | false    | some.code     | ''                       | some.code
-      some.code | some message    | false    | some.code     | some message             | some message
-      """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
+  // ─── constructor ──────────────────────────────────────────────────────────
+
+  @ParameterizedTest(name = "[{index}] code={0}, defaultMessage={1}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      CODE      | DEFAULT_MESSAGE | EXPECTED_CODE | EXPECTED_DEFAULT_MESSAGE
+      null      | null            | ''            | ''
+      null      | ''              | ''            | ''
+      null      | '  '            | ''            | ''
+      null      | some message    | ''            | ''
+      ''        | null            | ''            | ''
+      ''        | ''              | ''            | ''
+      ''        | '  '            | ''            | ''
+      ''        | some message    | ''            | ''
+      '  '      | null            | ''            | ''
+      '  '      | ''              | ''            | ''
+      '  '      | '  '            | ''            | ''
+      '  '      | some message    | ''            | ''
+      some.code | null            | some.code     | ''
+      some.code | ''              | some.code     | ''
+      some.code | '  '            | some.code     | ''
+      some.code | some message    | some.code     | some message
+      """)
   void constructor_instantiatesAsExpected(
       final String code, final String defaultMessage,
-      final boolean expectedIsEmpty, final String expectedCode,
-      final String expectedDefaultMessage, final String expectedMessage) {
+      final String expectedCode, final String expectedDefaultMessage) {
 
     final var actual = new MessageCodeImpl(code, defaultMessage);
 
-    assertThat(actual)
-        .hasCode(expectedCode)
-        .hasDefaultMessage(expectedDefaultMessage)
-        .hasMessage(expectedMessage)
-        .hasToString(expectedCode);
+    assertThat(actual.code()).isEqualTo(expectedCode);
+    assertThat(actual.defaultMessage()).isEqualTo(expectedDefaultMessage);
+  }
 
-    if (expectedIsEmpty) {
-      assertThat(actual).isEmpty();
-    } else {
-      assertThat(actual).isNotEmpty();
-    }
+  // ─── instanceof MessageCode ───────────────────────────────────────────────
+
+  @Test
+  void constructor_implementsMessageCode() {
+    final var actual = new MessageCodeImpl("AA", "BB");
+
+    assertThat(actual).isInstanceOf(MessageCode.class);
+  }
+
+  // ─── toString ─────────────────────────────────────────────────────────────
+
+  @ParameterizedTest(name = "[{index}] code={0}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      CODE      | DEFAULT_MESSAGE | EXPECTED_TO_STRING
+      null      | null            | ''
+      null      | some message    | ''
+      ''        | null            | ''
+      some.code | null            | some.code
+      some.code | some message    | some.code
+      """)
+  void toString_returnsCode(
+      final String code, final String defaultMessage, final String expectedToString) {
+
+    final var actual = new MessageCodeImpl(code, defaultMessage);
+
+    assertThat(actual.toString()).isEqualTo(expectedToString);
+  }
+
+  // ─── equals(Object) ───────────────────────────────────────────────────────
+
+  @Test
+  void equals_object_withSameInstance_returnsTrue() {
+    final var actual = new MessageCodeImpl("AA", "BB");
+
+    assertThat(actual.equals((Object) actual)).isTrue();
   }
 
   @Test
-  void equal_returnsTrueForSameInstance() {
-
+  void equals_object_withNull_returnsFalse() {
     final var actual = new MessageCodeImpl("AA", "BB");
 
-    assertThat(actual).isEqualTo(actual);
+    assertThat(actual.equals((Object) null)).isFalse();
   }
 
   @Test
-  void equal_returnsFalseForAnotherType() {
-
+  void equals_object_withNonMessageCodeType_returnsFalse() {
     final var actual = new MessageCodeImpl("AA", "BB");
-    final var notAMessageCode = (Object)"CC";
 
-    assertThat(actual).isNotEqualTo(notAMessageCode);
+    assertThat(actual.equals((Object) "AA")).isFalse();
   }
 
-  private static Stream<Arguments> provideCodeAndMessageValuesToTestEqualsAndHashCode() {
-    final String [] codes = { null, "", "  ", "some.code", "other.code"};
-    final String [] messages = { null, "", "  ", "some message", "other message"};
+  @Test
+  void equals_object_withMessageCodeSameCode_returnsTrue() {
+    final var actual = new MessageCodeImpl("AA", "BB");
+    final Object other = new MessageCodeImpl("AA", "CC");
 
-    return Stream.of(codes)
-        .flatMap(code1 -> Stream.of(messages)
-            .map(message1 -> arguments(code1, message1)))
-        .flatMap(args1 -> Stream.of(codes)
-            .flatMap(code2 -> Stream.of(messages)
-                .map(message2 -> {
-                  final String code1 = (String)args1.get()[0];
-                  final String message1 = (String)args1.get()[1];
-                  final boolean expectedEquals = isBlank(code1) && isBlank(code2) || (code1 != null && code1.equals(code2));
-                  return arguments(code1, message1, code2, message2, expectedEquals);
-                })));
+    assertThat(actual.equals(other)).isTrue();
   }
 
-  @ParameterizedTest
-  @MethodSource("provideCodeAndMessageValuesToTestEqualsAndHashCode")
-  void equalsAndHashCode_returnsAsExpected(
+  @Test
+  void equals_object_withMessageCodeDifferentCode_returnsFalse() {
+    final var actual = new MessageCodeImpl("AA", "BB");
+    final Object other = new MessageCodeImpl("XX", "BB");
+
+    assertThat(actual.equals(other)).isFalse();
+  }
+
+  @ParameterizedTest(name = "[{index}] code1={0}, code2={2}, expected={4}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      CODE_1    | DEFAULT_MESSAGE_1 | CODE_2     | DEFAULT_MESSAGE_2 | EXPECTED
+      null      | null              | null       | null              | true
+      null      | ''                | null       | ''                | true
+      null      | '  '              | null       | '  '              | true
+      null      | some message      | null       | other message     | true
+      ''        | null              | ''         | null              | true
+      ''        | some message      | ''         | other message     | true
+      '  '      | null              | '  '       | null              | true
+      '  '      | some message      | '  '       | other message     | true
+      some.code | null              | some.code  | null              | true
+      some.code | some message      | some.code  | other message     | true
+      some.code | null              | other.code | null              | false
+      some.code | some message      | other.code | some message      | false
+      null      | null              | some.code  | null              | false
+      some.code | null              | null       | null              | false
+      """)
+  void equals_object_returnsAsExpected(
       final String code1, final String defaultMessage1,
       final String code2, final String defaultMessage2,
-      final boolean expectedEquals) {
+      final boolean expected) {
+
+    final var actual = new MessageCodeImpl(code1, defaultMessage1);
+    final Object other = new MessageCodeImpl(code2, defaultMessage2);
+
+    assertThat(actual.equals(other)).isEqualTo(expected);
+  }
+
+  // ─── hashCode ─────────────────────────────────────────────────────────────
+
+  @ParameterizedTest(name = "[{index}] code1={0}, code2={2}, expectedSameHash={4}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      CODE_1    | DEFAULT_MESSAGE_1 | CODE_2     | DEFAULT_MESSAGE_2 | EXPECTED_SAME_HASH
+      null      | null              | null       | null              | true
+      null      | some message      | null       | other message     | true
+      some.code | some message      | some.code  | other message     | true
+      some.code | some message      | other.code | some message      | false
+      """)
+  void hashCode_returnsAsExpected(
+      final String code1, final String defaultMessage1,
+      final String code2, final String defaultMessage2,
+      final boolean expectedSameHash) {
 
     final var actual1 = new MessageCodeImpl(code1, defaultMessage1);
     final var actual2 = new MessageCodeImpl(code2, defaultMessage2);
 
-    if (expectedEquals) {
-      assertThat(actual1).isEqualTo(actual2);
+    if (expectedSameHash) {
       assertThat(actual1).hasSameHashCodeAs(actual2);
     } else {
-      assertThat(actual1).isNotEqualTo(actual2);
-      assertThat(actual1).doesNotHaveSameHashCodeAs(actual2);
+      assertThat(actual1.hashCode()).isNotEqualTo(actual2.hashCode());
     }
   }
 }

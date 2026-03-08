@@ -54,15 +54,19 @@ class MessageCodeImpl implements MessageCode {
     return code;
   }
 
+  /**
+   * <p>Returns {@code true} if the message code instances are both instances
+   * of {@code MessageCode} and are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}.</p>
+   *
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
+   */
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+  public boolean equals(Object other) {
+    if (other instanceof MessageCode messageCode) {
+      return equals(messageCode);
     }
-    if (!(o instanceof MessageCode other)) {
-      return false;
-    }
-    return Objects.equals(code, other.code());
+    return false;
   }
 
   @Override
