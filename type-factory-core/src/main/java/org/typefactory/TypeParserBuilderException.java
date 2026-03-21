@@ -89,7 +89,7 @@ public class TypeParserBuilderException extends RuntimeException  {
     if (messageCode == null) {
       return null;
     }
-    if (messageCodeArgs == null) {
+    if (messageCodeArgs == null || messageCodeArgs.isEmpty()) {
       return messageCode.message();
     }
     return messageCode.message(messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY));
@@ -122,8 +122,12 @@ public class TypeParserBuilderException extends RuntimeException  {
   }
 
 
-  public String getMessageCode() {
+  public String getErrorCode() {
     return messageCode.code();
+  }
+
+  public String getMessageCode() {
+    return getErrorCode();
   }
 
   public String getErrorMessage() {

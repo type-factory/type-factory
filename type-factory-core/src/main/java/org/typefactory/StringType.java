@@ -16,6 +16,7 @@
 package org.typefactory;
 
 import java.io.Serial;
+import java.util.Objects;
 
 public abstract class StringType implements CharSequenceType<StringType> {
 
@@ -33,6 +34,11 @@ public abstract class StringType implements CharSequenceType<StringType> {
     return value;
   }
 
+  @Override
+  public boolean isBlank() {
+    return isNull() || value.isBlank();
+  }
+
   /**
    * Returns the internal value as returned by {@link #value()} or empty string {@code ""} when internal value is {@code null}.
    *
@@ -48,11 +54,14 @@ public abstract class StringType implements CharSequenceType<StringType> {
     if (this == o) {
       return true;
     }
-    if (o == null || this.getClass() != o.getClass()) {
+    if (o == null) {
+      return this.isNull();
+    }
+    if (this.getClass() != o.getClass()) {
       return false;
     }
     final StringType s = (StringType) o;
-    return value == s.value || (value != null && value.equals(s.value));
+    return Objects.equals(value, s.value);
   }
 
   @Override

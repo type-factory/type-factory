@@ -312,13 +312,23 @@ public enum Category {
   final int[] characterCategories;
   final String abbreviation;
   final String alias;
+
+  /**
+   * <p>The bit mask for the category, where each bit represents one Unicode Category as
+   * defined in the {@link Character} class. This is used for efficient checking if a code point
+   * is in one of the categories with the {@link #codePointIsInOneOfTheCategories(int, long)} method.</p>
+   *
+   * <p>Note that the {@link Character#UNASSIGNED} category has value 0 so we assign it {@code bitMask=0x01}
+   * to avoid having a bitmask of zero for the UNASSIGNED category.</p>
+   */
   public final long bitMask;
 
   Category(final int characterCategory, final String abbreviation, final String alias) {
     this.characterCategories = new int[]{characterCategory};
     this.abbreviation = abbreviation;
     this.alias = alias;
-    this.bitMask = 0x1 << characterCategory; // characterCategory values start from zero.
+    // Character category for UNASSIGNED is int value 0 so we assign it bitflag 1 to avoid having a bitmask of zero for the UNASSIGNED category.
+    this.bitMask = 0x1L << characterCategory;
   }
 
   Category(final String abbreviation, final String alias, final Category... categories) {
@@ -339,12 +349,60 @@ public enum Category {
     this.bitMask = tempBitMask;
   }
 
+  /**
+   * <p>Returns the {@code int} value for the category as defined in the {@link Character} class. May
+   * return multiple {@code int} values if this category is a composite category.</p> {@link Character#UPPERCASE_LETTER}
+   *
+   * @return one or more {@code int} value for the category, or the composed categories, as defined in the {@link Character} class.
+   * @see #isCompositeCategory()
+   * @see Character#UPPERCASE_LETTER
+   * @see Character#LOWERCASE_LETTER
+   * @see Character#TITLECASE_LETTER
+   * @see Character#MODIFIER_LETTER
+   * @see Character#OTHER_LETTER
+   * @see Character#NON_SPACING_MARK
+   * @see Character#COMBINING_SPACING_MARK
+   * @see Character#ENCLOSING_MARK
+   * @see Character#DECIMAL_DIGIT_NUMBER
+   * @see Character#LETTER_NUMBER
+   * @see Character#OTHER_NUMBER
+   * @see Character#CONNECTOR_PUNCTUATION
+   * @see Character#DASH_PUNCTUATION
+   * @see Character#START_PUNCTUATION
+   * @see Character#END_PUNCTUATION
+   * @see Character#INITIAL_QUOTE_PUNCTUATION
+   * @see Character#FINAL_QUOTE_PUNCTUATION
+   * @see Character#OTHER_PUNCTUATION
+   * @see Character#MATH_SYMBOL
+   * @see Character#CURRENCY_SYMBOL
+   * @see Character#MODIFIER_SYMBOL
+   * @see Character#OTHER_SYMBOL
+   * @see Character#SPACE_SEPARATOR
+   * @see Character#LINE_SEPARATOR
+   * @see Character#PARAGRAPH_SEPARATOR
+   * @see Character#CONTROL
+   * @see Character#FORMAT
+   * @see Character#SURROGATE
+   * @see Character#PRIVATE_USE
+   * @see Character#UNASSIGNED
+   */
   public int[] getCharacterCategories() {
     return Arrays.copyOf(characterCategories, characterCategories.length);
   }
 
   /**
+   * <p>Returns {@code true} if this category is a composite category, meaning it is composed of multiple categories.</p>
+   *
+   * @return {@code true} if this category is a composite category, meaning it is composed of multiple categories.
+   * @see #getCharacterCategories()
+   */
+  public boolean isCompositeCategory() {
+    return characterCategories.length > 1;
+  }
+
+  /**
    * <p>Returns the category bit flags in a {@code long} value where each bit represents one Unicode Category.</p>
+   *
    * @param categories the categories to get the bit flags for.
    * @return the category bit flags.
    * @see #codePointIsInOneOfTheCategories(int, long)
@@ -371,7 +429,7 @@ public enum Category {
    *         codePoint, LETTER_DIGIT_CATEGORY_BIT_FLAGS);
    * }</pre>
    *
-   * @param codePoint the code point to check.
+   * @param codePoint        the code point to check.
    * @param categoryBitFlags the category bit flags to check.
    * @return {@code true} if the code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.
    * @see #getCategoryBitFlags(Category...)

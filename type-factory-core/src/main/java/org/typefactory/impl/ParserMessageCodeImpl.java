@@ -18,25 +18,55 @@ package org.typefactory.impl;
 import java.io.Serial;
 import java.util.Objects;
 import org.typefactory.InvalidValueException.ParserMessageCode;
+import org.typefactory.MessageCode;
 
 class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode {
 
   @Serial
   private static final long serialVersionUID = -344851934396452075L;
 
-  ParserMessageCodeImpl(final String messageCode, final String defaultMessage) {
-    super(messageCode, defaultMessage);
+  ParserMessageCodeImpl(final String code, final String defaultMessage) {
+    super(code, defaultMessage);
   }
 
+  /**
+   * <p>Returns {@code true} if the message code instances are both instances
+   * of {@code ParserMessageCode} and are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}.</p>
+   *
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
+   */
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+  public boolean equals(Object other) {
+    if (other instanceof ParserMessageCode parserMessageCode) {
+      return equals(parserMessageCode);
     }
-    if (!(o instanceof ParserMessageCode other)) {
-      return false;
+    return false;
+  }
+
+  /**
+   * <p>Returns {@code true} if the message code instances are both instances
+   * of {@code ParserMessageCode} and are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}.</p>
+   *
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
+   */
+  @Override
+  public boolean equals(MessageCode other) {
+    if (other instanceof ParserMessageCode parserMessageCode) {
+      return equals(parserMessageCode);
     }
-    return Objects.equals(messageCode, other.code()) && Objects.equals(defaultMessage, other.defaultMessage());
+    return false;
+  }
+
+  /**
+   * <p>Returns {@code true} if the parser message code instances are equal by code – that is,
+   * when {@code this.}{@link #code()} is equal to {@code this.}{@link #code()}.</p>
+   *
+   * @return {@code true} if {@code this.}{@link #code()} is equal to {@code other.}{@link #code()}, otherwise returns {@code false}.
+   */
+  public boolean equals(final ParserMessageCode other) {
+    return other != null && Objects.equals(code, other.code());
   }
 
   @Override
