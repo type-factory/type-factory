@@ -128,7 +128,7 @@ class MessageUtils {
           return ResourceBundle.getBundle(
               resourceBundleBaseName, locale, MessageUtils.class.getClassLoader(), DEFAULT_RESOURCE_BUNDLE_CONTROL);
         } catch (final Exception e3) {
-          logger.log(Level.FINE, e1, () ->
+          logger.log(Level.FINER, e1, () ->
               String.format("Can't load resource bundle for base name %s, locale %s – caused by: %s: %s",
                   resourceBundleBaseName, locale.toLanguageTag(),
                   e1.getClass().getSimpleName(), e1.getMessage()));
