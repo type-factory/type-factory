@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.InvalidValueException;
+import org.typefactory.InvalidValueException.ParserMessageCodeArgKeys;
 import org.typefactory.MessageCode;
-import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
 
 class ExceptionUtilsTest {
 

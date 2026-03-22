@@ -30,7 +30,6 @@ class InvalidValueExceptionAssertTest {
     assertThat(invalidValueExceptionAssert.getClass())
         .hasPublicMethods(
             "hasErrorCode",
-            "hasErrorCodeAsString",
             "hasErrorMessage",
             "hasErrorMessage",
             "hasInvalidValue",
@@ -41,7 +40,6 @@ class InvalidValueExceptionAssertTest {
             "hasParserErrorArgsContainingAllOf",
             "hasParserErrorArgsContainingExactly",
             "hasParserErrorCode",
-            "hasParserErrorCodeAsString",
             "hasParserErrorMessage",
             "hasParserErrorMessage",
             "hasParserErrorProperties",
@@ -135,7 +133,6 @@ class InvalidValueExceptionAssertTest {
 
     final var actualErrorCode = actualCode == null ? null : MessageCode.of(actualCode, "some-message");
     final var expectedErrorCode = expectedCode == null ? null : MessageCode.of(expectedCode, "some-message");
-    final var expectedErrorCodeAsString = expectedCode;
     final var someActual = InvalidValueException.builder()
         .errorCode(actualErrorCode)
         .build();
@@ -150,14 +147,9 @@ class InvalidValueExceptionAssertTest {
           .isThrownBy(() -> invalidValueExceptionAssert.hasErrorCode(expectedErrorCode))
           .withMessage(expectedExceptionMessage);
 
-      assertThatExceptionOfType(AssertionError.class)
-          .isThrownBy(() -> invalidValueExceptionAssert.hasErrorCodeAsString(expectedErrorCodeAsString))
-          .withMessage(expectedExceptionMessage);
-
     } else {
 
       assertThatNoException().isThrownBy(() -> invalidValueExceptionAssert.hasErrorCode(expectedErrorCode));
-      assertThatNoException().isThrownBy(() -> invalidValueExceptionAssert.hasErrorCodeAsString(expectedErrorCodeAsString));
 
       assertThat(invalidValueExceptionAssert.hasErrorCode(expectedErrorCode))
           .isInstanceOf(InvalidValueExceptionAssert.class)
@@ -484,7 +476,6 @@ class InvalidValueExceptionAssertTest {
 
     final var actualParserErrorCode = actualCode == null ? null : new SomeParserMessageCode(actualCode, "some-message");
     final var expectedParserErrorCode = expectedCode == null ? null : new SomeParserMessageCode(expectedCode, "some-message");
-    final var expectedParserErrorCodeAsString = expectedCode;
 
     final var someActual = InvalidValueException.builder()
         .parserErrorCode(actualParserErrorCode)
@@ -500,20 +491,11 @@ class InvalidValueExceptionAssertTest {
           .isThrownBy(() -> invalidValueExceptionAssert.hasParserErrorCode(expectedParserErrorCode))
           .withMessage(expectedExceptionMessage);
 
-      assertThatExceptionOfType(AssertionError.class)
-          .isThrownBy(() -> invalidValueExceptionAssert.hasParserErrorCodeAsString(expectedParserErrorCodeAsString))
-          .withMessage(expectedExceptionMessage);
-
     } else {
 
       assertThatNoException().isThrownBy(() -> invalidValueExceptionAssert.hasParserErrorCode(expectedParserErrorCode));
-      assertThatNoException().isThrownBy(() -> invalidValueExceptionAssert.hasParserErrorCodeAsString(expectedParserErrorCodeAsString));
 
       assertThat(invalidValueExceptionAssert.hasParserErrorCode(expectedParserErrorCode))
-          .isInstanceOf(InvalidValueExceptionAssert.class)
-          .isSameAs(invalidValueExceptionAssert);
-
-      assertThat(invalidValueExceptionAssert.hasParserErrorCodeAsString(expectedParserErrorCodeAsString))
           .isInstanceOf(InvalidValueExceptionAssert.class)
           .isSameAs(invalidValueExceptionAssert);
     }
@@ -681,7 +663,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    assertThatNoException().isThrownBy(() -> invalidValueExceptionAssert.hasNoParserErrorProperties());
+    assertThatNoException().isThrownBy(invalidValueExceptionAssert::hasNoParserErrorProperties);
 
     final var assertionResult = invalidValueExceptionAssert.hasNoParserErrorProperties();
     assertThat(assertionResult)

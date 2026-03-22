@@ -9,8 +9,8 @@ public final class Types {
     // don't instantiate me
   }
 
-  public static final CaseSensistive CS = new CaseSensistive();
-  public static final CaseInsensistive CI = new CaseInsensistive();
+  public static final CaseSensitive CS = new CaseSensitive();
+  public static final CaseInsensitive CI = new CaseInsensitive();
 
   public static <T extends CharSequenceType<T>> boolean isNull(final T type) {
     return type == null || type.isNull();
@@ -89,8 +89,8 @@ public final class Types {
     return isBlank(value) ? defaultValue : value;
   }
 
-  public static final class CaseSensistive extends AbstractCharSequenceTypes {
-    public CaseSensistive() {
+  public static final class CaseSensitive extends AbstractCharSequenceTypes {
+    public CaseSensitive() {
       super();
     }
 
@@ -103,38 +103,68 @@ public final class Types {
     public <T extends StringType> boolean equals(final T value1, final T value2) {
       return Objects.equals(value1, value2);
     }
+
+    @Override
+    public <T extends CharSequenceType<T>> int compare(T value1, T value2) {
+      if (value1 == value2) return 0; // both are null or both are the same instance
+      if (value1 == null) return -1; // null is less than any non-null
+      if (value2 == null) return 1; // any non-null is greater than null
+      return value1.compareTo(value2);
+    }
+
+    @Override
+    public <T extends StringType> int compare(T value1, T value2) {
+      if (value1 == value2) return 0; // both are null or both are the same instance
+      if (value1 == null) return -1; // null is less than any non-null
+      if (value2 == null) return 1; // any non-null is greater than null
+      return value1.compareTo(value2);
+    }
   }
 
-  public static final class CaseInsensistive extends AbstractCharSequenceTypes {
-    public CaseInsensistive() {
+  public static final class CaseInsensitive extends AbstractCharSequenceTypes {
+    public CaseInsensitive() {
       super();
     }
 
     @Override
     public <T extends CharSequenceType<T>> boolean equals(final T value1, final T value2) {
-      if (value1 == value2) { // both null or both reference the same object
-        return true;
-      }
-      return value1 != null && value1.equalsIgnoreCase(value2);
+      return (value1 == value2) || (value1 != null && value1.equalsIgnoreCase(value2));
     }
 
     @Override
     public <T extends StringType> boolean equals(final T value1, final T value2) {
-      if (value1 == value2) { // both null or both reference the same object
-        return true;
-      }
-      return value1 != null && value1.equalsIgnoreCase(value2);
+      return (value1 == value2) || (value1 != null && value1.equalsIgnoreCase(value2));
+    }
+
+    @Override
+    public <T extends CharSequenceType<T>> int compare(T value1, T value2) {
+      if (value1 == value2) return 0; // both are null or both are the same instance
+      if (value1 == null) return -1; // null is less than any non-null
+      if (value2 == null) return 1; // any non-null is greater than null
+      return value1.compareToIgnoreCase(value2);
+    }
+
+    @Override
+    public <T extends StringType> int compare(T value1, T value2) {
+      if (value1 == value2) return 0; // both are null or both are the same instance
+      if (value1 == null) return -1; // null is less than any non-null
+      if (value2 == null) return 1; // any non-null is greater than null
+      return value1.compareToIgnoreCase(value2);
     }
   }
 
-  private static abstract class AbstractCharSequenceTypes {
+  private abstract static class AbstractCharSequenceTypes {
 
     protected AbstractCharSequenceTypes() {
     }
 
-    abstract public <T extends CharSequenceType<T>> boolean equals(final T value1, final T value2);
+    public abstract <T extends CharSequenceType<T>> boolean equals(final T value1, final T value2);
 
-    abstract public <T extends StringType> boolean equals(final T value1, final T value2);
+    public abstract <T extends StringType> boolean equals(final T value1, final T value2);
+
+    public abstract <T extends CharSequenceType<T>> int compare(final T value1, final T value2);
+
+    public abstract <T extends StringType> int compare(final T value1, final T value2);
 
     @SafeVarargs
     public final <T extends CharSequenceType<T>> boolean equalsAny(final T value, final T ... otherValues) {

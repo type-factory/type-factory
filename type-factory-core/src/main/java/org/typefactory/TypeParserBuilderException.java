@@ -15,6 +15,8 @@
 */
 package org.typefactory;
 
+import static java.util.Collections.unmodifiableMap;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -28,7 +30,7 @@ import org.typefactory.impl.Factory;
  *
  * @author Evan Toliopoulos
  */
-public class TypeParserBuilderException extends RuntimeException  {
+public class TypeParserBuilderException extends RuntimeException {
 
   @Serial
   private static final long serialVersionUID = -7198769839039479407L;
@@ -43,7 +45,7 @@ public class TypeParserBuilderException extends RuntimeException  {
   /**
    * Immutable empty map.
    */
-  private static final Map<String, Serializable> EMPTY_MESSAGE_ARGS_MAP = Map.of();
+  private static final Map<String, Serializable> EMPTY_IMMUTABLE_MESSAGE_ARGS_MAP = Map.of();
 
   private static final MessageCode EMPTY_MESSAGE_CODE = Factory.messageCode(EMPTY_STRING, EMPTY_STRING);
 
@@ -78,8 +80,8 @@ public class TypeParserBuilderException extends RuntimeException  {
     super(createMessage(messageCode, messageCodeArgs), cause);
     this.messageCode = messageCode == null ? EMPTY_MESSAGE_CODE : messageCode;
     this.messageCodeArgs = messageCodeArgs == null
-        ? EMPTY_MESSAGE_ARGS_MAP
-        : messageCodeArgs;
+        ? EMPTY_IMMUTABLE_MESSAGE_ARGS_MAP
+        : unmodifiableMap(messageCodeArgs);
     this.messageCodeArgsValues = messageCodeArgs == null
         ? EMPTY_MESSAGE_ARGS_ARRAY
         : messageCodeArgs.values().toArray(EMPTY_MESSAGE_ARGS_ARRAY);
@@ -121,24 +123,19 @@ public class TypeParserBuilderException extends RuntimeException  {
     return messageCode.message(locale, messageCodeArgsValues);
   }
 
-
-  public String getErrorCode() {
+  /**
+   * <p>Provides the message code. The message code is used to retrieve the message, or localized
+   * message, from message resource bundles, like property files.</p>
+   *
+   * @return the message code used to retrieve the message, or localized message, from message resource bundles.
+   * @see #getMessage()
+   * @see #getLocalizedMessage()
+   */
+  public String getMessageCode() {
     return messageCode.code();
   }
 
-  public String getMessageCode() {
-    return getErrorCode();
-  }
-
-  public String getErrorMessage() {
-    return messageCode.message(messageCodeArgsValues);
-  }
-
-  public String getErrorMessage(final Locale locale) {
-    return messageCode.message(locale, messageCodeArgsValues);
-  }
-
-  public Map<String, Serializable> getErrorProperties() {
+  public Map<String, Serializable> getMessageProperties() {
     return messageCodeArgs;
   }
 
@@ -158,7 +155,10 @@ public class TypeParserBuilderException extends RuntimeException  {
      * @return an {@link TypeParserBuilderException} instance.
      */
     public TypeParserBuilderException build() {
-      return new TypeParserBuilderException(cause, messageCode, messageCodeArgs);
+      return new TypeParserBuilderException(
+          cause,
+          messageCode,
+          messageCodeArgs);
     }
 
     /**

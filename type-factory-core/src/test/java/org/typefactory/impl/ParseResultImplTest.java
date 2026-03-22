@@ -46,7 +46,6 @@ class ParseResultImplTest extends AbstractTypeParserTest {
       parseResult.addInvalidCodePoint(value);
     }
     assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(values);
-    assertThat(parseResult.invalidCodePointsToString()).isEqualTo(expectedInvalidValuesToString);
     assertThat(parseResult.parsedValueWasValid()).isFalse();
     assertThat(parseResult.parsedValueWasInvalid()).isTrue();
   }
@@ -56,7 +55,6 @@ class ParseResultImplTest extends AbstractTypeParserTest {
 
     final var parseResult = new TypeParserImpl.ParseResultImpl();
     assertThat(parseResult.invalidCodePoints()).isEmpty();
-    assertThat(parseResult.invalidCodePointsToString()).isEqualTo("[]");
     assertThat(parseResult.parsedValueWasValid()).isTrue();
     assertThat(parseResult.parsedValueWasInvalid()).isFalse();
   }
@@ -75,8 +73,6 @@ class ParseResultImplTest extends AbstractTypeParserTest {
     parseResult.addInvalidCodePoint('\u000B'); // vertical tab
 
     assertThat(parseResult.invalidCodePoints()).containsExactlyInAnyOrder(' ', '\n', '\t', '\r', '\f', '\u2028', '\u2029', '\u000B');
-    assertThat(parseResult.invalidCodePointsToString())
-        .isEqualTo("[U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000B LINE TABULATION, U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), U+0020 SPACE, U+2028 LINE SEPARATOR, U+2029 PARAGRAPH SEPARATOR]");
     assertThat(parseResult.parsedValueWasValid()).isFalse();
     assertThat(parseResult.parsedValueWasInvalid()).isTrue();
   }

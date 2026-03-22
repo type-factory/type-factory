@@ -18,6 +18,7 @@ package org.typefactory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -54,16 +55,6 @@ public class InvalidValueException extends IllegalArgumentException {
   private static final String EMPTY_STRING = "";
 
   /**
-   * An immutable empty {@link MessageCode} constant.
-   */
-  private static final MessageCode EMPTY_MESSAGE_CODE = Factory.messageCode(EMPTY_STRING, EMPTY_STRING);
-
-  /**
-   * An immutable empty {@link ParserMessageCode} constant.
-   */
-  private static final ParserMessageCode EMPTY_PARSER_MESSAGE_CODE = Factory.parserMessageCode(EMPTY_STRING, EMPTY_STRING);
-
-  /**
    * Immutable empty map for parser error properties.
    */
   private static final Map<String, Serializable> EMPTY_PARSER_ERROR_PROPERTIES = Map.of();
@@ -98,16 +89,15 @@ public class InvalidValueException extends IllegalArgumentException {
   /**
    * Protected constructor – use the {@link #builder()} to create an {@code InvalidValueException}.
    *
-   * @param cause                 the optional cause of the exception. Pass {@code null} if there is no cause.
-   * @param invalidValue          the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom
-   *                              type.
-   * @param targetTypeClass       an optional target custom type class. Pass {@code null} if the target type class is not known.
-   * @param errorCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
-   *                              If no error message is found in the resource-bundle or properties file then this value will be used as the error
-   *                              message.
+   * @param cause               the optional cause of the exception. Pass {@code null} if there is no cause.
+   * @param invalidValue        the invalid value that was rejected by the {@link TypeParser} when parsing the value to try to create a custom type.
+   * @param targetTypeClass     an optional target custom type class. Pass {@code null} if the target type class is not known.
+   * @param errorCode           the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If
+   *                            no error message is found in the resource-bundle or properties file then this value will be used as the error
+   *                            message.
    * @param parserErrorCode     the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
-   *                              file. If no parser error message is found in the resource-bundle or properties file then this value will be used as
-   *                              the error message.
+   *                            file. If no parser error message is found in the resource-bundle or properties file then this value will be used as
+   *                            the error message.
    * @param parserErrorCodeArgs the message arguments to supply to the message formatter used to create the error message.
    * @see #builder()
    */
@@ -121,11 +111,11 @@ public class InvalidValueException extends IllegalArgumentException {
     super(combineMessagesIntoSentences(errorCode, parserErrorCode, parserErrorCodeArgs), cause);
     this.invalidValue = invalidValue == null ? null : invalidValue.toString();
     this.targetTypeClass = targetTypeClass;
-    this.errorCode = errorCode == null ? EMPTY_MESSAGE_CODE : errorCode;
-    this.parserErrorCode = parserErrorCode == null ? EMPTY_PARSER_MESSAGE_CODE : parserErrorCode;
+    this.errorCode = errorCode == null ? MessageCode.EMPTY_MESSAGE_CODE : errorCode;
+    this.parserErrorCode = parserErrorCode == null ? ParserMessageCode.EMPTY_PARSER_MESSAGE_CODE : parserErrorCode;
     this.parserErrorCodeArgs = parserErrorCodeArgs == null
         ? EMPTY_PARSER_ERROR_PROPERTIES
-        : parserErrorCodeArgs;
+        : Collections.unmodifiableMap(parserErrorCodeArgs);
     this.parserErrorCodeArgsValues = parserErrorCodeArgs == null
         ? EMPTY_PARSER_MESSAGE_ARGS
         : parserErrorCodeArgs.values().toArray(EMPTY_PARSER_MESSAGE_ARGS);
@@ -134,14 +124,17 @@ public class InvalidValueException extends IllegalArgumentException {
   /**
    * <p>Provides the message associated with this exception.</p>
    *
-   * <p>The message is a combination of the custom error message and the parser error message
+   * <p>The message is a combination of the user's error message and the parser error message
    * provided by {@link #getErrorMessage()} and {@link #getParserErrorMessage()}.</p>
+   *
+   * <p></p>
    *
    * @return the message associated with this exception.
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    */
   @Override
+  @SuppressWarnings("java:S1185") // Overriding getMessage() to provide meaningful Javadoc.
   public String getMessage() {
     return super.getMessage();
   }
@@ -175,6 +168,12 @@ public class InvalidValueException extends IllegalArgumentException {
   }
 
 
+  /**
+   * <p>Provides the target custom type class if known. For example, if the custom type is a class called,
+   * say {@code CurrencyCode}, then this method would return {@code CurrencyCode.class}.</p>
+   *
+   * @return the target custom type class if known, or {@code null} otherwise
+   */
   public Class<?> getTargetTypeClass() {
     return targetTypeClass;
   }
@@ -184,7 +183,7 @@ public class InvalidValueException extends IllegalArgumentException {
    * <p>Provides the error code for the custom type as a {@link MessageCode} instance.</p>
    *
    * <p>{@code MessageCode} values can be used in most places that a string value can be used
-   * as it implements {@link CharSequence}. If an actual string value is required then use {@link #getErrorCodeAsString()}.</p>
+   * as it implements {@link CharSequence}.</p>
    *
    * <p>Use {@link #getErrorMessage()} to return the message associated with this error code.</p>
    *
@@ -192,7 +191,6 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getMessage()
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorCode()
@@ -201,29 +199,6 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   public MessageCode getErrorCode() {
     return errorCode;
-  }
-
-  /**
-   * <p>Provides the error code for the custom type as a string.</p>
-   *
-   * <p>Use {@link #getErrorCode()} to return the error code as a {@link MessageCode} instance
-   * which can be used in most places that a string value can, as it implements {@link CharSequence}</p>
-   *
-   * <p>Use {@link #getErrorMessage()} to return the message associated with this error code.</p>
-   *
-   * @return the error code for the custom type as a string.
-   * @see #getMessage()
-   * @see #getLocalizedMessage()
-   * @see #getLocalizedMessage(Locale)
-   * @see #getErrorCode()
-   * @see #getErrorMessage(Locale)
-   * @see #getErrorMessage()
-   * @see #getParserErrorCode()
-   * @see #getParserErrorMessage()
-   * @see #getParserErrorMessage(Locale)
-   */
-  public String getErrorCodeAsString() {
-    return errorCode.code();
   }
 
   /**
@@ -236,28 +211,28 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorCode()
    * @see #getParserErrorMessage()
    * @see #getParserErrorMessage(Locale)
-   * @deprecated use {@link #getErrorCode()} or {@link #getErrorCodeAsString()} instead.
+   * @deprecated use {@link #getErrorCode()} instead which return a {@link MessageCode} instance that can be used in most places that a string value
+   * can be used as it implements {@link CharSequence}.
    */
   @Deprecated(since = "1.1", forRemoval = true)
   public String getMessageCode() {
-    return getErrorCodeAsString();
+    return errorCode.code();
   }
 
   /**
-   * <p>Provides the error message associated with the error code that is provided by {@link #getErrorCode()}.</p>
+   * <p>Provides only the error message associated with the error code that is provided by {@link #getErrorCode()}.</p>
    *
    * <p>The result differs from the {@link #getMessage()} method in that {@code getMessage()} returns a
    * complete error message combining the two messages provided by {@code getErrorMessage()} and {@link #getParserErrorMessage()}.</p>
    *
    * <p>Use {@link #getErrorMessage(Locale)} to return the message localized to the specified locale.</p>
    *
-   * @return the error message for the custom type.
+   * @return the error message for the custom type, or and empty {@link MessageCode} instance if no error code was provided.
    * @see #getMessage()
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
@@ -297,7 +272,7 @@ public class InvalidValueException extends IllegalArgumentException {
    * <p>Provides the parser error code as a {@link ParserMessageCode} instance.</p>
    *
    * <p>{@code ParserMessageCode} values can be used in most places that a string value can be used
-   * as it implements {@link CharSequence}. If an actual string value is required then use {@link #getParserErrorCodeAsString()}.</p>
+   * as it implements {@link CharSequence}.</p>
    *
    * <p>Use {@link #getParserErrorMessage()} to return the parser error message associated with this parser error code.</p>
    *
@@ -306,7 +281,6 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorMessage()
@@ -314,30 +288,6 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   public ParserMessageCode getParserErrorCode() {
     return parserErrorCode;
-  }
-
-  /**
-   * <p>Provides the parser error code as a string.</p>
-   *
-   * <p>Use {@link #getParserErrorCode()} to return the parser error code as a {@link ParserMessageCode} instance
-   * which can be used in most places that a string value can, as it implements {@link CharSequence}</p>
-   *
-   * <p>Use {@link #getParserErrorMessage()} to return the parser error message associated with this parser error code.</p>
-   *
-   * @return the parser error code as a string.
-   * @see #getMessage()
-   * @see #getLocalizedMessage()
-   * @see #getLocalizedMessage(Locale)
-   * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
-   * @see #getErrorMessage(Locale)
-   * @see #getErrorMessage()
-   * @see #getParserErrorCode()
-   * @see #getParserErrorMessage()
-   * @see #getParserErrorMessage(Locale)
-   */
-  public String getParserErrorCodeAsString() {
-    return parserErrorCode.code();
   }
 
   /**
@@ -350,13 +300,13 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorCode()
    * @see #getParserErrorMessage()
    * @see #getParserErrorMessage(Locale)
-   * @deprecated use {@link #getParserErrorCode()} or {@link #getParserErrorCodeAsString()} instead.
+   * @deprecated use {@link #getParserErrorCode()} instead which returns a {@link ParserMessageCode} instance that can be used in most places that a
+   * string value can be used as it implements {@link CharSequence}.
    */
   @Deprecated(since = "1.1", forRemoval = true)
   public String getParserMessageCode() {
@@ -367,8 +317,7 @@ public class InvalidValueException extends IllegalArgumentException {
    * <p>Provides the parser error message associated with the parser error code that is provided by {@link #getParserErrorCode()}.</p>
    *
    * <p>The result differs from the {@link #getMessage()} method in that {@code getMessage()} returns a
-   * complete error message combining the two messages provided by {@link #getErrorMessage()} and
-   * {@code #getParserErrorMessage()}.</p>
+   * complete error message combining the two messages provided by {@link #getErrorMessage()} and {@code #getParserErrorMessage()}.</p>
    *
    * <p>Use {@link #getParserErrorMessage(Locale)} to return the parser error message localized to the specified locale.</p>
    *
@@ -377,7 +326,6 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorCode()
@@ -400,7 +348,6 @@ public class InvalidValueException extends IllegalArgumentException {
    * @see #getLocalizedMessage()
    * @see #getLocalizedMessage(Locale)
    * @see #getErrorCode()
-   * @see #getErrorCodeAsString()
    * @see #getErrorMessage(Locale)
    * @see #getErrorMessage()
    * @see #getParserErrorCode()
@@ -412,8 +359,7 @@ public class InvalidValueException extends IllegalArgumentException {
 
   /**
    * <p>Provides the parser error properties which can be interrogated or logged as needs.
-   * Internally, the entry order is maintained so that the values can be used as arguments
-   * to the message formatter.</p>
+   * Internally, the entry order is maintained so that the values can be used as arguments to the message formatter.</p>
    *
    * @return the parser error properties that were used to create the parser error message.
    */
@@ -427,7 +373,7 @@ public class InvalidValueException extends IllegalArgumentException {
    *
    * @return the parser error arguments that were used to create the parser error message.
    */
-  public Serializable [] getParserErrorArgs() {
+  public Serializable[] getParserErrorArgs() {
     return Arrays.copyOf(parserErrorCodeArgsValues, parserErrorCodeArgsValues.length, Serializable[].class);
   }
 
@@ -441,6 +387,11 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   public String getInvalidValue() {
     return invalidValue;
+  }
+
+  protected String getInvalidCodePointDescription() {
+    final var invalidCodePoint = parserErrorCodeArgs.get(ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT);
+    return String.format("'%s'", invalidValue);
   }
 
   /**
@@ -491,9 +442,8 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * Set the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
-     *                  error message is found in the resource-bundle or properties file then the value you provide here will be used as the error
-     *                  message.
+     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no error
+     *                  message is found in the resource-bundle or properties file then the value you provide here will be used as the error message.
      * @return this builder
      */
     public InvalidValueExceptionBuilder errorCode(final MessageCode errorCode) {
@@ -504,9 +454,8 @@ public class InvalidValueException extends IllegalArgumentException {
     /**
      * Set the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
-     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no
-     *                    error message is found in the resource-bundle or properties file then the value you provide here will be used as the error
-     *                    message.
+     * @param errorCode the key used to find the error message in the {@code org.typefactory.Messages} resource-bundle or properties file. If no error
+     *                  message is found in the resource-bundle or properties file then the value you provide here will be used as the error message.
      * @return this builder
      * @deprecated use {@link #errorCode(MessageCode)} instead.
      */
@@ -520,8 +469,8 @@ public class InvalidValueException extends IllegalArgumentException {
      * Set the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
      * @param parserErrorCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
-     *                          file. If no parser error message is found in the resource-bundle or properties file then the value you provide here
-     *                          will be used as the error message.
+     *                        file. If no parser error message is found in the resource-bundle or properties file then the value you provide here will
+     *                        be used as the error message.
      * @return this builder
      */
     public InvalidValueExceptionBuilder parserErrorCode(final ParserMessageCode parserErrorCode) {
@@ -533,8 +482,8 @@ public class InvalidValueException extends IllegalArgumentException {
      * Set the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties file.
      *
      * @param parserErrorCode the key used to find the parser error message in the {@code org.typefactory.Messages} resource-bundle or properties
-     *                          file. If no parser error message is found in the resource-bundle or properties file then the value you provide here
-     *                          will be used as the error message.
+     *                        file. If no parser error message is found in the resource-bundle or properties file then the value you provide here will
+     *                        be used as the error message.
      * @return this builder
      * @deprecated use {@link #parserErrorCode(ParserMessageCode)} instead.
      */
@@ -679,6 +628,11 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   public interface ParserMessageCode extends MessageCode {
 
+    /**
+     * An immutable empty {@link ParserMessageCode} constant.
+     */
+    ParserMessageCode EMPTY_PARSER_MESSAGE_CODE = Factory.parserMessageCode(EMPTY_STRING, EMPTY_STRING);
+
     ParserMessageCode INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN = Factory.parserMessageCode(
         "invalid_value_does_not_match_regex_pattern",
         "Invalid value - does not match regular-expression pattern {0}");
@@ -752,6 +706,19 @@ public class InvalidValueException extends IllegalArgumentException {
     ParserMessageCode INVALID_VALUE_TOO_SHORT = Factory.parserMessageCode(
         "invalid_value_too_short",
         "Invalid value - too short, minimum length is {0,number,integer}.");
+  }
+
+  public static class ParserMessageCodeArgKeys {
+
+    private ParserMessageCodeArgKeys() {
+      // don't instantiate me
+    }
+
+    public static final String MIN_LENGTH = "minLength";
+    public static final String MAX_LENGTH = "maxLength";
+    public static final String INVALID_CHARACTER_DESCRIPTION = "invalidCharacterDescription";
+    public static final String INVALID_CHARACTER_CODE_POINT = "invalidCharacter";
+    public static final String REGEX_PATTERN = "regexPattern";
   }
 
 }

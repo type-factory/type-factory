@@ -480,7 +480,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equals(CharSequenceType) ────────────────────
+  // ─── CI (CaseInsensitive) — equals(CharSequenceType) ────────────────────
 
   @Test
   void ci_equals_charSequenceType_withBothNull_returnsTrue() {
@@ -509,7 +509,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equals(StringType) ───────────────────────────
+  // ─── CI (CaseInsensitive) — equals(StringType) ───────────────────────────
 
   @Test
   void ci_equals_stringType_withBothNull_returnsTrue() {
@@ -538,7 +538,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equalsAny(CharSequenceType, varargs) ─────────
+  // ─── CI (CaseInsensitive) — equalsAny(CharSequenceType, varargs) ─────────
 
   @Test
   void ci_equalsAny_charSequenceType_varargs_withNullOtherValues_returnsFalse() {
@@ -563,7 +563,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equalsAny(StringType, varargs) ──────────────
+  // ─── CI (CaseInsensitive) — equalsAny(StringType, varargs) ──────────────
 
   @Test
   void ci_equalsAny_stringType_varargs_withNullOtherValues_returnsFalse() {
@@ -588,7 +588,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equalsAny(CharSequenceType, Collection) ──────
+  // ─── CI (CaseInsensitive) — equalsAny(CharSequenceType, Collection) ──────
 
   @Test
   void ci_equalsAny_charSequenceType_collection_withNullCollection_returnsFalse() {
@@ -613,7 +613,7 @@ class TypesTest {
         .isEqualTo(expected);
   }
 
-  // ─── CI (CaseInsensistive) — equalsAny(StringType, Collection) ───────────
+  // ─── CI (CaseInsensitive) — equalsAny(StringType, Collection) ───────────
 
   @Test
   void ci_equalsAny_stringType_collection_withNullCollection_returnsFalse() {
@@ -637,6 +637,150 @@ class TypesTest {
             new SomeStringType("abc"),
             new SomeStringType("zzz"))))
         .isEqualTo(expected);
+  }
+
+  // ─── CS (CaseSensitive) — compare(CharSequenceType) ─────────────────────
+
+  @Test
+  void cs_compare_charSequenceType_withBothNull_returnsZero() {
+    assertThat(Types.CS.compare((SomeCharSequenceType) null, (SomeCharSequenceType) null)).isZero();
+  }
+
+  @Test
+  void cs_compare_charSequenceType_withSameInstance_returnsZero() {
+    final var value = new SomeCharSequenceType("abc");
+    assertThat(Types.CS.compare(value, value)).isZero();
+  }
+
+  @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | abc     | negative
+      abc     | null    | positive
+      abc     | abc     | zero
+      abc     | abd     | negative
+      abd     | abc     | positive
+      abc     | ABC     | positive
+      ABC     | abc     | negative
+      abc     | abcd    | negative
+      abcd    | abc     | positive
+      """)
+  void cs_compare_charSequenceType_returnsAsExpected(
+      final String value1, final String value2, final String expectedSign) {
+    final int result = Types.CS.compare(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2));
+    switch (expectedSign) {
+      case "negative" -> assertThat(result).isNegative();
+      case "positive" -> assertThat(result).isPositive();
+      default        -> assertThat(result).isZero();
+    }
+  }
+
+  // ─── CS (CaseSensitive) — compare(StringType) ────────────────────────────
+
+  @Test
+  void cs_compare_stringType_withBothNull_returnsZero() {
+    assertThat(Types.CS.compare((SomeStringType) null, (SomeStringType) null)).isZero();
+  }
+
+  @Test
+  void cs_compare_stringType_withSameInstance_returnsZero() {
+    final var value = new SomeStringType("abc");
+    assertThat(Types.CS.compare(value, value)).isZero();
+  }
+
+  @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | abc     | negative
+      abc     | null    | positive
+      abc     | abc     | zero
+      abc     | abd     | negative
+      abd     | abc     | positive
+      abc     | ABC     | positive
+      ABC     | abc     | negative
+      abc     | abcd    | negative
+      abcd    | abc     | positive
+      """)
+  void cs_compare_stringType_returnsAsExpected(
+      final String value1, final String value2, final String expectedSign) {
+    final int result = Types.CS.compare(new SomeStringType(value1), new SomeStringType(value2));
+    switch (expectedSign) {
+      case "negative" -> assertThat(result).isNegative();
+      case "positive" -> assertThat(result).isPositive();
+      default        -> assertThat(result).isZero();
+    }
+  }
+
+  // ─── CI (CaseInsensitive) — compare(CharSequenceType) ────────────────────
+
+  @Test
+  void ci_compare_charSequenceType_withBothNull_returnsZero() {
+    assertThat(Types.CI.compare((SomeCharSequenceType) null, (SomeCharSequenceType) null)).isZero();
+  }
+
+  @Test
+  void ci_compare_charSequenceType_withSameInstance_returnsZero() {
+    final var value = new SomeCharSequenceType("abc");
+    assertThat(Types.CI.compare(value, value)).isZero();
+  }
+
+  @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | abc     | negative
+      abc     | null    | positive
+      abc     | abc     | zero
+      abc     | ABC     | zero
+      ABC     | abc     | zero
+      abc     | abd     | negative
+      abd     | abc     | positive
+      abc     | abcd    | negative
+      abcd    | abc     | positive
+      """)
+  void ci_compare_charSequenceType_returnsAsExpected(
+      final String value1, final String value2, final String expectedSign) {
+    final int result = Types.CI.compare(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2));
+    switch (expectedSign) {
+      case "negative" -> assertThat(result).isNegative();
+      case "positive" -> assertThat(result).isPositive();
+      default        -> assertThat(result).isZero();
+    }
+  }
+
+  // ─── CI (CaseInsensitive) — compare(StringType) ──────────────────────────
+
+  @Test
+  void ci_compare_stringType_withBothNull_returnsZero() {
+    assertThat(Types.CI.compare((SomeStringType) null, (SomeStringType) null)).isZero();
+  }
+
+  @Test
+  void ci_compare_stringType_withSameInstance_returnsZero() {
+    final var value = new SomeStringType("abc");
+    assertThat(Types.CI.compare(value, value)).isZero();
+  }
+
+  @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
+  @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
+      VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | abc     | negative
+      abc     | null    | positive
+      abc     | abc     | zero
+      abc     | ABC     | zero
+      ABC     | abc     | zero
+      abc     | abd     | negative
+      abd     | abc     | positive
+      abc     | abcd    | negative
+      abcd    | abc     | positive
+      """)
+  void ci_compare_stringType_returnsAsExpected(
+      final String value1, final String value2, final String expectedSign) {
+    final int result = Types.CI.compare(new SomeStringType(value1), new SomeStringType(value2));
+    switch (expectedSign) {
+      case "negative" -> assertThat(result).isNegative();
+      case "positive" -> assertThat(result).isPositive();
+      default        -> assertThat(result).isZero();
+    }
   }
 
   // ─── Some concrete classes ───────────────────────────────────────────────────

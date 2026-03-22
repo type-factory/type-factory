@@ -73,17 +73,4 @@ class ParserMessageCodeImpl extends MessageCodeImpl implements ParserMessageCode
   public int hashCode() {
     return super.hashCode();
   }
-
-  static class ParserMessageCodeArgKeys {
-
-    private ParserMessageCodeArgKeys() {
-      // don't instantiate me
-    }
-
-    public static final String MIN_LENGTH = "minLength";
-    public static final String MAX_LENGTH = "maxLength";
-    public static final String INVALID_CHARACTER_DESCRIPTION = "invalidCharacterDescription";
-    public static final String REGEX_PATTERN = "regexPattern";
-  }
-
 }

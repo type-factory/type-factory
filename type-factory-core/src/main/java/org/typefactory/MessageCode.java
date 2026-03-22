@@ -49,9 +49,15 @@ import org.typefactory.impl.Factory;
 public interface MessageCode extends CharSequence, Comparable<MessageCode>, Serializable {
 
   /**
+   * An immutable empty {@link MessageCode} constant.
+   */
+  MessageCode EMPTY_MESSAGE_CODE = Factory.messageCode("", "");
+
+  /**
    * <p>Returns the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.</p>
    *
    * <p>This should always return an empty string if instantiated with null, empty or blank values.</p>
+   *
    * @return the message code – a key to an entry in a {@link java.util.ResourceBundle} with base name {@code org.typefactory.Messages}.
    */
   String code();
@@ -168,18 +174,18 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
 
   /**
    * <p>Returns the {@code char} value at the specified index of the message code character sequence.
-   * An index ranges from zero to {@code length() - 1}.  The first {@code char} value of the
-   * message code character sequence is at index zero, the next at index one, and so on, as for array
-   * indexing.</p>
+   * An index ranges from zero to {@code length() - 1}.  The first {@code char} value of the message code character sequence is at index zero, the
+   * next at index one, and so on, as for array indexing.</p>
    *
    * <p>If the {@code char} value specified by the index is a
    * <a href="{@docRoot}/java.base/java/lang/Character.html#unicode">surrogate</a>, the surrogate
    * value is returned.</p>
    *
-   * @param   index   the index of the {@code char} value to be returned
-   * @return  the specified {@code char} value
-   * @throws  IndexOutOfBoundsException if the {@code index} argument is negative or not less than {@code length()}
-   */  @Override
+   * @param index the index of the {@code char} value to be returned
+   * @return the specified {@code char} value
+   * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than {@code length()}
+   */
+  @Override
   default char charAt(int index) {
     if (isEmpty()) {
       throw new StringIndexOutOfBoundsException("String index out of range: " + index);
@@ -191,14 +197,14 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    * <p>Returns a new {@code CharSequence} that is a subsequence of this message code character sequence.</p>
    *
    * <p>The subsequence starts with the {@code char} value at the specified {@code start} and ends with the
-   * {@code char} value at index {@code end - 1}.  The length (in {@code char}s) of the
-   * subsequence is {@code end - start}, so if {@code start == end} then an empty sequence is returned.</p>
+   * {@code char} value at index {@code end - 1}.  The length (in {@code char}s) of the subsequence is {@code end - start}, so if {@code start == end}
+   * then an empty sequence is returned.</p>
    *
    * @param start the start index, inclusive
-   * @param end the end index, exclusive
+   * @param end   the end index, exclusive
    * @return the specified subsequence
-   * @throws IndexOutOfBoundsException if {@code start} or {@code end} are negative, or if {@code end}
-   *         is greater than {@code length()}, or if {@code start} is greater than {@code end}
+   * @throws IndexOutOfBoundsException if {@code start} or {@code end} are negative, or if {@code end} is greater than {@code length()}, or if
+   *                                   {@code start} is greater than {@code end}
    */
   @Override
   default CharSequence subSequence(int start, int end) {
@@ -214,17 +220,15 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
    * code character sequence {@code o}.</p>
    *
    * <p>Returns zero if the message code character sequence {@code o} contains a character sequence
-   * that is Lexicographically the same as this message code character sequence, or if both
-   * message code character sequences are empty.</p>
+   * that is Lexicographically the same as this message code character sequence, or if both message code character sequences are empty.</p>
    *
    * <p>Otherwise, returns a negative or positive integer depending on whether the character sequence
-   * represented by this message code character sequence is lexicographically less than or
-   * greater than the character sequence represented by {@code o}.</p>
+   * represented by this message code character sequence is lexicographically less than or greater than the character sequence represented by
+   * {@code o}.</p>
    *
    * <p>Will return a positive integer if {@code o} is null.</p>
    *
-   * @return a negative integer, zero, or a positive integer as this object
-   *         is less than, equal to, or greater than the specified object.
+   * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
    */
   @Override
   default int compareTo(final MessageCode o) {
@@ -239,6 +243,19 @@ public interface MessageCode extends CharSequence, Comparable<MessageCode>, Seri
     return c1.compareTo(c2);
   }
 
+  /**
+   * <p>Compares the provided message code instances by their {@link #code()} values,
+   * returning a negative integer, zero, or a positive integer as the first argument
+   * is less than, equal to, or greater than the second.</p>
+   *
+   * <p>The {@link #defaultMessage()} component is not considered for the comparison.
+   * Two {@code MessageCode} instances are equal if their {@link #code()} values are equal.</p>
+   *
+   * @param c1 the first message code instance to compare.
+   * @param c2 the second message code instance to compare.
+   * @return a negative integer, zero, or a positive integer as the {@code c1.code()} value
+   * is less than, equal to, or greater than the {@code c2.code()} value.
+   */
   static int compare(final MessageCode c1, final MessageCode c2) {
     if (c1 == c2) {
       // both are null or both are the same instance

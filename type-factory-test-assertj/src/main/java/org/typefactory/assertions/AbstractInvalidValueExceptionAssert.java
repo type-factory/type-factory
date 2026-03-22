@@ -117,27 +117,6 @@ public abstract class AbstractInvalidValueExceptionAssert<
   }
 
   /**
-   * Verifies that the actual InvalidValueException's messageCode is equal to the given one.
-   *
-   * @param expected the given messageCode to compare the actual InvalidValueException's messageCode to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's messageCode is not equal to the given one.
-   */
-  public SELF hasErrorCodeAsString(final String expected) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    final var actualErrorCode = actual.getErrorCodeAsString();
-
-    if (AssertionUtils.notEquals(actualErrorCode, expected)) {
-      throw failure("%nExpected actual of type:  %s%nto have errorCode:  %s%nbut errorCode was:  %s",
-          classNameOfActual(), valueOf(expected), valueOf(actualErrorCode));
-    }
-
-    return myself;
-  }
-
-  /**
    * Verifies that the actual InvalidValueException's errorMessage is equal to the given one.
    *
    * @param expected the given errorMessage to compare the actual InvalidValueException's errorMessage to.
@@ -258,27 +237,6 @@ public abstract class AbstractInvalidValueExceptionAssert<
     if (MessageCode.notEquals(actualParserErrorCode, expected)) {
       throw failure("%nExpected actual of type:  %s%nto have parserErrorCode:  %s%nbut parserErrorCode was:  %s",
           classNameOfActual(), valueOf(expected), valueOf(actualParserErrorCode));
-    }
-
-    return myself;
-  }
-
-  /**
-   * Verifies that the actual InvalidValueException's parserErrorCode is equal to the given one.
-   *
-   * @param expected the given parserErrorCode to compare the actual InvalidValueException's parserErrorCode to.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual InvalidValueException's parserErrorCode is not equal to the given one.
-   */
-  public SELF hasParserErrorCodeAsString(final String expected) {
-    // check that actual InvalidValueException we want to make assertions on is not null.
-    isNotNull();
-
-    final var actualParserErrorCodeAsString = actual.getParserErrorCodeAsString();
-
-    if (AssertionUtils.notEquals(actualParserErrorCodeAsString, expected)) {
-      throw failure("%nExpected actual of type:  %s%nto have parserErrorCode:  %s%nbut parserErrorCode was:  %s",
-          classNameOfActual(), valueOf(expected), valueOf(actualParserErrorCodeAsString));
     }
 
     return myself;
