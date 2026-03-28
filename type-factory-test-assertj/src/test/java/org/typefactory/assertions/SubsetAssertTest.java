@@ -122,14 +122,14 @@ class SubsetAssertTest {
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       SUBSET_CHARACTERS | ASSERT_CONTAINS | EXPECTED_ERROR_MESSAGE
-      abcdΣωπ           | e               | '\nExpected actual Subset: \s\nto contain character:  e\nbut no such character was found in the Subset.'
-      abcdΣωπ           | f               | '\nExpected actual Subset: \s\nto contain character:  f\nbut no such character was found in the Subset.'
-      abcdΣωπ           | g               | '\nExpected actual Subset: \s\nto contain character:  g\nbut no such character was found in the Subset.'
-      abcdΣωπ           | h               | '\nExpected actual Subset: \s\nto contain character:  h\nbut no such character was found in the Subset.'
-      abcdΣωπ           | μ               | '\nExpected actual Subset: \s\nto contain character:  μ\nbut no such character was found in the Subset.'
-      abcdΣωπ           | θ               | '\nExpected actual Subset: \s\nto contain character:  θ\nbut no such character was found in the Subset.'
-      abcdΣωπ           | β               | '\nExpected actual Subset: \s\nto contain character:  β\nbut no such character was found in the Subset.'
-      abcdΣωπ           | '\n'            | '\nExpected actual Subset: \s\nto contain character:  U+000A\nbut no such character was found in the Subset.'
+      abcdΣωπ           | e               | '\nExpected actual Subset:  \nto contain character:  e\nbut no such character was found in the Subset.'
+      abcdΣωπ           | f               | '\nExpected actual Subset:  \nto contain character:  f\nbut no such character was found in the Subset.'
+      abcdΣωπ           | g               | '\nExpected actual Subset:  \nto contain character:  g\nbut no such character was found in the Subset.'
+      abcdΣωπ           | h               | '\nExpected actual Subset:  \nto contain character:  h\nbut no such character was found in the Subset.'
+      abcdΣωπ           | μ               | '\nExpected actual Subset:  \nto contain character:  μ\nbut no such character was found in the Subset.'
+      abcdΣωπ           | θ               | '\nExpected actual Subset:  \nto contain character:  θ\nbut no such character was found in the Subset.'
+      abcdΣωπ           | β               | '\nExpected actual Subset:  \nto contain character:  β\nbut no such character was found in the Subset.'
+      abcdΣωπ           | '\n'            | '\nExpected actual Subset:  \nto contain character:  U+000A\nbut no such character was found in the Subset.'
       """)
   void containsCharacter_throwsAssertionError(
       final String subsetCharacters, final char characterToContain, final String expectedMessage) {
@@ -434,4 +434,86 @@ class SubsetAssertTest {
         .isThrownBy(() -> subsetAssert.containsExactlyCategories(categoriesToContain))
         .withMessage(expectedMessage);
   }
+
+  // ─── charArrayToCodePointArray ────────────────────────────────────────────
+
+  @Test
+  void charArrayToCodePointArray_withNull_returnsEmptyArray() {
+
+    final var result = AbstractSubsetAssert.charArrayToCodePointArray(null);
+
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  void charArrayToCodePointArray_withEmptyArray_returnsEmptyArray() {
+
+    final var result = AbstractSubsetAssert.charArrayToCodePointArray(new char[0]);
+
+    assertThat(result).isEmpty();
+  }
+
+  @ParameterizedTest(name = "[{index}] char=''{0}'' → codePoint={1}")
+  @CsvSource(delimiter = '|', textBlock = """
+      a | 97
+      A | 65
+      z | 122
+      Z | 90
+      0 | 48
+      9 | 57
+      Σ | 931
+      π | 960
+      ω | 969
+      € | 8364
+      """)
+  void charArrayToCodePointArray_withSingleChar_returnsSingleElementIntArray(
+      final String charAsString, final int expectedCodePoint) {
+
+    final var result = AbstractSubsetAssert.charArrayToCodePointArray(
+        new char[]{charAsString.charAt(0)});
+
+    assertThat(result).containsExactly(expectedCodePoint);
+  }
+
+  @ParameterizedTest(name = "[{index}] chars=''{0}''")
+  @CsvSource(delimiter = '|', textBlock = """
+      abc | 97  | 98  | 99
+      ABC | 65  | 66  | 67
+      012 | 48  | 49  | 50
+      aAΣ | 97  | 65  | 931
+      πω€ | 960 | 969 | 8364
+      """)
+  void charArrayToCodePointArray_withMultipleChars_returnsCorrectCodePoints(
+      final String chars,
+      final int expectedFirst, final int expectedSecond, final int expectedThird) {
+
+    final var result = AbstractSubsetAssert.charArrayToCodePointArray(chars.toCharArray());
+
+    assertThat(result).containsExactly(expectedFirst, expectedSecond, expectedThird);
+  }
+
+  @Test
+  void charArrayToCodePointArray_preservesInsertionOrder() {
+
+    // Deliberate non-alphabetical order to confirm position is maintained
+    final var result = AbstractSubsetAssert.charArrayToCodePointArray(
+        new char[]{'z', 'a', 'Z', 'A', 'π', 'Σ'});
+
+    assertThat(result).containsExactly(
+        'z', 'a', 'Z', 'A', 'π', 'Σ');
+  }
+
+  @Test
+  void charArrayToCodePointArray_returnsNewArrayOnEachCall() {
+
+    final var chars = new char[]{'a', 'b'};
+
+    final var result1 = AbstractSubsetAssert.charArrayToCodePointArray(chars);
+    final var result2 = AbstractSubsetAssert.charArrayToCodePointArray(chars);
+
+    assertThat(result1)
+        .isNotSameAs(result2)
+        .containsExactly(result2);
+  }
+
 }
