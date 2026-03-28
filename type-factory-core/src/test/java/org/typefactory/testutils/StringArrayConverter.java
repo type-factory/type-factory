@@ -43,7 +43,7 @@ public class StringArrayConverter implements ArgumentConverter {
       return Arrays.stream(value.split(",\\s*"))
           .map(v -> "null".equals(v.trim()) ? null : v)
           .toList()
-          .toArray(new String[0]);
+          .toArray(EMPTY_STRING_ARRAY);
     } catch (Exception e) {
       throw new IllegalArgumentException(
           "The argument should be a string written as array of comma separate values all within square brackets. Invalid value: " + source, e);

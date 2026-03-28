@@ -1,9 +1,11 @@
 package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.typefactory.TypeParserBuilderException.MessageCodes;
 
 @ExtendWith(MockitoExtension.class)
 class TypeParserBuilderExceptionTest {
@@ -36,8 +39,6 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getMessage()).isNull();
     assertThat(actual.getLocalizedMessage()).isNotNull().isEmpty();
     assertThat(actual.getMessageCode()).isNotNull().isEmpty();
-    assertThat(actual.getErrorMessage()).isNotNull().isEmpty();
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isNotNull().isEmpty();
   }
 
   @Test
@@ -48,8 +49,6 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
   }
 
   @Test
@@ -63,8 +62,6 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getMessage()).isNull();
     assertThat(actual.getLocalizedMessage()).isNotNull().isEmpty();
     assertThat(actual.getMessageCode()).isNotNull().isEmpty();
-    assertThat(actual.getErrorMessage()).isNotNull().isEmpty();
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isNotNull().isEmpty();
   }
 
   @Test
@@ -78,8 +75,6 @@ class TypeParserBuilderExceptionTest {
     assertThat(actual.getMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getLocalizedMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
     assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
-    assertThat(actual.getErrorMessage()).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
-    assertThat(actual.getErrorMessage(Locale.FRENCH)).isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.defaultMessage());
   }
 
   @ParameterizedTest
@@ -91,7 +86,7 @@ class TypeParserBuilderExceptionTest {
         .addMessageCodeArg(argKey, "A")
         .build();
 
-    assertThat(actual.getErrorProperties()).isEmpty();
+    assertThat(actual.getMessageProperties()).isEmpty();
   }
 
   @Test
@@ -101,7 +96,7 @@ class TypeParserBuilderExceptionTest {
         .addMessageCodeArg("A", "B")
         .build();
 
-    assertThat(actual.getErrorProperties()).containsAllEntriesOf(Map.of("A", "B"));
+    assertThat(actual.getMessageProperties()).containsAllEntriesOf(Map.of("A", "B"));
   }
 
   @ParameterizedTest
@@ -211,5 +206,32 @@ class TypeParserBuilderExceptionTest {
 
     assertThat(actual).hasToString("""
         TypeParserBuilderException{message='some default error message because of A', messageCode='some.error.code', defaultErrorMessage='some default error message because of {0}', invalidCodePoint='A', cause='Exception - some exception message'}""");
+  }
+
+  @Test
+  void getMessageCode_returnsSameValueAsGetErrorCode() {
+    final var actual = TypeParserBuilderException.builder()
+        .messageCode(ERROR_MESSAGE_CODE_NO_ARGS)
+        .build();
+
+    assertThat(actual.getMessageCode())
+        .isEqualTo(actual.getMessageCode())
+        .isEqualTo(ERROR_MESSAGE_CODE_NO_ARGS.code());
+  }
+
+  @Test
+  void messageCodes_invalidZeroDigitExceptionMessage_hasExpectedCodeAndDefaultMessage() {
+    assertThat(MessageCodes.INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE.code())
+        .isEqualTo("invalid_zero_digit");
+    assertThat(MessageCodes.INVALID_ZERO_DIGIT_EXCEPTION_MESSAGE.defaultMessage())
+        .isEqualTo("An invalid zero digit has been configured for the type parser – the zero digit character must represent zero and the subsequent nine characters must be valid unicode decimal digits.");
+  }
+
+  @Test
+  void messageCodes_constructorIsPrivate() throws Exception {
+    final Constructor<MessageCodes> constructor = MessageCodes.class.getDeclaredConstructor();
+    assertThat(constructor.canAccess(null)).isFalse();
+    constructor.setAccessible(true);
+    assertThatCode(constructor::newInstance).doesNotThrowAnyException();
   }
 }

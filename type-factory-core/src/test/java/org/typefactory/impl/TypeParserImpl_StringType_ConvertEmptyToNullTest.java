@@ -29,7 +29,6 @@ import org.typefactory.TypeParser;
 
 class TypeParserImpl_StringType_ConvertEmptyToNullTest {
 
-
   @ParameterizedTest
   @NullAndEmptySource
   void parseToStringType_withConvertEmptyToNull_returnsNullForNullValue(final String value) {

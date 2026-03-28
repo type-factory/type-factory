@@ -65,7 +65,7 @@ import org.typefactory.impl.Factory;
 public interface TypeParser {
 
   /**
-   * <p>Creates a builder with which to create a type-parser.</p>>
+   * <p>Creates a builder with which to create a type-parser.</p>
    *
    * @return a builder with which to create a type-parser.
    */

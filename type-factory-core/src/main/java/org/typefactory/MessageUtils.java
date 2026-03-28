@@ -65,7 +65,7 @@ class MessageUtils {
       final String message = getResourceBundleMessage(resourceBundleBaseName, locale, messageCode);
       return new MessageFormat(message, locale).format(messageArgs == null ? EMPTY_MESSAGE_ARGS : messageArgs);
     } catch (final Exception e) {
-      logger.fine(() ->
+      logger.finer(() ->
           String.format("Can't format message for key '%s' from resource bundle for base name %s, locale %s – %s",
               messageCode.code(), resourceBundleBaseName, locale.toLanguageTag(), e.getClass().getSimpleName()));
       if (messageCode.defaultMessage() == null || messageCode.defaultMessage().isBlank()) {
@@ -90,8 +90,8 @@ class MessageUtils {
           return message;
         }
       } catch (final Exception e) {
-        logger.fine(() -> String.format("Can't load message for key '%s' from resource bundle for base name %s, locale %s – %s",
-            messageCode.code(), resourceBundle.getBaseBundleName(), locale.toLanguageTag(), e.getClass().getName()));
+        logger.finer(() -> String.format("Can't load message for key '%s' from resource bundle for base name %s, locale %s – %s",
+            messageCode.code(), resourceBundle.getBaseBundleName(), locale.toLanguageTag(), e.getClass().getSimpleName()));
       }
     }
     message = messageCode.defaultMessage();
@@ -128,16 +128,10 @@ class MessageUtils {
           return ResourceBundle.getBundle(
               resourceBundleBaseName, locale, MessageUtils.class.getClassLoader(), DEFAULT_RESOURCE_BUNDLE_CONTROL);
         } catch (final Exception e3) {
-          logger.log(Level.FINE, e1, () ->
-              String.format("""
-                      Can't load resource bundle for base name %s, locale %s – caused by:
-                      - %s: %s,
-                      - %s: %s,
-                      - %s: %s""",
+          logger.log(Level.FINER, e1, () ->
+              String.format("Can't load resource bundle for base name %s, locale %s – caused by: %s: %s",
                   resourceBundleBaseName, locale.toLanguageTag(),
-                  e1.getClass().getName(), e1.getMessage(),
-                  e2.getClass().getName(), e2.getMessage(),
-                  e3.getClass().getName(), e3.getMessage()));
+                  e1.getClass().getSimpleName(), e1.getMessage()));
         }
       }
     }

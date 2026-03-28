@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 import org.typefactory.Category;
 import org.typefactory.InvalidValueException;
 import org.typefactory.InvalidValueException.ParserMessageCode;
+import org.typefactory.InvalidValueException.ParserMessageCodeArgKeys;
 import org.typefactory.MessageCode;
-import org.typefactory.impl.ParserMessageCodeImpl.ParserMessageCodeArgKeys;
 
 public class ExceptionUtils {
 
@@ -47,9 +47,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_TOO_SHORT)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_TOO_SHORT)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.MIN_LENGTH,
             minLength)
         .build();
@@ -64,9 +64,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_TOO_LONG)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_TOO_LONG)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.MAX_LENGTH,
             maxLength)
         .build();
@@ -98,11 +98,14 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(parserMessageCode)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(parserMessageCode)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
+        .addParserErrorCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT,
+            invalidCodePoint)
         .build();
   }
 
@@ -115,11 +118,14 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
+        .addParserErrorCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT,
+            invalidCodePoint)
         .build();
   }
 
@@ -132,11 +138,14 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION,
             unicodeHexCode(invalidCodePoint))
+        .addParserErrorCodeArg(
+            ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT,
+            invalidCodePoint)
         .build();
   }
 
@@ -149,9 +158,9 @@ public class ExceptionUtils {
     return InvalidValueException.builder()
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN)
-        .addParserMessageCodeArg(
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN)
+        .addParserErrorCodeArg(
             ParserMessageCodeArgKeys.REGEX_PATTERN,
             regex.toString())
         .build();
@@ -167,17 +176,26 @@ public class ExceptionUtils {
         .cause(cause)
         .invalidValue(value)
         .targetTypeClass(targetTypeClass)
-        .messageCode(messageCode)
-        .parserMessageCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
+        .errorCode(messageCode)
+        .parserErrorCode(ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION)
         .build();
   }
 
   static String unicodeHexCode(final int codePoint) {
+    return unicodeHexCode(codePoint, TypeFactoryConfig.instance().codePointNamesInExceptionMessages());
+  }
+  static String unicodeHexCode(final int codePoint, final boolean includeCodePointName) {
     if (Character.isDefined(codePoint)) {
       if (codePointIsInOneOfTheCategories(codePoint, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
-        return codePoint > 0xFFFF
-            ? String.format("U+%06X %s", codePoint, Character.getName(codePoint))
-            : String.format("U+%04X %s", (short) codePoint, Character.getName(codePoint));
+        if (includeCodePointName) {
+          return codePoint > 0xFFFF
+              ? String.format("U+%06X %s", codePoint, CharacterNameCache.getCharacterName(codePoint))
+              : String.format("U+%04X %s", (short) codePoint, CharacterNameCache.getCharacterName(codePoint));
+        } else {
+          return codePoint > 0xFFFF
+              ? String.format("U+%06X", codePoint)
+              : String.format("U+%04X", (short) codePoint);
+        }
       }
       if (Character.isHighSurrogate((char) codePoint)) {
         return String.format("U+%04X HIGH SURROGATE", (short) codePoint);
@@ -185,9 +203,15 @@ public class ExceptionUtils {
       if (Character.isLowSurrogate((char) codePoint)) {
         return String.format("U+%04X LOW SURROGATE", (short) codePoint);
       }
-      return codePoint > 0xFFFF
-          ? String.format("%c U+%06X %s", codePoint, codePoint, Character.getName(codePoint))
-          : String.format("%c U+%04X %s", codePoint, (short) codePoint, Character.getName(codePoint));
+      if (includeCodePointName) {
+        return codePoint > 0xFFFF
+            ? String.format("%c U+%06X %s", codePoint, codePoint, CharacterNameCache.getCharacterName(codePoint))
+            : String.format("%c U+%04X %s", codePoint, (short) codePoint, CharacterNameCache.getCharacterName(codePoint));
+      } else {
+        return codePoint > 0xFFFF
+            ? String.format("%c U+%06X", codePoint, codePoint)
+            : String.format("%c U+%04X", codePoint, (short) codePoint);
+      }
     }
 
     if (!Character.isValidCodePoint(codePoint)) {

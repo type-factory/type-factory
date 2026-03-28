@@ -526,19 +526,6 @@ final class TypeParserImpl implements TypeParser {
       return invalidCodePoints.toArray();
     }
 
-    public String invalidCodePointsToString() {
-      final StringBuilder s = new StringBuilder(256);
-      s.append('[');
-      for (int codePoint : invalidCodePoints.toArray()) {
-        s.append(ExceptionUtils.unicodeHexCode(codePoint)).append(", ");
-      }
-      if (s.length() > 1) {
-        s.setLength(s.length() - 2); // remove last ", "
-      }
-      s.append(']');
-      return s.toString();
-    }
-
     @Override
     public String toString() {
       final StringBuilder s = new StringBuilder(256);

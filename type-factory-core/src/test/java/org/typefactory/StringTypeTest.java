@@ -72,8 +72,15 @@ class StringTypeTest {
     assertThatObject(actual2).isEqualTo(actual1);
   }
 
+  @Test
+  void equals_returnsTrueWhenOtherInstanceIsNull() {
+    final var actual1 = new ConcreteStringType(null);
+    final var actual2 = (ConcreteStringType) null;
+    assertThatObject(actual1).isEqualTo(actual2);
+  }
+
   @ParameterizedTest
-  @NullAndEmptySource
+  @EmptySource
   @ValueSource(strings = {
       " ",
       "a",
