@@ -102,17 +102,17 @@ class TypesTest {
 
   @ParameterizedTest(name = "[{index}] value={0}, expected={1}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
-    VALUE        | EXPECTED
-    ''           | true
-    ' '          | true
-    '   '        | true
-    '\t'         | true
-    ' \t '       | true
-    '\r'         | true
-    a            | false
-    abc          | false
-    ' a '        | false
-    """)
+      VALUE        | EXPECTED
+      ''           | true
+      ' '          | true
+      '   '        | true
+      '\t'         | true
+      ' \t '       | true
+      '\r'         | true
+      a            | false
+      abc          | false
+      ' a '        | false
+      """)
   void isBlank_charSequence_string_returnsAsExpected(final String value, final boolean expected) {
     // explicitly treat as CharSequence
     final var cs = value == null ? null : value;
@@ -121,17 +121,17 @@ class TypesTest {
 
   @ParameterizedTest(name = "[{index}] value={0}, expected={1}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
-    VALUE        | EXPECTED
-    ''           | true
-    ' '          | true
-    '   '        | true
-    '\t'         | true
-    ' \t '       | true
-    '\r'         | true
-    a            | false
-    abc          | false
-    ' a '        | false
-    """)
+      VALUE        | EXPECTED
+      ''           | true
+      ' '          | true
+      '   '        | true
+      '\t'         | true
+      ' \t '       | true
+      '\r'         | true
+      a            | false
+      abc          | false
+      ' a '        | false
+      """)
   void isBlank_charSequence_nonStringCharSequence_returnsAsExpected(final String value, final boolean expected) {
     // Wrap in a non-String CharSequence to exercise the char-by-char loop
     final CharSequence cs = value == null ? null : new StringBuilder(value);
@@ -339,6 +339,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expected={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED
+      null    | null    | true
       null    | abc     | false
       abc     | null    | false
       abc     | abc     | true
@@ -347,8 +348,11 @@ class TypesTest {
       """)
   void cs_equals_charSequenceType_returnsAsExpected(
       final String value1, final String value2, final boolean expected) {
-    assertThat(Types.CS.equals(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2)))
-        .isEqualTo(expected);
+
+    final var v1 = value1 == null ? null : new SomeCharSequenceType(value1);
+    final var v2 = value2 == null ? null : new SomeCharSequenceType(value2);
+
+    assertThat(Types.CS.equals(v1, v2)).isEqualTo(expected);
   }
 
   // ─── CS (CaseSensistive) — equals(StringType) ────────────────────────────
@@ -367,6 +371,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expected={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED
+      null    | null    | true
       null    | abc     | false
       abc     | null    | false
       abc     | abc     | true
@@ -375,8 +380,11 @@ class TypesTest {
       """)
   void cs_equals_stringType_returnsAsExpected(
       final String value1, final String value2, final boolean expected) {
-    assertThat(Types.CS.equals(new SomeStringType(value1), new SomeStringType(value2)))
-        .isEqualTo(expected);
+
+    final var v1 = value1 == null ? null : new SomeStringType(value1);
+    final var v2 = value2 == null ? null : new SomeStringType(value2);
+
+    assertThat(Types.CS.equals(v1, v2)).isEqualTo(expected);
   }
 
   // ─── CS (CaseSensistive) — equalsAny(CharSequenceType, varargs) ───────────
@@ -496,6 +504,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expected={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED
+      null    | null    | true
       null    | abc     | false
       abc     | null    | false
       abc     | abc     | true
@@ -505,8 +514,11 @@ class TypesTest {
       """)
   void ci_equals_charSequenceType_returnsAsExpected(
       final String value1, final String value2, final boolean expected) {
-    assertThat(Types.CI.equals(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2)))
-        .isEqualTo(expected);
+
+    final var v1 = value1 == null ? null : new SomeCharSequenceType(value1);
+    final var v2 = value2 == null ? null : new SomeCharSequenceType(value2);
+
+    assertThat(Types.CI.equals(v1, v2)).isEqualTo(expected);
   }
 
   // ─── CI (CaseInsensitive) — equals(StringType) ───────────────────────────
@@ -525,6 +537,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expected={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED
+      null    | null    | true
       null    | abc     | false
       abc     | null    | false
       abc     | abc     | true
@@ -534,8 +547,11 @@ class TypesTest {
       """)
   void ci_equals_stringType_returnsAsExpected(
       final String value1, final String value2, final boolean expected) {
-    assertThat(Types.CI.equals(new SomeStringType(value1), new SomeStringType(value2)))
-        .isEqualTo(expected);
+
+    final var v1 = value1 == null ? null : new SomeStringType(value1);
+    final var v2 = value2 == null ? null : new SomeStringType(value2);
+
+    assertThat(Types.CI.equals(v1, v2)).isEqualTo(expected);
   }
 
   // ─── CI (CaseInsensitive) — equalsAny(CharSequenceType, varargs) ─────────
@@ -655,6 +671,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | null    | zero
       null    | abc     | negative
       abc     | null    | positive
       abc     | abc     | zero
@@ -667,11 +684,13 @@ class TypesTest {
       """)
   void cs_compare_charSequenceType_returnsAsExpected(
       final String value1, final String value2, final String expectedSign) {
-    final int result = Types.CS.compare(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2));
+    final var v1 = value1 == null ? null : new SomeCharSequenceType(value1);
+    final var v2 = value2 == null ? null : new SomeCharSequenceType(value2);
+    final var result = Types.CS.compare(v1, v2);
     switch (expectedSign) {
       case "negative" -> assertThat(result).isNegative();
       case "positive" -> assertThat(result).isPositive();
-      default        -> assertThat(result).isZero();
+      default -> assertThat(result).isZero();
     }
   }
 
@@ -691,6 +710,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | null    | zero
       null    | abc     | negative
       abc     | null    | positive
       abc     | abc     | zero
@@ -703,11 +723,13 @@ class TypesTest {
       """)
   void cs_compare_stringType_returnsAsExpected(
       final String value1, final String value2, final String expectedSign) {
-    final int result = Types.CS.compare(new SomeStringType(value1), new SomeStringType(value2));
+    final var v1 = value1 == null ? null : new SomeStringType(value1);
+    final var v2 = value2 == null ? null : new SomeStringType(value2);
+    final var result = Types.CS.compare(v1, v2);
     switch (expectedSign) {
       case "negative" -> assertThat(result).isNegative();
       case "positive" -> assertThat(result).isPositive();
-      default        -> assertThat(result).isZero();
+      default -> assertThat(result).isZero();
     }
   }
 
@@ -727,6 +749,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | null    | zero
       null    | abc     | negative
       abc     | null    | positive
       abc     | abc     | zero
@@ -739,11 +762,13 @@ class TypesTest {
       """)
   void ci_compare_charSequenceType_returnsAsExpected(
       final String value1, final String value2, final String expectedSign) {
-    final int result = Types.CI.compare(new SomeCharSequenceType(value1), new SomeCharSequenceType(value2));
+    final var v1 = value1 == null ? null : new SomeCharSequenceType(value1);
+    final var v2 = value2 == null ? null : new SomeCharSequenceType(value2);
+    final var result = Types.CI.compare(v1, v2);
     switch (expectedSign) {
       case "negative" -> assertThat(result).isNegative();
       case "positive" -> assertThat(result).isPositive();
-      default        -> assertThat(result).isZero();
+      default -> assertThat(result).isZero();
     }
   }
 
@@ -763,6 +788,7 @@ class TypesTest {
   @ParameterizedTest(name = "[{index}] value1={0}, value2={1}, expectedSign={2}")
   @CsvSource(delimiter = '|', nullValues = "null", useHeadersInDisplayName = true, textBlock = """
       VALUE_1 | VALUE_2 | EXPECTED_SIGN
+      null    | null    | zero
       null    | abc     | negative
       abc     | null    | positive
       abc     | abc     | zero
@@ -775,11 +801,13 @@ class TypesTest {
       """)
   void ci_compare_stringType_returnsAsExpected(
       final String value1, final String value2, final String expectedSign) {
-    final int result = Types.CI.compare(new SomeStringType(value1), new SomeStringType(value2));
+    final var v1 = value1 == null ? null : new SomeStringType(value1);
+    final var v2 = value2 == null ? null : new SomeStringType(value2);
+    final var result = Types.CI.compare(v1, v2);
     switch (expectedSign) {
       case "negative" -> assertThat(result).isNegative();
       case "positive" -> assertThat(result).isPositive();
-      default        -> assertThat(result).isZero();
+      default -> assertThat(result).isZero();
     }
   }
 
@@ -789,6 +817,7 @@ class TypesTest {
    * Minimal {@link CharSequenceType}.
    */
   private record SomeCharSequenceType(String value) implements CharSequenceType<SomeCharSequenceType> {
+
     @Override
     public String toString() {
       return value == null ? "" : value;
@@ -799,9 +828,11 @@ class TypesTest {
    * Minimal {@link StringType}.
    */
   private static final class SomeStringType extends StringType {
+
     private SomeStringType(final String value) {
       super(value);
     }
+
     public static SomeStringType of(final String value) {
       return new SomeStringType(value);
     }

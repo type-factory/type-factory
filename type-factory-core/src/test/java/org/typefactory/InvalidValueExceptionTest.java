@@ -19,9 +19,11 @@ import static org.mockito.Mockito.when;
 import static org.typefactory.assertions.Assertions.assertThat;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,6 +33,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.typefactory.InvalidValueException.ParserMessageCode;
+import org.typefactory.InvalidValueException.ParserMessageCodeArgKeys;
 import org.typefactory.impl.Factory;
 
 @ExtendWith(MockitoExtension.class)
@@ -347,6 +350,257 @@ class InvalidValueExceptionTest {
         InvalidValueException{message='some default error message. some default parser error message.', messageCode='some.error.code', defaultErrorMessage='some default error message.', parserMessageCode='some.parser.error.code', defaultParserErrorMessage='some default parser error message.', invalidCodePoint='A', targetTypeClass='class org.typefactory.InvalidValueExceptionTest$SomeClass', cause='Exception - some exception message'}""");
   }
 
+
+  // ─── Deprecated builder methods ──────────────────────────────────────────
+
+  @Test
+  @SuppressWarnings({"deprecation", "removal"})
+  void builder_messageCode_setsErrorCode() {
+
+    final var actual = InvalidValueException.builder()
+        .messageCode(ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual)
+        .hasErrorCode(ERROR_MESSAGE_CODE)
+        .hasErrorMessage(ERROR_MESSAGE_CODE.defaultMessage());
+  }
+
+  @Test
+  @SuppressWarnings({"deprecation", "removal"})
+  void builder_parserMessageCode_setsParserErrorCode() {
+
+    final var actual = InvalidValueException.builder()
+        .parserMessageCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual)
+        .hasParserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .hasParserErrorMessage(PARSER_ERROR_MESSAGE_CODE.defaultMessage());
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = "  ")
+  @SuppressWarnings({"deprecation", "removal"})
+  void builder_addParserMessageCodeArg_withNullOrBlankKey_ignoresArg(final String argKey) {
+
+    final var actual = InvalidValueException.builder()
+        .addParserMessageCodeArg(argKey, "value")
+        .build();
+
+    assertThat(actual).hasNoParserErrorProperties();
+  }
+
+  @Test
+  @SuppressWarnings({"deprecation", "removal"})
+  void builder_addParserMessageCodeArg_withValidKey_addsArg() {
+
+    final var actual = InvalidValueException.builder()
+        .addParserMessageCodeArg("key", "value")
+        .build();
+
+    assertThat(actual).hasParserErrorPropertiesContainingAllEntriesOf(Map.of("key", "value"));
+  }
+
+  // ─── Deprecated exception accessors ──────────────────────────────────────
+
+  @Test
+  @SuppressWarnings({"deprecation", "removal"})
+  void getMessageCode_returnsErrorCodeString() {
+
+    final var actual = InvalidValueException.builder()
+        .errorCode(ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.getMessageCode()).isEqualTo(ERROR_MESSAGE_CODE.code());
+  }
+
+  @Test
+  @SuppressWarnings({"deprecation", "removal"})
+  void getParserMessageCode_returnsParserErrorCodeString() {
+
+    final var actual = InvalidValueException.builder()
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.getParserMessageCode()).isEqualTo(PARSER_ERROR_MESSAGE_CODE.code());
+  }
+
+  // ─── getParserErrorArgs() ─────────────────────────────────────────────────
+
+  @Test
+  void getParserErrorArgs_withNoArgs_returnsEmptyArray() {
+
+    final var actual = InvalidValueException.builder().build();
+
+    org.assertj.core.api.Assertions.assertThat(actual.getParserErrorArgs()).isEmpty();
+  }
+
+  @Test
+  void getParserErrorArgs_withArgs_returnsArgValuesInInsertionOrder() {
+
+    final var actual = InvalidValueException.builder()
+        .addParserErrorCodeArg("key1", "value1")
+        .addParserErrorCodeArg("key2", "value2")
+        .build();
+
+    assertThat(actual).hasParserErrorArgsContainingExactly("value1", "value2");
+  }
+
+  @Test
+  void getParserErrorArgs_returnsDefensiveCopy() {
+
+    final var actual = InvalidValueException.builder()
+        .addParserErrorCodeArg("key", "value")
+        .build();
+
+    final var args1 = actual.getParserErrorArgs();
+    final var args2 = actual.getParserErrorArgs();
+
+    org.assertj.core.api.Assertions.assertThat(args1).isNotSameAs(args2);
+    org.assertj.core.api.Assertions.assertThat(args1).containsExactly(args2);
+  }
+
+  // ─── getLocalizedMessage() (no-arg – uses Locale.getDefault()) ──────────
+
+  @Test
+  void getLocalizedMessage_noArgs_delegatesToDefaultLocale() {
+
+    final var actual = InvalidValueException.builder()
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.getLocalizedMessage())
+        .isEqualTo(actual.getLocalizedMessage(Locale.getDefault()));
+  }
+
+  // ─── toString() – variations ─────────────────────────────────────────────
+
+  @Test
+  void toString_withoutCause_doesNotIncludeCauseEntry() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue(INVALID_VALUE)
+        .targetTypeClass(SomeClass.class)
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.toString()).doesNotContain("cause=");
+  }
+
+  @Test
+  void toString_withoutTargetTypeClass_doesNotIncludeTargetTypeClassEntry() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue(INVALID_VALUE)
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.toString()).doesNotContain("targetTypeClass=");
+  }
+
+  @Test
+  void toString_withoutCauseOrTargetTypeClass_doesNotIncludeEither() {
+
+    final var actual = InvalidValueException.builder()
+        .invalidValue(INVALID_VALUE)
+        .errorCode(ERROR_MESSAGE_CODE)
+        .parserErrorCode(PARSER_ERROR_MESSAGE_CODE)
+        .build();
+
+    assertThat(actual.toString())
+        .doesNotContain("targetTypeClass=")
+        .doesNotContain("cause=");
+  }
+
+  @Test
+  void toString_withMultipleParserErrorCodeArgs_includesAllArgs() {
+
+    final var actual = InvalidValueException.builder()
+        .errorCode(ERROR_MESSAGE_CODE)
+        .addParserErrorCodeArg("arg1", "val1")
+        .addParserErrorCodeArg("arg2", "val2")
+        .build();
+
+    assertThat(actual.toString())
+        .contains("arg1='val1'")
+        .contains("arg2='val2'");
+  }
+
+  // ─── ParserMessageCode constants ─────────────────────────────────────────
+
+  @Test
+  void parserMessageCode_emptyConstant_hasEmptyCodeAndMessage() {
+
+    assertThat(ParserMessageCode.EMPTY_PARSER_MESSAGE_CODE.code()).isEmpty();
+    assertThat(ParserMessageCode.EMPTY_PARSER_MESSAGE_CODE.defaultMessage()).isEmpty();
+  }
+
+  @ParameterizedTest(name = "[{index}] code={0}")
+  @CsvSource(delimiter = '|', textBlock = """
+      invalid_value_does_not_match_regex_pattern         | Invalid value - does not match regular-expression pattern {0}
+      invalid_value_does_not_pass_custom_validation      | Invalid value - does not pass custom validation criteria.
+      invalid_value_invalid_character                    | Invalid value - invalid character {0}.
+      invalid_value_invalid_control_character            | Invalid value - invalid control character {0}.
+      invalid_value_invalid_format_character             | Invalid value - invalid format character {0}.
+      invalid_value_invalid_quote_character              | Invalid value - invalid quote character {0}.
+      invalid_value_invalid_whitespace_character         | Invalid value - invalid white-space character {0}.
+      invalid_value_high_surrogate_without_low_surrogate | Invalid value - incomplete surrogate-pair - the low-surrogate code unit is missing for the high-surrogate code unit {0}.
+      invalid_value_low_surrogate_without_high_surrogate | Invalid value - incomplete surrogate-pair - the high-surrogate code unit is missing for the low-surrogate code unit {0}.
+      invalid_value_too_long                             | Invalid value - too long, maximum length is {0,number,integer}.
+      invalid_value_too_short                            | Invalid value - too short, minimum length is {0,number,integer}.
+      """)
+  void parserMessageCode_constants_haveExpectedCodeAndDefaultMessage(
+      final String expectedCode, final String expectedDefaultMessage) {
+
+    final var matchingConstant = Stream.of(
+        ParserMessageCode.INVALID_VALUE_DOES_NOT_MATCH_REGEX_PATTERN,
+        ParserMessageCode.INVALID_VALUE_DOES_NOT_PASS_CUSTOM_VALIDATION,
+        ParserMessageCode.INVALID_VALUE_INVALID_CHARACTER,
+        ParserMessageCode.INVALID_VALUE_INVALID_CONTROL_CHARACTER,
+        ParserMessageCode.INVALID_VALUE_INVALID_FORMAT_CHARACTER,
+        ParserMessageCode.INVALID_VALUE_INVALID_QUOTE_CHARACTER,
+        ParserMessageCode.INVALID_VALUE_INVALID_WHITESPACE_CHARACTER,
+        ParserMessageCode.INVALID_VALUE_HIGH_SURROGATE_WITHOUT_LOW_SURROGATE,
+        ParserMessageCode.INVALID_VALUE_LOW_SURROGATE_WITHOUT_HIGH_SURROGATE,
+        ParserMessageCode.INVALID_VALUE_TOO_LONG,
+        ParserMessageCode.INVALID_VALUE_TOO_SHORT
+    ).filter(c -> expectedCode.equals(c.code())).findFirst();
+
+    org.assertj.core.api.Assertions.assertThat(matchingConstant)
+        .isPresent()
+        .get()
+        .satisfies(c -> assertThat(c.defaultMessage()).isEqualTo(expectedDefaultMessage));
+  }
+
+  // ─── ParserMessageCodeArgKeys ────────────────────────────────────────────
+
+  @Test
+  void parserMessageCodeArgKeys_privateConstructor_isInstantiableViaReflection() throws Exception {
+
+    final Constructor<ParserMessageCodeArgKeys> constructor =
+        ParserMessageCodeArgKeys.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    final var instance = constructor.newInstance();
+
+    assertThat(instance).isNotNull();
+  }
+
+  @Test
+  void parserMessageCodeArgKeys_constants_haveExpectedValues() {
+
+    assertThat(ParserMessageCodeArgKeys.MIN_LENGTH).isEqualTo("minLength");
+    assertThat(ParserMessageCodeArgKeys.MAX_LENGTH).isEqualTo("maxLength");
+    assertThat(ParserMessageCodeArgKeys.INVALID_CHARACTER_DESCRIPTION).isEqualTo("invalidCharacterDescription");
+    assertThat(ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT).isEqualTo("invalidCharacter");
+    assertThat(ParserMessageCodeArgKeys.REGEX_PATTERN).isEqualTo("regexPattern");
+  }
+
+  // ─── Inner helper classes ─────────────────────────────────────────────────
 
   static final class SomeClass {
 

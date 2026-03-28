@@ -182,9 +182,12 @@ public class ExceptionUtils {
   }
 
   static String unicodeHexCode(final int codePoint) {
+    return unicodeHexCode(codePoint, TypeFactoryConfig.instance().codePointNamesInExceptionMessages());
+  }
+  static String unicodeHexCode(final int codePoint, final boolean includeCodePointName) {
     if (Character.isDefined(codePoint)) {
       if (codePointIsInOneOfTheCategories(codePoint, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
-        if (TypeFactoryConfig.instance().codePointNamesInExceptionMessages()) {
+        if (includeCodePointName) {
           return codePoint > 0xFFFF
               ? String.format("U+%06X %s", codePoint, CharacterNameCache.getCharacterName(codePoint))
               : String.format("U+%04X %s", (short) codePoint, CharacterNameCache.getCharacterName(codePoint));
@@ -200,7 +203,7 @@ public class ExceptionUtils {
       if (Character.isLowSurrogate((char) codePoint)) {
         return String.format("U+%04X LOW SURROGATE", (short) codePoint);
       }
-      if (TypeFactoryConfig.instance().codePointNamesInExceptionMessages()) {
+      if (includeCodePointName) {
         return codePoint > 0xFFFF
             ? String.format("%c U+%06X %s", codePoint, codePoint, CharacterNameCache.getCharacterName(codePoint))
             : String.format("%c U+%04X %s", codePoint, (short) codePoint, CharacterNameCache.getCharacterName(codePoint));

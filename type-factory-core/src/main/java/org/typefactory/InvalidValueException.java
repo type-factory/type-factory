@@ -389,11 +389,6 @@ public class InvalidValueException extends IllegalArgumentException {
     return invalidValue;
   }
 
-  protected String getInvalidCodePointDescription() {
-    final var invalidCodePoint = parserErrorCodeArgs.get(ParserMessageCodeArgKeys.INVALID_CHARACTER_CODE_POINT);
-    return String.format("'%s'", invalidValue);
-  }
-
   /**
    * A builder to create {@link InvalidValueException} instances.
    */

@@ -2,6 +2,10 @@ package org.typefactory.impl;
 
 class CharacterNameCache {
 
+  private CharacterNameCache() {
+    // don't instantiate me
+  }
+
   record CacheEntry(int codePoint, String name) {
   }
 

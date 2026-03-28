@@ -178,6 +178,35 @@ class ExceptionUtilsTest {
     assertThat(actual).isEqualTo(expectedValue);
   }
 
+  @ParameterizedTest
+  @CsvSource(textBlock = """
+      CODE_POINT | EXPECTED_VALUE                        | COMMENT
+      0x0000     | U+0000                                | Control character
+      0x0001     | U+0001                                | Control character
+      0x000C     | U+000C                                | Control character
+      0x0008     | U+0008                                | Control character
+      0x0020     | U+0020                                | Space character
+      0x0027     | ' U+0027                              | Quote character
+      0x0065     | e U+0065                              | Latin character
+      0x005A     | Z U+005A                              | Latin character
+      0x01F202   | 🈂 U+01F202                           | Japanese codepoint requiring two 16-bit high and low surrogates
+      0x0E0023   | U+0E0023                              | Codepoint in the Unicode Format Category requiring two 16-bit high and low surrogates
+      0xD83D     | U+D83D HIGH SURROGATE                 | Dangling high surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03
+      0xDE03     | U+DE03 LOW SURROGATE                  | Dangling low surrogate – 😃 is U+1F603 which has high surrogate U+D83D and low surrogate U+DE03
+      0x00FFF8   | U+FFF8 UNASSIGNED UNICODE CHARACTER   | Inside the Unicode range but not an unassigned codepoint
+      0x0EFFF9   | U+0EFFF9 UNASSIGNED UNICODE CHARACTER | Inside the Unicode range but not an unassigned codepoint
+      0x110000   | U+110000 NOT A UNICODE CHARACTER      | Outside unicode range - max Unicode value is 0x10FFFF
+      0x01000000 | U+01000000 NOT A UNICODE CHARACTER    | Outside unicode range - max Unicode value is 0x10FFFF
+      """, delimiter = '|', quoteCharacter = '`', useHeadersInDisplayName = true)
+  void unicodeHexCode_withoutCodePointNames_handlesCodePoints(
+      final int codePoint,
+      final String expectedValue,
+      final String ignoredComment) {
+
+    final var actual = ExceptionUtils.unicodeHexCode(codePoint, false);
+    assertThat(actual).isEqualTo(expectedValue);
+  }
+
   private static class SomeClass {
 
   }
