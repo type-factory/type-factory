@@ -56,7 +56,7 @@ public class UnicodeGroupData {
   private final UnicodeSet tSourceSubset;
 
   private UnicodeGroupData() {
-    this.unicodeAllGroupedXmlFileName = "ucd.all.grouped.xml";
+    this.unicodeAllGroupedXmlFileName = "unicode/ucd.all.grouped.xml";
 
     final List<BlockEntry> blocks = new ArrayList<>();
     final List<UnicodeCodePoint> unicodeCodePoints = new ArrayList<>();
