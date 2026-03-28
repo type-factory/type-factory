@@ -19,10 +19,10 @@
   <properties>
     <maven.deploy.skip>false</maven.deploy.skip>
     <sonar.cpd.exclusions>
-      **/org/typefactory/assertions/AbstractLongTypeAssert.java
-      **/org/typefactory/assertions/AbstractIntegerTypeAssert.java
-      **/org/typefactory/assertions/AbstractShortTypeAssert.java
-      **/org/typefactory/assertions/AbstractCharSequenceTypeAssert.java
+      **/org/typefactory/assertions/AbstractLongTypeAssert.java,
+      **/org/typefactory/assertions/AbstractIntegerTypeAssert.java,
+      **/org/typefactory/assertions/AbstractShortTypeAssert.java,
+      **/org/typefactory/assertions/AbstractCharSequenceTypeAssert.java,
     </sonar.cpd.exclusions>
   </properties>
 
