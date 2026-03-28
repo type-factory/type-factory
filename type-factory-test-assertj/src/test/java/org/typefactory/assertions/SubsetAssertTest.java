@@ -228,15 +228,17 @@ class SubsetAssertTest {
       abcdΣωπ😀         | 😜              | '\nExpected actual Subset: \s\nto contain code-point:  😜\nbut no such code-point was found in the Subset.'
       """)
   void containsCodePoint_throwsAssertionError(
-      final String subsetCharacters, final String codePointToContain, final String expectedMessage) {
+      final String subsetCharacters, final String codePointToContainStr, final String expectedMessage) {
 
     final var someActual = Subset.builder()
         .includeChars(subsetCharacters.toCharArray())
         .build();
     final var subsetAssert = SubsetAssert.assertThat(someActual);
 
+    final var codePointToContain = codePointToContainStr.codePointAt(0);
+
     assertThatExceptionOfType(AssertionError.class)
-        .isThrownBy(() -> subsetAssert.containsCodePoint(codePointToContain.codePointAt(0)))
+        .isThrownBy(() -> subsetAssert.containsCodePoint(codePointToContain))
         .withMessage(expectedMessage);
   }
 

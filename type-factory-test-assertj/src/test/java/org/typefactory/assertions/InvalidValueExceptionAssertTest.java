@@ -81,7 +81,7 @@ class InvalidValueExceptionAssertTest {
               final var expectedExceptionMessage = targetClass == expectedTargetClass
                   ? null
                   : String.format(
-                      "\nExpected actual of type:  InvalidValueException\nto have targetTypeClass:  %s\nbut targetTypeClass was:  %s",
+                      "%nExpected actual of type:  InvalidValueException%nnto have targetTypeClass:  %s%nbut targetTypeClass was:  %s",
                       expectedTargetClass == null ? "null" : expectedTargetClass.getName(),
                       targetClass == null ? "null" : targetClass.getName());
               return Arguments.of(targetClass, expectedTargetClass, expectedExceptionMessage);
@@ -139,7 +139,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -224,7 +224,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -297,7 +297,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -346,7 +346,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -421,7 +421,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -483,7 +483,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -564,7 +564,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -637,7 +637,7 @@ class InvalidValueExceptionAssertTest {
 
     final var invalidValueExceptionAssert = InvalidValueExceptionAssert.assertThat(someActual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 

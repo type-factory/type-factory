@@ -30,27 +30,27 @@ import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
 
-class AssertionsTest {
+class TypeFactoryAssertionsTest {
 
   // ─── protected constructor ────────────────────────────────────────────────
 
   @Test
   void constructor_isInstantiable() {
-    assertThat(new Assertions()).isNotNull();
+    assertThat(new TypeFactoryAssertions()).isNotNull();
   }
 
   // ─── assertThat(IntegerType) ──────────────────────────────────────────────
 
   @Test
   void assertThat_withNullIntegerType_returnsIntegerTypeAssert() {
-    assertThat(Assertions.assertThat((IntegerType) null))
+    assertThat(TypeFactoryAssertions.assertThat((IntegerType) null))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
   }
 
   @Test
   void assertThat_withNonNullIntegerType_returnsIntegerTypeAssert() {
-    assertThat(Assertions.assertThat(new SomeIntegerType(42)))
+    assertThat(TypeFactoryAssertions.assertThat(new SomeIntegerType(42)))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
   }
@@ -59,14 +59,14 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    assertThat(Assertions.assertThat((InvalidValueException) null))
+    assertThat(TypeFactoryAssertions.assertThat((InvalidValueException) null))
         .isNotNull()
         .isInstanceOf(InvalidValueExceptionAssert.class);
   }
 
   @Test
   void assertThat_withNonNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    assertThat(Assertions.assertThat(InvalidValueException.builder()
+    assertThat(TypeFactoryAssertions.assertThat(InvalidValueException.builder()
             .errorCode(MessageCode.of("some.error", "Some error."))
             .invalidValue("some bad value")
             .build()))
@@ -78,14 +78,14 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullLongType_returnsLongTypeAssert() {
-    assertThat(Assertions.assertThat((LongType) null))
+    assertThat(TypeFactoryAssertions.assertThat((LongType) null))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
   }
 
   @Test
   void assertThat_withNonNullLongType_returnsLongTypeAssert() {
-    assertThat(Assertions.assertThat(new SomeLongType(42L)))
+    assertThat(TypeFactoryAssertions.assertThat(new SomeLongType(42L)))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
   }
@@ -94,7 +94,7 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullMessageCode_returnsMessageCodeAssert() {
-    assertThat(Assertions.assertThat((MessageCode) null))
+    assertThat(TypeFactoryAssertions.assertThat((MessageCode) null))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
   }
@@ -107,7 +107,7 @@ class AssertionsTest {
       error.validation.failed
       """)
   void assertThat_withNonNullMessageCode_returnsMessageCodeAssert(final String messageCode) {
-    assertThat(Assertions.assertThat(MessageCode.of("some.error", "Some error.")))
+    assertThat(TypeFactoryAssertions.assertThat(MessageCode.of("some.error", "Some error.")))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
   }
@@ -116,14 +116,14 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullShortType_returnsShortTypeAssert() {
-    assertThat(Assertions.assertThat((ShortType) null))
+    assertThat(TypeFactoryAssertions.assertThat((ShortType) null))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
   }
 
   @Test
   void assertThat_withNonNullShortType_returnsShortTypeAssert() {
-    assertThat(Assertions.assertThat(new SomeShortType((short) 7)))
+    assertThat(TypeFactoryAssertions.assertThat(new SomeShortType((short) 7)))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
   }
@@ -132,7 +132,7 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullStringType_returnsStringTypeAssert() {
-    assertThat(Assertions.assertThat((StringType) null))
+    assertThat(TypeFactoryAssertions.assertThat((StringType) null))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
   }
@@ -145,7 +145,7 @@ class AssertionsTest {
       foo
       """)
   void assertThat_withNonNullStringType_returnsStringTypeAssert(final String value) {
-    assertThat(Assertions.assertThat(new SomeStringType(value)))
+    assertThat(TypeFactoryAssertions.assertThat(new SomeStringType(value)))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
   }
@@ -154,7 +154,7 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullCharSequenceType_returnsCharSequenceTypeAssert() {
-    assertThat(Assertions.assertThat((SomeCharSequenceType) null))
+    assertThat(TypeFactoryAssertions.assertThat((SomeCharSequenceType) null))
         .isNotNull();
   }
 
@@ -167,7 +167,7 @@ class AssertionsTest {
       """)
   void assertThat_withNonNullCharSequenceType_returnsCharSequenceTypeAssert(final String value) {
     final SomeCharSequenceType actual = new SomeCharSequenceType(value);
-    assertThat(Assertions.assertThat(actual))
+    assertThat(TypeFactoryAssertions.assertThat(actual))
         .isNotNull()
         .isInstanceOf(CharSequenceTypeAssert.class);
   }
@@ -176,14 +176,14 @@ class AssertionsTest {
 
   @Test
   void assertThat_withNullSubset_returnsSubsetAssert() {
-    assertThat(Assertions.assertThat((Subset) null))
+    assertThat(TypeFactoryAssertions.assertThat((Subset) null))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
   }
 
   @Test
   void assertThat_withNonNullSubset_returnsSubsetAssert() {
-    assertThat(Assertions.assertThat(Subset.builder().includeChar('a').build()))
+    assertThat(TypeFactoryAssertions.assertThat(Subset.builder().includeChar('a').build()))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
   }

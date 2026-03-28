@@ -30,20 +30,20 @@ import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
 
-class SoftAssertionsTest {
+class TypeFactorySoftAssertionsTest {
 
   // ─── constructor ──────────────────────────────────────────────────────────
 
   @Test
   void constructor_isInstantiable() {
-    assertThat(new SoftAssertions()).isNotNull();
+    assertThat(new TypeFactorySoftAssertions()).isNotNull();
   }
 
   // ─── assertThat(IntegerType) ──────────────────────────────────────────────
 
   @Test
   void assertThat_withNullIntegerType_returnsIntegerTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((IntegerType) null))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
@@ -52,7 +52,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNonNullIntegerType_returnsIntegerTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(new SomeIntegerType(42)))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
@@ -63,7 +63,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((InvalidValueException) null))
         .isNotNull()
         .isInstanceOf(InvalidValueExceptionAssert.class);
@@ -72,7 +72,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNonNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(InvalidValueException.builder()
         .errorCode(MessageCode.of("some.error", "Some error."))
         .invalidValue("some bad value")
@@ -86,7 +86,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullLongType_returnsLongTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((LongType) null))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
@@ -95,7 +95,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNonNullLongType_returnsLongTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(new SomeLongType(42L)))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
@@ -106,7 +106,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullMessageCode_returnsMessageCodeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((MessageCode) null))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
@@ -121,7 +121,7 @@ class SoftAssertionsTest {
       error.validation.failed
       """)
   void assertThat_withNonNullMessageCode_returnsMessageCodeAssert(final String messageCode) {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(MessageCode.of(messageCode, "Some message.")))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
@@ -132,7 +132,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullShortType_returnsShortTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((ShortType) null))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
@@ -141,7 +141,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNonNullShortType_returnsShortTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(new SomeShortType((short) 7)))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
@@ -152,7 +152,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullStringType_returnsStringTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((StringType) null))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
@@ -167,7 +167,7 @@ class SoftAssertionsTest {
       foo
       """)
   void assertThat_withNonNullStringType_returnsStringTypeAssert(final String value) {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(new SomeStringType(value)))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
@@ -178,7 +178,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullCharSequenceType_returnsCharSequenceTypeAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((SomeCharSequenceType) null))
         .isNotNull();
     softAssertions.assertAll();
@@ -192,7 +192,7 @@ class SoftAssertionsTest {
       foo
       """)
   void assertThat_withNonNullCharSequenceType_returnsCharSequenceTypeAssert(final String value) {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     final SomeCharSequenceType actual = new SomeCharSequenceType(value);
     assertThat(softAssertions.assertThat(actual))
         .isNotNull()
@@ -204,7 +204,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNullSubset_returnsSubsetAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat((Subset) null))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
@@ -213,7 +213,7 @@ class SoftAssertionsTest {
 
   @Test
   void assertThat_withNonNullSubset_returnsSubsetAssert() {
-    final SoftAssertions softAssertions = new SoftAssertions();
+    final TypeFactorySoftAssertions softAssertions = new TypeFactorySoftAssertions();
     assertThat(softAssertions.assertThat(Subset.builder().includeChar('a').build()))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);

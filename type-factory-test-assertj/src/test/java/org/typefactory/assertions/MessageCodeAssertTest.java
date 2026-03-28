@@ -262,7 +262,7 @@ class MessageCodeAssertTest {
     final var actual = MessageCode.of(code, defaultMessage);
     final var messageCodeAssert = MessageCodeAssert.assertThat(actual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 
@@ -388,7 +388,7 @@ class MessageCodeAssertTest {
     final var actual = MessageCode.of(code, defaultMessage);
     final var messageCodeAssert = MessageCodeAssert.assertThat(actual);
 
-    Assertions.setMaxStackTraceElementsDisplayed(10);
+    TypeFactoryAssertions.setMaxStackTraceElementsDisplayed(10);
 
     if (expectedExceptionMessage != null) {
 

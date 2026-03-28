@@ -16,7 +16,7 @@
 package org.typefactory;
 
 import static org.mockito.Mockito.when;
-import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;

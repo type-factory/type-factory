@@ -13,7 +13,7 @@ import org.typefactory.Subset;
 /**
  * Entry point for soft assertions of different data types.
  */
-public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
+public class TypeFactorySoftAssertions extends org.assertj.core.api.SoftAssertions {
 
   /**
    * Creates a new "soft" instance of <code>{@link IntegerTypeAssert}</code>.

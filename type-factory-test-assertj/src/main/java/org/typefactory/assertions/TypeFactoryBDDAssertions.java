@@ -11,10 +11,16 @@ import org.typefactory.StringType;
 import org.typefactory.Subset;
 
 /**
- * Entry point for assertions of different data types. Each method in this class is a static factory for the
- * type-specific assertion objects.
+ * Entry point for BDD assertions of different data types.
  */
-public class Assertions extends org.assertj.core.api.Assertions {
+public class TypeFactoryBDDAssertions extends org.assertj.core.api.BDDAssertions {
+
+  /**
+   * Creates a new <code>{@link TypeFactoryBDDAssertions}</code>.
+   */
+  protected TypeFactoryBDDAssertions() {
+    // empty
+  }
 
   /**
    * Creates a new instance of <code>{@link IntegerTypeAssert}</code>.
@@ -23,7 +29,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static IntegerTypeAssert assertThat(IntegerType actual) {
+  public static IntegerTypeAssert then(IntegerType actual) {
     return new IntegerTypeAssert(actual);
   }
 
@@ -34,7 +40,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static InvalidValueExceptionAssert assertThat(InvalidValueException actual) {
+  public static InvalidValueExceptionAssert then(InvalidValueException actual) {
     return new InvalidValueExceptionAssert(actual);
   }
 
@@ -45,7 +51,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static LongTypeAssert assertThat(LongType actual) {
+  public static LongTypeAssert then(LongType actual) {
     return new LongTypeAssert(actual);
   }
 
@@ -56,7 +62,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static MessageCodeAssert assertThat(MessageCode actual) {
+  public static MessageCodeAssert then(MessageCode actual) {
     return new MessageCodeAssert(actual);
   }
 
@@ -67,7 +73,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static ShortTypeAssert assertThat(ShortType actual) {
+  public static ShortTypeAssert then(ShortType actual) {
     return new ShortTypeAssert(actual);
   }
 
@@ -78,7 +84,7 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static StringTypeAssert assertThat(StringType actual) {
+  public static StringTypeAssert then(StringType actual) {
     return new StringTypeAssert(actual);
   }
 
@@ -89,9 +95,10 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static <T extends CharSequenceType<T>> CharSequenceTypeAssert assertThat(T actual) {
+  public static <T extends CharSequenceType<T>> CharSequenceTypeAssert then(T actual) {
     return new CharSequenceTypeAssert(actual);
   }
+
 
   /**
    * Creates a new instance of <code>{@link SubsetAssert}</code>.
@@ -100,14 +107,8 @@ public class Assertions extends org.assertj.core.api.Assertions {
    * @return the created assertion object.
    */
   @CheckReturnValue
-  public static SubsetAssert assertThat(Subset actual) {
+  public static SubsetAssert then(Subset actual) {
     return new SubsetAssert(actual);
   }
 
-  /**
-   * Creates a new <code>{@link Assertions}</code>.
-   */
-  protected Assertions() {
-    // empty
-  }
 }

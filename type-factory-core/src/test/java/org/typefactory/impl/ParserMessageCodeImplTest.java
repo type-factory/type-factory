@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import java.lang.reflect.Constructor;
 import org.junit.jupiter.api.Test;

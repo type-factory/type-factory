@@ -1,6 +1,6 @@
 package org.typefactory;
 
-import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import java.lang.reflect.Constructor;
 import java.util.List;

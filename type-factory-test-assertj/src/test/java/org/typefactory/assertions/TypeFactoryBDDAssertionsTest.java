@@ -30,27 +30,27 @@ import org.typefactory.ShortType;
 import org.typefactory.StringType;
 import org.typefactory.Subset;
 
-class BDDAssertionsTest {
+class TypeFactoryBDDAssertionsTest {
 
   // ─── protected constructor ────────────────────────────────────────────────
 
   @Test
   void constructor_isInstantiable() {
-    assertThat(new BDDAssertions()).isNotNull();
+    assertThat(new TypeFactoryBDDAssertions()).isNotNull();
   }
 
   // ─── then(IntegerType) ────────────────────────────────────────────────────
 
   @Test
   void then_withNullIntegerType_returnsIntegerTypeAssert() {
-    assertThat(BDDAssertions.then((IntegerType) null))
+    assertThat(TypeFactoryBDDAssertions.then((IntegerType) null))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
   }
 
   @Test
   void then_withNonNullIntegerType_returnsIntegerTypeAssert() {
-    assertThat(BDDAssertions.then(new SomeIntegerType(42)))
+    assertThat(TypeFactoryBDDAssertions.then(new SomeIntegerType(42)))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
   }
@@ -59,14 +59,14 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    assertThat(BDDAssertions.then((InvalidValueException) null))
+    assertThat(TypeFactoryBDDAssertions.then((InvalidValueException) null))
         .isNotNull()
         .isInstanceOf(InvalidValueExceptionAssert.class);
   }
 
   @Test
   void then_withNonNullInvalidValueException_returnsInvalidValueExceptionAssert() {
-    assertThat(BDDAssertions.then(InvalidValueException.builder()
+    assertThat(TypeFactoryBDDAssertions.then(InvalidValueException.builder()
         .errorCode(MessageCode.of("some.error", "Some error."))
         .invalidValue("some bad value")
         .build()))
@@ -78,14 +78,14 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullLongType_returnsLongTypeAssert() {
-    assertThat(BDDAssertions.then((LongType) null))
+    assertThat(TypeFactoryBDDAssertions.then((LongType) null))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
   }
 
   @Test
   void then_withNonNullLongType_returnsLongTypeAssert() {
-    assertThat(BDDAssertions.then(new SomeLongType(42L)))
+    assertThat(TypeFactoryBDDAssertions.then(new SomeLongType(42L)))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
   }
@@ -94,7 +94,7 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullMessageCode_returnsMessageCodeAssert() {
-    assertThat(BDDAssertions.then((MessageCode) null))
+    assertThat(TypeFactoryBDDAssertions.then((MessageCode) null))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
   }
@@ -107,7 +107,7 @@ class BDDAssertionsTest {
       error.validation.failed
       """)
   void then_withNonNullMessageCode_returnsMessageCodeAssert(final String messageCode) {
-    assertThat(BDDAssertions.then(MessageCode.of(messageCode, "Some message.")))
+    assertThat(TypeFactoryBDDAssertions.then(MessageCode.of(messageCode, "Some message.")))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
   }
@@ -116,14 +116,14 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullShortType_returnsShortTypeAssert() {
-    assertThat(BDDAssertions.then((ShortType) null))
+    assertThat(TypeFactoryBDDAssertions.then((ShortType) null))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
   }
 
   @Test
   void then_withNonNullShortType_returnsShortTypeAssert() {
-    assertThat(BDDAssertions.then(new SomeShortType((short) 7)))
+    assertThat(TypeFactoryBDDAssertions.then(new SomeShortType((short) 7)))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
   }
@@ -132,7 +132,7 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullStringType_returnsStringTypeAssert() {
-    assertThat(BDDAssertions.then((StringType) null))
+    assertThat(TypeFactoryBDDAssertions.then((StringType) null))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
   }
@@ -145,7 +145,7 @@ class BDDAssertionsTest {
       foo
       """)
   void then_withNonNullStringType_returnsStringTypeAssert(final String value) {
-    assertThat(BDDAssertions.then(new SomeStringType(value)))
+    assertThat(TypeFactoryBDDAssertions.then(new SomeStringType(value)))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
   }
@@ -154,7 +154,7 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullCharSequenceType_returnsCharSequenceTypeAssert() {
-    assertThat(BDDAssertions.then((SomeCharSequenceType) null))
+    assertThat(TypeFactoryBDDAssertions.then((SomeCharSequenceType) null))
         .isNotNull();
   }
 
@@ -167,7 +167,7 @@ class BDDAssertionsTest {
       """)
   void then_withNonNullCharSequenceType_returnsCharSequenceTypeAssert(final String value) {
     final SomeCharSequenceType actual = new SomeCharSequenceType(value);
-    assertThat(BDDAssertions.then(actual))
+    assertThat(TypeFactoryBDDAssertions.then(actual))
         .isNotNull()
         .isInstanceOf(CharSequenceTypeAssert.class);
   }
@@ -176,14 +176,14 @@ class BDDAssertionsTest {
 
   @Test
   void then_withNullSubset_returnsSubsetAssert() {
-    assertThat(BDDAssertions.then((Subset) null))
+    assertThat(TypeFactoryBDDAssertions.then((Subset) null))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
   }
 
   @Test
   void then_withNonNullSubset_returnsSubsetAssert() {
-    assertThat(BDDAssertions.then(Subset.builder().includeChar('a').build()))
+    assertThat(TypeFactoryBDDAssertions.then(Subset.builder().includeChar('a').build()))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
   }

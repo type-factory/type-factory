@@ -14,8 +14,8 @@
 */
 package org.typefactory;
 
-import static org.typefactory.assertions.Assertions.assertThat;
-import static org.typefactory.assertions.Assertions.assertThatExceptionOfType;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
 
 import java.util.Locale;
 import org.junit.jupiter.api.Test;

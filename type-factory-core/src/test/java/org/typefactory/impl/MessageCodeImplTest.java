@@ -15,7 +15,7 @@
 */
 package org.typefactory.impl;
 
-import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
