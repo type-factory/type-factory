@@ -37,9 +37,10 @@ class CharacterNameCacheTest {
     final var entry2 = new CacheEntry(65, "LATIN CAPITAL LETTER A");
     final var entry3 = new CacheEntry(66, "LATIN CAPITAL LETTER B");
 
-    assertThat(entry1).isEqualTo(entry2);
-    assertThat(entry1).hasSameHashCodeAs(entry2);
-    assertThat(entry1).isNotEqualTo(entry3);
+    assertThat(entry1)
+        .isEqualTo(entry2)
+        .hasSameHashCodeAs(entry2)
+        .isNotEqualTo(entry3);
   }
 
   @Test

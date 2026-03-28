@@ -1,6 +1,6 @@
 package org.typefactory.assertions;
 
-import org.assertj.core.util.CheckReturnValue;
+import org.assertj.core.annotation.CheckReturnValue;
 import org.typefactory.InvalidValueException;
 
 /**
