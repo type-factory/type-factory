@@ -362,6 +362,7 @@ class SubsetAssertTest {
   @ParameterizedTest(name = "[{index}] {arguments}")
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       SUBSET_CATEGORIES                                        | ASSERT_CONTAINS_EXACTLY_CATEGORIES         | EXPECTED_ERROR_MESSAGE
+      []                                                       | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]'
       [DECIMAL_DIGIT_NUMBER]                                   | [UPPERCASE_LETTER]                         | '\nExpected actual Subset:  \nto contain the categories:  [UPPERCASE_LETTER]\nmissing expected categories:  [UPPERCASE_LETTER]'
       [DECIMAL_DIGIT_NUMBER]                                   | [DECIMAL_DIGIT_NUMBER,UPPERCASE_LETTER]    | '\nExpected actual Subset:  \nto contain the categories:  [DECIMAL_DIGIT_NUMBER, UPPERCASE_LETTER]\ncontained expected categories:  [DECIMAL_DIGIT_NUMBER]\nmissing expected categories:  [UPPERCASE_LETTER]'
       [CASED_LETTER]                                           | [CASED_LETTER,DECIMAL_DIGIT_NUMBER]        | '\nExpected actual Subset:  \nto contain the categories:  [CASED_LETTER, DECIMAL_DIGIT_NUMBER]\nwhich expands to the categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, DECIMAL_DIGIT_NUMBER]\ncontained expected categories:  [UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER]\nmissing expected categories:  [DECIMAL_DIGIT_NUMBER]'

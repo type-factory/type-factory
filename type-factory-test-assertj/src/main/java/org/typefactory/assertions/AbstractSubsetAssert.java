@@ -35,14 +35,6 @@ public abstract class AbstractSubsetAssert<
     super(actual, selfType);
   }
 
-  protected String classNameOfActual() {
-    return actual == null ? "<? extends ShortType>" : actual.getClass().getSimpleName();
-  }
-
-  protected boolean actualIsNull() {
-    return actual == null;
-  }
-
   /**
    * Verifies that the actual Subset is empty.
    *
@@ -142,22 +134,19 @@ public abstract class AbstractSubsetAssert<
 
   public SELF containsCategories(final Category... expectedCategories) {
     isNotNull();
-    final var subsetContainsResult = new SubsetContainsCategoryResult(actual, List.of(expectedCategories));
+    final var expectedCategoriesList = List.of(expectedCategories);
+    final var subsetContainsResult = new SubsetContainsCategoryResult(actual, expectedCategoriesList);
     if (!subsetContainsResult.expectedAndNotContained.isBlank()) {
       final var message = Stream.of(
               String.format("%nExpected actual Subset:  "),
-              subsetContainsResult.expectedCategories.isBlank()
-                  ? ""
-                  : String.format("%nto contain the categories:  [%s]", subsetContainsResult.expectedCategories),
+              String.format("%nto contain the categories:  [%s]", subsetContainsResult.expectedCategories),
               subsetContainsResult.expandedExpectedCategories.isBlank()
                   ? ""
                   : String.format("%nwhich expands to the categories:  [%s]", subsetContainsResult.expandedExpectedCategories),
               subsetContainsResult.expectedAndContained.isBlank()
                   ? ""
                   : String.format("%ncontained expected categories:  [%s]", subsetContainsResult.expectedAndContained),
-              subsetContainsResult.expectedAndNotContained.isBlank()
-                  ? ""
-                  : String.format("%nmissing expected categories:  [%s]", subsetContainsResult.expectedAndNotContained))
+              String.format("%nmissing expected categories:  [%s]", subsetContainsResult.expectedAndNotContained))
           .filter(not(String::isBlank))
           .collect(Collectors.joining(""));
 
@@ -172,9 +161,7 @@ public abstract class AbstractSubsetAssert<
     if (!subsetContainsResult.expectedAndNotContained.isBlank() || !subsetContainsResult.containedAndNotExpected.isBlank()) {
       final var message = Stream.of(
               String.format("%nExpected actual Subset:  "),
-              subsetContainsResult.expectedCategories.isBlank()
-                  ? ""
-                  : String.format("%nto contain exactly the categories:  [%s]", subsetContainsResult.expectedCategories),
+              String.format("%nto contain exactly the categories:  [%s]", subsetContainsResult.expectedCategories),
               subsetContainsResult.expandedExpectedCategories.isBlank()
                   ? ""
                   : String.format("%nwhich expands to the categories:  [%s]", subsetContainsResult.expandedExpectedCategories),
