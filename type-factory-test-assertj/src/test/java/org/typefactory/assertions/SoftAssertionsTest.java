@@ -47,6 +47,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((IntegerType) null))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   @Test
@@ -55,6 +56,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(new SomeIntegerType(42)))
         .isNotNull()
         .isInstanceOf(IntegerTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(InvalidValueException) ───────────────────────────────────
@@ -65,6 +67,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((InvalidValueException) null))
         .isNotNull()
         .isInstanceOf(InvalidValueExceptionAssert.class);
+    softAssertions.assertAll();
   }
 
   @Test
@@ -76,6 +79,7 @@ class SoftAssertionsTest {
         .build()))
         .isNotNull()
         .isInstanceOf(InvalidValueExceptionAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(LongType) ─────────────────────────────────────────────────
@@ -86,6 +90,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((LongType) null))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   @Test
@@ -94,6 +99,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(new SomeLongType(42L)))
         .isNotNull()
         .isInstanceOf(LongTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(MessageCode) ──────────────────────────────────────────────
@@ -104,6 +110,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((MessageCode) null))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
+    softAssertions.assertAll();
   }
 
   @ParameterizedTest(name = "[{index}] messageCode={0}")
@@ -118,6 +125,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(MessageCode.of(messageCode, "Some message.")))
         .isNotNull()
         .isInstanceOf(MessageCodeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(ShortType) ────────────────────────────────────────────────
@@ -128,6 +136,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((ShortType) null))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   @Test
@@ -136,6 +145,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(new SomeShortType((short) 7)))
         .isNotNull()
         .isInstanceOf(ShortTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(StringType) ───────────────────────────────────────────────
@@ -146,6 +156,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((StringType) null))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   @ParameterizedTest(name = "[{index}] value={0}")
@@ -160,6 +171,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(new SomeStringType(value)))
         .isNotNull()
         .isInstanceOf(StringTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(CharSequenceType) ─────────────────────────────────────────
@@ -169,6 +181,7 @@ class SoftAssertionsTest {
     final SoftAssertions softAssertions = new SoftAssertions();
     assertThat(softAssertions.assertThat((SomeCharSequenceType) null))
         .isNotNull();
+    softAssertions.assertAll();
   }
 
   @ParameterizedTest(name = "[{index}] value={0}")
@@ -184,6 +197,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(actual))
         .isNotNull()
         .isInstanceOf(CharSequenceTypeAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── assertThat(Subset) ───────────────────────────────────────────────────
@@ -194,6 +208,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat((Subset) null))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
+    softAssertions.assertAll();
   }
 
   @Test
@@ -202,6 +217,7 @@ class SoftAssertionsTest {
     assertThat(softAssertions.assertThat(Subset.builder().includeChar('a').build()))
         .isNotNull()
         .isInstanceOf(SubsetAssert.class);
+    softAssertions.assertAll();
   }
 
   // ─── inner helper types ───────────────────────────────────────────────────
