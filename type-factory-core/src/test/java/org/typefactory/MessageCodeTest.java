@@ -14,8 +14,8 @@
 */
 package org.typefactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.typefactory.assertions.Assertions.assertThat;
+import static org.typefactory.assertions.Assertions.assertThatExceptionOfType;
 
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class MessageCodeTest {
 
     assertThat(messageCode.code()).isEqualTo(expectedCode);
     assertThat(messageCode.defaultMessage()).isEqualTo(expectedDefaultMessage);
-    assertThat(messageCode.toString()).isEqualTo(expectedCode);
+    assertThat(messageCode).hasToString(expectedCode);
 
     if (expectedIsEmpty) {
       assertThat(messageCode.isEmpty()).isTrue();
@@ -250,7 +250,7 @@ class MessageCodeTest {
 
     final var messageCode = new SomeMessageCode(code, null);
 
-    assertThat(messageCode.subSequence(start, end).toString()).isEqualTo(expectedSubSequence);
+    assertThat(messageCode.subSequence(start, end)).hasToString(expectedSubSequence);
   }
 
   // ─── compareTo ────────────────────────────────────────────────────────────

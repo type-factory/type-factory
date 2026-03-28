@@ -434,7 +434,7 @@ class InvalidValueExceptionTest {
 
     final var actual = InvalidValueException.builder().build();
 
-    org.assertj.core.api.Assertions.assertThat(actual.getParserErrorArgs()).isEmpty();
+    assertThat(actual.getParserErrorArgs()).isEmpty();
   }
 
   @Test
@@ -458,8 +458,9 @@ class InvalidValueExceptionTest {
     final var args1 = actual.getParserErrorArgs();
     final var args2 = actual.getParserErrorArgs();
 
-    org.assertj.core.api.Assertions.assertThat(args1).isNotSameAs(args2);
-    org.assertj.core.api.Assertions.assertThat(args1).containsExactly(args2);
+    assertThat(args1)
+        .isNotSameAs(args2)
+        .containsExactly(args2);
   }
 
   // ─── getLocalizedMessage() (no-arg – uses Locale.getDefault()) ──────────
@@ -571,7 +572,7 @@ class InvalidValueExceptionTest {
         ParserMessageCode.INVALID_VALUE_TOO_SHORT
     ).filter(c -> expectedCode.equals(c.code())).findFirst();
 
-    org.assertj.core.api.Assertions.assertThat(matchingConstant)
+    assertThat(matchingConstant)
         .isPresent()
         .get()
         .satisfies(c -> assertThat(c.defaultMessage()).isEqualTo(expectedDefaultMessage));

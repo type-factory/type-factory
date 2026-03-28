@@ -221,7 +221,7 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   @Deprecated(since = "1.1", forRemoval = true)
   public String getMessageCode() {
-    return errorCode.code();
+    return getErrorCode().code();
   }
 
   /**
@@ -310,7 +310,7 @@ public class InvalidValueException extends IllegalArgumentException {
    */
   @Deprecated(since = "1.1", forRemoval = true)
   public String getParserMessageCode() {
-    return parserErrorCode.code();
+    return getParserErrorCode().code();
   }
 
   /**
@@ -456,8 +456,7 @@ public class InvalidValueException extends IllegalArgumentException {
      */
     @Deprecated(since = "1.1", forRemoval = true)
     public InvalidValueExceptionBuilder messageCode(final MessageCode errorCode) {
-      this.errorCode = errorCode;
-      return this;
+      return errorCode(errorCode);
     }
 
     /**
@@ -484,8 +483,7 @@ public class InvalidValueException extends IllegalArgumentException {
      */
     @Deprecated(since = "1.1", forRemoval = true)
     public InvalidValueExceptionBuilder parserMessageCode(final ParserMessageCode parserErrorCode) {
-      this.parserErrorCode = parserErrorCode;
-      return this;
+      return parserErrorCode(parserErrorCode);
     }
 
     /**
@@ -522,10 +520,7 @@ public class InvalidValueException extends IllegalArgumentException {
      */
     @Deprecated(since = "1.1", forRemoval = true)
     public <V extends Serializable> InvalidValueExceptionBuilder addParserMessageCodeArg(final String key, final V value) {
-      if (key != null && !key.isBlank()) {
-        this.parserErrorCodeArgs.put(key, value);
-      }
-      return this;
+      return addParserErrorCodeArg(key, value);
     }
 
     /**
