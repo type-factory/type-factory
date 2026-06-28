@@ -7,7 +7,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import org.typefactory.Subset;
 
-public abstract class CldrResourceBundle extends ResourceBundle {
+public abstract class AbstractCldrResourceBundle extends ResourceBundle {
 
   public static final String STANDARD_CHARACTERS = "standard.characters";
   public static final String AUXILIARY_CHARACTERS = "auxiliary.characters";
@@ -22,7 +22,7 @@ public abstract class CldrResourceBundle extends ResourceBundle {
   private final Subset auxiliarySubset;
   private final Subset punctuationSubset;
 
-  protected CldrResourceBundle(
+  protected AbstractCldrResourceBundle(
       final Subset standardSubset,
       final Subset auxiliarySubset,
       final Subset punctuationSubset) {

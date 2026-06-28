@@ -3,7 +3,7 @@ package org.typefactory;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.typefactory.unicode.cldr.CldrResourceBundle;
+import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 
 public interface LocaleData {
 
@@ -18,7 +18,7 @@ public interface LocaleData {
     try {
       final var resourceBundle = ResourceBundle.getBundle("org.typefactory.unicode.cldr", locale, new LocaleDataControl());
 
-      if (resourceBundle instanceof CldrResourceBundle cldrResourceBundle) {
+      if (resourceBundle instanceof AbstractCldrResourceBundle cldrResourceBundle) {
         return new LocaleDataImpl(
             cldrResourceBundle.getStandardSubset(),
             cldrResourceBundle.getAuxiliarySubset(),

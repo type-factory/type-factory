@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.typefactory.unicode.cldr.CldrResourceBundle;
+import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 import org.typefactory.unicode.cldr.af;
 import org.typefactory.unicode.cldr.ar;
 import org.typefactory.unicode.cldr.az;
@@ -37,7 +37,7 @@ class LocaleDataTest {
   @MethodSource("supportedLocales")
   void getInstance_shouldReturnLocaleDataForGeneratedBundles(
       final String localeTag,
-      final Class<? extends CldrResourceBundle> expectedBundleType) {
+      final Class<? extends AbstractCldrResourceBundle> expectedBundleType) {
 
     final Locale locale = Locale.forLanguageTag(localeTag);
 

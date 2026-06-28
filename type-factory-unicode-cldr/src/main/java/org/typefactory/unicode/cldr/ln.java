@@ -26,7 +26,7 @@ import org.typefactory.impl.Factory;
 @Generated(
     comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
-public final class ln extends CldrResourceBundle {
+public final class ln extends AbstractCldrResourceBundle {
 
   public ln() {
     super(
