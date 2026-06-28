@@ -1,0 +1,133 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+package org.typefactory.unicode.cldr;
+
+import javax.annotation.processing.Generated;
+import org.typefactory.Subset;
+import org.typefactory.impl.Factory;
+
+/**
+ * Provides Type Factory subsets for the Greek language as defined
+ * by the Unicode Common Locale Data Repository (CLDR).
+ */
+@Generated(
+    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    value = "org.typefactory:type-factory-unicode-cldr-code-generator")
+public final class el extends CldrResourceBundle {
+
+  public el() {
+    super(
+        STANDARD_CHARACTERS_SUBSET,
+        AUXILIARY_CHARACTERS_SUBSET,
+        PUNCTUATION_CHARACTERS_SUBSET);
+  }
+
+  /**
+   * <p>The standard characters for the Greek language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters>}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new int[]{
+          0x0386_0386, //  Ά
+          0x0388_038a, //  Έ Ή Ί
+          0x038c_038c, //  Ό
+          0x038e_03a1, //  Ύ Ώ ΐ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ
+          0x03a3_03ce, //  Σ Τ Υ Φ Χ Ψ Ω Ϊ Ϋ ά έ ή ί ΰ α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π
+                       //  ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ
+      },
+      5, 69);
+
+
+  /**
+   * <p>The auxiliary characters for the Greek language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new int[]{
+          0x1f00_1f15, //  ἀ ἁ ἂ ἃ ἄ ἅ ἆ ἇ Ἀ Ἁ Ἂ Ἃ Ἄ Ἅ Ἆ Ἇ ἐ ἑ ἒ ἓ ἔ ἕ
+          0x1f18_1f1d, //  Ἐ Ἑ Ἒ Ἓ Ἔ Ἕ
+          0x1f20_1f3f, //  ἠ ἡ ἢ ἣ ἤ ἥ ἦ ἧ Ἠ Ἡ Ἢ Ἣ Ἤ Ἥ Ἦ Ἧ ἰ ἱ ἲ ἳ ἴ ἵ ἶ ἷ Ἰ Ἱ Ἲ Ἳ Ἴ Ἵ Ἶ Ἷ
+          0x1f42_1f44, //  ὂ ὃ ὄ
+          0x1f4a_1f4c, //  Ὂ Ὃ Ὄ
+          0x1f50_1f57, //  ὐ ὑ ὒ ὓ ὔ ὕ ὖ ὗ
+          0x1f59_1f59, //  Ὑ
+          0x1f5b_1f5b, //  Ὓ
+          0x1f5d_1f5d, //  Ὕ
+          0x1f5f_1f5f, //  Ὗ
+          0x1f62_1f67, //  ὢ ὣ ὤ ὥ ὦ ὧ
+          0x1f6a_1f70, //  Ὢ Ὣ Ὤ Ὥ Ὦ Ὧ ὰ
+          0x1f72_1f72, //  ὲ
+          0x1f74_1f74, //  ὴ
+          0x1f76_1f76, //  ὶ
+          0x1f78_1f78, //  ὸ
+          0x1f7a_1f7a, //  ὺ
+          0x1f7c_1f7c, //  ὼ
+          0x1fb6_1fb6, //  ᾶ
+          0x1fba_1fba, //  Ὰ
+          0x1fc6_1fc6, //  ῆ
+          0x1fc8_1fc8, //  Ὲ
+          0x1fca_1fca, //  Ὴ
+          0x1fd2_1fd2, //  ῒ
+          0x1fd6_1fd7, //  ῖ ῗ
+          0x1fda_1fda, //  Ὶ
+          0x1fe2_1fe2, //  ῢ
+          0x1fe6_1fe7, //  ῦ ῧ
+          0x1fea_1fea, //  Ὺ
+          0x1ff6_1ff6, //  ῶ
+          0x1ff8_1ff8, //  Ὸ
+          0x1ffa_1ffa, //  Ὼ
+      },
+      32, 113);
+
+
+  /**
+   * <p>The punctuation characters for the Greek language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new char[]{
+          0x21_22, //  ! "
+          0x26_26, //  &
+          0x28_2a, //  ( ) *
+          0x2c_2f, //  , - . /
+          0x3a_3b, //  : ;
+          0x40_40, //  @
+          0x5b_5d, //  [ \ ]
+          0xa7_a7, //  §
+          0xab_ab, //  «
+          0xbb_bb, //  »
+      },
+        new int[]{
+          0x2010_2011, //  ‐ ‑
+          0x2013_2014, //  – —
+          0x2026_2026, //  …
+      },
+      13, 24);
+
+
+}

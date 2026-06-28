@@ -53,6 +53,10 @@ public class Factory {
     return new TypeParserBuilderImpl();
   }
 
+  public static Subset emptySubset() {
+    return RangedSubsetImpl.EMPTY_SUBSET;
+  }
+
   public static Subset rangedSubset(
       final char[] singleByteCodePointRanges,
       final int numberOfCodePointRanges,

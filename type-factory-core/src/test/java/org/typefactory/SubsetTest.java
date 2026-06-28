@@ -16,9 +16,12 @@
 package org.typefactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class SubsetTest {
 
@@ -53,4 +56,41 @@ class SubsetTest {
     assertThat(actual.contains('Y')).isTrue();
     assertThat(actual.contains('Z')).isTrue();
   }
+
+  @Test
+  void toPattern_shouldRenderEmptySubsetAsAnEmptyCharacterClass() {
+    final Subset actual = Subset.builder().build();
+
+    assertThat(actual).isEmpty();
+    assertThat(actual.toPattern()).isEqualTo("[]");
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @CsvSource(
+      delimiter = '|',
+      useHeadersInDisplayName = true,
+      textBlock = """
+          scenario                      | subsetCharacters  | expectedPattern
+          single character              | A                 | [A]
+          single space character        | ' '               | [\\u0020]
+          single newline character      | '\t'              | [\\u0009]
+          single control character      | '\u000B'          | [\\u000b]
+          two-character range           | AB                | [AB]
+          escaped range                 | '\u001F\u0020'    | [\\u001f\\u0020]
+          three-character range         | ABC               | [A-C]
+          two three-character ranges    | ABCabc            | [A-Ca-c]
+          mixed ranges and characters   | ABCHabch          | [A-CHa-ch]
+          mixed ranges                  | ABC abc\txyz      | [\\u0009\\u0020A-Ca-cx-z]
+          """)
+  void toPattern_shouldRenderExpectedPatterns(
+      final String scenario, final String subsetCharacters, final String expectedPattern) {
+
+    final Subset actual = Subset.builder()
+        .includeCodePoints(subsetCharacters.codePoints().toArray())
+        .build();
+
+    assertThat(actual).isNotEmpty();
+    assertThat(actual.toPattern()).isEqualTo(expectedPattern);
+  }
+
 }

@@ -69,6 +69,8 @@
     <module>type-factory-examples</module>
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
+    <module>type-factory-unicode-cldr-code-generator</module>
+    <module>type-factory-unicode-cldr</module>
     <module>type-factory-core</module>
     <module>type-factory-test-assertj</module>
     <module>type-factory-bom</module>
@@ -109,6 +111,18 @@
       <dependency>
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-language</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-unicode-cldr-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-unicode-cldr</artifactId>
         <version>${project.version}</version>
       </dependency>
 
