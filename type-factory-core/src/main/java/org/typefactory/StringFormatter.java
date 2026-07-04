@@ -299,6 +299,19 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
     return this;
   }
 
+  public StringFormatter appendPaddingToDistanceFromLastLineSeparator(final int width) {
+    if (width < 0) {
+      throw new IllegalArgumentException("width must be >= 0");
+    }
+    final int lastLineSeparatorIndex = delegate.lastIndexOf(LINE_SEPARATOR);
+    final int distanceFromLastLineSeparator = delegate.length() - (lastLineSeparatorIndex + LINE_SEPARATOR.length());
+    final int paddingWidth = width - distanceFromLastLineSeparator;
+    if (paddingWidth > 0) {
+      appendPadding(paddingWidth);
+    }
+    return this;
+  }
+
   /**
    * Appends the platform line separator.
    *
@@ -1423,6 +1436,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   private String formatInteger(final long value) {
     final NumberFormat format = NumberFormat.getIntegerInstance(locale);
+    format.setGroupingUsed(false);
     return format.format(value);
   }
 
@@ -1444,6 +1458,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   private String formatInteger(final BigInteger value) {
     final NumberFormat format = NumberFormat.getIntegerInstance(locale);
+    format.setGroupingUsed(false);
     return format.format((Object) value);
   }
 
@@ -1455,6 +1470,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   private String formatDecimal(final BigDecimal value) {
     final DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+    format.setGroupingUsed(false);
     format.setMinimumIntegerDigits(1);
     return format.format(value);
   }

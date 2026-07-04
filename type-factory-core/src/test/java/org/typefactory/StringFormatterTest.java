@@ -220,7 +220,7 @@ class StringFormatterTest {
         .appendSpace()
         .append(1234.5d);
 
-    assertThatObject(builder).hasToString("1.234 1.234 1.234,5 1.234,5");
+    assertThatObject(builder).hasToString("1234 1234 1234,5 1234,5");
   }
 
   @Test
@@ -231,10 +231,12 @@ class StringFormatterTest {
         .appendPipe()
         .append(1234)
         .appendPipe()
+        .append(1234.567d)
+        .appendPipe()
         .setLocale(Locale.GERMANY)
         .append(1234)
         .appendPipe()
-        .append(1.5d)
+        .append(1234.567d)
         .appendPipe()
         .leftAppend(1234L, 8)
         .appendPipe()
@@ -242,7 +244,7 @@ class StringFormatterTest {
         .appendPipe();
 
     assertThatObject(builder).hasToString(
-        "|1,234|1.234|1,5|1.234   |   1.234|");
+        "|1234|1234.567|1234|1234,567|1234    |    1234|");
   }
 
   @Test
@@ -268,7 +270,7 @@ class StringFormatterTest {
         .appendPipe();
 
     assertThatObject(builder)
-        .hasToString("|1.234   |   1.234|missing | missing|missing | missing| missing|");
+        .hasToString("|1234    |    1234|missing | missing|missing | missing| missing|");
   }
 
   @Test
@@ -526,7 +528,7 @@ class StringFormatterTest {
         .rightAppend(new BigDecimal("1.5"), 8, 1)
         .appendPipe();
 
-    assertThatObject(builder).hasToString("|1.234   |   1.234|1.234   |   1.234|1,5     |     1,5|1,5     |     1,5|");
+    assertThatObject(builder).hasToString("|1234    |    1234|1234    |    1234|1,5     |     1,5|1,5     |     1,5|");
   }
 
   @Test
