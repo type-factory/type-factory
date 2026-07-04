@@ -50,6 +50,7 @@ public final class yue_Hant extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057, 0x0058, 0x0059, 
         0x005a, 0x005b, 0x005c, 0x005d, 0x005e, 0x005f, 0x0060, 0x0061, 
         0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 0x0068, 0x0069, 
@@ -67,6 +68,7 @@ public final class yue_Hant extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0052__ codePoint ranges
           0x00_00, 0x06_07, 0x0a_0a, 0x17_17, 0x1d_1d, 0x24_25, 0x28_2a, 0x2e_2e,  // 刀 分 切 刊 列 初 判 別 刨 利 刪 刮
           0x30_30, 0x36_37, 0x3a_3b, 0x43_43, 0x47_47, 0x4c_4d, 0x5b_5b, 0x69_6a,  // 到 制 刷 刺 刻 剃 則 剌 前 剛 剩 剪
@@ -526,6 +528,7 @@ public final class yue_Hant extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0xffff, 0x00fe, 0x00ff, 0x0020, 0xffff, 0x0030  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -533,6 +536,7 @@ public final class yue_Hant extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x21_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 0x5f_5f,  // ! " # % & ( ) * , - . / : ; ? @ [ \ ] _
           0x7b_7b, 0x7d_7d, 0xa7_a7, 0xb7_b7 },                                    // { } § ·

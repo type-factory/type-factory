@@ -171,6 +171,28 @@ class StringFormatterTest {
   }
 
   @Test
+  void appendPaddingToDistanceFromLastNewline_padsFromTheLastNewline() {
+    final var builder = new StringFormatter()
+        .append("abc")
+        .appendNewline()
+        .append("de")
+        .appendPaddingToDistanceFromLastNewline(4);
+
+    assertThatObject(builder).hasToString("abc" + System.lineSeparator() + "de  ");
+  }
+
+  @Test
+  void appendPaddingToDistanceFromLastLineSeparator_padsFromTheLastLineSeparator() {
+    final var builder = new StringFormatter()
+        .append("abc")
+        .appendLineSeparator()
+        .append("de")
+        .appendPaddingToDistanceFromLastLineSeparator(4);
+
+    assertThatObject(builder).hasToString("abc" + System.lineSeparator() + "de  ");
+  }
+
+  @Test
   void appendFill_supportsCodePointsAndZeroWidth() {
     final var builder = new StringFormatter();
 
@@ -661,5 +683,24 @@ class StringFormatterTest {
     rightAppend.invoke(builder, new Object[]{null, 0});
 
     assertThatObject(builder).hasToString("missingmissing");
+  }
+
+  @Test
+  void privatePaddingHelper_measuresDistanceFromTheLastStringOrTheBeginningWhenMissing() throws Exception {
+
+    final var builder = new StringFormatter()
+        .append("abc")
+        .append("XX")
+        .append("de");
+    final Method appendPaddingToDistanceFromLastString = StringFormatter.class.getDeclaredMethod(
+        "appendPaddingToDistanceFromLastString", int.class, String.class);
+    appendPaddingToDistanceFromLastString.setAccessible(true);
+
+    appendPaddingToDistanceFromLastString.invoke(builder, 4, "XX");
+    assertThatObject(builder).hasToString("abcXXde  ");
+
+    final var missingDelimiterBuilder = new StringFormatter().append("abc");
+    appendPaddingToDistanceFromLastString.invoke(missingDelimiterBuilder, 4, "XX");
+    assertThatObject(missingDelimiterBuilder).hasToString("abc ");
   }
 }

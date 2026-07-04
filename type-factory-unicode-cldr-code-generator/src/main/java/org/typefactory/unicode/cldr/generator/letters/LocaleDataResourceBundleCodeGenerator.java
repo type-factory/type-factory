@@ -100,43 +100,43 @@ public class LocaleDataResourceBundleCodeGenerator {
             """, language, script, lettersClassName, lettersClassName))
 
         .append(String.format("""
-            /**
-             * <p>The standard characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters>}
-             *    element in the CLDR dataset.</p>
-             */
-          """,language, script))
+              /**
+               * <p>The standard characters for the %s language%s as defined by the
+               *    Unicode Common Locale Data Repository (CLDR).</p>
+               *
+               * <p>These are the characters in the {@code <exemplarCharacters>}
+               *    element in the CLDR dataset.</p>
+               */
+            """, language, script))
         .append("  static final Subset STANDARD_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, standardCharactersSubset))
-        .appendLineSeparator()
+        .appendNewline()
         .append(String.format("""
-            /**
-             * <p>The auxiliary characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
-             *    element in the CLDR dataset.</p>
-             */
-          """,language, script))
+              /**
+               * <p>The auxiliary characters for the %s language%s as defined by the
+               *    Unicode Common Locale Data Repository (CLDR).</p>
+               *
+               * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
+               *    element in the CLDR dataset.</p>
+               */
+            """, language, script))
         .append("  static final Subset AUXILIARY_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, auxiliaryCharactersSubset))
-        .appendLineSeparator()
+        .appendNewline()
         .append(String.format("""
-            /**
-             * <p>The punctuation characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
-             *    element in the CLDR dataset.</p>
-             */
-          """,language, script))
+              /**
+               * <p>The punctuation characters for the %s language%s as defined by the
+               *    Unicode Common Locale Data Repository (CLDR).</p>
+               *
+               * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
+               *    element in the CLDR dataset.</p>
+               */
+            """, language, script))
         .append("  static final Subset PUNCTUATION_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, punctuationCharactersSubset))
-        .appendLineSeparator()
+        .appendNewline()
         .append('}')
-        .appendLineSeparator();
+        .appendNewline();
 
     try (final FileWriter fileWriter = new FileWriter(
         outputDirectory + File.separator + lettersClassName + ".java")) {
@@ -193,12 +193,12 @@ public class LocaleDataResourceBundleCodeGenerator {
         if (!arrayStarted) {
           switch (locale.getCountry()) {
             case "ja", "zh":
-              s.appendLineSeparator().append("      // See Javadoc for full set of unicode code points in the following ranges.");
+              s.appendNewline().append("      // See Javadoc for full set of unicode code points in the following ranges.");
               break;
             default:
               break;
           }
-          s.appendLineSeparator().append("        new ").append(rangeArrayType).append("[]{").appendLineSeparator();
+          s.appendNewline().append("        new ").append(rangeArrayType).append("[]{").appendNewline();
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
@@ -209,16 +209,16 @@ public class LocaleDataResourceBundleCodeGenerator {
             for (int c = from; c <= min(to, from + 20); ++c) {
               s.append(' ').appendCodePoint(c);
             }
-            s.append(" ...").appendLineSeparator();
+            s.append(" ...").appendNewline();
             break;
           default:
             for (int c = from, i = 1; c <= to; ++c, ++i) {
               s.append(' ').appendCodePoint(c);
               if (i % 30 == 0 && to - c > 2) {
-                s.appendLineSeparator().append(indent).append("// ");
+                s.appendNewline().append(indent).append("// ");
               }
             }
-            s.appendLineSeparator();
+            s.appendNewline();
             break;
         }
       }
@@ -242,15 +242,16 @@ public class LocaleDataResourceBundleCodeGenerator {
     } else if (subsetWrapper instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
       return sf -> appendOptimalHashedBlockRangedSubset(optimalHashedRangedSubsetWrapper).accept(sf);
     } else {
-      return sf -> {};
+      return sf -> {
+      };
     }
   }
 
   private static Consumer<StringFormatter> appendEmptySubset() {
     return sf ->
         sf.append("Factory.emptySubset();")
-            .appendLineSeparator()
-            .appendLineSeparator();
+            .appendNewline()
+            .appendNewline();
   }
 
   private static Consumer<StringFormatter> appendRangedSubset(
@@ -260,13 +261,13 @@ public class LocaleDataResourceBundleCodeGenerator {
     return sf -> {
 
       sf.append("Factory.rangedSubset(")
-          .appendLineSeparator();
+          .appendNewline();
 
       final Sizes singleByteSizes = appendCodepointArrayRanges(sf, locale, rangedSubsetWrapper, 0x00, 0xFF, "char", "0x%02x_%02x");
       final Sizes doubleByteSizes = appendCodepointArrayRanges(sf, locale, rangedSubsetWrapper, 0x0100, 0xFFFF, "int", "0x%04x_%04x");
       final Sizes tripleByteSizes = appendCodepointArrayRanges(sf, locale, rangedSubsetWrapper, 0x00010000, MAX_VALUE, "long", "0x%08x_%08xL");
 
-      sf.appendLineSeparator()
+      sf.appendNewline()
           .appendPadding(6)
           .append(singleByteSizes.numberOfCodePointRanges
                   + doubleByteSizes.numberOfCodePointRanges
@@ -275,8 +276,8 @@ public class LocaleDataResourceBundleCodeGenerator {
                   + doubleByteSizes.numberOfCodePointsInCodePointRanges
                   + tripleByteSizes.numberOfCodePointsInCodePointRanges)
           .append(");")
-          .appendLineSeparator()
-          .appendLineSeparator();
+          .appendNewline()
+          .appendNewline();
     };
   }
 
@@ -290,18 +291,22 @@ public class LocaleDataResourceBundleCodeGenerator {
 
     return s -> {
 
-      s.append("Factory.hashedRangedSubset(").appendLineSeparator();
-      s.appendLineSeparator().append("      // Hash-buckets with 0..n keys – null indicates an empty hash-bucket.");
-      s.appendLineSeparator().append("      //");
-      s.appendLineSeparator().append("      //       ┌──── hashIndex       - an index to the hash-bucket");
-      s.appendLineSeparator().append("      //       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket");
-      s.appendLineSeparator().append("      //       │  │");
-      s.appendLineSeparator().append("      //  char[ ][ ] blockKeys");
-      s.appendLineSeparator().append("      new char[ ][ ] {");
+      s.append("Factory.hashedRangedSubset(")
+          .appendNewline()
+          .appendNewline()
+          .append("""
+                    // Hash-buckets with 0..n keys – null indicates an empty hash-bucket.
+                    //
+                    //       ┌──── hashIndex       - an index to the hash-bucket
+                    //       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
+                    //       │  │
+                    //  char[ ][ ] blockKeys
+                    new char[ ][ ] {
+              """);
       for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
         final char[] buckets = keys[hashIndex];
         if (hashIndex % 8 == 0) {
-          s.appendLineSeparator().appendPadding(8);
+          s.appendNewline().appendPadding(8);
         }
         final StringFormatter temp = new StringFormatter();
         if (buckets == null || buckets.length == 0) {
@@ -321,35 +326,38 @@ public class LocaleDataResourceBundleCodeGenerator {
         }
         s.append(String.format("%-16s, ", temp));
       }
-      s.setLength(s.length() - 2);
-      s.append("  },");
-      s.appendLineSeparator();
-      s.appendLineSeparator().append("      //       ┌─────── hashIndex           - an index to the hash-bucket");
-      s.appendLineSeparator().append("      //       │  ┌──── hashBucketIndex     - an index to the key within the hash-bucket");
-      s.appendLineSeparator().append("      //       │  │  ┌─ codePointRangeIndex - an index to the range within the array of ranges");
-      s.appendLineSeparator().append("      //       │  │  │");
-      s.appendLineSeparator().append("      //  char[ ][ ][ ] codePointRanges");
-      s.appendLineSeparator().append("      new char[ ][ ][ ] {");
+      s.setLength(s.length() - 2)
+          .append("  },")
+          .appendNewline()
+          .appendNewline()
+          .append("""
+                    //       ┌─────── hashIndex           - an index to the hash-bucket
+                    //       │  ┌──── hashBucketIndex     - an index to the key within the hash-bucket
+                    //       │  │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+                    //       │  │  │
+                    //  char[ ][ ][ ] codePointRanges
+                    new char[ ][ ][ ] {
+              """);
       for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
         final char[] keyBuckets = keys[hashIndex];
         if (keyBuckets == null) {
-          s.appendLineSeparator().append("        null,");
+          s.appendNewline().append("        null,");
         } else {
-          s.appendLineSeparator().append("        {");
+          s.appendNewline().append("        {");
           for (int hashBucketIndex = 0; hashBucketIndex < keyBuckets.length; ++hashBucketIndex) {
             int charCount = 0;
             final int key = keyBuckets[hashBucketIndex];
             if (hashBucketIndex > 0) {
-              s.appendLineSeparator().appendPadding(9);
+              s.appendNewline().appendPadding(9);
             }
             s.append(String.format(" // 0x%04x__ codePoint ranges", key));
-            s.appendLineSeparator().appendPadding(10);
+            s.appendNewline().appendPadding(10);
             final char[] codePointRanges = codePointRangesByBlock[hashIndex][hashBucketIndex];
             s.append("{");
 
             for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
               if (codePointRangeIndex > 0 && codePointRangeIndex % 8 == 0) {
-                s.append(" //").append(c).appendLineSeparator().append("           ");
+                s.append(" //").append(c).appendNewline().append("           ");
                 c.setLength(0);
                 charCount = 0;
               }
@@ -360,7 +368,7 @@ public class LocaleDataResourceBundleCodeGenerator {
               final int codePointTo = (key << 8) | (to & 0xFF);
               for (int codePoint = codePointFrom; codePoint <= codePointTo; ++codePoint, ++charCount) {
                 if (charCount > 0 && charCount % 20 == 0) {
-                  c.appendLineSeparator().appendPadding(83).append("//");
+                  c.appendNewline().appendPadding(83).append("//");
                 }
                 c.append(' ').appendCodePoint(codePoint);
               }
@@ -368,29 +376,29 @@ public class LocaleDataResourceBundleCodeGenerator {
             s.setLength(s.length() - 2);
             s.append("},");
             if (hashBucketIndex < keyBuckets.length - 1) {
-              s.appendPadding(84).append("//").append(c);
+              s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
               c.setLength(0);
             }
           }
           s.setLength(s.length() - 1);
           s.append(" }, ");
           if (hashIndex < keys.length - 1) {
-            s.appendPadding(84).append("//").append(c);
+            s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
             c.setLength(0);
           }
         }
       }
-      s.setLength(s.length() - 2);
-      s.append(" },");
-      s.appendPadding(84).append("//").append(c);
-      c.setLength(0);
-      s.appendLineSeparator().append("        // number of code-point ranges");
-      s.appendLineSeparator().appendPadding(8).append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
-      s.appendLineSeparator().append("        // number of code-points");
-      s.appendLineSeparator().appendPadding(8).append(hashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges())
+      s.setLength(s.length() - 2)
+          .append(" },")
+          .appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c)
+          .appendNewline().append("        // number of code-point ranges")
+          .appendNewline().appendPadding(8).append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",")
+          .appendNewline().append("        // number of code-points")
+          .appendNewline().appendPadding(8).append(hashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges())
           .append(");")
-          .appendLineSeparator()
-          .appendLineSeparator();
+          .appendNewline()
+          .appendNewline();
+      c.setLength(0);
     };
   }
 
@@ -404,28 +412,35 @@ public class LocaleDataResourceBundleCodeGenerator {
 
     return s -> {
 
-      s.append("Factory.optimalHashedRangedSubset(").appendLineSeparator();
-      s.appendLineSeparator().append("      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.");
-      s.appendLineSeparator().append("      //");
-      s.appendLineSeparator().append("      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key");
-      s.appendLineSeparator().append("      //       │");
-      s.appendLineSeparator().append("      //  char[ ] blockKeys");
-      s.appendLineSeparator().append("      new char[ ] {");
+      s.append("Factory.optimalHashedRangedSubset(")
+          .appendNewline()
+          .appendNewline()
+          .append("""
+                    // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+                    //
+                    //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+                    //       │
+                    //  char[ ] blockKeys
+                    new char[ ] {
+              """);
       for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
         final int key = keys[hashIndex];
         if (hashIndex % 8 == 0) {
-          s.appendLineSeparator().appendPadding(8);
+          s.appendNewline().appendPadding(8);
         }
         s.append(String.format("0x%04x, ", key));
       }
-      s.setLength(s.length() - 2);
-      s.append("  },");
-      s.appendLineSeparator();
-      s.appendLineSeparator().append("      //       ┌──── hashIndex           - an index to the hash-bucket");
-      s.appendLineSeparator().append("      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges");
-      s.appendLineSeparator().append("      //       │  │");
-      s.appendLineSeparator().append("      //  char[ ][ ] codePointRanges");
-      s.appendLineSeparator().append("      new char[ ][ ] {");
+      s.setLength(s.length() - 2)
+          .append("  },")
+          .appendNewline()
+          .appendNewline()
+          .append("""
+                    //       ┌──── hashIndex           - an index to the hash-bucket
+                    //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+                    //       │  │
+                    //  char[ ][ ] codePointRanges
+                    new char[ ][ ] {
+              """);
       int contiguousEmptyBucketCount = 0;
       for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
         int charCount = 0;
@@ -433,17 +448,17 @@ public class LocaleDataResourceBundleCodeGenerator {
         final char[] codePointRanges = codePointRangesByBlock[hashIndex];
         if (key == 0xFFFF) {
           if (contiguousEmptyBucketCount++ % 12 == 0) {
-            s.appendLineSeparator().appendPadding(9);
+            s.appendNewline().appendPadding(9);
           }
           s.append(" null,");
         } else {
           contiguousEmptyBucketCount = 0;
-          s.appendLineSeparator().append("        {");
+          s.appendNewline().append("        {");
           s.append(String.format(" // 0x%04x__ codePoint ranges", key));
-          s.appendLineSeparator().appendPadding(10);
+          s.appendNewline().appendPadding(10);
           for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
             if (codePointRangeIndex > 0 && codePointRangeIndex % 8 == 0) {
-              s.append(" //").append(c).appendLineSeparator().appendPadding(10);
+              s.append(" //").append(c).appendNewline().appendPadding(10);
               c.setLength(0);
               charCount = 0;
             }
@@ -454,7 +469,7 @@ public class LocaleDataResourceBundleCodeGenerator {
             final int codePointTo = (key << 8) | (to & 0xFF);
             for (int codePoint = codePointFrom; codePoint <= codePointTo; ++codePoint, ++charCount) {
               if (charCount > 0 && charCount % 20 == 0) {
-                c.appendLineSeparator().appendPadding(83).append("//");
+                c.appendNewline().appendPadding(83).append("//");
               }
               c.append(' ').appendCodePoint(codePoint);
             }
@@ -467,17 +482,17 @@ public class LocaleDataResourceBundleCodeGenerator {
           }
         }
       }
-      s.setLength(s.length() - 1);
-      s.append(" },");
-      s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
-      c.setLength(0);
-      s.appendLineSeparator().append("        // number of code-point ranges");
-      s.appendLineSeparator().appendPadding(8).append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
-      s.appendLineSeparator().append("        // number of code-points");
-      s.appendLineSeparator().appendPadding(8).append(optimalHashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges())
+      s.setLength(s.length() - 1)
+          .append(" },")
+          .appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c)
+          .appendNewline().append("        // number of code-point ranges")
+          .appendNewline().appendPadding(8).append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",")
+          .appendNewline().append("        // number of code-points")
+          .appendNewline().appendPadding(8).append(optimalHashedRangedSubsetWrapper.numberOfCodePointsInCodePointRanges())
           .append(");")
-          .appendLineSeparator()
-          .appendLineSeparator();
+          .appendNewline()
+          .appendNewline();
+      c.setLength(0);
     };
   }
 }

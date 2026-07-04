@@ -80,6 +80,7 @@ public final class gd extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0xffff, 0xffff, 0xffff, 0x001e, 0xffff  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -87,6 +88,7 @@ public final class gd extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x49_4b, 0x51_51, 0x56_5a, 0x6a_6b, 0x71_71, 0x76_7a, 0xc1_c7, 0xc9_cb,  // I J K Q V W X Y Z j k q v w x y z Á Â Ã
                                                                                    // Ä Å Æ Ç É Ê Ë

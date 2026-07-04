@@ -50,6 +50,7 @@ public final class agq extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0x0003  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -57,6 +58,7 @@ public final class agq extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x41_49, 0x4b_50, 0x53_57, 0x59_5a, 0x61_69, 0x6b_70, 0x73_77, 0x79_7a,  // A B C D E F G H I K L M N O P S T U V W
                                                                                    // Y Z a b c d e f g h i k l m n o p s t u

@@ -50,6 +50,7 @@ public final class ee extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0xffff  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -57,6 +58,7 @@ public final class ee extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x41_42, 0x44_49, 0x4b_50, 0x52_5a, 0x61_62, 0x64_69, 0x6b_70, 0x72_7a,  // A B D E F G H I K L M N O P R S T U V W
                                                                                    // X Y Z a b d e f g h i k l m n o p r s t

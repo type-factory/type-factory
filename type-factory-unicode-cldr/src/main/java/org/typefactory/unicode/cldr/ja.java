@@ -50,6 +50,7 @@ public final class ja extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077, 
         0x0078, 0x0079, 0x007a, 0x007b, 0x007c, 0x007d, 0x007e, 0x007f, 
         0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 
@@ -70,6 +71,7 @@ public final class ja extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0070__ codePoint ranges
           0x2c_2c, 0x6b_6b, 0x6f_70, 0x7d_7d, 0x89_8a, 0x8e_8e, 0xad_ad, 0xb9_ba,  // 瀬 火 灯 灰 災 炉 炊 炎 炭 点 為
           0xc8_c8 },                                                               // 烈
@@ -532,6 +534,7 @@ public final class ja extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0xffff, 0xffff, 0x00ff, 0x0020, 0xffff, 0x0030  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -539,6 +542,7 @@ public final class ja extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x21_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 0x5f_5f,  // ! " # % & ( ) * , - . / : ; ? @ [ \ ] _
           0x7b_7b, 0x7d_7d, 0xa7_a7, 0xb6_b6 },                                    // { } § ¶

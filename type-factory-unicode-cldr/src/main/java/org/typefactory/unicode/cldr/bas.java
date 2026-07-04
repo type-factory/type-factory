@@ -50,6 +50,7 @@ public final class bas extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0x0003, 0x001d  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -57,6 +58,7 @@ public final class bas extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x41_50, 0x52_57, 0x59_5a, 0x61_70, 0x72_77, 0x79_7a, 0xc0_c2, 0xc8_ca,  // A B C D E F G H I J K L M N O P R S T U
                                                                                    // V W Y Z a b c d e f g h i j k l m n o p

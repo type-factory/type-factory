@@ -50,6 +50,7 @@ public final class jgo extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0x00a7  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -57,6 +58,7 @@ public final class jgo extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x41_44, 0x46_4e, 0x50_50, 0x53_57, 0x59_5a, 0x61_64, 0x66_6e, 0x70_70,  // A B C D F G H I J K L M N P S T U V W Y
                                                                                    // Z a b c d f g h i j k l m n p

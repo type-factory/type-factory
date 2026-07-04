@@ -50,6 +50,7 @@ public final class mas extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0x0001, 0x0002, 0x0003  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -57,6 +58,7 @@ public final class mas extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x41_45, 0x47_50, 0x52_55, 0x57_57, 0x59_59, 0x61_65, 0x67_70, 0x72_75,  // A B C D E G H I J K L M N O P R S T U W
                                                                                    // Y a b c d e g h i j k l m n o p r s t u

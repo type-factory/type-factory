@@ -299,13 +299,26 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
     return this;
   }
 
-  public StringFormatter appendPaddingToDistanceFromLastLineSeparator(final int width) {
+  /**
+   * Appends spaces so the distance from the last occurrence of the supplied string reaches the
+   * requested width.
+   *
+   * <p>When the string is not present, the distance is measured from the start of the current
+   * contents.
+   *
+   * @param width the minimum distance from the last occurrence of the supplied string
+   * @param str the string to measure from
+   * @return this formatter
+   */
+  private StringFormatter appendPaddingToDistanceFromLastString(final int width, final String str) {
     if (width < 0) {
       throw new IllegalArgumentException("width must be >= 0");
     }
-    final int lastLineSeparatorIndex = delegate.lastIndexOf(LINE_SEPARATOR);
-    final int distanceFromLastLineSeparator = delegate.length() - (lastLineSeparatorIndex + LINE_SEPARATOR.length());
-    final int paddingWidth = width - distanceFromLastLineSeparator;
+    final int lastIndex = delegate.lastIndexOf(str);
+    final int distanceFromLastString = lastIndex < 0
+        ? delegate.length()
+        : delegate.length() - (lastIndex + str.length());
+    final int paddingWidth = width - distanceFromLastString;
     if (paddingWidth > 0) {
       appendPadding(paddingWidth);
     }
@@ -313,9 +326,44 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
+   * Appends spaces so the distance from the last newline reaches the requested width.
+   *
+   * @param width the minimum distance from the last newline
+   * @return this formatter
+   * @see #appendNewline()
+   */
+  public StringFormatter appendPaddingToDistanceFromLastNewline(final int width) {
+    return appendPaddingToDistanceFromLastString(width, "\n");
+  }
+
+  /**
+   * Appends spaces so the distance from the last platform line separator reaches the requested width.
+   *
+   * @param width the minimum distance from the last line separator
+   * @return this formatter
+   * @see #appendLineSeparator()
+   */
+  public StringFormatter appendPaddingToDistanceFromLastLineSeparator(final int width) {
+    return appendPaddingToDistanceFromLastString(width, LINE_SEPARATOR);
+  }
+
+  /**
+   * Appends the newline character.
+   *
+   * @return this formatter
+   * @see #appendLineSeparator()
+   * @see StringBuilder#append(String)
+   */
+  public StringFormatter appendNewline() {
+    delegate.append(LINE_SEPARATOR);
+    return this;
+  }
+
+  /**
    * Appends the platform line separator.
    *
    * @return this formatter
+   * #see #appendNewline()
    * @see StringBuilder#append(String)
    */
   public StringFormatter appendLineSeparator() {

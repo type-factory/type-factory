@@ -437,6 +437,7 @@ public final class ko extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x008f, 0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 
         0x0097, 0x0098, 0x0099, 0x009a, 0x009b, 0x009c, 0x009d, 0x009e, 
         0x009f, 0x0011, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 
@@ -461,6 +462,7 @@ public final class ko extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x008f__ codePoint ranges
           0x03_03, 0x15_15, 0x4e_4e, 0x5f_5f, 0x9c_9c, 0xd1_d1, 0xe6_e6, 0xf2_f2 },// 較 輕 轎 轟 辜 近 迦 迲
         { // 0x0090__ codePoint ranges
@@ -698,6 +700,7 @@ public final class ko extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
+
         0x0000, 0xffff, 0xffff, 0x00ff, 0x0020, 0xffff, 0x0030  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
@@ -705,6 +708,7 @@ public final class ko extends AbstractCldrResourceBundle {
       //       │  │
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
+
         { // 0x0000__ codePoint ranges
           0x21_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 0x5f_5f,  // ! " # % & ( ) * , - . / : ; ? @ [ \ ] _
           0x7b_7b, 0x7d_7d, 0xa1_a1, 0xa7_a7, 0xb6_b7, 0xbf_bf },                  // { } ¡ § ¶ · ¿
