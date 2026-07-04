@@ -730,43 +730,35 @@ public final class zh_Hans extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
-      //
-      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
-      //       │
-      //  char[ ] blockKeys
-      new char[ ] {
-        0x0000, 0xffff, 0x00fe, 0x00ff, 0x0020, 0xffff, 0x0030  },
-
-      //       ┌──── hashIndex           - an index to the hash-bucket
-      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
-      //       │  │
-      //  char[ ][ ] codePointRanges
-      new char[ ][ ] {
-        { // 0x0000__ codePoint ranges
-          0x21_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 0x5f_5f,  // ! " # % & ( ) * , - . / : ; ? @ [ \ ] _
-          0x7b_7b, 0x7d_7d, 0xa7_a7, 0xb7_b7 },                                    // { } § ·
-          null,
-        { // 0x00fe__ codePoint ranges
-          0x30_31, 0x33_44, 0x49_52, 0x54_57, 0x59_61, 0x63_63, 0x68_68, 0x6a_6b },// ︰ ︱ ︳ ︴ ︵ ︶ ︷ ︸ ︹ ︺ ︻ ︼ ︽ ︾ ︿ ﹀ ﹁ ﹂ ﹃ ﹄
-                                                                                   // ﹉ ﹊ ﹋ ﹌ ﹍ ﹎ ﹏ ﹐ ﹑ ﹒ ﹔ ﹕ ﹖ ﹗ ﹙ ﹚ ﹛ ﹜ ﹝ ﹞
-                                                                                   // ﹟ ﹠ ﹡ ﹣ ﹨ ﹪ ﹫
-        { // 0x00ff__ codePoint ranges
-          0x01_03, 0x05_0a, 0x0c_0f, 0x1a_1b, 0x1f_20, 0x3b_3d, 0x3f_3f, 0x5b_5b,  // ！ ＂ ＃ ％ ＆ ＇ （ ） ＊ ， － ． ／ ： ； ？ ＠ ［ ＼ ］
-                                                                                   // ＿ ｛
-          0x5d_5d },                                                               // ｝
-        { // 0x0020__ codePoint ranges
-          0x10_11, 0x13_16, 0x18_19, 0x1c_1d, 0x25_26, 0x30_30, 0x32_33, 0x35_35,  // ‐ ‑ – — ― ‖ ‘ ’ “ ” ‥ … ‰ ′ ″ ‵
-          0x3b_3b },                                                               // ※
-          null,
-        { // 0x0030__ codePoint ranges
-          0x01_03, 0x08_11, 0x14_17, 0x1d_1e } },                                  // 、 。 〃 〈 〉 《 》 「 」 『 』 【 】 〔 〕 〖 〗 〝 〞
-        // number of code-point ranges
-        42,
-        // number of code-points
-        130);
+        new char[]{
+          0x21_23, //  ! " #
+          0x25_2e, //  % & ' ( ) * + , - .
+          0x3a_40, //  : ; < = > ? @
+          0x5b_5e, //  [ \ ] ^
+          0x60_60, //  `
+          0x7b_7e, //  { | } ~
+          0xb7_b7, //  ·
+      },
+        new int[]{
+          0x2011_2011, //  ‑
+          0x2013_2014, //  – —
+          0x2018_2019, //  ‘ ’
+          0x201c_201d, //  “ ”
+          0x2026_2026, //  …
+          0x3001_3002, //  、 。
+          0x300a_300d, //  《 》 「 」
+          0x3010_3011, //  【 】
+          0xff01_ff01, //  ！
+          0xff08_ff09, //  （ ）
+          0xff0c_ff0c, //  ，
+          0xff1a_ff1b, //  ： ；
+          0xff1f_ff1f, //  ？
+          0xff5c_ff5c, //  ｜
+          0xff5e_ff5e, //  ～
+      },
+      22, 55);
 
 
 }

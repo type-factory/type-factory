@@ -112,13 +112,11 @@ public final class cv extends AbstractCldrResourceBundle {
         new int[]{
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
-          0x2018_2018, //  ‘
-          0x201a_201a, //  ‚
-          0x201c_201c, //  “
-          0x201e_201e, //  „
+          0x2018_2019, //  ‘ ’
+          0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
-      19, 32);
+      17, 32);
 
 
 }

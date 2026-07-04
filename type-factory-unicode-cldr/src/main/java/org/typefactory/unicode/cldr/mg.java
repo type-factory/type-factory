@@ -56,19 +56,20 @@ public final class mg extends AbstractCldrResourceBundle {
           0x76_76, //  v
           0x79_7a, //  y z
           0xc0_c0, //  À
-          0xc2_c2, //  Â
-          0xc8_cc, //  È É Ê Ë Ì
-          0xce_cf, //  Î Ï
-          0xd1_d1, //  Ñ
+          0xc8_c8, //  È
+          0xcc_cc, //  Ì
+          0xd2_d2, //  Ò
           0xd4_d4, //  Ô
           0xe0_e0, //  à
-          0xe2_e2, //  â
-          0xe8_ec, //  è é ê ë ì
-          0xee_ef, //  î ï
-          0xf1_f1, //  ñ
+          0xe8_e8, //  è
+          0xec_ec, //  ì
+          0xf2_f2, //  ò
           0xf4_f4, //  ô
       },
-      22, 64);
+        new int[]{
+          0x1ef2_1ef3, //  Ỳ ỳ
+      },
+      21, 54);
 
 
   /**
@@ -82,15 +83,37 @@ public final class mg extends AbstractCldrResourceBundle {
 
         new char[]{
           0x43_43, //  C
+          0x4e_4e, //  N
           0x51_51, //  Q
           0x55_55, //  U
           0x57_58, //  W X
           0x63_63, //  c
+          0x6e_6e, //  n
           0x71_71, //  q
           0x75_75, //  u
           0x77_78, //  w x
+          0xc1_c3, //  Á Â Ã
+          0xc9_cb, //  É Ê Ë
+          0xce_cf, //  Î Ï
+          0xd1_d1, //  Ñ
+          0xd3_d3, //  Ó
+          0xd6_d6, //  Ö
+          0xdd_dd, //  Ý
+          0xe1_e3, //  á â ã
+          0xe9_eb, //  é ê ë
+          0xee_ef, //  î ï
+          0xf1_f1, //  ñ
+          0xf3_f3, //  ó
+          0xf6_f6, //  ö
+          0xfd_fd, //  ý
+          0xff_ff, //  ÿ
       },
-      8, 10);
+        new int[]{
+          0x0178_0178, //  Ÿ
+          0x0302_0302, //  ̂
+          0x0308_0308, //  ̈
+      },
+      28, 40);
 
 
   /**
@@ -114,9 +137,9 @@ public final class mg extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2011_2011, //  ‑
+          0x2010_2011, //  ‐ ‑
       },
-      10, 14);
+      10, 15);
 
 
 }

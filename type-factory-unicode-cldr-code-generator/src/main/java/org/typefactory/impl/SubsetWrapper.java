@@ -34,6 +34,7 @@ public interface SubsetWrapper extends Subset {
     }
 
     final Subset subset = subsetBuilder.build();
+
     if (subset instanceof RangedSubsetImpl rangedSubset) {
       return new RangedSubsetWrapper(rangedSubset);
     }

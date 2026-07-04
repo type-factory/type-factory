@@ -110,9 +110,9 @@ public final class gsw extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2011_2011, //  ‑
+          0x2010_2011, //  ‐ ‑
       },
-      10, 14);
+      10, 15);
 
 
 }

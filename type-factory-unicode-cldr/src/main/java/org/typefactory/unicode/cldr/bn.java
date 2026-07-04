@@ -89,7 +89,7 @@ public final class bn extends AbstractCldrResourceBundle {
 
         new char[]{
           0x21_23, //  ! " #
-          0x26_2a, //  & ' ( ) *
+          0x27_2a, //  ' ( ) *
           0x2c_2f, //  , - . /
           0x3a_3b, //  : ;
           0x3f_40, //  ? @
@@ -98,6 +98,7 @@ public final class bn extends AbstractCldrResourceBundle {
           0xa7_a7, //  §
       },
         new int[]{
+          0x0964_0965, //  । ॥
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
           0x2018_2019, //  ‘ ’
@@ -106,7 +107,7 @@ public final class bn extends AbstractCldrResourceBundle {
           0x2026_2026, //  …
           0x2032_2033, //  ′ ″
       },
-      15, 32);
+      16, 33);
 
 
 }

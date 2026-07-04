@@ -52,17 +52,19 @@ public final class kok_Latn extends AbstractCldrResourceBundle {
           0xca_ca, //  Ê
           0xd1_d1, //  Ñ
           0xd4_d5, //  Ô Õ
+          0xd8_d8, //  Ø
           0xe3_e3, //  ã
           0xe7_e7, //  ç
           0xea_ea, //  ê
           0xf1_f1, //  ñ
           0xf4_f5, //  ô õ
+          0xf8_f8, //  ø
       },
         new int[]{
           0x0128_0129, //  Ĩ ĩ
           0x1ebc_1ebd, //  Ẽ ẽ
       },
-      14, 68);
+      16, 70);
 
 
   /**
@@ -81,14 +83,14 @@ public final class kok_Latn extends AbstractCldrResourceBundle {
           0xcb_cf, //  Ë Ì Í Î Ï
           0xd2_d3, //  Ò Ó
           0xd6_d6, //  Ö
-          0xd8_dc, //  Ø Ù Ú Û Ü
+          0xd9_dc, //  Ù Ú Û Ü
           0xe0_e2, //  à á â
           0xe4_e6, //  ä å æ
           0xe8_e9, //  è é
           0xeb_ef, //  ë ì í î ï
           0xf2_f3, //  ò ó
           0xf6_f6, //  ö
-          0xf8_fc, //  ø ù ú û ü
+          0xf9_fc, //  ù ú û ü
           0xff_ff, //  ÿ
       },
         new int[]{
@@ -100,7 +102,7 @@ public final class kok_Latn extends AbstractCldrResourceBundle {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      22, 66);
+      22, 64);
 
 
   /**
@@ -121,6 +123,8 @@ public final class kok_Latn extends AbstractCldrResourceBundle {
           0x5b_5b, //  [
           0x5d_5d, //  ]
           0xa7_a7, //  §
+          0xab_ab, //  «
+          0xbb_bb, //  »
       },
         new int[]{
           0x2010_2011, //  ‐ ‑
@@ -131,7 +135,7 @@ public final class kok_Latn extends AbstractCldrResourceBundle {
           0x2026_2026, //  …
           0x2032_2033, //  ′ ″
       },
-      15, 32);
+      17, 34);
 
 
 }

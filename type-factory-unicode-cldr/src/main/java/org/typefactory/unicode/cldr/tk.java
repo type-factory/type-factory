@@ -105,8 +105,8 @@ public final class tk extends AbstractCldrResourceBundle {
 
         new char[]{
           0x21_23, //  ! " #
-          0x28_2a, //  ( ) *
-          0x2c_2e, //  , - .
+          0x26_2a, //  & ' ( ) *
+          0x2c_2f, //  , - . /
           0x3a_3b, //  : ;
           0x3f_40, //  ? @
           0x5b_5b, //  [
@@ -121,7 +121,7 @@ public final class tk extends AbstractCldrResourceBundle {
           0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
-      14, 24);
+      14, 27);
 
 
 }

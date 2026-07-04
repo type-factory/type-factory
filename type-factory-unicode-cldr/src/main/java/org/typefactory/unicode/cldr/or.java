@@ -97,6 +97,7 @@ public final class or extends AbstractCldrResourceBundle {
           0xa7_a7, //  §
       },
         new int[]{
+          0x0964_0964, //  ।
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
           0x2018_2019, //  ‘ ’
@@ -105,7 +106,7 @@ public final class or extends AbstractCldrResourceBundle {
           0x2026_2026, //  …
           0x2032_2033, //  ′ ″
       },
-      15, 32);
+      16, 33);
 
 
 }

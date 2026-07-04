@@ -109,8 +109,8 @@ public final class it extends AbstractCldrResourceBundle {
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x21_22, //  ! "
-          0x27_29, //  ' ( )
+          0x21_23, //  ! " #
+          0x26_2a, //  & ' ( ) *
           0x2c_2f, //  , - . /
           0x3a_3b, //  : ;
           0x3f_40, //  ? @
@@ -128,7 +128,7 @@ public final class it extends AbstractCldrResourceBundle {
           0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
-      16, 25);
+      16, 28);
 
 
 }
