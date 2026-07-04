@@ -50,7 +50,7 @@ public final class mas extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
-        0x0000, 0x0001, 0x0002  },
+        0x0000, 0x0001, 0x0002, 0x0003  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
@@ -58,17 +58,20 @@ public final class mas extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x41_45, 0x47_50, 0x52_55, 0x57_57, 0x59_59, 0x61_65, 0x67_70, 0x72_75, 
-          0x77_77, 0x79_79, 0xc0_c2, 0xc8_ca, 0xcc_ce, 0xd2_d4, 0xd9_db, 0xe0_e2, 
-          0xe8_ea, 0xec_ee, 0xf2_f4, 0xf9_fb},
+          0x41_45, 0x47_50, 0x52_55, 0x57_57, 0x59_59, 0x61_65, 0x67_70, 0x72_75,  // A B C D E G H I J K L M N O P R S T U W
+                                                                                   // Y a b c d e g h i j k l m n o p r s t u
+          0x77_77, 0x79_79, 0xc0_c2, 0xc8_ca, 0xcc_ce, 0xd2_d4, 0xd9_db, 0xe0_e2,  // w y À Á Â È É Ê Ì Í Î Ò Ó Ô Ù Ú Û à á â
+          0xe8_ea, 0xec_ee, 0xf2_f4, 0xf9_fb },                                    // è é ê ì í î ò ó ô ù ú û
         { // 0x0001__ codePoint ranges
-          0x00_01, 0x12_13, 0x2a_2b, 0x4a_4d, 0x6a_6b, 0x86_86, 0x90_90, 0x97_97},
+          0x00_01, 0x12_13, 0x2a_2b, 0x4a_4d, 0x6a_6b, 0x86_86, 0x90_90, 0x97_97 },// Ā ā Ē ē Ī ī Ŋ ŋ Ō ō Ū ū Ɔ Ɛ Ɨ
         { // 0x0002__ codePoint ranges
-          0x44_44, 0x54_54, 0x5b_5b, 0x68_68, 0x89_89}},
+          0x44_44, 0x54_54, 0x5b_5b, 0x68_68, 0x89_89 },                           // Ʉ ɔ ɛ ɨ ʉ
+        { // 0x0003__ codePoint ranges
+          0x01_01 } },                                                             // ́
         // number of code-point ranges
-        33,
+        34,
         // number of code-points
-        92);
+        93);
 
 
   /**
@@ -116,9 +119,9 @@ public final class mas extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

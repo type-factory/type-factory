@@ -70,8 +70,9 @@ public final class ksf extends AbstractCldrResourceBundle {
           0x01dd_01dd, //  ǝ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
+          0x0301_0301, //  ́
       },
-      23, 66);
+      24, 67);
 
 
   /**
@@ -113,9 +114,9 @@ public final class ksf extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

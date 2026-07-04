@@ -70,10 +70,12 @@ public final class kea extends AbstractCldrResourceBundle {
 
         new char[]{
           0x43_43, //  C
-          0x51_51, //  Q
+          0x4e_4e, //  N
+          0x51_52, //  Q R
           0x57_57, //  W
           0x63_63, //  c
-          0x71_71, //  q
+          0x6e_6e, //  n
+          0x71_72, //  q r
           0x77_77, //  w
           0xaa_aa, //  ª
           0xba_ba, //  º
@@ -93,10 +95,11 @@ public final class kea extends AbstractCldrResourceBundle {
           0x0152_0153, //  Œ œ
           0x0168_016d, //  Ũ ũ Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
+          0x0308_0308, //  ̈
           0x1d58_1d58, //  ᵘ
           0x1ebc_1ebd, //  Ẽ ẽ
       },
-      24, 91);
+      27, 96);
 
 
   /**

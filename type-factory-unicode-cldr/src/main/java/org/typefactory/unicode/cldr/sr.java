@@ -65,7 +65,22 @@ public final class sr extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new int[]{
+          0x0302_0302, //  ̂
+          0x0410_0410, //  А
+          0x0415_0415, //  Е
+          0x0418_0418, //  И
+          0x041e_041e, //  О
+          0x0423_0423, //  У
+          0x0430_0430, //  а
+          0x0435_0435, //  е
+          0x0438_0438, //  и
+          0x043e_043e, //  о
+          0x0443_0443, //  у
+      },
+      11, 11);
 
 
   /**

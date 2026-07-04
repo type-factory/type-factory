@@ -82,6 +82,8 @@ public final class wae extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
+          0x53_53, //  S
+          0x73_73, //  s
           0xc0_c0, //  À
           0xc2_c2, //  Â
           0xc5_c8, //  Å Æ Ç È
@@ -111,7 +113,7 @@ public final class wae extends AbstractCldrResourceBundle {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      26, 59);
+      28, 61);
 
 
   /**
@@ -135,9 +137,9 @@ public final class wae extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

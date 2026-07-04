@@ -42,43 +42,40 @@ public final class jgo extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-        new char[]{
-          0x41_44, //  A B C D
-          0x46_4e, //  F G H I J K L M N
-          0x50_50, //  P
-          0x53_57, //  S T U V W
-          0x59_5a, //  Y Z
-          0x61_64, //  a b c d
-          0x66_6e, //  f g h i j k l m n
-          0x70_70, //  p
-          0x73_77, //  s t u v w
-          0x79_7a, //  y z
-          0xc1_c2, //  Á Â
-          0xcd_ce, //  Í Î
-          0xda_db, //  Ú Û
-          0xe1_e2, //  á â
-          0xed_ee, //  í î
-          0xfa_fb, //  ú û
-      },
-        new int[]{
-          0x0143_0144, //  Ń ń
-          0x014a_014b, //  Ŋ ŋ
-          0x0186_0186, //  Ɔ
-          0x0190_0190, //  Ɛ
-          0x01cd_01d0, //  Ǎ ǎ Ǐ ǐ
-          0x01d3_01d4, //  Ǔ ǔ
-          0x01f8_01f9, //  Ǹ ǹ
-          0x0244_0244, //  Ʉ
-          0x0254_0254, //  ɔ
-          0x025b_025b, //  ɛ
-          0x0289_0289, //  ʉ
-          0x1e3e_1e3f, //  Ḿ ḿ
-          0x1e84_1e85, //  Ẅ ẅ
-          0xa78b_a78c, //  Ꞌ ꞌ
-      },
-      30, 78);
+      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      //
+      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+      //       │
+      //  char[ ] blockKeys
+      new char[ ] {
+        0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0x00a7  },
+
+      //       ┌──── hashIndex           - an index to the hash-bucket
+      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+      //       │  │
+      //  char[ ][ ] codePointRanges
+      new char[ ][ ] {
+        { // 0x0000__ codePoint ranges
+          0x41_44, 0x46_4e, 0x50_50, 0x53_57, 0x59_5a, 0x61_64, 0x66_6e, 0x70_70,  // A B C D F G H I J K L M N P S T U V W Y
+                                                                                   // Z a b c d f g h i j k l m n p
+          0x73_77, 0x79_7a, 0xc1_c2, 0xcd_ce, 0xda_db, 0xe1_e2, 0xed_ee, 0xfa_fb },// s t u v w y z Á Â Í Î Ú Û á â í î ú û
+        { // 0x0001__ codePoint ranges
+          0x43_44, 0x4a_4b, 0x86_86, 0x90_90, 0xcd_d0, 0xd3_d4, 0xf8_f9 },         // Ń ń Ŋ ŋ Ɔ Ɛ Ǎ ǎ Ǐ ǐ Ǔ ǔ Ǹ ǹ
+        { // 0x0002__ codePoint ranges
+          0x44_44, 0x54_54, 0x5b_5b, 0x89_89 },                                    // Ʉ ɔ ɛ ʉ
+        { // 0x0003__ codePoint ranges
+          0x00_02, 0x04_04, 0x08_08, 0x0c_0c },                                    // ̀ ́ ̂ ̄ ̈ ̌
+          null, null,
+        { // 0x001e__ codePoint ranges
+          0x3e_3f, 0x84_85 },                                                      // Ḿ ḿ Ẅ ẅ
+        { // 0x00a7__ codePoint ranges
+          0x8b_8c } },                                                             // Ꞌ ꞌ
+        // number of code-point ranges
+        34,
+        // number of code-points
+        84);
 
 
   /**

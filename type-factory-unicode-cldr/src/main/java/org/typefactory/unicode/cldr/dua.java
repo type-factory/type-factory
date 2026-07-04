@@ -76,8 +76,9 @@ public final class dua extends AbstractCldrResourceBundle {
           0x0253_0254, //  ɓ ɔ
           0x0257_0257, //  ɗ
           0x025b_025b, //  ɛ
+          0x0301_0301, //  ́
       },
-      29, 64);
+      30, 65);
 
 
   /**
@@ -125,9 +126,9 @@ public final class dua extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

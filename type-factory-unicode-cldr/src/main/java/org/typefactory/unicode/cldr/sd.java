@@ -96,25 +96,22 @@ public final class sd extends AbstractCldrResourceBundle {
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x21_22, //  ! "
+          0x21_21, //  !
           0x28_29, //  ( )
-          0x2d_2d, //  -
           0x2f_2f, //  /
           0x3a_3a, //  :
           0x5b_5b, //  [
           0x5d_5d, //  ]
+          0x7b_7b, //  {
+          0x7d_7d, //  }
       },
         new int[]{
-          0x060c_060c, //  ،
-          0x061b_061b, //  ؛
-          0x061f_061f, //  ؟
-          0x066d_066d, //  ٭
-          0x2011_2011, //  ‑
-          0x2018_2019, //  ‘ ’
-          0x201d_201d, //  ”
-          0x2026_2026, //  …
+          0x06d4_06d4, //  ۔
+          0x2018_2018, //  ‘
+          0x204f_204f, //  ⁏
+          0x2e41_2e41, //  ⹁
       },
-      15, 18);
+      12, 13);
 
 
 }

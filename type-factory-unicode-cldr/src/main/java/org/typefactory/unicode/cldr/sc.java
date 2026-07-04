@@ -79,9 +79,11 @@ public final class sc extends AbstractCldrResourceBundle {
         new char[]{
           0x4b_4b, //  K
           0x51_51, //  Q
+          0x53_53, //  S
           0x57_59, //  W X Y
           0x6b_6b, //  k
           0x71_71, //  q
+          0x73_73, //  s
           0x77_79, //  w x y
           0xaa_aa, //  ª
           0xba_ba, //  º
@@ -106,7 +108,7 @@ public final class sc extends AbstractCldrResourceBundle {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      26, 61);
+      28, 63);
 
 
   /**

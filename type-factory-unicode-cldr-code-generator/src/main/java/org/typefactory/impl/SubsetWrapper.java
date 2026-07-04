@@ -22,10 +22,17 @@ import org.typefactory.Subset;
 public interface SubsetWrapper extends Subset {
 
   static SubsetWrapper optimisedSubset(final UnicodeSet unicodeSet) {
+
     final SubsetBuilder subsetBuilder = Subset.builder();
     for (EntryRange range : unicodeSet.ranges()) {
       subsetBuilder.includeCodePointRange(range.codepoint, range.codepointEnd);
     }
+    for (var s : unicodeSet.strings()) {
+      for (int cp : s.codePoints().toArray()) {
+        subsetBuilder.includeCodePoint(cp);
+      }
+    }
+
     final Subset subset = subsetBuilder.build();
     if (subset instanceof RangedSubsetImpl rangedSubset) {
       return new RangedSubsetWrapper(rangedSubset);

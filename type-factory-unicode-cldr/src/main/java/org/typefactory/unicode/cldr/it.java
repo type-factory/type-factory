@@ -71,6 +71,8 @@ public final class it extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
+          0x53_53, //  S
+          0x73_73, //  s
           0xaa_aa, //  ª
           0xba_ba, //  º
           0xc1_c7, //  Á Â Ã Ä Å Æ Ç
@@ -94,7 +96,7 @@ public final class it extends AbstractCldrResourceBundle {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      20, 49);
+      22, 51);
 
 
   /**
@@ -107,8 +109,8 @@ public final class it extends AbstractCldrResourceBundle {
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x21_23, //  ! " #
-          0x26_2a, //  & ' ( ) *
+          0x21_22, //  ! "
+          0x27_29, //  ' ( )
           0x2c_2f, //  , - . /
           0x3a_3b, //  : ;
           0x3f_40, //  ? @
@@ -126,7 +128,7 @@ public final class it extends AbstractCldrResourceBundle {
           0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
-      16, 28);
+      16, 25);
 
 
 }

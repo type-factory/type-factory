@@ -46,19 +46,17 @@ public final class bem extends AbstractCldrResourceBundle {
 
         new char[]{
           0x41_43, //  A B C
-          0x45_47, //  E F G
-          0x49_50, //  I J K L M N O P
+          0x45_50, //  E F G H I J K L M N O P
           0x53_55, //  S T U
           0x57_57, //  W
           0x59_59, //  Y
           0x61_63, //  a b c
-          0x65_67, //  e f g
-          0x69_70, //  i j k l m n o p
+          0x65_70, //  e f g h i j k l m n o p
           0x73_75, //  s t u
           0x77_77, //  w
           0x79_79, //  y
       },
-      12, 38);
+      10, 40);
 
 
   /**
@@ -108,9 +106,9 @@ public final class bem extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

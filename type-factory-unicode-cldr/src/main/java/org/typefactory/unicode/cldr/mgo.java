@@ -45,16 +45,12 @@ public final class mgo extends AbstractCldrResourceBundle {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x41_42, //  A B
-          0x44_47, //  D E F G
-          0x49_4b, //  I J K
+          0x41_4b, //  A B C D E F G H I J K
           0x4d_50, //  M N O P
           0x52_55, //  R S T U
           0x57_57, //  W
           0x59_5a, //  Y Z
-          0x61_62, //  a b
-          0x64_67, //  d e f g
-          0x69_6b, //  i j k
+          0x61_6b, //  a b c d e f g h i j k
           0x6d_70, //  m n o p
           0x72_75, //  r s t u
           0x77_77, //  w
@@ -77,8 +73,9 @@ public final class mgo extends AbstractCldrResourceBundle {
           0x0254_0254, //  ɔ
           0x0259_0259, //  ə
           0x02bc_02bc, //  ʼ
+          0x0300_0300, //  ̀
       },
-      30, 57);
+      27, 62);
 
 
   /**

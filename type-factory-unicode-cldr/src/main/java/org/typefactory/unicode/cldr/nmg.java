@@ -50,7 +50,7 @@ public final class nmg extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
-        0x0000, 0x0001, 0x0002  },
+        0x0000, 0x0001, 0x0002, 0x0003  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
@@ -58,18 +58,22 @@ public final class nmg extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x41_50, 0x52_57, 0x59_59, 0x61_70, 0x72_77, 0x79_79, 0xc1_c2, 0xc4_c4, 
-          0xc9_ca, 0xcd_cf, 0xd3_d4, 0xd6_d6, 0xda_db, 0xe1_e2, 0xe4_e4, 0xe9_ea, 
-          0xed_ef, 0xf3_f4, 0xf6_f6, 0xfa_fb},
+          0x41_50, 0x52_57, 0x59_59, 0x61_70, 0x72_77, 0x79_79, 0xc1_c2, 0xc4_c4,  // A B C D E F G H I J K L M N O P R S T U
+                                                                                   // V W Y a b c d e f g h i j k l m n o p r
+                                                                                   // s t u v w y Á Â Ä
+          0xc9_ca, 0xcd_cf, 0xd3_d4, 0xd6_d6, 0xda_db, 0xe1_e2, 0xe4_e4, 0xe9_ea,  // É Ê Í Î Ï Ó Ô Ö Ú Û á â ä é ê
+          0xed_ef, 0xf3_f4, 0xf6_f6, 0xfa_fb },                                    // í î ï ó ô ö ú û
         { // 0x0001__ codePoint ranges
-          0x00_01, 0x12_13, 0x1a_1b, 0x2a_2b, 0x43_44, 0x4a_4d, 0x54_55, 0x6a_6b, 
-          0x81_81, 0x86_86, 0x8e_8e, 0x90_90, 0xcd_d4, 0xdd_dd},
+          0x00_01, 0x12_13, 0x1a_1b, 0x2a_2b, 0x43_44, 0x4a_4d, 0x54_55, 0x6a_6b,  // Ā ā Ē ē Ě ě Ī ī Ń ń Ŋ ŋ Ō ō Ŕ ŕ Ū ū
+          0x81_81, 0x86_86, 0x8e_8e, 0x90_90, 0xcd_d4, 0xdd_dd },                  // Ɓ Ɔ Ǝ Ɛ Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ ǝ
         { // 0x0002__ codePoint ranges
-          0x53_54, 0x5b_5b}},
+          0x53_54, 0x5b_5b },                                                      // ɓ ɔ ɛ
+        { // 0x0003__ codePoint ranges
+          0x01_02, 0x04_04, 0x0c_0c } },                                           // ́ ̂ ̄ ̌
         // number of code-point ranges
-        36,
+        39,
         // number of code-points
-        106);
+        110);
 
 
   /**
@@ -113,9 +117,9 @@ public final class nmg extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

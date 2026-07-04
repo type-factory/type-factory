@@ -42,45 +42,42 @@ public final class nnh extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-        new char[]{
-          0x41_50, //  A B C D E F G H I J K L M N O P
-          0x53_57, //  S T U V W
-          0x59_5a, //  Y Z
-          0x61_70, //  a b c d e f g h i j k l m n o p
-          0x73_77, //  s t u v w
-          0x79_7a, //  y z
-          0xc0_c2, //  À Á Â
-          0xc8_ca, //  È É Ê
-          0xcc_cd, //  Ì Í
-          0xd2_d4, //  Ò Ó Ô
-          0xd9_db, //  Ù Ú Û
-          0xe0_e2, //  à á â
-          0xe8_ea, //  è é ê
-          0xec_ed, //  ì í
-          0xf2_f4, //  ò ó ô
-          0xf9_fb, //  ù ú û
-          0xff_ff, //  ÿ
-      },
-        new int[]{
-          0x011a_011b, //  Ě ě
-          0x0143_0144, //  Ń ń
-          0x014a_014b, //  Ŋ ŋ
-          0x0178_0178, //  Ÿ
-          0x0186_0186, //  Ɔ
-          0x0190_0190, //  Ɛ
-          0x01cd_01ce, //  Ǎ ǎ
-          0x01d1_01d4, //  Ǒ ǒ Ǔ ǔ
-          0x0244_0244, //  Ʉ
-          0x0254_0254, //  ɔ
-          0x025b_025b, //  ɛ
-          0x0289_0289, //  ʉ
-          0x02bc_02bc, //  ʼ
-          0x1e3e_1e3f, //  Ḿ ḿ
-          0x1e84_1e85, //  Ẅ ẅ
-      },
-      32, 99);
+      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      //
+      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+      //       │
+      //  char[ ] blockKeys
+      new char[ ] {
+        0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0xffff  },
+
+      //       ┌──── hashIndex           - an index to the hash-bucket
+      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+      //       │  │
+      //  char[ ][ ] codePointRanges
+      new char[ ][ ] {
+        { // 0x0000__ codePoint ranges
+          0x41_50, 0x53_57, 0x59_5a, 0x61_70, 0x73_77, 0x79_7a, 0xc0_c2, 0xc8_ca,  // A B C D E F G H I J K L M N O P S T U V
+                                                                                   // W Y Z a b c d e f g h i j k l m n o p s
+                                                                                   // t u v w y z À Á Â È É Ê
+          0xcc_cd, 0xd2_d4, 0xd9_db, 0xe0_e2, 0xe8_ea, 0xec_ed, 0xf2_f4, 0xf9_fb,  // Ì Í Ò Ó Ô Ù Ú Û à á â è é ê ì í ò ó ô ù
+                                                                                   // ú û
+          0xff_ff },                                                               // ÿ
+        { // 0x0001__ codePoint ranges
+          0x1a_1b, 0x43_44, 0x4a_4b, 0x78_78, 0x86_86, 0x90_90, 0xcd_ce, 0xd1_d4 },// Ě ě Ń ń Ŋ ŋ Ÿ Ɔ Ɛ Ǎ ǎ Ǒ ǒ Ǔ ǔ
+        { // 0x0002__ codePoint ranges
+          0x44_44, 0x54_54, 0x5b_5b, 0x89_89, 0xbc_bc },                           // Ʉ ɔ ɛ ʉ ʼ
+        { // 0x0003__ codePoint ranges
+          0x00_02, 0x0c_0c },                                                      // ̀ ́ ̂ ̌
+          null, null,
+        { // 0x001e__ codePoint ranges
+          0x3e_3f, 0x84_85 },                                                      // Ḿ ḿ Ẅ ẅ
+          null },                                                                  //
+        // number of code-point ranges
+        34,
+        // number of code-points
+        103);
 
 
   /**

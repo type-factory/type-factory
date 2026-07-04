@@ -71,8 +71,10 @@ public final class ln extends AbstractCldrResourceBundle {
           0x01cd_01d2, //  Ǎ ǎ Ǐ ǐ Ǒ ǒ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
+          0x0301_0302, //  ́ ̂
+          0x030c_030c, //  ̌
       },
-      24, 76);
+      26, 79);
 
 
   /**
@@ -116,9 +118,9 @@ public final class ln extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

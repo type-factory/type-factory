@@ -88,18 +88,21 @@ public final class gd extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x49_4b, 0x51_51, 0x56_5a, 0x6a_6b, 0x71_71, 0x76_7a, 0xc1_c7, 0xc9_cb, 
-          0xcd_cf, 0xd1_d1, 0xd3_d4, 0xd6_d6, 0xd8_d8, 0xda_dc, 0xe1_e7, 0xe9_eb, 
-          0xed_ef, 0xf1_f1, 0xf3_f4, 0xf6_f6, 0xf8_f8, 0xfa_fc, 0xff_ff},
+          0x49_4b, 0x51_51, 0x56_5a, 0x6a_6b, 0x71_71, 0x76_7a, 0xc1_c7, 0xc9_cb,  // I J K Q V W X Y Z j k q v w x y z Á Â Ã
+                                                                                   // Ä Å Æ Ç É Ê Ë
+          0xcd_cf, 0xd1_d1, 0xd3_d4, 0xd6_d6, 0xd8_d8, 0xda_dc, 0xe1_e7, 0xe9_eb,  // Í Î Ï Ñ Ó Ô Ö Ø Ú Û Ü á â ã ä å æ ç é ê
+                                                                                   // ë
+          0xed_ef, 0xf1_f1, 0xf3_f4, 0xf6_f6, 0xf8_f8, 0xfa_fc, 0xff_ff },         // í î ï ñ ó ô ö ø ú û ü ÿ
         { // 0x0001__ codePoint ranges
-          0x00_03, 0x0a_0b, 0x12_15, 0x20_21, 0x2a_2d, 0x31_31, 0x41_42, 0x4c_4f, 
-          0x52_53, 0x5e_5f, 0x6a_6d, 0x78_78},
+          0x00_03, 0x0a_0b, 0x12_15, 0x20_21, 0x2a_2d, 0x31_31, 0x41_42, 0x4c_4f,  // Ā ā Ă ă Ċ ċ Ē ē Ĕ ĕ Ġ ġ Ī ī Ĭ ĭ ı Ł ł Ō
+                                                                                   // ō Ŏ ŏ
+          0x52_53, 0x5e_5f, 0x6a_6d, 0x78_78 },                                    // Œ œ Ş ş Ū ū Ŭ ŭ Ÿ
         { // 0x0002__ codePoint ranges
-          0x18_19},
+          0x18_19 },                                                               // Ș ș
           null, null, null,
         { // 0x001e__ codePoint ranges
-          0x0a_0b, 0x1e_1f, 0x40_41, 0x56_57, 0x60_61, 0x6a_6b},
-          null},
+          0x0a_0b, 0x1e_1f, 0x40_41, 0x56_57, 0x60_61, 0x6a_6b },                  // Ḋ ḋ Ḟ ḟ Ṁ ṁ Ṗ ṗ Ṡ ṡ Ṫ ṫ
+          null },                                                                  //
         // number of code-point ranges
         42,
         // number of code-points

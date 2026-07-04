@@ -68,7 +68,10 @@ public final class nl extends AbstractCldrResourceBundle {
           0xfa_fa, //  ú
           0xfc_fc, //  ü
       },
-      22, 72);
+        new int[]{
+          0x0301_0301, //  ́
+      },
+      23, 73);
 
 
   /**

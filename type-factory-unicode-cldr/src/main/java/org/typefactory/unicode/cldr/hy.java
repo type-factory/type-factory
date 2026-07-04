@@ -63,9 +63,13 @@ public final class hy extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
+          0x0535_0535, //  Ե
+          0x0552_0552, //  Ւ
+          0x0565_0565, //  ե
+          0x0582_0582, //  ւ
           0x0587_0587, //  և
       },
-      1, 1);
+      5, 5);
 
 
   /**

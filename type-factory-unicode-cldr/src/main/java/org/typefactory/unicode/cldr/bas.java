@@ -42,43 +42,40 @@ public final class bas extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-        new char[]{
-          0x41_50, //  A B C D E F G H I J K L M N O P
-          0x52_57, //  R S T U V W
-          0x59_5a, //  Y Z
-          0x61_70, //  a b c d e f g h i j k l m n o p
-          0x72_77, //  r s t u v w
-          0x79_7a, //  y z
-          0xc0_c2, //  À Á Â
-          0xc8_ca, //  È É Ê
-          0xcc_ce, //  Ì Í Î
-          0xd2_d4, //  Ò Ó Ô
-          0xd9_db, //  Ù Ú Û
-          0xe0_e2, //  à á â
-          0xe8_ea, //  è é ê
-          0xec_ee, //  ì í î
-          0xf2_f4, //  ò ó ô
-          0xf9_fb, //  ù ú û
-      },
-        new int[]{
-          0x0100_0101, //  Ā ā
-          0x0112_0113, //  Ē ē
-          0x011a_011b, //  Ě ě
-          0x012a_012b, //  Ī ī
-          0x0143_0144, //  Ń ń
-          0x014a_014d, //  Ŋ ŋ Ō ō
-          0x016a_016b, //  Ū ū
-          0x0181_0181, //  Ɓ
-          0x0186_0186, //  Ɔ
-          0x0190_0190, //  Ɛ
-          0x01cd_01d4, //  Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ
-          0x01f8_01f9, //  Ǹ ǹ
-          0x0253_0254, //  ɓ ɔ
-          0x025b_025b, //  ɛ
-      },
-      30, 110);
+      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      //
+      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+      //       │
+      //  char[ ] blockKeys
+      new char[ ] {
+        0x0000, 0x0001, 0x0002, 0x0003, 0x001d  },
+
+      //       ┌──── hashIndex           - an index to the hash-bucket
+      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+      //       │  │
+      //  char[ ][ ] codePointRanges
+      new char[ ][ ] {
+        { // 0x0000__ codePoint ranges
+          0x41_50, 0x52_57, 0x59_5a, 0x61_70, 0x72_77, 0x79_7a, 0xc0_c2, 0xc8_ca,  // A B C D E F G H I J K L M N O P R S T U
+                                                                                   // V W Y Z a b c d e f g h i j k l m n o p
+                                                                                   // r s t u v w y z À Á Â È É Ê
+          0xcc_ce, 0xd2_d4, 0xd9_db, 0xe0_e2, 0xe8_ea, 0xec_ee, 0xf2_f4, 0xf9_fb },// Ì Í Î Ò Ó Ô Ù Ú Û à á â è é ê ì í î ò ó
+                                                                                   // ô ù ú û
+        { // 0x0001__ codePoint ranges
+          0x00_01, 0x12_13, 0x1a_1b, 0x2a_2b, 0x43_44, 0x4a_4d, 0x6a_6b, 0x81_81,  // Ā ā Ē ē Ě ě Ī ī Ń ń Ŋ ŋ Ō ō Ū ū Ɓ
+          0x86_86, 0x90_90, 0xcd_d4, 0xf8_f9 },                                    // Ɔ Ɛ Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ Ǹ ǹ
+        { // 0x0002__ codePoint ranges
+          0x53_54, 0x5b_5b },                                                      // ɓ ɔ ɛ
+        { // 0x0003__ codePoint ranges
+          0x00_02, 0x04_04, 0x0c_0c },                                             // ̀ ́ ̂ ̄ ̌
+        { // 0x001d__ codePoint ranges
+          0xc6_c7 } },                                                             // ᷆ ᷇
+        // number of code-point ranges
+        34,
+        // number of code-points
+        117);
 
 
   /**
@@ -120,9 +117,9 @@ public final class bas extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

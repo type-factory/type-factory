@@ -57,9 +57,10 @@ public final class hsb extends AbstractCldrResourceBundle {
           0x0141_0144, //  Ł ł Ń ń
           0x0158_0159, //  Ř ř
           0x0160_0161, //  Š š
+          0x0179_017a, //  Ź ź
           0x017d_017e, //  Ž ž
       },
-      11, 70);
+      12, 72);
 
 
   /**
@@ -73,6 +74,9 @@ public final class hsb extends AbstractCldrResourceBundle {
 
         new char[]{
           0x49_49, //  I
+          0x53_53, //  S
+          0x69_69, //  i
+          0x73_73, //  s
           0xc0_cf, //  À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï
           0xd1_d2, //  Ñ Ò
           0xd4_d4, //  Ô
@@ -100,8 +104,9 @@ public final class hsb extends AbstractCldrResourceBundle {
           0x0164_0165, //  Ť ť
           0x016a_0171, //  Ū ū Ŭ ŭ Ů ů Ű ű
           0x0178_017c, //  Ÿ Ź ź Ż ż
+          0x0307_0307, //  ̇
       },
-      26, 116);
+      30, 120);
 
 
   /**

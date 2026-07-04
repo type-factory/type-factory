@@ -69,12 +69,14 @@ public final class yo extends AbstractCldrResourceBundle {
         new int[]{
           0x0143_0144, //  Ń ń
           0x01f8_01f9, //  Ǹ ǹ
+          0x0300_0301, //  ̀ ́
+          0x0304_0304, //  ̄
           0x1e3e_1e3f, //  Ḿ ḿ
           0x1e62_1e63, //  Ṣ ṣ
           0x1eb8_1eb9, //  Ẹ ẹ
           0x1ecc_1ecd, //  Ọ ọ
       },
-      26, 74);
+      28, 77);
 
 
   /**

@@ -127,20 +127,23 @@ public final class ii extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x21_21, 0x23_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d, 
-          0x5f_5f, 0x7b_7b, 0x7d_7d, 0xa7_a7, 0xb7_b7},
+          0x21_21, 0x23_23, 0x25_26, 0x28_2a, 0x2c_2f, 0x3a_3b, 0x3f_40, 0x5b_5d,  // ! # % & ( ) * , - . / : ; ? @ [ \ ]
+          0x5f_5f, 0x7b_7b, 0x7d_7d, 0xa7_a7, 0xb7_b7 },                           // _ { } § ·
           null,
         { // 0x00fe__ codePoint ranges
-          0x30_31, 0x33_44, 0x49_52, 0x54_57, 0x59_61, 0x63_63, 0x68_68, 0x6a_6b},
+          0x30_31, 0x33_44, 0x49_52, 0x54_57, 0x59_61, 0x63_63, 0x68_68, 0x6a_6b },// ︰ ︱ ︳ ︴ ︵ ︶ ︷ ︸ ︹ ︺ ︻ ︼ ︽ ︾ ︿ ﹀ ﹁ ﹂ ﹃ ﹄
+                                                                                   // ﹉ ﹊ ﹋ ﹌ ﹍ ﹎ ﹏ ﹐ ﹑ ﹒ ﹔ ﹕ ﹖ ﹗ ﹙ ﹚ ﹛ ﹜ ﹝ ﹞
+                                                                                   // ﹟ ﹠ ﹡ ﹣ ﹨ ﹪ ﹫
         { // 0x00ff__ codePoint ranges
-          0x01_03, 0x05_0a, 0x0c_0f, 0x1a_1b, 0x1f_20, 0x3b_3d, 0x3f_3f, 0x5b_5b, 
-          0x5d_5d},
+          0x01_03, 0x05_0a, 0x0c_0f, 0x1a_1b, 0x1f_20, 0x3b_3d, 0x3f_3f, 0x5b_5b,  // ！ ＂ ＃ ％ ＆ ＇ （ ） ＊ ， － ． ／ ： ； ？ ＠ ［ ＼ ］
+                                                                                   // ＿ ｛
+          0x5d_5d },                                                               // ｝
         { // 0x0020__ codePoint ranges
-          0x10_11, 0x13_16, 0x18_19, 0x1c_1d, 0x25_26, 0x30_30, 0x32_33, 0x35_35, 
-          0x3b_3b},
+          0x10_11, 0x13_16, 0x18_19, 0x1c_1d, 0x25_26, 0x30_30, 0x32_33, 0x35_35,  // ‐ ‑ – — ― ‖ ‘ ’ “ ” ‥ … ‰ ′ ″ ‵
+          0x3b_3b },                                                               // ※
           null,
         { // 0x0030__ codePoint ranges
-          0x01_03, 0x08_11, 0x14_17, 0x1d_1e}},
+          0x01_03, 0x08_11, 0x14_17, 0x1d_1e } },                                  // 、 。 〃 〈 〉 《 》 「 」 『 』 【 】 〔 〕 〖 〗 〝 〞
         // number of code-point ranges
         43,
         // number of code-points

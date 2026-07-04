@@ -64,18 +64,23 @@ public final class bg extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
+          0x0300_0300, //  ̀
           0x0400_0401, //  Ѐ Ё
           0x040d_040d, //  Ѝ
-          0x042b_042b, //  Ы
-          0x042d_042d, //  Э
-          0x044b_044b, //  ы
-          0x044d_044d, //  э
-          0x0450_0451, //  ѐ ё
+          0x0410_0410, //  А
+          0x041e_041e, //  О
+          0x0423_0423, //  У
+          0x042a_042b, //  Ъ Ы
+          0x042d_0430, //  Э Ю Я а
+          0x043e_043e, //  о
+          0x0443_0443, //  у
+          0x044a_044b, //  ъ ы
+          0x044d_0451, //  э ю я ѐ ё
           0x045d_045d, //  ѝ
           0x0462_0463, //  Ѣ ѣ
           0x046a_046b, //  Ѫ ѫ
       },
-      10, 14);
+      15, 27);
 
 
   /**

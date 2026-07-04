@@ -45,7 +45,6 @@ public final class pa_Guru extends AbstractCldrResourceBundle {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
-          0x0a02_0a02, //  ਂ
           0x0a05_0a0a, //  ਅ ਆ ਇ ਈ ਉ ਊ
           0x0a0f_0a10, //  ਏ ਐ
           0x0a13_0a28, //  ਓ ਔ ਕ ਖ ਗ ਘ ਙ ਚ ਛ ਜ ਝ ਞ ਟ ਠ ਡ ਢ ਣ ਤ ਥ ਦ ਧ ਨ
@@ -60,7 +59,7 @@ public final class pa_Guru extends AbstractCldrResourceBundle {
           0x0a5c_0a5c, //  ੜ
           0x0a66_0a74, //  ੦ ੧ ੨ ੩ ੪ ੫ ੬ ੭ ੮ ੯ ੰ ੱ ੲ ੳ ੴ
       },
-      14, 69);
+      13, 68);
 
 
   /**
@@ -73,10 +72,12 @@ public final class pa_Guru extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
-          0x0a03_0a03, //  ਃ
+          0x0a02_0a03, //  ਂ ਃ
+          0x0a32_0a32, //  ਲ
+          0x0a3c_0a3c, //  ਼
           0x200c_200d, //  ‌ ‍
       },
-      2, 3);
+      4, 6);
 
 
   /**

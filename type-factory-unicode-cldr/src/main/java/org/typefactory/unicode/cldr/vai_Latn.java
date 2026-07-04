@@ -73,9 +73,11 @@ public final class vai_Latn extends AbstractCldrResourceBundle {
           0x0253_0254, //  ɓ ɔ
           0x0257_0257, //  ɗ
           0x025b_025b, //  ɛ
+          0x0301_0301, //  ́
+          0x0303_0303, //  ̃
           0x1ebc_1ebd, //  Ẽ ẽ
       },
-      27, 82);
+      29, 84);
 
 
   /**
@@ -109,9 +111,9 @@ public final class vai_Latn extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

@@ -62,8 +62,9 @@ public final class tr extends AbstractCldrResourceBundle {
           0x011e_011f, //  Ğ ğ
           0x0130_0131, //  İ ı
           0x015e_015f, //  Ş ş
+          0x0307_0307, //  ̇
       },
-      15, 58);
+      16, 59);
 
 
   /**
@@ -77,8 +78,10 @@ public final class tr extends AbstractCldrResourceBundle {
 
         new char[]{
           0x51_51, //  Q
+          0x53_53, //  S
           0x57_58, //  W X
           0x71_71, //  q
+          0x73_73, //  s
           0x77_78, //  w x
           0xc0_c6, //  À Á Â Ã Ä Å Æ
           0xc8_cf, //  È É Ê Ë Ì Í Î Ï
@@ -99,7 +102,7 @@ public final class tr extends AbstractCldrResourceBundle {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      20, 77);
+      22, 79);
 
 
   /**

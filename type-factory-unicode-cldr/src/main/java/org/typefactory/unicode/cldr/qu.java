@@ -46,6 +46,7 @@ public final class qu extends AbstractCldrResourceBundle {
 
         new char[]{
           0x41_41, //  A
+          0x43_43, //  C
           0x48_49, //  H I
           0x4b_4e, //  K L M N
           0x50_51, //  P Q
@@ -53,6 +54,7 @@ public final class qu extends AbstractCldrResourceBundle {
           0x57_57, //  W
           0x59_59, //  Y
           0x61_61, //  a
+          0x63_63, //  c
           0x68_69, //  h i
           0x6b_6e, //  k l m n
           0x70_71, //  p q
@@ -62,7 +64,10 @@ public final class qu extends AbstractCldrResourceBundle {
           0xd1_d1, //  Ñ
           0xf1_f1, //  ñ
       },
-      16, 30);
+        new int[]{
+          0x02bc_02bc, //  ʼ
+      },
+      19, 33);
 
 
   /**

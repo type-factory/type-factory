@@ -50,7 +50,7 @@ public final class ee extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
-        0x0000, 0x0001, 0x0002, 0xffff, 0xffff, 0xffff, 0x001e, 0xffff  },
+        0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0xffff  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
@@ -58,21 +58,25 @@ public final class ee extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x41_42, 0x44_49, 0x4b_50, 0x52_5a, 0x61_62, 0x64_69, 0x6b_70, 0x72_7a, 
-          0xc0_c1, 0xc3_c3, 0xc8_c9, 0xcc_cd, 0xd2_d3, 0xd5_d5, 0xd9_da, 0xe0_e1, 
-          0xe3_e3, 0xe8_e9, 0xec_ed, 0xf2_f3, 0xf5_f5, 0xf9_fa},
+          0x41_42, 0x44_49, 0x4b_50, 0x52_5a, 0x61_62, 0x64_69, 0x6b_70, 0x72_7a,  // A B D E F G H I K L M N O P R S T U V W
+                                                                                   // X Y Z a b d e f g h i k l m n o p r s t
+                                                                                   // u v w x y z
+          0xc0_c1, 0xc3_c3, 0xc8_c9, 0xcc_cd, 0xd2_d3, 0xd5_d5, 0xd9_da, 0xe0_e1,  // À Á Ã È É Ì Í Ò Ó Õ Ù Ú à á
+          0xe3_e3, 0xe8_e9, 0xec_ed, 0xf2_f3, 0xf5_f5, 0xf9_fa },                  // ã è é ì í ò ó õ ù ú
         { // 0x0001__ codePoint ranges
-          0x28_29, 0x4a_4b, 0x68_69, 0x86_86, 0x89_89, 0x90_92, 0x94_94, 0xb2_b2},
+          0x28_29, 0x4a_4b, 0x68_69, 0x86_86, 0x89_89, 0x90_92, 0x94_94, 0xb2_b2 },// Ĩ ĩ Ŋ ŋ Ũ ũ Ɔ Ɖ Ɛ Ƒ ƒ Ɣ Ʋ
         { // 0x0002__ codePoint ranges
-          0x54_54, 0x56_56, 0x5b_5b, 0x63_63, 0x8b_8b},
-          null, null, null,
+          0x54_54, 0x56_56, 0x5b_5b, 0x63_63, 0x8b_8b },                           // ɔ ɖ ɛ ɣ ʋ
+        { // 0x0003__ codePoint ranges
+          0x00_01, 0x03_03 },                                                      // ̀ ́ ̃
+          null, null,
         { // 0x001e__ codePoint ranges
-          0xbc_bd},
-          null},
+          0xbc_bd },                                                               // Ẽ ẽ
+          null },                                                                  //
         // number of code-point ranges
-        36,
+        38,
         // number of code-points
-        90);
+        93);
 
 
   /**

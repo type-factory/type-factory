@@ -77,8 +77,10 @@ public final class ewo extends AbstractCldrResourceBundle {
           0x0254_0254, //  ɔ
           0x0259_0259, //  ə
           0x025b_025b, //  ɛ
+          0x0300_0302, //  ̀ ́ ̂
+          0x030c_030c, //  ̌
       },
-      30, 96);
+      32, 100);
 
 
   /**
@@ -124,9 +126,9 @@ public final class ewo extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

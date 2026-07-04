@@ -53,7 +53,7 @@ public final class bo extends AbstractCldrResourceBundle {
           0x0f58_0f5b, //  མ ཙ ཚ ཛ
           0x0f5d_0f68, //  ཝ ཞ ཟ འ ཡ ར ལ ཤ ཥ ས ཧ ཨ
           0x0f6a_0f6a, //  ཪ
-          0x0f72_0f72, //  ི
+          0x0f71_0f72, //  ཱ ི
           0x0f74_0f74, //  ུ
           0x0f77_0f77, //  ཷ
           0x0f79_0f80, //  ཹ ེ ཻ ོ ཽ ཾ ཿ ྀ
@@ -67,7 +67,7 @@ public final class bo extends AbstractCldrResourceBundle {
           0x0fad_0fb8, //  ྭ ྮ ྯ ྰ ྱ ྲ ླ ྴ ྵ ྶ ྷ ྸ
           0x0fba_0fbc, //  ྺ ྻ ྼ
       },
-      21, 86);
+      21, 87);
 
 
   /**
@@ -106,9 +106,9 @@ public final class bo extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

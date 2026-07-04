@@ -64,8 +64,10 @@ public final class nus extends AbstractCldrResourceBundle {
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
           0x0263_0263, //  ɣ
+          0x0308_0308, //  ̈
+          0x0331_0331, //  ̱
       },
-      17, 68);
+      19, 70);
 
 
   /**
@@ -99,9 +101,9 @@ public final class nus extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

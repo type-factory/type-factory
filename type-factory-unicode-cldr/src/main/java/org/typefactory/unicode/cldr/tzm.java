@@ -57,13 +57,14 @@ public final class tzm extends AbstractCldrResourceBundle {
           0x0194_0194, //  Ɣ
           0x025b_025b, //  ɛ
           0x0263_0263, //  ɣ
+          0x02b7_02b7, //  ʷ
           0x1e0c_1e0d, //  Ḍ ḍ
           0x1e24_1e25, //  Ḥ ḥ
           0x1e5a_1e5b, //  Ṛ ṛ
           0x1e62_1e63, //  Ṣ ṣ
           0x1e6c_1e6d, //  Ṭ ṭ
       },
-      15, 60);
+      16, 61);
 
 
   /**
@@ -105,9 +106,9 @@ public final class tzm extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

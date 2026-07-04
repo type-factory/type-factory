@@ -45,13 +45,11 @@ public final class yav extends AbstractCldrResourceBundle {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x41_46, //  A B C D E F
-          0x48_49, //  H I
+          0x41_49, //  A B C D E F G H I
           0x4b_50, //  K L M N O P
           0x53_57, //  S T U V W
           0x59_59, //  Y
-          0x61_66, //  a b c d e f
-          0x68_69, //  h i
+          0x61_69, //  a b c d e f g h i
           0x6b_70, //  k l m n o p
           0x73_77, //  s t u v w
           0x79_79, //  y
@@ -77,8 +75,9 @@ public final class yav extends AbstractCldrResourceBundle {
           0x01d1_01d4, //  Ǒ ǒ Ǔ ǔ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
+          0x0300_0301, //  ̀ ́
       },
-      30, 88);
+      29, 92);
 
 
   /**
@@ -126,9 +125,9 @@ public final class yav extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

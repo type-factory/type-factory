@@ -72,34 +72,36 @@ public final class lt extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-        new char[]{
-          0x51_51, //  Q
-          0x57_58, //  W X
-          0x71_71, //  q
-          0x77_78, //  w x
-          0xc0_c1, //  À Á
-          0xc3_c3, //  Ã
-          0xc8_c9, //  È É
-          0xcc_cd, //  Ì Í
-          0xd1_d3, //  Ñ Ò Ó
-          0xd5_d5, //  Õ
-          0xd9_da, //  Ù Ú
-          0xe0_e1, //  à á
-          0xe3_e3, //  ã
-          0xe8_e9, //  è é
-          0xec_ed, //  ì í
-          0xf1_f3, //  ñ ò ó
-          0xf5_f5, //  õ
-          0xf9_fa, //  ù ú
-      },
-        new int[]{
-          0x0128_0129, //  Ĩ ĩ
-          0x0168_0169, //  Ũ ũ
-          0x1ebc_1ebd, //  Ẽ ẽ
-      },
-      21, 38);
+      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      //
+      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+      //       │
+      //  char[ ] blockKeys
+      new char[ ] {
+        0x0000, 0x0001, 0x001e, 0x0003  },
+
+      //       ┌──── hashIndex           - an index to the hash-bucket
+      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+      //       │  │
+      //  char[ ][ ] codePointRanges
+      new char[ ][ ] {
+        { // 0x0000__ codePoint ranges
+          0x43_44, 0x48_4a, 0x4c_4d, 0x51_52, 0x57_58, 0x5a_5a, 0x63_64, 0x68_6a,  // C D H I J L M Q R W X Z c d h i j
+          0x6c_6d, 0x71_72, 0x77_78, 0x7a_7a, 0xc0_c1, 0xc3_c3, 0xc8_c9, 0xcc_cd,  // l m q r w x z À Á Ã È É Ì Í
+          0xd1_d3, 0xd5_d5, 0xd9_da, 0xe0_e1, 0xe3_e3, 0xe8_e9, 0xec_ed, 0xf1_f3,  // Ñ Ò Ó Õ Ù Ú à á ã è é ì í ñ ò ó
+          0xf5_f5, 0xf9_fa },                                                      // õ ù ú
+        { // 0x0001__ codePoint ranges
+          0x04_05, 0x16_19, 0x28_29, 0x2e_2f, 0x68_6b, 0x72_73, 0x7d_7e },         // Ą ą Ė ė Ę ę Ĩ ĩ Į į Ũ ũ Ū ū Ų ų Ž ž
+        { // 0x001e__ codePoint ranges
+          0xbc_bd },                                                               // Ẽ ẽ
+        { // 0x0003__ codePoint ranges
+          0x00_01, 0x03_03, 0x07_07 } },                                           // ̀ ́ ̃ ̇
+        // number of code-point ranges
+        37,
+        // number of code-points
+        74);
 
 
   /**

@@ -75,6 +75,9 @@ public final class dsb extends AbstractCldrResourceBundle {
 
         new char[]{
           0x49_49, //  I
+          0x53_53, //  S
+          0x69_69, //  i
+          0x73_73, //  s
           0xc0_cf, //  À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï
           0xd1_d2, //  Ñ Ò
           0xd4_d4, //  Ô
@@ -103,8 +106,9 @@ public final class dsb extends AbstractCldrResourceBundle {
           0x016a_0171, //  Ū ū Ŭ ŭ Ů ů Ű ű
           0x0178_0178, //  Ÿ
           0x017b_017c, //  Ż ż
+          0x0307_0307, //  ̇
       },
-      27, 112);
+      31, 116);
 
 
   /**

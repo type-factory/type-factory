@@ -68,7 +68,10 @@ public final class fy extends AbstractCldrResourceBundle {
           0xf6_f6, //  ö
           0xfa_fd, //  ú û ü ý
       },
-      22, 82);
+        new int[]{
+          0x0301_0301, //  ́
+      },
+      23, 83);
 
 
   /**

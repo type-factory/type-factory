@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.typefactory.Subset;
 import org.typefactory.impl.HashedRangedSubsetWrapper;
 import org.typefactory.impl.InternalSubsetUtils;
 import org.typefactory.impl.OptimalHashedRangedSubsetWrapper;
@@ -40,9 +39,9 @@ import org.typefactory.impl.RangedSubsetWrapper;
 import org.typefactory.impl.SubsetWrapper;
 import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
 
-public class LocaleSubsetsClassGenerator {
+public class UnicodeCldrResourceBundleClassGenerator {
 
-  private static final Logger logger = Logger.getLogger(LocaleSubsetsClassGenerator.class.getName());
+  private static final Logger logger = Logger.getLogger(UnicodeCldrResourceBundleClassGenerator.class.getName());
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
   public static final String INDENT_08 = "        ";
@@ -51,7 +50,16 @@ public class LocaleSubsetsClassGenerator {
   private final String licenseHeader;
   private final File outputDirectory;
 
-  public LocaleSubsetsClassGenerator(
+  private static String indent(final int indentRequired) {
+    return " ".repeat(indentRequired);
+  }
+
+  private static String indent(final int indentRequired, final StringBuilder s) {
+    final int indent = indentRequired - s.length() + s.lastIndexOf(LINE_SEPARATOR);
+    return " ".repeat(Math.max(0, indent));
+  }
+
+  public UnicodeCldrResourceBundleClassGenerator(
       final String licenseHeader,
       final File outputDirectory,
       final UnicodeGroupData unicodeGroupData) {
@@ -83,21 +91,6 @@ public class LocaleSubsetsClassGenerator {
       // An exception or missing ISO3 mapping heavily implies it's a non-living (e.g., historical) tag
       return false;
     }
-  }
-
-  private static Subset subsetFromUnicodeSet(final UnicodeSet exemplars) {
-    final var subsetBuilder = Subset.builder();
-    for (var range : exemplars.ranges()) {
-      subsetBuilder.includeCodePointRange(range.codepoint, range.codepointEnd);
-    }
-    for (var s : exemplars.strings()) {
-      for (int cp : s.codePoints().toArray()) {
-        final var scp = Character.toString(cp);
-        subsetBuilder.includeCodePoint(cp);
-      }
-    }
-
-    return subsetBuilder.build();
   }
 
   public void generateLanguageClass() {
@@ -173,14 +166,14 @@ public class LocaleSubsetsClassGenerator {
             """, language, script, lettersClassName, lettersClassName));
 
     s.append(String.format("""
-            /**
-             * <p>The standard characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters>}
-             *    element in the CLDR dataset.</p>
-             */
-          """, language, script));
+          /**
+           * <p>The standard characters for the %s language%s as defined by the
+           *    Unicode Common Locale Data Repository (CLDR).</p>
+           *
+           * <p>These are the characters in the {@code <exemplarCharacters>}
+           *    element in the CLDR dataset.</p>
+           */
+        """, language, script));
 
     final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(standardCharactersUnicodeSet);
 
@@ -196,16 +189,15 @@ public class LocaleSubsetsClassGenerator {
     }
     s.append(");").append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(LINE_SEPARATOR);
 
-
     s.append(String.format("""
-            /**
-             * <p>The auxiliary characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
-             *    element in the CLDR dataset.</p>
-             */
-          """, language, script));
+          /**
+           * <p>The auxiliary characters for the %s language%s as defined by the
+           *    Unicode Common Locale Data Repository (CLDR).</p>
+           *
+           * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
+           *    element in the CLDR dataset.</p>
+           */
+        """, language, script));
 
     final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(auxiliaryCharactersUnicodeSet);
 
@@ -226,16 +218,15 @@ public class LocaleSubsetsClassGenerator {
       s.append(");").append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(LINE_SEPARATOR);
     }
 
-
     s.append(String.format("""
-            /**
-             * <p>The punctuation characters for the %s language%s as defined by the
-             *    Unicode Common Locale Data Repository (CLDR).</p>
-             *
-             * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
-             *    element in the CLDR dataset.</p>
-             */
-          """, language, script));
+          /**
+           * <p>The punctuation characters for the %s language%s as defined by the
+           *    Unicode Common Locale Data Repository (CLDR).</p>
+           *
+           * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
+           *    element in the CLDR dataset.</p>
+           */
+        """, language, script));
 
     final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(punctuationCharactersUnicodeSet);
 
@@ -411,7 +402,6 @@ public class LocaleSubsetsClassGenerator {
     }
   }
 
-
 //  @SuppressWarnings("java:S3776")
 //  private static void appendAlphabetCharactersJavadoc(
 //      final StringBuilder s,
@@ -477,6 +467,9 @@ public class LocaleSubsetsClassGenerator {
       final StringBuilder s,
       final HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
 
+    // Another string builder for the inline comments.
+    final StringBuilder c = new StringBuilder();
+
     final char[][] keys = hashedRangedSubsetWrapper.getBlockKeys();
     final char[][][] codePointRangesByBlock = hashedRangedSubsetWrapper.getCodePointRangesByBlock();
     s.append(LINE_SEPARATOR).append("      // Hash-buckets with 0..n keys – null indicates an empty hash-bucket.");
@@ -525,6 +518,7 @@ public class LocaleSubsetsClassGenerator {
       } else {
         s.append(LINE_SEPARATOR).append("        {");
         for (int hashBucketIndex = 0; hashBucketIndex < keyBuckets.length; ++hashBucketIndex) {
+          int charCount = 0;
           final int key = keyBuckets[hashBucketIndex];
           if (hashBucketIndex > 0) {
             s.append(LINE_SEPARATOR).append("         ");
@@ -533,23 +527,44 @@ public class LocaleSubsetsClassGenerator {
           s.append(LINE_SEPARATOR).append(INDENT_10);
           final char[] codePointRanges = codePointRangesByBlock[hashIndex][hashBucketIndex];
           s.append("{");
+
           for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
             if (codePointRangeIndex > 0 && codePointRangeIndex % 8 == 0) {
-              s.append(LINE_SEPARATOR).append("           ");
+              s.append(" //").append(c).append(LINE_SEPARATOR).append("           ");
+              c.setLength(0);
+              charCount = 0;
             }
             final int from = InternalSubsetUtils.getInclusiveFrom(codePointRanges[codePointRangeIndex]);
             final int to = InternalSubsetUtils.getInclusiveTo(codePointRanges[codePointRangeIndex]);
             s.append(String.format("0x%02x_%02x, ", from & 0xFF, to & 0xFF));
+            final int codePointFrom = (key << 8) | (from & 0xFF);
+            final int codePointTo = (key << 8) | (to & 0xFF);
+            for (int codePoint = codePointFrom; codePoint <= codePointTo; ++codePoint, ++charCount) {
+              if (charCount > 0 && charCount % 20 == 0) {
+                c.append(LINE_SEPARATOR).append(indent(83)).append("//");
+              }
+              c.append(' ').appendCodePoint(codePoint);
+            }
           }
           s.setLength(s.length() - 2);
           s.append("},");
+          if (hashBucketIndex < keyBuckets.length - 1) {
+            s.append(indent(84, s)).append("//").append(c);
+            c.setLength(0);
+          }
         }
         s.setLength(s.length() - 1);
-        s.append("}, ");
+        s.append(" }, ");
+        if (hashIndex < keys.length - 1) {
+          s.append(indent(84, s)).append("//").append(c);
+          c.setLength(0);
+        }
       }
     }
     s.setLength(s.length() - 2);
-    s.append("},");
+    s.append(" },");
+    s.append(indent(84, s)).append("//").append(c);
+    c.setLength(0);
     s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
     s.append(LINE_SEPARATOR).append(INDENT_08).append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
     s.append(LINE_SEPARATOR).append("        // number of code-points");
@@ -559,6 +574,9 @@ public class LocaleSubsetsClassGenerator {
   private static void appendOptimalHashedBlockRangedSubset(
       final StringBuilder s,
       final OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
+
+    // Another string builder for the inline comments.
+    final StringBuilder c = new StringBuilder();
 
     final char[] keys = optimalHashedRangedSubsetWrapper.getBlockKeys();
     final char[][] codePointRangesByBlock = optimalHashedRangedSubsetWrapper.getCodePointRangesByBlock();
@@ -585,6 +603,7 @@ public class LocaleSubsetsClassGenerator {
     s.append(LINE_SEPARATOR).append("      new char[ ][ ] {");
     int contiguousEmptyBucketCount = 0;
     for (int hashIndex = 0; hashIndex < keys.length; ++hashIndex) {
+      int charCount = 0;
       final int key = keys[hashIndex];
       final char[] codePointRanges = codePointRangesByBlock[hashIndex];
       if (key == 0xFFFF) {
@@ -599,18 +618,34 @@ public class LocaleSubsetsClassGenerator {
         s.append(LINE_SEPARATOR).append(INDENT_10);
         for (int codePointRangeIndex = 0; codePointRangeIndex < codePointRanges.length; ++codePointRangeIndex) {
           if (codePointRangeIndex > 0 && codePointRangeIndex % 8 == 0) {
-            s.append(LINE_SEPARATOR).append(INDENT_10);
+            s.append(" //").append(c).append(LINE_SEPARATOR).append(INDENT_10);
+            c.setLength(0);
+            charCount = 0;
           }
           final int from = InternalSubsetUtils.getInclusiveFrom(codePointRanges[codePointRangeIndex]);
           final int to = InternalSubsetUtils.getInclusiveTo(codePointRanges[codePointRangeIndex]);
           s.append(String.format("0x%02x_%02x, ", from & 0xFF, to & 0xFF));
+          final int codePointFrom = (key << 8) | (from & 0xFF);
+          final int codePointTo = (key << 8) | (to & 0xFF);
+          for (int codePoint = codePointFrom; codePoint <= codePointTo; ++codePoint, ++charCount) {
+            if (charCount > 0 && charCount % 20 == 0) {
+              c.append(LINE_SEPARATOR).append(indent(83)).append("//");
+            }
+            c.append(' ').appendCodePoint(codePoint);
+          }
         }
         s.setLength(s.length() - 2);
-        s.append("},");
+        s.append(" },");
+        if (hashIndex < keys.length - 1) {
+          s.append(indent(84, s)).append("//").append(c);
+          c.setLength(0);
+        }
       }
     }
     s.setLength(s.length() - 1);
-    s.append("},");
+    s.append(" },");
+    s.append(indent(84, s)).append("//").append(c);
+    c.setLength(0);
     s.append(LINE_SEPARATOR).append("        // number of code-point ranges");
     s.append(LINE_SEPARATOR).append(INDENT_08).append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",");
     s.append(LINE_SEPARATOR).append("        // number of code-points");

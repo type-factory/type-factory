@@ -45,6 +45,8 @@ public final class el extends AbstractCldrResourceBundle {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
+          0x0301_0301, //  ́
+          0x0308_0308, //  ̈
           0x0386_0386, //  Ά
           0x0388_038a, //  Έ Ή Ί
           0x038c_038c, //  Ό
@@ -52,7 +54,7 @@ public final class el extends AbstractCldrResourceBundle {
           0x03a3_03ce, //  Σ Τ Υ Φ Χ Ψ Ω Ϊ Ϋ ά έ ή ί ΰ α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π
                        //  ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ
       },
-      5, 69);
+      7, 71);
 
 
   /**
@@ -65,6 +67,20 @@ public final class el extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
+          0x0300_0301, //  ̀ ́
+          0x0308_0308, //  ̈
+          0x0313_0313, //  ̓
+          0x0342_0342, //  ͂
+          0x0391_0391, //  Α
+          0x0397_0397, //  Η
+          0x0399_0399, //  Ι
+          0x03a5_03a5, //  Υ
+          0x03a9_03a9, //  Ω
+          0x03b1_03b1, //  α
+          0x03b7_03b7, //  η
+          0x03b9_03b9, //  ι
+          0x03c5_03c5, //  υ
+          0x03c9_03c9, //  ω
           0x1f00_1f15, //  ἀ ἁ ἂ ἃ ἄ ἅ ἆ ἇ Ἀ Ἁ Ἂ Ἃ Ἄ Ἅ Ἆ Ἇ ἐ ἑ ἒ ἓ ἔ ἕ
           0x1f18_1f1d, //  Ἐ Ἑ Ἒ Ἓ Ἔ Ἕ
           0x1f20_1f3f, //  ἠ ἡ ἢ ἣ ἤ ἥ ἦ ἧ Ἠ Ἡ Ἢ Ἣ Ἤ Ἥ Ἦ Ἧ ἰ ἱ ἲ ἳ ἴ ἵ ἶ ἷ Ἰ Ἱ Ἲ Ἳ Ἴ Ἵ Ἶ Ἷ
@@ -98,7 +114,7 @@ public final class el extends AbstractCldrResourceBundle {
           0x1ff8_1ff8, //  Ὸ
           0x1ffa_1ffa, //  Ὼ
       },
-      32, 113);
+      46, 128);
 
 
   /**

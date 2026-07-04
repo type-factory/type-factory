@@ -50,7 +50,7 @@ public final class agq extends AbstractCldrResourceBundle {
       //       │
       //  char[ ] blockKeys
       new char[ ] {
-        0x0000, 0x0001, 0x0002  },
+        0x0000, 0x0001, 0x0002, 0x0003  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
@@ -58,19 +58,23 @@ public final class agq extends AbstractCldrResourceBundle {
       //  char[ ][ ] codePointRanges
       new char[ ][ ] {
         { // 0x0000__ codePoint ranges
-          0x41_49, 0x4b_50, 0x53_57, 0x59_5a, 0x61_69, 0x6b_70, 0x73_77, 0x79_7a, 
-          0xc0_c0, 0xc2_c2, 0xc8_c8, 0xca_ca, 0xcc_cc, 0xce_ce, 0xd2_d2, 0xd4_d4, 
-          0xd9_d9, 0xdb_db, 0xe0_e0, 0xe2_e2, 0xe8_e8, 0xea_ea, 0xec_ec, 0xee_ee, 
-          0xf2_f2, 0xf4_f4, 0xf9_f9, 0xfb_fb},
+          0x41_49, 0x4b_50, 0x53_57, 0x59_5a, 0x61_69, 0x6b_70, 0x73_77, 0x79_7a,  // A B C D E F G H I K L M N O P S T U V W
+                                                                                   // Y Z a b c d e f g h i k l m n o p s t u
+                                                                                   // v w y z
+          0xc0_c0, 0xc2_c2, 0xc8_c8, 0xca_ca, 0xcc_cc, 0xce_ce, 0xd2_d2, 0xd4_d4,  // À Â È Ê Ì Î Ò Ô
+          0xd9_d9, 0xdb_db, 0xe0_e0, 0xe2_e2, 0xe8_e8, 0xea_ea, 0xec_ec, 0xee_ee,  // Ù Û à â è ê ì î
+          0xf2_f2, 0xf4_f4, 0xf9_f9, 0xfb_fb },                                    // ò ô ù û
         { // 0x0001__ codePoint ranges
-          0x00_01, 0x12_13, 0x1a_1b, 0x2a_2b, 0x4a_4d, 0x6a_6b, 0x86_86, 0x90_90, 
-          0x97_97, 0xcd_d4},
+          0x00_01, 0x12_13, 0x1a_1b, 0x2a_2b, 0x4a_4d, 0x6a_6b, 0x86_86, 0x90_90,  // Ā ā Ē ē Ě ě Ī ī Ŋ ŋ Ō ō Ū ū Ɔ Ɛ
+          0x97_97, 0xcd_d4 },                                                      // Ɨ Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ
         { // 0x0002__ codePoint ranges
-          0x44_44, 0x54_54, 0x5b_5b, 0x68_68, 0x89_89, 0x94_94}},
+          0x44_44, 0x54_54, 0x5b_5b, 0x68_68, 0x89_89, 0x94_94 },                  // Ʉ ɔ ɛ ɨ ʉ ʔ
+        { // 0x0003__ codePoint ranges
+          0x00_00, 0x02_02, 0x04_04, 0x0c_0c } },                                  // ̀ ̂ ̄ ̌
         // number of code-point ranges
-        44,
+        48,
         // number of code-points
-        95);
+        99);
 
 
   /**
@@ -112,9 +116,9 @@ public final class agq extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

@@ -66,45 +66,40 @@ public final class fi extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-        new char[]{
-          0x49_49, //  I
-          0xc0_c3, //  À Á Â Ã
-          0xc6_cb, //  Æ Ç È É Ê Ë
-          0xcd_d5, //  Í Î Ï Ð Ñ Ò Ó Ô Õ
-          0xd8_e3, //  Ø Ù Ú Û Ü Ý Þ ß à á â ã
-          0xe6_eb, //  æ ç è é ê ë
-          0xed_f5, //  í î ï ð ñ ò ó ô õ
-          0xf8_ff, //  ø ù ú û ü ý þ ÿ
-      },
-        new int[]{
-          0x0100_0107, //  Ā ā Ă ă Ą ą Ć ć
-          0x010a_0113, //  Ċ ċ Č č Ď ď Đ đ Ē ē
-          0x0116_011b, //  Ė ė Ę ę Ě ě
-          0x011e_011f, //  Ğ ğ
-          0x0122_0123, //  Ģ ģ
-          0x0126_0127, //  Ħ ħ
-          0x012a_012b, //  Ī ī
-          0x012e_0131, //  Į į İ ı
-          0x0136_0137, //  Ķ ķ
-          0x0139_013e, //  Ĺ ĺ Ļ ļ Ľ ľ
-          0x0141_0148, //  Ł ł Ń ń Ņ ņ Ň ň
-          0x014a_014b, //  Ŋ ŋ
-          0x0150_0155, //  Ő ő Œ œ Ŕ ŕ
-          0x0158_015f, //  Ř ř Ś ś Ŝ ŝ Ş ş
-          0x0162_0167, //  Ţ ţ Ť ť Ŧ ŧ
-          0x016a_016b, //  Ū ū
-          0x016e_0173, //  Ů ů Ű ű Ų ų
-          0x0178_017c, //  Ÿ Ź ź Ż ż
-          0x01b7_01b7, //  Ʒ
-          0x01e4_01e9, //  Ǥ ǥ Ǧ ǧ Ǩ ǩ
-          0x01ee_01ef, //  Ǯ ǯ
-          0x0218_021b, //  Ș ș Ț ț
-          0x021e_021f, //  Ȟ ȟ
-          0x0292_0292, //  ʒ
-      },
-      32, 158);
+      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      //
+      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
+      //       │
+      //  char[ ] blockKeys
+      new char[ ] {
+        0x0000, 0x0001, 0x0002, 0x0003  },
+
+      //       ┌──── hashIndex           - an index to the hash-bucket
+      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
+      //       │  │
+      //  char[ ][ ] codePointRanges
+      new char[ ][ ] {
+        { // 0x0000__ codePoint ranges
+          0x49_49, 0x53_53, 0x69_69, 0x73_73, 0xc0_c3, 0xc6_cb, 0xcd_d5, 0xd8_e3,  // I S i s À Á Â Ã Æ Ç È É Ê Ë Í Î Ï Ð Ñ Ò
+                                                                                   // Ó Ô Õ Ø Ù Ú Û Ü Ý Þ ß à á â ã
+          0xe6_eb, 0xed_f5, 0xf8_ff },                                             // æ ç è é ê ë í î ï ð ñ ò ó ô õ ø ù ú û ü
+                                                                                   // ý þ ÿ
+        { // 0x0001__ codePoint ranges
+          0x00_07, 0x0a_13, 0x16_1b, 0x1e_1f, 0x22_23, 0x26_27, 0x2a_2b, 0x2e_31,  // Ā ā Ă ă Ą ą Ć ć Ċ ċ Č č Ď ď Đ đ Ē ē Ė ė
+                                                                                   // Ę ę Ě ě Ğ ğ Ģ ģ Ħ ħ Ī ī Į į İ ı
+          0x36_37, 0x39_3e, 0x41_48, 0x4a_4b, 0x50_55, 0x58_5f, 0x62_67, 0x6a_6b,  // Ķ ķ Ĺ ĺ Ļ ļ Ľ ľ Ł ł Ń ń Ņ ņ Ň ň Ŋ ŋ Ő ő
+                                                                                   // Œ œ Ŕ ŕ Ř ř Ś ś Ŝ ŝ Ş ş Ţ ţ Ť ť Ŧ ŧ Ū ū
+          0x6e_73, 0x78_7c, 0xb7_b7, 0xe4_e9, 0xee_ef },                           // Ů ů Ű ű Ų ų Ÿ Ź ź Ż ż Ʒ Ǥ ǥ Ǧ ǧ Ǩ ǩ Ǯ ǯ
+        { // 0x0002__ codePoint ranges
+          0x18_1b, 0x1e_1f, 0x92_92 },                                             // Ș ș Ț ț Ȟ ȟ ʒ
+        { // 0x0003__ codePoint ranges
+          0x07_07 } },                                                             // ̇
+        // number of code-point ranges
+        36,
+        // number of code-points
+        162);
 
 
   /**

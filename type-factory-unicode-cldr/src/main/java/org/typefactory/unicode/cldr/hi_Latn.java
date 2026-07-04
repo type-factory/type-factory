@@ -61,6 +61,10 @@ public final class hi_Latn extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
+          0x4c_4d, //  L M
+          0x52_52, //  R
+          0x6c_6d, //  l m
+          0x72_72, //  r
           0xd1_d1, //  Ñ
           0xf1_f1, //  ñ
       },
@@ -71,6 +75,9 @@ public final class hi_Latn extends AbstractCldrResourceBundle {
           0x014c_014f, //  Ō ō Ŏ ŏ
           0x015a_015b, //  Ś ś
           0x016a_016b, //  Ū ū
+          0x0304_0304, //  ̄
+          0x0310_0310, //  ̐
+          0x0325_0325, //  ̥
           0x1e0c_1e0d, //  Ḍ ḍ
           0x1e24_1e25, //  Ḥ ḥ
           0x1e36_1e37, //  Ḷ ḷ
@@ -80,7 +87,7 @@ public final class hi_Latn extends AbstractCldrResourceBundle {
           0x1e62_1e63, //  Ṣ ṣ
           0x1e6c_1e6d, //  Ṭ ṭ
       },
-      16, 36);
+      23, 45);
 
 
   /**

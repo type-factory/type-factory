@@ -71,8 +71,10 @@ public final class kkj extends AbstractCldrResourceBundle {
           0x0253_0254, //  ɓ ɔ
           0x0257_0257, //  ɗ
           0x025b_025b, //  ɛ
+          0x0300_0302, //  ̀ ́ ̂
+          0x0327_0327, //  ̧
       },
-      24, 86);
+      26, 90);
 
 
   /**

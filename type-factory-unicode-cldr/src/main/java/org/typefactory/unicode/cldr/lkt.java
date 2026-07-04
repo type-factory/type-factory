@@ -95,17 +95,22 @@ public final class lkt extends AbstractCldrResourceBundle {
           0x43_44, //  C D
           0x46_46, //  F
           0x4a_4a, //  J
-          0x51_52, //  Q R
+          0x51_53, //  Q R S
           0x56_56, //  V
           0x58_58, //  X
           0x63_64, //  c d
           0x66_66, //  f
           0x6a_6a, //  j
-          0x71_72, //  q r
+          0x71_73, //  q r s
           0x76_76, //  v
           0x78_78, //  x
       },
-      12, 16);
+        new int[]{
+          0x0160_0161, //  Š š
+          0x021e_021f, //  Ȟ ȟ
+          0x02bc_02bc, //  ʼ
+      },
+      15, 23);
 
 
   /**

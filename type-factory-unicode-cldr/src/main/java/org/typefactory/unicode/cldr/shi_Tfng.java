@@ -60,8 +60,9 @@ public final class shi_Tfng extends AbstractCldrResourceBundle {
           0x2d5f_2d5f, //  ⵟ
           0x2d61_2d63, //  ⵡ ⵢ ⵣ
           0x2d65_2d65, //  ⵥ
+          0x2d6f_2d6f, //  ⵯ
       },
-      15, 31);
+      16, 32);
 
 
   /**
@@ -95,9 +96,9 @@ public final class shi_Tfng extends AbstractCldrResourceBundle {
           0x7d_7d, //  }
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x2011_2011, //  ‑
       },
-      10, 15);
+      10, 14);
 
 
 }

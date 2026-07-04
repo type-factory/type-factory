@@ -54,9 +54,9 @@ public final class mai extends AbstractCldrResourceBundle {
           0x093c_093c, //  ़
           0x093e_0942, //  ा ि ी ु ू
           0x0947_0948, //  े ै
-          0x094b_094c, //  ो ौ
+          0x094b_094d, //  ो ौ ्
       },
-      10, 44);
+      10, 45);
 
 
   /**
@@ -69,12 +69,13 @@ public final class mai extends AbstractCldrResourceBundle {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new int[]{
+          0x0902_0903, //  ं ः
           0x0905_090c, //  अ आ इ ई उ ऊ ऋ ऌ
           0x090f_0910, //  ए ऐ
           0x0913_0914, //  ओ औ
           0x0961_0961, //  ॡ
       },
-      4, 13);
+      5, 15);
 
 
   /**
