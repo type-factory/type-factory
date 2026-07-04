@@ -29,20 +29,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
 
-public class UnicodeCldrResourceBundleClassGenerator {
+public class UnicodeCldrHelper {
 
-  private static final Logger logger = Logger.getLogger(UnicodeCldrResourceBundleClassGenerator.class.getName());
+  private static final Logger logger = Logger.getLogger(UnicodeCldrHelper.class.getName());
 
   private final File outputDirectory;
-  private final LocaleDataResourceBundleCodeGenerator localeDataResourceBundleCodeGenerator;
+  private final CldrResourceBundleClassGenerator cldrResourceBundleClassGenerator;
 
-  public UnicodeCldrResourceBundleClassGenerator(
+  public UnicodeCldrHelper(
       final String licenseHeader,
       final File outputDirectory,
       final UnicodeGroupData unicodeGroupData) {
     this.outputDirectory = outputDirectory;
-    this.localeDataResourceBundleCodeGenerator =
-        new LocaleDataResourceBundleCodeGenerator(licenseHeader, outputDirectory);
+    this.cldrResourceBundleClassGenerator =
+        new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory);
   }
 
   public static Set<ULocale> getLivingLanguageLocales() {
@@ -90,7 +90,7 @@ public class UnicodeCldrResourceBundleClassGenerator {
         createAlphabetCharactersTxt(locale, standardCharactersUnicodeSet);
       }
 
-      localeDataResourceBundleCodeGenerator.generateLocaleDataResourceBundleClass(
+      cldrResourceBundleClassGenerator.generateLocaleDataResourceBundleClass(
           locale,
           standardCharactersUnicodeSet,
           auxiliaryCharactersUnicodeSet,

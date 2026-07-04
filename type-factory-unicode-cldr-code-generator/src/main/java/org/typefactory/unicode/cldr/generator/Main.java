@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
-import org.typefactory.unicode.cldr.generator.letters.UnicodeCldrResourceBundleClassGenerator;
+import org.typefactory.unicode.cldr.generator.letters.UnicodeCldrHelper;
 import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
 
 public class Main {
@@ -58,10 +58,10 @@ public class Main {
 
     final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
 
-    final UnicodeCldrResourceBundleClassGenerator unicodeCldrResourceBundleClassGenerator =
-        new UnicodeCldrResourceBundleClassGenerator(licenseHeader, outputDirectory, unicodeGroupData);
+    final UnicodeCldrHelper unicodeCldrHelper =
+        new UnicodeCldrHelper(licenseHeader, outputDirectory, unicodeGroupData);
 
-    unicodeCldrResourceBundleClassGenerator.generateLanguageClass();
+    unicodeCldrHelper.generateLanguageClass();
   }
 
   private static String getLicenseHeader(final String licenseFilePath) {

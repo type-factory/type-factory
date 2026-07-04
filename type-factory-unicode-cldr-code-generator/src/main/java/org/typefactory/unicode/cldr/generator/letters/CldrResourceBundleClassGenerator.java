@@ -34,9 +34,9 @@ import org.typefactory.impl.OptimalHashedRangedSubsetWrapper;
 import org.typefactory.impl.RangedSubsetWrapper;
 import org.typefactory.impl.SubsetWrapper;
 
-public class LocaleDataResourceBundleCodeGenerator {
+public class CldrResourceBundleClassGenerator {
 
-  private static final Logger logger = Logger.getLogger(LocaleDataResourceBundleCodeGenerator.class.getName());
+  private static final Logger logger = Logger.getLogger(CldrResourceBundleClassGenerator.class.getName());
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
   public static final String INDENT_08 = "        ";
@@ -45,7 +45,7 @@ public class LocaleDataResourceBundleCodeGenerator {
   private final String licenseHeader;
   private final File outputDirectory;
 
-  public LocaleDataResourceBundleCodeGenerator(
+  public CldrResourceBundleClassGenerator(
       final String licenseHeader,
       final File outputDirectory) {
     this.licenseHeader = licenseHeader;
