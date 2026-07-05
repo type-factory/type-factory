@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -30,7 +31,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class UnicodeCldrHelper {
 
@@ -99,22 +105,32 @@ public class UnicodeCldrHelper {
     }
   }
 
-  static CldrLocaleXmlDocument getCldrLocaleParsedXmlDocument(final Path path) {
-    try (final var inputStream = Files.newInputStream(path)) {
-      return new CldrLocaleXmlDocument(inputStream);
-    } catch (final Exception e) {
-      logger.severe(() -> "Cannot load CLDR locale resource from path " + path);
-      throw new RuntimeException(e);
+  static Document parseCldrLocaleXmlDocument(final InputStream xmlInputStream) {
+    try {
+      final var documentBuilder = DocumentBuilderFactory.newInstance();
+      documentBuilder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      documentBuilder.setExpandEntityReferences(false);
+      documentBuilder.setNamespaceAware(false);
+      documentBuilder.setXIncludeAware(false);
+
+      final var builder = documentBuilder.newDocumentBuilder();
+      builder.setEntityResolver((publicId, systemId) -> new InputSource(new StringReader("")));
+
+      return builder.parse(xmlInputStream);
+    } catch (final SAXException | IOException | RuntimeException | javax.xml.parsers.ParserConfigurationException e) {
+      logger.log(Level.SEVERE, e, () -> "Cannot read exemplar characters");
+      throw new IllegalStateException("Cannot read exemplar characters", e);
     }
   }
 
-  static CldrLocaleXmlDocument getCldrLocaleParsedXmlDocument(final String resourceName) {
+  static CldrLocaleXmlDocument getCldrLocaleXmlDocument(final String resourceName) {
     final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try (final InputStream inputStream = classLoader.getResourceAsStream(resourceName)) {
       if (inputStream == null) {
         throw new IllegalStateException("Cannot load CLDR locale resource from resource name " + resourceName);
       }
-      return new CldrLocaleXmlDocument(inputStream);
+      final var document = parseCldrLocaleXmlDocument(inputStream);
+      return new CldrLocaleXmlDocument(resourceName, document);
     } catch (final Exception e) {
       logger.severe(() -> "Cannot load CLDR locale resource from resource name " + resourceName);
       throw new RuntimeException(e);
@@ -139,10 +155,10 @@ public class UnicodeCldrHelper {
     final List<String> cldrLocaleXmlFilePaths = getCldrLocaleXmlFilePaths();
     for (final String resourceName : cldrLocaleXmlFilePaths) {
 
-      final CldrLocaleXmlDocument cldrLocaleXmlDocument = getCldrLocaleParsedXmlDocument(resourceName);
+      final CldrLocaleXmlDocument cldrLocaleXmlDocument = getCldrLocaleXmlDocument(resourceName);
       final Locale locale = cldrLocaleXmlDocument.getLocale();
 
-      if (!isIso639Language(locale)) {
+      if (!isIso639Language(locale) && !cldrLocaleXmlDocument.isRootCldrResource()) {
         continue;
       }
 
@@ -152,10 +168,10 @@ public class UnicodeCldrHelper {
         continue;
       }
 
-      final String localeScript = locale.getScript();
-      if ("Hani".equalsIgnoreCase(localeScript)) {
-        createAlphabetCharactersTxt(locale, cldrLocaleXmlDocument.getStandardExemplarCharacters());
-      }
+//      final String localeScript = locale.getScript();
+//      if ("Hani".equalsIgnoreCase(localeScript)) {
+//        createAlphabetCharactersTxt(locale, cldrLocaleXmlDocument.getStandardExemplarCharacters());
+//      }
 
       cldrResourceBundleClassGenerator.generateLocaleDataResourceBundleClass(cldrLocaleXmlDocument);
     }

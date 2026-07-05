@@ -26,13 +26,23 @@ import org.typefactory.impl.Factory;
 @Generated(
     comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
-public final class mn_Mong extends AbstractCldrResourceBundle {
+public class mn_Mong extends mn {
 
   public mn_Mong() {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
         PUNCTUATION_CHARACTERS_SUBSET);
+  }
+
+  protected mn_Mong(
+          final Subset standardSubset,
+          final Subset auxiliarySubset,
+          final Subset punctuationSubset) {
+    super(
+        standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
+        auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
   }
 
   /**
@@ -59,7 +69,7 @@ public final class mn_Mong extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = null;
 
 
   /**
@@ -69,7 +79,7 @@ public final class mn_Mong extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = null;
 
 
 }

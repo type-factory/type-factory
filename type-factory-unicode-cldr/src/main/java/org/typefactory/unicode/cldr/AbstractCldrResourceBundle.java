@@ -4,8 +4,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import org.typefactory.Subset;
+import org.typefactory.impl.Factory;
 
 public abstract class AbstractCldrResourceBundle extends ResourceBundle {
 
@@ -26,9 +28,9 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
       final Subset standardSubset,
       final Subset auxiliarySubset,
       final Subset punctuationSubset) {
-    this.standardSubset = standardSubset;
-    this.auxiliarySubset = auxiliarySubset;
-    this.punctuationSubset = punctuationSubset;
+    this.standardSubset = Objects.requireNonNullElse(standardSubset, Factory.emptySubset());
+    this.auxiliarySubset = Objects.requireNonNullElse(auxiliarySubset, Factory.emptySubset());
+    this.punctuationSubset = Objects.requireNonNullElse(punctuationSubset, Factory.emptySubset());
   }
 
   @Override

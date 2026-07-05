@@ -62,27 +62,16 @@ class UnicodeCldrHelperTest {
   }
 
   @Test
-  void getCldrLocaleParsedXmlDocument_loadsClasspathResource() {
-    final Path localeXml = Path.of("target", "classes", "cldr-common", "common", "main", "af.xml");
-    org.junit.jupiter.api.Assumptions.assumeTrue(localeXml.toFile().isFile(), "CLDR resources must be unpacked for this test");
-
-    final CldrLocaleXmlDocument actual = UnicodeCldrHelper.getCldrLocaleParsedXmlDocument(localeXml);
-
-    assertThat(actual.getLocale().getLanguage()).isEqualTo("af");
-    assertThat(actual.getStandardExemplarCharacters().isEmpty()).isFalse();
-  }
-
-  @Test
-  void getCldrLocaleParsedXmlDocument_loadsByResourceName() {
+  void getCldrLocaleXmlDocument_loadsByResourceName() {
     final CldrLocaleXmlDocument actual =
-        UnicodeCldrHelper.getCldrLocaleParsedXmlDocument("cldr-common/common/main/af.xml");
+        UnicodeCldrHelper.getCldrLocaleXmlDocument("cldr-common/common/main/af.xml");
 
     assertThat(actual.getLocale().getLanguage()).isEqualTo("af");
     assertThat(actual.getStandardExemplarCharacters().isEmpty()).isFalse();
   }
 
   @Test
-  void getCldrLocaleXmlFilePaths_returnsEmptyListWhenResourceDirectoryMissing() throws Exception {
+  void getCldrLocaleXmlFilePaths_returnsEmptyListWhenResourceDirectoryMissing() {
     final ClassLoader original = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(new ClassLoader(original) {
       @Override
@@ -99,7 +88,7 @@ class UnicodeCldrHelperTest {
   }
 
   @Test
-  void getCldrLocaleXmlFilePaths_wrapsPathResolutionErrors() throws Exception {
+  void getCldrLocaleXmlFilePaths_wrapsPathResolutionErrors() {
     final ClassLoader original = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(new ClassLoader(original) {
       @Override
@@ -118,14 +107,6 @@ class UnicodeCldrHelperTest {
     } finally {
       Thread.currentThread().setContextClassLoader(original);
     }
-  }
-
-  @Test
-  void getCldrLocaleParsedXmlDocument_wrapsResourceLookupErrors() {
-    final Path missingPath = Path.of("target", "missing-" + System.nanoTime() + ".xml");
-
-    assertThatThrownBy(() -> UnicodeCldrHelper.getCldrLocaleParsedXmlDocument(missingPath))
-        .isInstanceOf(RuntimeException.class);
   }
 
   @Test

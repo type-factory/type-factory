@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,9 +65,16 @@ public class CldrResourceBundleClassGenerator {
         ? ""
         : " (" + locale.getDisplayScript() + " script)";
 
-    final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getStandardExemplarCharacters());
-    final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getAuxiliaryExemplarCharacters());
-    final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getPunctuationExemplarCharacters());
+    final Optional<SubsetWrapper> standardCharactersSubset =
+        cldrLocaleXmlDocument.getStandardExemplarCharacters().map(SubsetWrapper::optimisedSubset);
+
+    final Optional<SubsetWrapper> auxiliaryCharactersSubset =
+        cldrLocaleXmlDocument.getAuxiliaryExemplarCharacters().map(SubsetWrapper::optimisedSubset);
+
+    final Optional<SubsetWrapper> punctuationCharactersSubset =
+        cldrLocaleXmlDocument.getPunctuationExemplarCharacters().map(SubsetWrapper::optimisedSubset);
+
+    final String extendsClass = cldrLocaleXmlDocument.extendsClassName();
 
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
@@ -84,7 +92,7 @@ public class CldrResourceBundleClassGenerator {
             @Generated(
                 comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
                 value = "org.typefactory:type-factory-unicode-cldr-code-generator")
-            public final class %s extends AbstractCldrResourceBundle {
+            public class %s extends %s {
             
               public %s() {
                 super(
@@ -93,8 +101,17 @@ public class CldrResourceBundleClassGenerator {
                     PUNCTUATION_CHARACTERS_SUBSET);
               }
             
-            """, language, script, lettersClassName, lettersClassName))
-
+              protected %s(
+                      final Subset standardSubset,
+                      final Subset auxiliarySubset,
+                      final Subset punctuationSubset) {
+                super(
+                    standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
+                    auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
+                    punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+              }
+            
+            """, language, script, lettersClassName, extendsClass, lettersClassName, lettersClassName))
         .append(String.format("""
               /**
                * <p>The standard characters for the %s language%s as defined by the
@@ -227,7 +244,13 @@ public class CldrResourceBundleClassGenerator {
 
   private static Consumer<StringFormatter> appendSubset(
       final Locale locale,
-      final SubsetWrapper subsetWrapper) {
+      final Optional<SubsetWrapper> optionalSubsetWrapper) {
+
+    if (optionalSubsetWrapper.isEmpty()) {
+      return sf -> appendNullSubset().accept(sf);
+    }
+
+    final var subsetWrapper = optionalSubsetWrapper.get();
 
     if (subsetWrapper.isEmpty()) {
       return sf -> appendEmptySubset().accept(sf);
@@ -241,6 +264,13 @@ public class CldrResourceBundleClassGenerator {
       return sf -> {
       };
     }
+  }
+
+  private static Consumer<StringFormatter> appendNullSubset() {
+    return sf ->
+        sf.append("null;")
+            .appendNewline()
+            .appendNewline();
   }
 
   private static Consumer<StringFormatter> appendEmptySubset() {

@@ -26,13 +26,23 @@ import org.typefactory.impl.Factory;
 @Generated(
     comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
-public final class ff extends AbstractCldrResourceBundle {
+public class ff extends root {
 
   public ff() {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
         PUNCTUATION_CHARACTERS_SUBSET);
+  }
+
+  protected ff(
+          final Subset standardSubset,
+          final Subset auxiliarySubset,
+          final Subset punctuationSubset) {
+    super(
+        standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
+        auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
   }
 
   /**
@@ -96,7 +106,7 @@ public final class ff extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = null;
 
 
 }
