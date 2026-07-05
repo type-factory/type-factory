@@ -42,25 +42,7 @@ public final class kk_Cyrl extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new int[]{
-          0x0401_0401, //  Ё
-          0x0406_0406, //  І
-          0x0410_044f, //  А Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э
-                       //  Ю Я а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы
-                       //  ь э ю я
-          0x0451_0451, //  ё
-          0x0456_0456, //  і
-          0x0492_0493, //  Ғ ғ
-          0x049a_049b, //  Қ қ
-          0x04a2_04a3, //  Ң ң
-          0x04ae_04b1, //  Ү ү Ұ ұ
-          0x04ba_04bb, //  Һ һ
-          0x04d8_04d9, //  Ә ә
-          0x04e8_04e9, //  Ө ө
-      },
-      12, 84);
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
   /**
@@ -80,30 +62,7 @@ public final class kk_Cyrl extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_23, //  ! " #
-          0x26_2a, //  & ' ( ) *
-          0x2c_2f, //  , - . /
-          0x3a_3b, //  : ;
-          0x3f_40, //  ? @
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-          0xa7_a7, //  §
-          0xab_ab, //  «
-          0xbb_bb, //  »
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-          0x2013_2014, //  – —
-          0x2018_2019, //  ‘ ’
-          0x201c_201d, //  “ ”
-          0x2026_2026, //  …
-      },
-      17, 32);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

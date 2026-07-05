@@ -73,9 +73,9 @@ public final class ar extends AbstractCldrResourceBundle {
           0x06a7_06a9, //  ڧ ڨ ک
           0x06af_06af, //  گ
           0x06cc_06cc, //  ی
-          0x200c_200d, //  ‌ ‍
+          0x200c_200f, //  ‌ ‍ ‎ ‏
       },
-      12, 16);
+      12, 18);
 
 
   /**

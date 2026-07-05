@@ -44,6 +44,10 @@ public final class ml extends AbstractCldrResourceBundle {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
+        new char[]{
+          0x7b_7b, //  {
+          0x7d_7d, //  }
+      },
         new int[]{
           0x0d02_0d03, //  ം ഃ
           0x0d05_0d0b, //  അ ആ ഇ ഈ ഉ ഊ ഋ
@@ -51,7 +55,7 @@ public final class ml extends AbstractCldrResourceBundle {
           0x0d12_0d28, //  ഒ ഓ ഔ ക ഖ ഗ ഘ ങ ച ഛ ജ ഝ ഞ ട ഠ ഡ ഢ ണ ത ഥ ദ ധ ന
           0x0d2a_0d39, //  പ ഫ ബ ഭ മ യ ര റ ല ള ഴ വ ശ ഷ സ ഹ
       },
-      5, 51);
+      7, 53);
 
 
   /**

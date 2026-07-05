@@ -86,9 +86,9 @@ public final class uz_Arab extends AbstractCldrResourceBundle {
           0x06bc_06bc, //  ڼ
           0x06cd_06cd, //  ۍ
           0x06d0_06d0, //  ې
-          0x200c_200d, //  ‌ ‍
+          0x200c_200f, //  ‌ ‍ ‎ ‏
       },
-      13, 14);
+      13, 16);
 
 
   /**
@@ -98,23 +98,7 @@ public final class uz_Arab extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_21, //  !
-          0x28_29, //  ( )
-          0x2c_2e, //  , - .
-          0x3a_3b, //  : ;
-          0x3f_3f, //  ?
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-      },
-      10, 15);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

@@ -41,9 +41,7 @@ public interface SubsetWrapper extends Subset {
     final SubsetBuilder subsetBuilder = Subset.builder();
 
     if (exemplarCharacters != null) {
-      for (CldrExemplarCharacters.Range range : exemplarCharacters.ranges()) {
-        subsetBuilder.includeCodePointRange(range.inclusiveFrom(), range.inclusiveTo());
-      }
+      exemplarCharacters.codePoints().forEach(subsetBuilder::includeCodePoint);
       for (String string : exemplarCharacters.strings()) {
         for (int cp : string.codePoints().toArray()) {
           subsetBuilder.includeCodePoint(cp);

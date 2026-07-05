@@ -20,7 +20,7 @@ import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Māori language as defined
+ * Provides Type Factory subsets for the Maori language as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
@@ -36,7 +36,7 @@ public final class mi extends AbstractCldrResourceBundle {
   }
 
   /**
-   * <p>The standard characters for the Māori language as defined by the
+   * <p>The standard characters for the Maori language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
@@ -73,7 +73,7 @@ public final class mi extends AbstractCldrResourceBundle {
 
 
   /**
-   * <p>The auxiliary characters for the Māori language as defined by the
+   * <p>The auxiliary characters for the Maori language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
@@ -103,29 +103,13 @@ public final class mi extends AbstractCldrResourceBundle {
 
 
   /**
-   * <p>The punctuation characters for the Māori language as defined by the
+   * <p>The punctuation characters for the Maori language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_21, //  !
-          0x28_29, //  ( )
-          0x2c_2e, //  , - .
-          0x3a_3b, //  : ;
-          0x3f_3f, //  ?
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-      },
-      10, 15);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

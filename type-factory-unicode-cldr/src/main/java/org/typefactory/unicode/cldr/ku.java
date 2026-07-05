@@ -73,7 +73,6 @@ public final class ku extends AbstractCldrResourceBundle {
 
         new char[]{
           0x53_53, //  S
-          0x73_73, //  s
           0xc0_c6, //  À Á Â Ã Ä Å Æ
           0xc8_c9, //  È É
           0xcb_cd, //  Ë Ì Í
@@ -97,7 +96,7 @@ public final class ku extends AbstractCldrResourceBundle {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      22, 67);
+      21, 66);
 
 
   /**

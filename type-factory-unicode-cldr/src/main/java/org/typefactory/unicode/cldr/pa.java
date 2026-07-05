@@ -44,6 +44,10 @@ public final class pa extends AbstractCldrResourceBundle {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
+        new char[]{
+          0x7b_7b, //  {
+          0x7d_7d, //  }
+      },
         new int[]{
           0x0a02_0a02, //  ਂ
           0x0a05_0a0a, //  ਅ ਆ ਇ ਈ ਉ ਊ
@@ -60,7 +64,7 @@ public final class pa extends AbstractCldrResourceBundle {
           0x0a5c_0a5c, //  ੜ
           0x0a66_0a74, //  ੦ ੧ ੨ ੩ ੪ ੫ ੬ ੭ ੮ ੯ ੰ ੱ ੲ ੳ ੴ
       },
-      14, 69);
+      16, 71);
 
 
   /**

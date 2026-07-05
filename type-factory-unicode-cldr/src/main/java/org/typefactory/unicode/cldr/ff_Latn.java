@@ -20,7 +20,7 @@ import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Fula language (Latin script) as defined
+ * Provides Type Factory subsets for the Fulah language (Latin script) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
@@ -36,83 +36,33 @@ public final class ff_Latn extends AbstractCldrResourceBundle {
   }
 
   /**
-   * <p>The standard characters for the Fula language (Latin script) as defined by the
+   * <p>The standard characters for the Fulah language (Latin script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x41_50, //  A B C D E F G H I J K L M N O P
-          0x52_55, //  R S T U
-          0x57_57, //  W
-          0x59_59, //  Y
-          0x61_70, //  a b c d e f g h i j k l m n o p
-          0x72_75, //  r s t u
-          0x77_77, //  w
-          0x79_79, //  y
-          0xd1_d1, //  Ñ
-          0xf1_f1, //  ñ
-      },
-        new int[]{
-          0x014a_014b, //  Ŋ ŋ
-          0x0181_0181, //  Ɓ
-          0x018a_018a, //  Ɗ
-          0x01b3_01b4, //  Ƴ ƴ
-          0x0253_0253, //  ɓ
-          0x0257_0257, //  ɗ
-      },
-      16, 54);
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
   /**
-   * <p>The auxiliary characters for the Fula language (Latin script) as defined by the
+   * <p>The auxiliary characters for the Fulah language (Latin script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x51_51, //  Q
-          0x56_56, //  V
-          0x58_58, //  X
-          0x5a_5a, //  Z
-          0x71_71, //  q
-          0x76_76, //  v
-          0x78_78, //  x
-          0x7a_7a, //  z
-      },
-      8, 8);
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
   /**
-   * <p>The punctuation characters for the Fula language (Latin script) as defined by the
+   * <p>The punctuation characters for the Fulah language (Latin script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_21, //  !
-          0x28_29, //  ( )
-          0x2c_2e, //  , - .
-          0x3a_3b, //  : ;
-          0x3f_3f, //  ?
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-      },
-      10, 15);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

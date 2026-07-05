@@ -20,7 +20,7 @@ import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Chinese language (Traditional Han script) as defined
+ * Provides Type Factory subsets for the Chinese language (Traditional script) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
@@ -36,7 +36,7 @@ public final class zh_Hant extends AbstractCldrResourceBundle {
   }
 
   /**
-   * <p>The standard characters for the Chinese language (Traditional Han script) as defined by the
+   * <p>The standard characters for the Chinese language (Traditional script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
@@ -421,7 +421,7 @@ public final class zh_Hant extends AbstractCldrResourceBundle {
 
 
   /**
-   * <p>The auxiliary characters for the Chinese language (Traditional Han script) as defined by the
+   * <p>The auxiliary characters for the Chinese language (Traditional script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
@@ -640,7 +640,7 @@ public final class zh_Hant extends AbstractCldrResourceBundle {
 
 
   /**
-   * <p>The punctuation characters for the Chinese language (Traditional Han script) as defined by the
+   * <p>The punctuation characters for the Chinese language (Traditional script) as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}

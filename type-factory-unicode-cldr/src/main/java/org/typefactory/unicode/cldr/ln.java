@@ -52,7 +52,8 @@ public final class ln extends AbstractCldrResourceBundle {
           0x61_69, //  a b c d e f g h i
           0x6b_70, //  k l m n o p
           0x72_77, //  r s t u v w
-          0x79_7a, //  y z
+          0x79_7b, //  y z {
+          0x7d_7d, //  }
           0xc1_c2, //  Á Â
           0xc9_ca, //  É Ê
           0xcd_ce, //  Í Î
@@ -74,7 +75,7 @@ public final class ln extends AbstractCldrResourceBundle {
           0x0301_0302, //  ́ ̂
           0x030c_030c, //  ̌
       },
-      26, 79);
+      27, 81);
 
 
   /**
@@ -104,23 +105,7 @@ public final class ln extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_21, //  !
-          0x28_29, //  ( )
-          0x2c_2e, //  , - .
-          0x3a_3b, //  : ;
-          0x3f_3f, //  ?
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-      },
-      10, 15);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

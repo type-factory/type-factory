@@ -66,8 +66,9 @@ public final class he extends AbstractCldrResourceBundle {
           0x05c1_05c2, //  ׁ ׂ
           0x05c4_05c4, //  ׄ
           0x05f4_05f4, //  ״
+          0x200e_200f, //  ‎ ‏
       },
-      6, 18);
+      7, 20);
 
 
   /**

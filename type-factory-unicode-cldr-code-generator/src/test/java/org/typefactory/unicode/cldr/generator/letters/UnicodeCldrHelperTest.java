@@ -16,28 +16,96 @@
 package org.typefactory.unicode.cldr.generator.letters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.File;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class UnicodeCldrHelperTest {
 
   @Test
-  void getLivingLanguageLocales_filtersCountryLocalesAndNonLivingLanguages(@TempDir final Path tempDir) throws Exception {
-    Files.writeString(tempDir.resolve("af.xml"), "<ldml/>");
-    Files.writeString(tempDir.resolve("be_TARASK.xml"), "<ldml/>");
-    Files.writeString(tempDir.resolve("cs_CZ.xml"), "<ldml/>");
-    Files.writeString(tempDir.resolve("root.xml"), "<ldml/>");
+  void getCldrLocaleXmlFilePaths_loadsFromClasspathResources() {
+    final Path cldrMainDirectory = Path.of("target", "classes", "cldr-common", "common", "main");
+    org.junit.jupiter.api.Assumptions.assumeTrue(cldrMainDirectory.toFile().isDirectory(), "CLDR resources must be unpacked for this test");
 
-    final Set<Locale> actual = UnicodeCldrHelper.getLivingLanguageLocales(tempDir.toFile());
+    final List<Path> actual = UnicodeCldrHelper.getCldrLocaleXmlFilePaths();
 
     assertThat(actual)
-        .contains(Locale.forLanguageTag("af"), Locale.forLanguageTag("be-TARASK"))
-        .doesNotContain(Locale.forLanguageTag("cs-CZ"));
+        .isNotEmpty()
+        .anySatisfy(path -> assertThat(path.getFileName().toString()).isEqualTo("af.xml"));
+    assertThat(actual)
+        .anySatisfy(path -> assertThat(path.getFileName().toString()).isEqualTo("be_TARASK.xml"));
+  }
+
+  @Test
+  void getCldrLocaleParsedXmlDocument_loadsClasspathResource() {
+    final Path localeXml = Path.of("target", "classes", "cldr-common", "common", "main", "af.xml");
+    org.junit.jupiter.api.Assumptions.assumeTrue(localeXml.toFile().isFile(), "CLDR resources must be unpacked for this test");
+
+    final CldrLocaleXmlDocument actual = UnicodeCldrHelper.getCldrLocaleParsedXmlDocument(localeXml);
+
+    assertThat(actual.getLocale().getLanguage()).isEqualTo("af");
+    assertThat(actual.getStandardExemplarCharacters().isEmpty()).isFalse();
+  }
+
+  @Test
+  void getCldrLocaleXmlFilePaths_returnsEmptyListWhenResourceDirectoryMissing() throws Exception {
+    final ClassLoader original = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(new ClassLoader(original) {
+      @Override
+      public URL getResource(final String name) {
+        return null;
+      }
+    });
+
+    try {
+      assertThat(UnicodeCldrHelper.getCldrLocaleXmlFilePaths()).isEmpty();
+    } finally {
+      Thread.currentThread().setContextClassLoader(original);
+    }
+  }
+
+  @Test
+  void getCldrLocaleXmlFilePaths_wrapsPathResolutionErrors() throws Exception {
+    final ClassLoader original = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(new ClassLoader(original) {
+      @Override
+      public URL getResource(final String name) {
+        try {
+          return new URL("file", "", "/tmp|bad");
+        } catch (final Exception e) {
+          throw new IllegalStateException(e);
+        }
+      }
+    });
+
+    try {
+      assertThatThrownBy(UnicodeCldrHelper::getCldrLocaleXmlFilePaths)
+          .isInstanceOf(RuntimeException.class);
+    } finally {
+      Thread.currentThread().setContextClassLoader(original);
+    }
+  }
+
+  @Test
+  void getCldrLocaleParsedXmlDocument_wrapsResourceLookupErrors() {
+    final Path missingPath = Path.of("target", "missing-" + System.nanoTime() + ".xml");
+
+    assertThatThrownBy(() -> UnicodeCldrHelper.getCldrLocaleParsedXmlDocument(missingPath))
+        .isInstanceOf(RuntimeException.class);
+  }
+
+  @Test
+  void isIso639Language_distinguishesKnownLanguages() {
+    assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag("af"))).isTrue();
+    assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag("zz"))).isFalse();
+    assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag(""))).isFalse();
   }
 }

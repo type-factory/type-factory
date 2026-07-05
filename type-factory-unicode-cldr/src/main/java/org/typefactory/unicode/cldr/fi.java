@@ -75,7 +75,7 @@ public final class fi extends AbstractCldrResourceBundle {
       //  char[ ] blockKeys
       new char[ ] {
 
-        0x0000, 0x0001, 0x0002, 0x0003  },
+        0x0000, 0x0001, 0x0002  },
 
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
@@ -84,10 +84,10 @@ public final class fi extends AbstractCldrResourceBundle {
       new char[ ][ ] {
 
         { // 0x0000__ codePoint ranges
-          0x49_49, 0x53_53, 0x69_69, 0x73_73, 0xc0_c3, 0xc6_cb, 0xcd_d5, 0xd8_e3,  // I S i s À Á Â Ã Æ Ç È É Ê Ë Í Î Ï Ð Ñ Ò
-                                                                                   // Ó Ô Õ Ø Ù Ú Û Ü Ý Þ ß à á â ã
-          0xe6_eb, 0xed_f5, 0xf8_ff },                                             // æ ç è é ê ë í î ï ð ñ ò ó ô õ ø ù ú û ü
-                                                                                   // ý þ ÿ
+          0x49_49, 0x53_53, 0xc0_c3, 0xc6_cb, 0xcd_d5, 0xd8_e3, 0xe6_eb, 0xed_f5,  // I S À Á Â Ã Æ Ç È É Ê Ë Í Î Ï Ð Ñ Ò Ó Ô
+                                                                                   // Õ Ø Ù Ú Û Ü Ý Þ ß à á â ã æ ç è é ê ë í
+                                                                                   // î ï ð ñ ò ó ô õ
+          0xf8_ff },                                                               // ø ù ú û ü ý þ ÿ
         { // 0x0001__ codePoint ranges
           0x00_07, 0x0a_13, 0x16_1b, 0x1e_1f, 0x22_23, 0x26_27, 0x2a_2b, 0x2e_31,  // Ā ā Ă ă Ą ą Ć ć Ċ ċ Č č Ď ď Đ đ Ē ē Ė ė
                                                                                    // Ę ę Ě ě Ğ ğ Ģ ģ Ħ ħ Ī ī Į į İ ı
@@ -95,13 +95,11 @@ public final class fi extends AbstractCldrResourceBundle {
                                                                                    // Œ œ Ŕ ŕ Ř ř Ś ś Ŝ ŝ Ş ş Ţ ţ Ť ť Ŧ ŧ Ū ū
           0x6e_73, 0x78_7c, 0xb7_b7, 0xe4_e9, 0xee_ef },                           // Ů ů Ű ű Ų ų Ÿ Ź ź Ż ż Ʒ Ǥ ǥ Ǧ ǧ Ǩ ǩ Ǯ ǯ
         { // 0x0002__ codePoint ranges
-          0x18_1b, 0x1e_1f, 0x92_92 },                                             // Ș ș Ț ț Ȟ ȟ ʒ
-        { // 0x0003__ codePoint ranges
-          0x07_07 } },                                                             // ̇
+          0x18_1b, 0x1e_1f, 0x92_92 } },                                           // Ș ș Ț ț Ȟ ȟ ʒ
         // number of code-point ranges
-        36,
+        33,
         // number of code-points
-        162);
+        159);
 
 
   /**

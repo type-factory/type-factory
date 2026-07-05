@@ -55,6 +55,8 @@ public final class yo extends AbstractCldrResourceBundle {
           0x72_75, //  r s t u
           0x77_77, //  w
           0x79_79, //  y
+          0x7b_7b, //  {
+          0x7d_7d, //  }
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -76,7 +78,7 @@ public final class yo extends AbstractCldrResourceBundle {
           0x1eb8_1eb9, //  Ẹ ẹ
           0x1ecc_1ecd, //  Ọ ọ
       },
-      28, 77);
+      30, 79);
 
 
   /**

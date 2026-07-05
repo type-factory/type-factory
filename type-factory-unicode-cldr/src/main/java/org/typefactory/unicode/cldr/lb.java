@@ -69,8 +69,6 @@ public final class lb extends AbstractCldrResourceBundle {
         new char[]{
           0x49_49, //  I
           0x53_53, //  S
-          0x69_69, //  i
-          0x73_73, //  s
           0xc0_c3, //  À Á Â Ã
           0xc5_c8, //  Å Æ Ç È
           0xca_ca, //  Ê
@@ -98,9 +96,8 @@ public final class lb extends AbstractCldrResourceBundle {
           0x015e_015f, //  Ş ş
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
-          0x0307_0307, //  ̇
       },
-      30, 82);
+      27, 79);
 
 
   /**

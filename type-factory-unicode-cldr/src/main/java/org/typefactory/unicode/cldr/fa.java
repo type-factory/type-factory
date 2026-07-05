@@ -80,9 +80,9 @@ public final class fa extends AbstractCldrResourceBundle {
           0x0652_0652, //  ْ
           0x0656_0656, //  ٖ
           0x0670_0670, //  ٰ
-          0x200c_200d, //  ‌ ‍
+          0x200c_200f, //  ‌ ‍ ‎ ‏
       },
-      9, 13);
+      9, 15);
 
 
   /**

@@ -65,11 +65,9 @@ public final class hy extends AbstractCldrResourceBundle {
         new int[]{
           0x0535_0535, //  Ե
           0x0552_0552, //  Ւ
-          0x0565_0565, //  ե
-          0x0582_0582, //  ւ
           0x0587_0587, //  և
       },
-      5, 5);
+      3, 3);
 
 
   /**

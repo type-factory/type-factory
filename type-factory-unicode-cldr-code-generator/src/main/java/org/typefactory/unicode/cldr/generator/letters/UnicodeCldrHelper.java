@@ -18,10 +18,12 @@ package org.typefactory.unicode.cldr.generator.letters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -32,7 +34,8 @@ public class UnicodeCldrHelper {
 
   private static final Logger logger = Logger.getLogger(UnicodeCldrHelper.class.getName());
 
-  private static final Path UNICODE_CLDR_XML_DIRECTORY_PATH = Path.of("target", "classes", "cldr-common", "common", "main");
+  private static final String CLDR_MAIN_RESOURCE_DIRECTORY = "cldr-common/common/main";
+  private static final Set<String> ISO_639_LANGUAGES = Set.of(Locale.getISOLanguages());
 
   private final File outputDirectory;
   private final CldrResourceBundleClassGenerator cldrResourceBundleClassGenerator;
@@ -46,67 +49,71 @@ public class UnicodeCldrHelper {
         new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory);
   }
 
-  static Set<Locale> getLivingLanguageLocales(final File cldrMainDirectory) {
-    final var baseLocales = new TreeSet<>(Comparator.comparing(Locale::toLanguageTag));
+  static List<Path> getCldrLocaleXmlFilePaths() {
 
-    final File[] localeXmlFiles = cldrMainDirectory.listFiles((dir, name) -> name.endsWith(".xml"));
-    if (localeXmlFiles == null) {
-      return baseLocales;
+    final URL cldrMainResourceDirectory = Thread.currentThread().getContextClassLoader().getResource(CLDR_MAIN_RESOURCE_DIRECTORY);
+    if (cldrMainResourceDirectory == null) {
+      logger.warning(() -> "Cannot locate CLDR resource directory " + CLDR_MAIN_RESOURCE_DIRECTORY);
+      return List.of();
     }
 
-    for (final File localeXmlFile : localeXmlFiles) {
-      final String localeFileName = localeXmlFile.getName().replace(".xml", "");
-      final String localeLanguageTag = localeFileName.replace('_', '-');
-      final Locale locale = Locale.forLanguageTag(localeLanguageTag);
-      if (isLivingLanguage(locale) && locale.getCountry().isEmpty()) {
-        baseLocales.add(locale);
+    try {
+      final Path cldrMainResourceDirectoryPath = Path.of(cldrMainResourceDirectory.toURI());
+      try (var localeXmlFileStream = Files.list(cldrMainResourceDirectoryPath)) {
+        return localeXmlFileStream
+            .filter(path -> path.getFileName().toString().endsWith(".xml"))
+            .toList();
       }
+    } catch (final Exception e) {
+      logger.severe(() -> "Cannot read CLDR locale list from resource directory " + CLDR_MAIN_RESOURCE_DIRECTORY);
+      throw new RuntimeException(e);
     }
-    return baseLocales;
   }
 
-  public static boolean isLivingLanguage(final Locale locale) {
-    try {
-      // We're using Java's Locale built-in structure to help us guess if a language is living or not.
-      final String iso3Language = locale.getISO3Language();
+  static CldrLocaleXmlDocument getCldrLocaleParsedXmlDocument(final Path path) {
+    try (final var inputStream = path.toFile().toURI().toURL().openStream()) {
+      return new CldrLocaleXmlDocument(inputStream);
+    } catch (final Exception e) {
+      logger.severe(() -> "Cannot load CLDR locale resource from path " + path);
+      throw new RuntimeException(e);
+    }
+  }
 
-      // We're assuming that languages without recognized 3-letter codes in modern Java are probably extinct/historical
-      return !iso3Language.isEmpty();
+  public static boolean isIso639Language(final Locale locale) {
+    try {
+      // We're using Java's Locale built-in ISO-639 locale knowledge to help us determine
+      // whether we want to process this locale.
+      final String language = locale.getLanguage();
+      return !language.isEmpty() && ISO_639_LANGUAGES.contains(locale.getLanguage());
 
     } catch (final Exception e) {
-      // An exception or missing ISO3 mapping implies it's a non-living (e.g., historical) tag
       return false;
     }
   }
 
   public void generateLanguageClass() {
-    final File cldrMainDirectory = UNICODE_CLDR_XML_DIRECTORY_PATH.toFile();
-    final Set<Locale> locales = getLivingLanguageLocales(cldrMainDirectory);
+    final List<Path> cldrLocaleXmlFilePaths = getCldrLocaleXmlFilePaths();
+    for (final Path path : cldrLocaleXmlFilePaths) {
 
-    for (final Locale locale : locales) {
-      final String localeScript = locale.getScript();
+      final CldrLocaleXmlDocument cldrLocaleXmlDocument = getCldrLocaleParsedXmlDocument(path);
+      final Locale locale = cldrLocaleXmlDocument.getLocale();
 
-      final Path cldrLocaleXmlFilePath = cldrMainDirectory.toPath().resolve(locale.toString() + ".xml");
-      final File cldrLocaleXmlFile = cldrLocaleXmlFilePath.toFile();
-      final Map<String, CldrExemplarCharacters> exemplarCharactersByType =
-          CldrExemplarCharactersReader.readLocaleExemplarCharacters(cldrLocaleXmlFile);
-
-      final CldrExemplarCharacters standardCharacters =
-          exemplarCharactersByType.getOrDefault("standard", CldrExemplarCharacters.empty());
-      final CldrExemplarCharacters auxiliaryCharacters =
-          exemplarCharactersByType.getOrDefault("auxiliary", CldrExemplarCharacters.empty());
-      final CldrExemplarCharacters punctuationCharacters =
-          exemplarCharactersByType.getOrDefault("punctuation", CldrExemplarCharacters.empty());
-
-      if ("Hani".equalsIgnoreCase(localeScript)) {
-        createAlphabetCharactersTxt(locale, standardCharacters);
+      if (!isIso639Language(locale)) {
+        continue;
       }
 
-      cldrResourceBundleClassGenerator.generateLocaleDataResourceBundleClass(
-          locale,
-          standardCharacters,
-          auxiliaryCharacters,
-          punctuationCharacters);
+      if (cldrLocaleXmlDocument.getStandardExemplarCharacters().isEmpty()
+          && cldrLocaleXmlDocument.getAuxiliaryExemplarCharacters().isEmpty()
+          && cldrLocaleXmlDocument.getPunctuationExemplarCharacters().isEmpty()) {
+        continue;
+      }
+
+      final String localeScript = locale.getScript();
+      if ("Hani".equalsIgnoreCase(localeScript)) {
+        createAlphabetCharactersTxt(locale, cldrLocaleXmlDocument.getStandardExemplarCharacters());
+      }
+
+      cldrResourceBundleClassGenerator.generateLocaleDataResourceBundleClass(cldrLocaleXmlDocument);
     }
   }
 
@@ -139,21 +146,20 @@ public class UnicodeCldrHelper {
     s.append(System.lineSeparator()).append(System.lineSeparator());
     s.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
-    for (CldrExemplarCharacters.Range range : exemplarCharacters.ranges()) {
-      final int from = range.inclusiveFrom();
-      final int to = range.inclusiveTo();
-      if (to > from) {
-        for (int c = from, i = 0; c <= to; ++c, ++i) {
-          if (i % 32 == 0) {
-            s.append(System.lineSeparator());
-            s.append(String.format("%06x..%06x  ", c, Math.min(to, c + 31)));
-          }
-          s.append(' ').appendCodePoint(c);
-        }
-      } else {
+    for (int i = 0; i < exemplarCharacters.codePoints().size(); ++i) {
+      final int codePoint = exemplarCharacters.codePoints().get(i);
+      if (i % 32 == 0) {
         s.append(System.lineSeparator());
-        s.append(String.format("%06x          ", from));
-        s.append(' ').appendCodePoint(from);
+        s.append(String.format("%06x  ", codePoint));
+      }
+      s.append(' ').appendCodePoint(codePoint);
+    }
+
+    if (!exemplarCharacters.strings().isEmpty()) {
+      s.append(System.lineSeparator()).append(System.lineSeparator());
+      s.append("Strings").append(System.lineSeparator());
+      for (String string : exemplarCharacters.strings()) {
+        s.append(string).append(System.lineSeparator());
       }
     }
 

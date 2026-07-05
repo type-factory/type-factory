@@ -44,6 +44,10 @@ public final class bn extends AbstractCldrResourceBundle {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
+        new char[]{
+          0x7b_7b, //  {
+          0x7d_7d, //  }
+      },
         new int[]{
           0x0981_0983, //  ঁ ং ঃ
           0x0985_098c, //  অ আ ই ঈ উ ঊ ঋ ঌ
@@ -59,7 +63,7 @@ public final class bn extends AbstractCldrResourceBundle {
           0x09e0_09e3, //  ৠ ৡ ৢ ৣ
           0x09fa_09fa, //  ৺
       },
-      13, 68);
+      15, 70);
 
 
   /**

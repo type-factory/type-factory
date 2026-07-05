@@ -15,43 +15,34 @@
 */
 package org.typefactory.unicode.cldr.generator.letters;
 
+import static java.util.Objects.requireNonNullElse;
+
 import java.util.List;
 
-public final class CldrExemplarCharacters {
+public record CldrExemplarCharacters(
+    String raw,
+    List<Integer> codePoints,
+    List<String> strings) {
 
-  public record Range(int inclusiveFrom, int inclusiveTo) {
+  public CldrExemplarCharacters {
+    raw = requireNonNullElse(raw, "");
+    codePoints = List.copyOf(requireNonNullElse(codePoints, List.of()));
+    strings = List.copyOf(requireNonNullElse(strings, List.of()));
   }
 
-  private static final CldrExemplarCharacters EMPTY = new CldrExemplarCharacters(List.of(), List.of());
-
-  private final List<Range> ranges;
-  private final List<String> strings;
-
-  private CldrExemplarCharacters(final List<Range> ranges, final List<String> strings) {
-    this.ranges = List.copyOf(ranges);
-    this.strings = List.copyOf(strings);
-  }
+  private static final CldrExemplarCharacters EMPTY =
+      new CldrExemplarCharacters("", List.of(), List.of());
 
   public static CldrExemplarCharacters empty() {
     return EMPTY;
   }
 
-  public static CldrExemplarCharacters of(final List<Range> ranges, final List<String> strings) {
-    if ((ranges == null || ranges.isEmpty()) && (strings == null || strings.isEmpty())) {
-      return EMPTY;
-    }
-    return new CldrExemplarCharacters(ranges == null ? List.of() : ranges, strings == null ? List.of() : strings);
-  }
-
-  public List<Range> ranges() {
-    return ranges;
-  }
-
-  public List<String> strings() {
-    return strings;
-  }
-
   public boolean isEmpty() {
-    return ranges.isEmpty() && strings.isEmpty();
+    return EMPTY.equals(this);
+  }
+
+  @Override
+  public String toString() {
+    return raw;
   }
 }

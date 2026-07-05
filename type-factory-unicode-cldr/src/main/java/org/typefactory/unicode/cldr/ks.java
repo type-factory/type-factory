@@ -85,8 +85,9 @@ public final class ks extends AbstractCldrResourceBundle {
           0x064e_0650, //  َ ُ ِ
           0x0654_0657, //  ٔ ٕ ٖ ٗ
           0x065f_065f, //  ٟ
+          0x200e_200f, //  ‎ ‏
       },
-      4, 9);
+      5, 11);
 
 
   /**

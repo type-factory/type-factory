@@ -89,9 +89,9 @@ public final class ur extends AbstractCldrResourceBundle {
           0x067a_067d, //  ٺ ٻ ټ ٽ
           0x06ba_06ba, //  ں
           0x06c2_06c3, //  ۂ ۃ
-          0x200c_200d, //  ‌ ‍
+          0x200c_200f, //  ‌ ‍ ‎ ‏
       },
-      13, 33);
+      13, 35);
 
 
   /**

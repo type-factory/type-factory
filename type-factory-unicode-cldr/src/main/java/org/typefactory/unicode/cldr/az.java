@@ -62,9 +62,8 @@ public final class az extends AbstractCldrResourceBundle {
           0x015e_015f, //  Ş ş
           0x018f_018f, //  Ə
           0x0259_0259, //  ə
-          0x0307_0307, //  ̇
       },
-      16, 65);
+      15, 64);
 
 
   /**

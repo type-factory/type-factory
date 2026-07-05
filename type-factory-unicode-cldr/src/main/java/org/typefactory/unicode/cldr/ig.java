@@ -78,6 +78,8 @@ public final class ig extends AbstractCldrResourceBundle {
           0x6d_6d, //  m
           0x71_71, //  q
           0x78_78, //  x
+          0x7b_7b, //  {
+          0x7d_7d, //  }
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -102,7 +104,7 @@ public final class ig extends AbstractCldrResourceBundle {
           0x1eca_1ecd, //  Ị ị Ọ ọ
           0x1ee4_1ee5, //  Ụ ụ
       },
-      29, 52);
+      31, 54);
 
 
   /**

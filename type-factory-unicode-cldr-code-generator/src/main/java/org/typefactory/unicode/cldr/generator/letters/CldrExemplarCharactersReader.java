@@ -17,10 +17,13 @@ package org.typefactory.unicode.cldr.generator.letters;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.text.Normalizer;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,8 +46,12 @@ final class CldrExemplarCharactersReader {
     // don't instantiate me
   }
 
-  static Map<String, CldrExemplarCharacters> readLocaleExemplarCharacters(final File localeXmlFile) {
+  static Map<String, CldrExemplarCharacters> readLocaleExemplarCharacters(final InputStream localeXmlInputStream) {
     final Map<String, CldrExemplarCharacters> exemplarCharactersByType = new LinkedHashMap<>();
+
+    if (localeXmlInputStream == null) {
+      return exemplarCharactersByType;
+    }
 
     try {
       final var documentBuilder = DocumentBuilderFactory.newInstance();
@@ -56,27 +63,26 @@ final class CldrExemplarCharactersReader {
       final var builder = documentBuilder.newDocumentBuilder();
       builder.setEntityResolver((publicId, systemId) -> new InputSource(new StringReader("")));
 
-      final var document = builder.parse(localeXmlFile);
+      final var document = builder.parse(localeXmlInputStream);
       final NodeList exemplarCharacterNodes = document.getElementsByTagName("exemplarCharacters");
 
       for (int i = 0; i < exemplarCharacterNodes.getLength(); ++i) {
         final Element exemplarCharacterElement = (Element) exemplarCharacterNodes.item(i);
-        final String type = exemplarCharacterElement.getAttribute("type");
+        final String rawType = exemplarCharacterElement.getAttribute("type");
+        final String type = rawType.isBlank() ? TYPE_STANDARD : rawType;
         final String exemplarCharactersText = exemplarCharacterElement.getTextContent();
 
-        switch (type.isBlank() ? TYPE_STANDARD : type) {
+        switch (type) {
           case TYPE_STANDARD, TYPE_AUXILIARY, TYPE_PUNCTUATION ->
-              exemplarCharactersByType.put(
-                  type.isBlank() ? TYPE_STANDARD : type,
-                  parseExemplarCharacters(exemplarCharactersText));
+              exemplarCharactersByType.put(type,parseExemplarCharacters(exemplarCharactersText));
           default -> {
             // Ignore other exemplar character types such as index and numbers.
           }
         }
       }
     } catch (final SAXException | IOException | RuntimeException | javax.xml.parsers.ParserConfigurationException e) {
-      logger.log(Level.SEVERE, e, () -> "Cannot read exemplar characters from " + localeXmlFile);
-      throw new IllegalStateException("Cannot read exemplar characters from " + localeXmlFile, e);
+      logger.log(Level.SEVERE, e, () -> "Cannot read exemplar characters");
+      throw new IllegalStateException("Cannot read exemplar characters", e);
     }
 
     exemplarCharactersByType.putIfAbsent(TYPE_STANDARD, CldrExemplarCharacters.empty());
@@ -84,6 +90,15 @@ final class CldrExemplarCharactersReader {
     exemplarCharactersByType.putIfAbsent(TYPE_PUNCTUATION, CldrExemplarCharacters.empty());
 
     return exemplarCharactersByType;
+  }
+
+  static Map<String, CldrExemplarCharacters> readLocaleExemplarCharacters(final File localeXmlFile) {
+    try (final InputStream inputStream = new java.io.FileInputStream(localeXmlFile)) {
+      return readLocaleExemplarCharacters(inputStream);
+    } catch (final IOException e) {
+      logger.log(Level.SEVERE, e, () -> "Cannot read exemplar characters from " + localeXmlFile);
+      throw new IllegalStateException("Cannot read exemplar characters from " + localeXmlFile, e);
+    }
   }
 
   static CldrExemplarCharacters parseExemplarCharacters(final String exemplarCharactersText) {
@@ -96,8 +111,8 @@ final class CldrExemplarCharactersReader {
       content = content.substring(1, content.length() - 1);
     }
 
-    final List<CldrExemplarCharacters.Range> ranges = new ArrayList<>();
-    final List<String> strings = new ArrayList<>();
+    final LinkedHashSet<Integer> codePoints = new LinkedHashSet<>();
+    final LinkedHashSet<String> strings = new LinkedHashSet<>();
 
     int index = 0;
     while (index < content.length()) {
@@ -107,6 +122,7 @@ final class CldrExemplarCharactersReader {
       }
 
       final char current = content.charAt(index);
+
       if (current == '{') {
         final int tokenStart = ++index;
         while (index < content.length() && content.charAt(index) != '}') {
@@ -115,44 +131,30 @@ final class CldrExemplarCharactersReader {
         if (index >= content.length()) {
           throw new IllegalArgumentException("Unterminated CLDR exemplar string: " + exemplarCharactersText);
         }
-        strings.add(decodeTokenToString(content.substring(tokenStart, index)));
+        final String decodedToken = decodeToken(content.substring(tokenStart, index));
+        addNormalisedVariants(decodedToken, codePoints, strings);
         index++;
         continue;
       }
 
       final int tokenStart = index;
       while (index < content.length()
-          && !Character.isWhitespace(content.charAt(index))
-          && content.charAt(index) != '}') {
+          && !Character.isWhitespace(content.charAt(index))) {
+//          && content.charAt(index) != '}') {
         index++;
       }
 
       final String token = content.substring(tokenStart, index);
-      final int hyphenIndex = findUnescapedHyphen(token);
-
-      if (hyphenIndex > 0 && hyphenIndex < token.length() - 1) {
-        final List<Integer> leftCodePoints = decodeTokenToCodePoints(token.substring(0, hyphenIndex));
-        final List<Integer> rightCodePoints = decodeTokenToCodePoints(token.substring(hyphenIndex + 1));
-        if (leftCodePoints.size() == 1 && rightCodePoints.size() == 1) {
-          ranges.add(new CldrExemplarCharacters.Range(leftCodePoints.get(0), rightCodePoints.get(0)));
-          continue;
-        }
-      }
-
-      final String decodedToken = decodeTokenToString(token);
-      final List<Integer> codePoints = decodedToken.codePoints().boxed().toList();
-      if (codePoints.size() == 1) {
-        final int codePoint = codePoints.get(0);
-        ranges.add(new CldrExemplarCharacters.Range(codePoint, codePoint));
-      } else {
-        strings.add(decodedToken);
+      final String decodedToken = decodeToken(token);
+      for (String unit : splitIntoUnits(decodedToken)) {
+        addNormalisedVariants(unit, codePoints, strings);
       }
     }
 
-    return CldrExemplarCharacters.of(ranges, strings);
+    return new CldrExemplarCharacters(exemplarCharactersText, List.copyOf(codePoints), List.copyOf(strings));
   }
 
-  private static int skipWhitespace(final String content, final int startIndex) {
+  static int skipWhitespace(final String content, final int startIndex) {
     int index = startIndex;
     while (index < content.length() && Character.isWhitespace(content.charAt(index))) {
       index++;
@@ -160,47 +162,85 @@ final class CldrExemplarCharactersReader {
     return index;
   }
 
-  private static int findUnescapedHyphen(final String token) {
-    for (int index = 0; index < token.length(); ) {
-      final char current = token.charAt(index);
-      if (current == '\\' && index + 1 < token.length()) {
-        index = skipEscape(token, index);
-        continue;
-      }
-      if (current == '-') {
-        return index;
-      }
-      index += Character.charCount(token.codePointAt(index));
-    }
-    return -1;
-  }
-
-  private static List<Integer> decodeTokenToCodePoints(final String token) {
-    final List<Integer> codePoints = new ArrayList<>();
+  static String decodeToken(final String token) {
+    final StringBuilder decoded = new StringBuilder();
     for (int index = 0; index < token.length(); ) {
       final char current = token.charAt(index);
       if (current == '\\' && index + 1 < token.length()) {
         final int nextIndex = skipEscape(token, index);
-        codePoints.add(decodeEscapedCodePoint(token, index, nextIndex));
+        decoded.appendCodePoint(decodeEscapedCodePoint(token, index, nextIndex));
         index = nextIndex;
         continue;
       }
       final int codePoint = token.codePointAt(index);
-      codePoints.add(codePoint);
-      index += Character.charCount(codePoint);
-    }
-    return codePoints;
-  }
-
-  private static String decodeTokenToString(final String token) {
-    final StringBuilder decoded = new StringBuilder();
-    for (final int codePoint : decodeTokenToCodePoints(token)) {
       decoded.appendCodePoint(codePoint);
+      index += Character.charCount(codePoint);
     }
     return decoded.toString();
   }
 
-  private static int decodeEscapedCodePoint(final String token, final int escapeStart, final int escapeEnd) {
+  static List<String> splitIntoUnits(final String decodedToken) {
+    final List<String> units = new java.util.ArrayList<>();
+    final StringBuilder currentUnit = new StringBuilder();
+
+    for (int index = 0; index < decodedToken.length(); ) {
+      final int codePoint = decodedToken.codePointAt(index);
+      if (currentUnit.length() > 0 && !isCombiningMark(codePoint)) {
+        units.add(currentUnit.toString());
+        currentUnit.setLength(0);
+      }
+      currentUnit.appendCodePoint(codePoint);
+      index += Character.charCount(codePoint);
+    }
+
+    if (currentUnit.length() > 0) {
+      units.add(currentUnit.toString());
+    }
+    return units;
+  }
+
+  static void addNormalisedVariants(
+      final String unit,
+      final LinkedHashSet<Integer> codePoints,
+      final LinkedHashSet<String> strings) {
+
+//    final String normalised = Normalizer.normalize(unit, Normalizer.Form.NFC);
+//    final String upperCasedNormalised = Normalizer.normalize(unit.toUpperCase(Locale.ROOT), Normalizer.Form.NFC);
+
+    final String lowerCase = unit;
+    final String upperCased = unit.toUpperCase(Locale.ROOT);
+
+    addNormalisedVariant(lowerCase, codePoints, strings);
+    addNormalisedVariant(upperCased, codePoints, strings);
+  }
+
+  static void addNormalisedVariant(
+      final String normalised,
+      final LinkedHashSet<Integer> codePoints,
+      final LinkedHashSet<String> strings) {
+
+    if (normalised.isBlank()) {
+      return;
+    }
+
+    final int[] codePointArray = normalised.codePoints().toArray();
+    if (codePointArray.length == 1) {
+      codePoints.add(codePointArray[0]);
+    } else {
+      strings.add(normalised);
+    }
+  }
+
+  static boolean isCombiningMark(final int codePoint) {
+    return switch (Character.getType(codePoint)) {
+      case Character.NON_SPACING_MARK,
+           Character.COMBINING_SPACING_MARK,
+           Character.ENCLOSING_MARK -> true;
+      default -> false;
+    };
+  }
+
+  static int decodeEscapedCodePoint(final String token, final int escapeStart, final int escapeEnd) {
     final char escapeType = token.charAt(escapeStart + 1);
     if (escapeType == 'u' && escapeEnd - escapeStart >= 6) {
       return Integer.parseInt(token.substring(escapeStart + 2, escapeStart + 6), 16);
@@ -217,7 +257,7 @@ final class CldrExemplarCharactersReader {
     return token.codePointAt(escapeStart + 1);
   }
 
-  private static int skipEscape(final String token, final int escapeStart) {
+  static int skipEscape(final String token, final int escapeStart) {
     final char escapeType = token.charAt(escapeStart + 1);
     if (escapeType == 'u' && escapeStart + 6 <= token.length()) {
       return escapeStart + 6;

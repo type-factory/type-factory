@@ -44,6 +44,10 @@ public final class yi extends AbstractCldrResourceBundle {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
+        new char[]{
+          0x7b_7b, //  {
+          0x7d_7d, //  }
+      },
         new int[]{
           0x05b4_05b4, //  ִ
           0x05b7_05b8, //  ַ ָ
@@ -53,7 +57,7 @@ public final class yi extends AbstractCldrResourceBundle {
           0x05d0_05ea, //  א ב ג ד ה ו ז ח ט י ך כ ל ם מ ן נ ס ע ף פ ץ צ ק ר ש ת
           0x05f2_05f2, //  ײ
       },
-      7, 34);
+      9, 36);
 
 
   /**
@@ -63,7 +67,12 @@ public final class yi extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new int[]{
+          0x200e_200f, //  ‎ ‏
+      },
+      1, 2);
 
 
   /**

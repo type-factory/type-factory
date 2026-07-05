@@ -42,29 +42,7 @@ public final class az_Latn extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x41_56, //  A B C D E F G H I J K L M N O P Q R S T U V
-          0x58_5a, //  X Y Z
-          0x61_76, //  a b c d e f g h i j k l m n o p q r s t u v
-          0x78_7a, //  x y z
-          0xc7_c7, //  Ç
-          0xd6_d6, //  Ö
-          0xdc_dc, //  Ü
-          0xe7_e7, //  ç
-          0xf6_f6, //  ö
-          0xfc_fc, //  ü
-      },
-        new int[]{
-          0x011e_011f, //  Ğ ğ
-          0x0130_0131, //  İ ı
-          0x015e_015f, //  Ş ş
-          0x018f_018f, //  Ə
-          0x0259_0259, //  ə
-          0x0307_0307, //  ̇
-      },
-      16, 65);
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
   /**
@@ -74,13 +52,7 @@ public final class az_Latn extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x57_57, //  W
-          0x77_77, //  w
-      },
-      2, 2);
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
   /**
@@ -90,28 +62,7 @@ public final class az_Latn extends AbstractCldrResourceBundle {
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
    */
-  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
-
-        new char[]{
-          0x21_23, //  ! " #
-          0x26_2a, //  & ' ( ) *
-          0x2c_2f, //  , - . /
-          0x3a_3b, //  : ;
-          0x3f_40, //  ? @
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0xa7_a7, //  §
-      },
-        new int[]{
-          0x2010_2011, //  ‐ ‑
-          0x2013_2014, //  – —
-          0x2018_2019, //  ‘ ’
-          0x201c_201d, //  “ ”
-          0x2020_2021, //  † ‡
-          0x2026_2026, //  …
-          0x2032_2033, //  ′ ″
-      },
-      15, 32);
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
 
 
 }

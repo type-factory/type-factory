@@ -1,0 +1,75 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+package org.typefactory.unicode.cldr;
+
+import javax.annotation.processing.Generated;
+import org.typefactory.Subset;
+import org.typefactory.impl.Factory;
+
+/**
+ * Provides Type Factory subsets for the English language (Deseret script) as defined
+ * by the Unicode Common Locale Data Repository (CLDR).
+ */
+@Generated(
+    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    value = "org.typefactory:type-factory-unicode-cldr-code-generator")
+public final class en_Dsrt extends AbstractCldrResourceBundle {
+
+  public en_Dsrt() {
+    super(
+        STANDARD_CHARACTERS_SUBSET,
+        AUXILIARY_CHARACTERS_SUBSET,
+        PUNCTUATION_CHARACTERS_SUBSET);
+  }
+
+  /**
+   * <p>The standard characters for the English language (Deseret script) as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters>}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
+
+        new long[]{
+          0x00010400_0001044fL, //  𐐀 𐐁 𐐂 𐐃 𐐄 𐐅 𐐆 𐐇 𐐈 𐐉 𐐊 𐐋 𐐌 𐐍 𐐎 𐐏 𐐐 𐐑 𐐒 𐐓 𐐔 𐐕 𐐖 𐐗 𐐘 𐐙 𐐚 𐐛 𐐜 𐐝
+                                //  𐐞 𐐟 𐐠 𐐡 𐐢 𐐣 𐐤 𐐥 𐐦 𐐧 𐐨 𐐩 𐐪 𐐫 𐐬 𐐭 𐐮 𐐯 𐐰 𐐱 𐐲 𐐳 𐐴 𐐵 𐐶 𐐷 𐐸 𐐹 𐐺 𐐻
+                                //  𐐼 𐐽 𐐾 𐐿 𐑀 𐑁 𐑂 𐑃 𐑄 𐑅 𐑆 𐑇 𐑈 𐑉 𐑊 𐑋 𐑌 𐑍 𐑎 𐑏
+      },
+      1, 80);
+
+
+  /**
+   * <p>The auxiliary characters for the English language (Deseret script) as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.emptySubset();
+
+
+  /**
+   * <p>The punctuation characters for the English language (Deseret script) as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
+   *    element in the CLDR dataset.</p>
+   */
+  static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.emptySubset();
+
+
+}

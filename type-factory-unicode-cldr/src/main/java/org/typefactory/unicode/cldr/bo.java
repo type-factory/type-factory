@@ -95,20 +95,13 @@ public final class bo extends AbstractCldrResourceBundle {
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
         new char[]{
-          0x21_21, //  !
-          0x28_29, //  ( )
-          0x2c_2e, //  , - .
-          0x3a_3b, //  : ;
-          0x3f_3f, //  ?
-          0x5b_5b, //  [
-          0x5d_5d, //  ]
-          0x7b_7b, //  {
-          0x7d_7d, //  }
+          0x3a_3a, //  :
       },
         new int[]{
-          0x2010_2011, //  ‐ ‑
+          0x0f0b_0f0b, //  ་
+          0x0f0d_0f0d, //  །
       },
-      10, 15);
+      3, 3);
 
 
 }

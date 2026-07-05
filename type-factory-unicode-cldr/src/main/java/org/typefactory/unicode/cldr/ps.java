@@ -82,9 +82,9 @@ public final class ps extends AbstractCldrResourceBundle {
 
         new int[]{
           0x06d2_06d2, //  ے
-          0x200c_200d, //  ‌ ‍
+          0x200c_200f, //  ‌ ‍ ‎ ‏
       },
-      2, 3);
+      2, 5);
 
 
   /**

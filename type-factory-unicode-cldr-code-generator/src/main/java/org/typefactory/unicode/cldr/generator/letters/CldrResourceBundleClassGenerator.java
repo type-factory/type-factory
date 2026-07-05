@@ -52,13 +52,10 @@ public class CldrResourceBundleClassGenerator {
   }
 
   public String generateLocaleDataResourceBundleClass(
-      final Locale locale,
-      final CldrExemplarCharacters standardCharacters,
-      final CldrExemplarCharacters auxiliaryCharacters,
-      final CldrExemplarCharacters punctuationCharacters) {
+      final CldrLocaleXmlDocument cldrLocaleXmlDocument) {
 
-    final String localeLanguageTag = tokenize(locale.toLanguageTag());
-    final String lettersClassName = localeLanguageTag;
+    final Locale locale = cldrLocaleXmlDocument.getLocale();
+    final String lettersClassName = tokenize(locale.toLanguageTag());
     logger.info(() -> "Creating subset for " + lettersClassName);
 
     final String language = locale.getDisplayLanguage();
@@ -67,9 +64,9 @@ public class CldrResourceBundleClassGenerator {
         ? ""
         : " (" + locale.getDisplayScript() + " script)";
 
-    final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(standardCharacters);
-    final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(auxiliaryCharacters);
-    final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(punctuationCharacters);
+    final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getStandardExemplarCharacters());
+    final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getAuxiliaryExemplarCharacters());
+    final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(cldrLocaleXmlDocument.getPunctuationExemplarCharacters());
 
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)

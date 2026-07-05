@@ -91,9 +91,9 @@ public final class lt extends AbstractCldrResourceBundle {
 
         { // 0x0000__ codePoint ranges
           0x43_44, 0x48_4a, 0x4c_4d, 0x51_52, 0x57_58, 0x5a_5a, 0x63_64, 0x68_6a,  // C D H I J L M Q R W X Z c d h i j
-          0x6c_6d, 0x71_72, 0x77_78, 0x7a_7a, 0xc0_c1, 0xc3_c3, 0xc8_c9, 0xcc_cd,  // l m q r w x z À Á Ã È É Ì Í
-          0xd1_d3, 0xd5_d5, 0xd9_da, 0xe0_e1, 0xe3_e3, 0xe8_e9, 0xec_ed, 0xf1_f3,  // Ñ Ò Ó Õ Ù Ú à á ã è é ì í ñ ò ó
-          0xf5_f5, 0xf9_fa },                                                      // õ ù ú
+          0x6c_6d, 0x71_72, 0x77_78, 0x7a_7b, 0x7d_7d, 0xc0_c1, 0xc3_c3, 0xc8_c9,  // l m q r w x z { } À Á Ã È É
+          0xcc_cd, 0xd1_d3, 0xd5_d5, 0xd9_da, 0xe0_e1, 0xe3_e3, 0xe8_e9, 0xec_ed,  // Ì Í Ñ Ò Ó Õ Ù Ú à á ã è é ì í
+          0xf1_f3, 0xf5_f5, 0xf9_fa },                                             // ñ ò ó õ ù ú
         { // 0x0001__ codePoint ranges
           0x04_05, 0x16_19, 0x28_29, 0x2e_2f, 0x68_6b, 0x72_73, 0x7d_7e },         // Ą ą Ė ė Ę ę Ĩ ĩ Į į Ũ ũ Ū ū Ų ų Ž ž
         { // 0x001e__ codePoint ranges
@@ -101,9 +101,9 @@ public final class lt extends AbstractCldrResourceBundle {
         { // 0x0003__ codePoint ranges
           0x00_01, 0x03_03, 0x07_07 } },                                           // ̀ ́ ̃ ̇
         // number of code-point ranges
-        37,
+        38,
         // number of code-points
-        74);
+        76);
 
 
   /**

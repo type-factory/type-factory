@@ -77,8 +77,9 @@ public final class ug extends AbstractCldrResourceBundle {
 
         new int[]{
           0x0626_0626, //  ئ
+          0x200e_200f, //  ‎ ‏
       },
-      1, 1);
+      2, 3);
 
 
   /**

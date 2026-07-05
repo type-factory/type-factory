@@ -81,7 +81,6 @@ public final class pl extends AbstractCldrResourceBundle {
           0x56_56, //  V
           0x58_58, //  X
           0x71_71, //  q
-          0x73_73, //  s
           0x76_76, //  v
           0x78_78, //  x
           0xc0_c0, //  À
@@ -106,7 +105,7 @@ public final class pl extends AbstractCldrResourceBundle {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      27, 47);
+      26, 46);
 
 
   /**

@@ -76,11 +76,6 @@ public final class el extends AbstractCldrResourceBundle {
           0x0399_0399, //  Ι
           0x03a5_03a5, //  Υ
           0x03a9_03a9, //  Ω
-          0x03b1_03b1, //  α
-          0x03b7_03b7, //  η
-          0x03b9_03b9, //  ι
-          0x03c5_03c5, //  υ
-          0x03c9_03c9, //  ω
           0x1f00_1f15, //  ἀ ἁ ἂ ἃ ἄ ἅ ἆ ἇ Ἀ Ἁ Ἂ Ἃ Ἄ Ἅ Ἆ Ἇ ἐ ἑ ἒ ἓ ἔ ἕ
           0x1f18_1f1d, //  Ἐ Ἑ Ἒ Ἓ Ἔ Ἕ
           0x1f20_1f3f, //  ἠ ἡ ἢ ἣ ἤ ἥ ἦ ἧ Ἠ Ἡ Ἢ Ἣ Ἤ Ἥ Ἦ Ἧ ἰ ἱ ἲ ἳ ἴ ἵ ἶ ἷ Ἰ Ἱ Ἲ Ἳ Ἴ Ἵ Ἶ Ἷ
@@ -114,7 +109,7 @@ public final class el extends AbstractCldrResourceBundle {
           0x1ff8_1ff8, //  Ὸ
           0x1ffa_1ffa, //  Ὼ
       },
-      46, 128);
+      41, 123);
 
 
   /**
