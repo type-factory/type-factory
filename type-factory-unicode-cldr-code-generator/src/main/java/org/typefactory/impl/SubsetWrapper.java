@@ -18,6 +18,7 @@ package org.typefactory.impl;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
+import org.typefactory.unicode.cldr.generator.letters.CldrExemplarCharacters;
 
 public interface SubsetWrapper extends Subset {
 
@@ -33,8 +34,27 @@ public interface SubsetWrapper extends Subset {
       }
     }
 
-    final Subset subset = subsetBuilder.build();
+    return wrap(subsetBuilder.build());
+  }
 
+  static SubsetWrapper optimisedSubset(final CldrExemplarCharacters exemplarCharacters) {
+    final SubsetBuilder subsetBuilder = Subset.builder();
+
+    if (exemplarCharacters != null) {
+      for (CldrExemplarCharacters.Range range : exemplarCharacters.ranges()) {
+        subsetBuilder.includeCodePointRange(range.inclusiveFrom(), range.inclusiveTo());
+      }
+      for (String string : exemplarCharacters.strings()) {
+        for (int cp : string.codePoints().toArray()) {
+          subsetBuilder.includeCodePoint(cp);
+        }
+      }
+    }
+
+    return wrap(subsetBuilder.build());
+  }
+
+  private static SubsetWrapper wrap(final Subset subset) {
     if (subset instanceof RangedSubsetImpl rangedSubset) {
       return new RangedSubsetWrapper(rangedSubset);
     }

@@ -19,11 +19,10 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import com.ibm.icu.text.UnicodeSet;
-import com.ibm.icu.util.ULocale;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,10 +52,10 @@ public class CldrResourceBundleClassGenerator {
   }
 
   public String generateLocaleDataResourceBundleClass(
-      final ULocale locale,
-      final UnicodeSet standardCharactersUnicodeSet,
-      final UnicodeSet auxiliaryCharactersUnicodeSet,
-      final UnicodeSet punctuationCharactersUnicodeSet) {
+      final Locale locale,
+      final CldrExemplarCharacters standardCharacters,
+      final CldrExemplarCharacters auxiliaryCharacters,
+      final CldrExemplarCharacters punctuationCharacters) {
 
     final String localeLanguageTag = tokenize(locale.toLanguageTag());
     final String lettersClassName = localeLanguageTag;
@@ -68,9 +67,9 @@ public class CldrResourceBundleClassGenerator {
         ? ""
         : " (" + locale.getDisplayScript() + " script)";
 
-    final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(standardCharactersUnicodeSet);
-    final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(auxiliaryCharactersUnicodeSet);
-    final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(punctuationCharactersUnicodeSet);
+    final SubsetWrapper standardCharactersSubset = SubsetWrapper.optimisedSubset(standardCharacters);
+    final SubsetWrapper auxiliaryCharactersSubset = SubsetWrapper.optimisedSubset(auxiliaryCharacters);
+    final SubsetWrapper punctuationCharactersSubset = SubsetWrapper.optimisedSubset(punctuationCharacters);
 
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
@@ -166,7 +165,7 @@ public class CldrResourceBundleClassGenerator {
 
   private static Sizes appendCodepointArrayRanges(
       final StringFormatter s,
-      final ULocale locale,
+      final Locale locale,
       final RangedSubsetWrapper subset,
       final int rangeStart,
       final int rangeEnd,
@@ -230,7 +229,7 @@ public class CldrResourceBundleClassGenerator {
   }
 
   private static Consumer<StringFormatter> appendSubset(
-      final ULocale locale,
+      final Locale locale,
       final SubsetWrapper subsetWrapper) {
 
     if (subsetWrapper.isEmpty()) {
@@ -255,7 +254,7 @@ public class CldrResourceBundleClassGenerator {
   }
 
   private static Consumer<StringFormatter> appendRangedSubset(
-      final ULocale locale,
+      final Locale locale,
       final RangedSubsetWrapper rangedSubsetWrapper) {
 
     return sf -> {

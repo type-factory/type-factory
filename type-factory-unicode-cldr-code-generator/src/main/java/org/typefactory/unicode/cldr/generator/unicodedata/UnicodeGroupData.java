@@ -196,7 +196,9 @@ public class UnicodeGroupData {
     try (final InputStream resourceStream =
         Thread.currentThread().getContextClassLoader().getResourceAsStream(unicodeAllGroupedXmlFileName)) {
       parseXml(resourceStream, blocks, codePoints);
+      logger.info(() -> "loaded " + unicodeAllGroupedXmlFileName);
     } catch (final IOException | XMLStreamException e) {
+      logger.warning(() -> "could not load " + unicodeAllGroupedXmlFileName);
       throw new UnicodeException(Error.CANNOT_LOAD_UNICODE_ALL_GROUPED_XML_FILE_NAME, unicodeAllGroupedXmlFileName, e);
     }
   }

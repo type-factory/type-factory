@@ -15,14 +15,13 @@
 */
 package org.typefactory.unicode.cldr.generator.letters;
 
-import com.ibm.icu.text.UnicodeSet;
-import com.ibm.icu.text.UnicodeSet.EntryRange;
-import com.ibm.icu.util.LocaleData;
-import com.ibm.icu.util.ULocale;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -45,11 +44,18 @@ public class UnicodeCldrHelper {
         new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory);
   }
 
-  public static Set<ULocale> getLivingLanguageLocales() {
-    final var baseLocales = new TreeSet<>(Comparator.comparing(ULocale::toString));
-    final var availableLocales = ULocale.getAvailableLocales();
+  static Set<Locale> getLivingLanguageLocales(final File cldrMainDirectory) {
+    final var baseLocales = new TreeSet<>(Comparator.comparing(Locale::toLanguageTag));
 
-    for (ULocale locale : availableLocales) {
+    final File[] localeXmlFiles = cldrMainDirectory.listFiles((dir, name) -> name.endsWith(".xml"));
+    if (localeXmlFiles == null) {
+      return baseLocales;
+    }
+
+    for (final File localeXmlFile : localeXmlFiles) {
+      final String localeFileName = localeXmlFile.getName();
+      final String localeLanguageTag = localeFileName.substring(0, localeFileName.length() - 4).replace('_', '-');
+      final Locale locale = Locale.forLanguageTag(localeLanguageTag);
       if (isLivingLanguage(locale) && locale.getCountry().isEmpty()) {
         baseLocales.add(locale);
       }
@@ -57,10 +63,10 @@ public class UnicodeCldrHelper {
     return baseLocales;
   }
 
-  public static boolean isLivingLanguage(final ULocale uLocale) {
+  public static boolean isLivingLanguage(final Locale locale) {
     try {
       // Java's Locale built-in structure helps verify its recognition as an active linguistic standard
-      final String iso3Language = uLocale.getISO3Language();
+      final String iso3Language = locale.getISO3Language();
 
       // Languages without recognized 3-letter codes in modern Java are typically extinct/historical
       return iso3Language != null && !iso3Language.isEmpty();
@@ -72,41 +78,44 @@ public class UnicodeCldrHelper {
   }
 
   public void generateLanguageClass() {
-    final var locales = getLivingLanguageLocales();
+    final File cldrMainDirectory = new File(Path.of("target", "classes", "cldr-common", "common", "main").toString());
+    final Set<Locale> locales = getLivingLanguageLocales(cldrMainDirectory);
 
-    for (var locale : locales) {
+    for (final Locale locale : locales) {
       final String localeScript = locale.getScript();
 
-      final UnicodeSet standardCharactersUnicodeSet =
-          LocaleData.getExemplarSet(locale, UnicodeSet.ADD_CASE_MAPPINGS, LocaleData.ES_STANDARD);
+      final File localeXmlFile = new File(cldrMainDirectory, locale.toString() + ".xml");
+      final Map<String, CldrExemplarCharacters> exemplarCharactersByType =
+          CldrExemplarCharactersReader.readLocaleExemplarCharacters(localeXmlFile);
 
-      final UnicodeSet auxiliaryCharactersUnicodeSet =
-          LocaleData.getExemplarSet(locale, UnicodeSet.ADD_CASE_MAPPINGS, LocaleData.ES_AUXILIARY);
-
-      final UnicodeSet punctuationCharactersUnicodeSet =
-          LocaleData.getExemplarSet(locale, UnicodeSet.ADD_CASE_MAPPINGS, LocaleData.ES_PUNCTUATION);
+      final CldrExemplarCharacters standardCharacters =
+          exemplarCharactersByType.getOrDefault("standard", CldrExemplarCharacters.empty());
+      final CldrExemplarCharacters auxiliaryCharacters =
+          exemplarCharactersByType.getOrDefault("auxiliary", CldrExemplarCharacters.empty());
+      final CldrExemplarCharacters punctuationCharacters =
+          exemplarCharactersByType.getOrDefault("punctuation", CldrExemplarCharacters.empty());
 
       if ("Hani".equalsIgnoreCase(localeScript)) {
-        createAlphabetCharactersTxt(locale, standardCharactersUnicodeSet);
+        createAlphabetCharactersTxt(locale, standardCharacters);
       }
 
       cldrResourceBundleClassGenerator.generateLocaleDataResourceBundleClass(
           locale,
-          standardCharactersUnicodeSet,
-          auxiliaryCharactersUnicodeSet,
-          punctuationCharactersUnicodeSet);
+          standardCharacters,
+          auxiliaryCharacters,
+          punctuationCharacters);
     }
   }
 
   private void createAlphabetCharactersTxt(
-      final ULocale locale,
-      final UnicodeSet unicodeSet) {
+      final Locale locale,
+      final CldrExemplarCharacters exemplarCharacters) {
 
     final String headerLine = "===================================================================================================";
 
     final StringBuilder s = new StringBuilder();
 
-    if (unicodeSet == null || unicodeSet.isEmpty()) {
+    if (exemplarCharacters == null || exemplarCharacters.isEmpty()) {
       return;
     }
 
@@ -127,9 +136,9 @@ public class UnicodeCldrHelper {
     s.append(System.lineSeparator()).append(System.lineSeparator());
     s.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
-    for (EntryRange range : unicodeSet.ranges()) {
-      final int from = range.codepoint;
-      final int to = range.codepointEnd;
+    for (CldrExemplarCharacters.Range range : exemplarCharacters.ranges()) {
+      final int from = range.inclusiveFrom();
+      final int to = range.inclusiveTo();
       if (to > from) {
         for (int c = from, i = 0; c <= to; ++c, ++i) {
           if (i % 32 == 0) {

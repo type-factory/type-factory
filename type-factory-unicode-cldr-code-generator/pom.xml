@@ -66,11 +66,13 @@
             <configuration>
               <target>
                 <unzip
-                  src="${project.basedir}/src/main/zip/ucd.all.grouped.zip"
-                  dest="${project.build.outputDirectory}/unicode" />
+                  src="${project.basedir}/src/main/zip/ucd.all.grouped-17.0.0.zip"
+                  dest="${project.build.outputDirectory}/unicode"
+                  overwrite="true" />
                 <unzip
                   src="${project.basedir}/src/main/zip/cldr-common-48.2.zip"
-                  dest="${project.build.outputDirectory}/cldr-common" >
+                  dest="${project.build.outputDirectory}/cldr-common"
+                  overwrite="true">
                   <patternset>
                     <include name="common/main/*"/>
                   </patternset>
