@@ -64,10 +64,10 @@ final class CldrExemplarCharactersReader {
         final String type = exemplarCharacterElement.getAttribute("type");
         final String exemplarCharactersText = exemplarCharacterElement.getTextContent();
 
-        switch (type == null || type.isBlank() ? TYPE_STANDARD : type) {
+        switch (type.isBlank() ? TYPE_STANDARD : type) {
           case TYPE_STANDARD, TYPE_AUXILIARY, TYPE_PUNCTUATION ->
               exemplarCharactersByType.put(
-                  type == null || type.isBlank() ? TYPE_STANDARD : type,
+                  type.isBlank() ? TYPE_STANDARD : type,
                   parseExemplarCharacters(exemplarCharactersText));
           default -> {
             // Ignore other exemplar character types such as index and numbers.

@@ -32,6 +32,8 @@ public class UnicodeCldrHelper {
 
   private static final Logger logger = Logger.getLogger(UnicodeCldrHelper.class.getName());
 
+  private static final Path UNICODE_CLDR_XML_DIRECTORY_PATH = Path.of("target", "classes", "cldr-common", "common", "main");
+
   private final File outputDirectory;
   private final CldrResourceBundleClassGenerator cldrResourceBundleClassGenerator;
 
@@ -53,8 +55,8 @@ public class UnicodeCldrHelper {
     }
 
     for (final File localeXmlFile : localeXmlFiles) {
-      final String localeFileName = localeXmlFile.getName();
-      final String localeLanguageTag = localeFileName.substring(0, localeFileName.length() - 4).replace('_', '-');
+      final String localeFileName = localeXmlFile.getName().replace(".xml", "");
+      final String localeLanguageTag = localeFileName.replace('_', '-');
       final Locale locale = Locale.forLanguageTag(localeLanguageTag);
       if (isLivingLanguage(locale) && locale.getCountry().isEmpty()) {
         baseLocales.add(locale);
@@ -65,28 +67,29 @@ public class UnicodeCldrHelper {
 
   public static boolean isLivingLanguage(final Locale locale) {
     try {
-      // Java's Locale built-in structure helps verify its recognition as an active linguistic standard
+      // We're using Java's Locale built-in structure to help us guess if a language is living or not.
       final String iso3Language = locale.getISO3Language();
 
-      // Languages without recognized 3-letter codes in modern Java are typically extinct/historical
-      return iso3Language != null && !iso3Language.isEmpty();
+      // We're assuming that languages without recognized 3-letter codes in modern Java are probably extinct/historical
+      return !iso3Language.isEmpty();
 
     } catch (final Exception e) {
-      // An exception or missing ISO3 mapping heavily implies it's a non-living (e.g., historical) tag
+      // An exception or missing ISO3 mapping implies it's a non-living (e.g., historical) tag
       return false;
     }
   }
 
   public void generateLanguageClass() {
-    final File cldrMainDirectory = new File(Path.of("target", "classes", "cldr-common", "common", "main").toString());
+    final File cldrMainDirectory = UNICODE_CLDR_XML_DIRECTORY_PATH.toFile();
     final Set<Locale> locales = getLivingLanguageLocales(cldrMainDirectory);
 
     for (final Locale locale : locales) {
       final String localeScript = locale.getScript();
 
-      final File localeXmlFile = new File(cldrMainDirectory, locale.toString() + ".xml");
+      final Path cldrLocaleXmlFilePath = cldrMainDirectory.toPath().resolve(locale.toString() + ".xml");
+      final File cldrLocaleXmlFile = cldrLocaleXmlFilePath.toFile();
       final Map<String, CldrExemplarCharacters> exemplarCharactersByType =
-          CldrExemplarCharactersReader.readLocaleExemplarCharacters(localeXmlFile);
+          CldrExemplarCharactersReader.readLocaleExemplarCharacters(cldrLocaleXmlFile);
 
       final CldrExemplarCharacters standardCharacters =
           exemplarCharactersByType.getOrDefault("standard", CldrExemplarCharacters.empty());
