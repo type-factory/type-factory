@@ -18,16 +18,18 @@ package org.typefactory.unicode.cldr.generator.letters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
 
 public class UnicodeCldrHelper {
@@ -49,21 +51,48 @@ public class UnicodeCldrHelper {
         new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory);
   }
 
-  static List<Path> getCldrLocaleXmlFilePaths() {
-
-    final URL cldrMainResourceDirectory = Thread.currentThread().getContextClassLoader().getResource(CLDR_MAIN_RESOURCE_DIRECTORY);
+  static List<String> getCldrLocaleXmlFilePaths() {
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    final URL cldrMainResourceDirectory = classLoader.getResource(CLDR_MAIN_RESOURCE_DIRECTORY);
     if (cldrMainResourceDirectory == null) {
       logger.warning(() -> "Cannot locate CLDR resource directory " + CLDR_MAIN_RESOURCE_DIRECTORY);
       return List.of();
     }
 
     try {
-      final Path cldrMainResourceDirectoryPath = Path.of(cldrMainResourceDirectory.toURI());
-      try (var localeXmlFileStream = Files.list(cldrMainResourceDirectoryPath)) {
-        return localeXmlFileStream
-            .filter(path -> path.getFileName().toString().endsWith(".xml"))
-            .toList();
-      }
+      return switch (cldrMainResourceDirectory.getProtocol()) {
+        case "file" -> {
+          final Path cldrMainResourceDirectoryPath = Path.of(cldrMainResourceDirectory.toURI());
+          try (var localeXmlFileStream = Files.list(cldrMainResourceDirectoryPath)) {
+            yield localeXmlFileStream
+                .filter(path -> path.getFileName().toString().endsWith(".xml"))
+                .map(path -> CLDR_MAIN_RESOURCE_DIRECTORY + "/" + cldrMainResourceDirectoryPath.relativize(path))
+                .sorted()
+                .toList();
+          }
+        }
+        case "jar" -> {
+          final JarURLConnection connection = (JarURLConnection) cldrMainResourceDirectory.openConnection();
+          final String entryPrefix = connection.getEntryName().endsWith("/")
+              ? connection.getEntryName()
+              : connection.getEntryName() + "/";
+
+          try (JarFile jarFile = connection.getJarFile()) {
+            yield jarFile.stream()
+                .map(ZipEntry::getName)
+                .filter(entryName -> entryName.startsWith(entryPrefix))
+                .filter(entryName -> !entryName.equals(entryPrefix))
+                .filter(entryName -> entryName.endsWith(".xml"))
+                .filter(entryName -> !entryName.substring(entryPrefix.length()).contains("/"))
+                .sorted()
+                .toList();
+          }
+        }
+        default -> {
+          logger.warning(() -> "Unsupported CLDR resource protocol " + cldrMainResourceDirectory.getProtocol());
+          yield List.of();
+        }
+      };
     } catch (final Exception e) {
       logger.severe(() -> "Cannot read CLDR locale list from resource directory " + CLDR_MAIN_RESOURCE_DIRECTORY);
       throw new RuntimeException(e);
@@ -71,7 +100,7 @@ public class UnicodeCldrHelper {
   }
 
   static CldrLocaleXmlDocument getCldrLocaleParsedXmlDocument(final Path path) {
-    try (final var inputStream = path.toFile().toURI().toURL().openStream()) {
+    try (final var inputStream = Files.newInputStream(path)) {
       return new CldrLocaleXmlDocument(inputStream);
     } catch (final Exception e) {
       logger.severe(() -> "Cannot load CLDR locale resource from path " + path);
@@ -79,8 +108,23 @@ public class UnicodeCldrHelper {
     }
   }
 
+  static CldrLocaleXmlDocument getCldrLocaleParsedXmlDocument(final String resourceName) {
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    try (final InputStream inputStream = classLoader.getResourceAsStream(resourceName)) {
+      if (inputStream == null) {
+        throw new IllegalStateException("Cannot load CLDR locale resource from resource name " + resourceName);
+      }
+      return new CldrLocaleXmlDocument(inputStream);
+    } catch (final Exception e) {
+      logger.severe(() -> "Cannot load CLDR locale resource from resource name " + resourceName);
+      throw new RuntimeException(e);
+    }
+  }
+
   public static boolean isIso639Language(final Locale locale) {
     try {
+      // TODO: The ISO-639 list has the 2-letter languages. Should we also consider 3-letter languages?
+
       // We're using Java's Locale built-in ISO-639 locale knowledge to help us determine
       // whether we want to process this locale.
       final String language = locale.getLanguage();
@@ -92,10 +136,10 @@ public class UnicodeCldrHelper {
   }
 
   public void generateLanguageClass() {
-    final List<Path> cldrLocaleXmlFilePaths = getCldrLocaleXmlFilePaths();
-    for (final Path path : cldrLocaleXmlFilePaths) {
+    final List<String> cldrLocaleXmlFilePaths = getCldrLocaleXmlFilePaths();
+    for (final String resourceName : cldrLocaleXmlFilePaths) {
 
-      final CldrLocaleXmlDocument cldrLocaleXmlDocument = getCldrLocaleParsedXmlDocument(path);
+      final CldrLocaleXmlDocument cldrLocaleXmlDocument = getCldrLocaleParsedXmlDocument(resourceName);
       final Locale locale = cldrLocaleXmlDocument.getLocale();
 
       if (!isIso639Language(locale)) {

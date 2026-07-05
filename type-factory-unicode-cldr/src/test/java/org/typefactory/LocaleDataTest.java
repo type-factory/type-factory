@@ -12,11 +12,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
-//import org.typefactory.unicode.cldr.af;
-//import org.typefactory.unicode.cldr.ar;
+import org.typefactory.unicode.cldr.af;
+import org.typefactory.unicode.cldr.ar;
 import org.typefactory.unicode.cldr.az;
+import org.typefactory.unicode.cldr.az_Arab;
 import org.typefactory.unicode.cldr.az_Cyrl;
-import org.typefactory.unicode.cldr.az_Latn;
 import org.typefactory.unicode.cldr.hy;
 
 class LocaleDataTest {
@@ -65,16 +65,16 @@ class LocaleDataTest {
 
   static Stream<Arguments> supportedLocales() {
     return Stream.of(
-//        Arguments.of("af", af.class),
-//        Arguments.of("ar", ar.class),
-//        Arguments.of("ar-EG", ar.class),
+        Arguments.of("af", af.class),
+        Arguments.of("ar", ar.class),
+        Arguments.of("ar-EG", ar.class),
         Arguments.of("az", az.class),
         Arguments.of("az-Arab", az.class),
-        Arguments.of("az-Arab-IQ", az.class),
+        Arguments.of("az-Arab-IQ", az_Arab.class),
         Arguments.of("az-Cyrl", az_Cyrl.class),
         Arguments.of("az-Cyrl-AZ", az_Cyrl.class),
-        Arguments.of("az-Latn", az_Latn.class),
-        Arguments.of("az-Latn-AZ", az_Latn.class),
+        Arguments.of("az-Latn", az.class),
+        Arguments.of("az-Latn-AZ", az.class),
         Arguments.of("hy", hy.class));
   }
 

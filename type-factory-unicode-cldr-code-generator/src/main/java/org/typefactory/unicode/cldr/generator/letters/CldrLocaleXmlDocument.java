@@ -74,6 +74,7 @@ public class CldrLocaleXmlDocument {
         .setScript(script.map(Node::getTextContent).orElse(""))
         .setRegion(territory.map(Node::getTextContent).orElse(""))
         .setVariant(variant.map(Node::getTextContent).orElse(""))
+        //.setExtension(Locale.PRIVATE_USE_EXTENSION, privateUseExtension)
         .build();
   }
 

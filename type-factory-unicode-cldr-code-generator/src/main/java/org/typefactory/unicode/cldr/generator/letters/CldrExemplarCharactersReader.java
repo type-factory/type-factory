@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.text.Normalizer;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -132,22 +131,20 @@ final class CldrExemplarCharactersReader {
           throw new IllegalArgumentException("Unterminated CLDR exemplar string: " + exemplarCharactersText);
         }
         final String decodedToken = decodeToken(content.substring(tokenStart, index));
-        addNormalisedVariants(decodedToken, codePoints, strings);
+        addCasedVariants(decodedToken, codePoints, strings);
         index++;
         continue;
       }
 
       final int tokenStart = index;
-      while (index < content.length()
-          && !Character.isWhitespace(content.charAt(index))) {
-//          && content.charAt(index) != '}') {
+      while (index < content.length() && !Character.isWhitespace(content.charAt(index))) {
         index++;
       }
 
       final String token = content.substring(tokenStart, index);
       final String decodedToken = decodeToken(token);
       for (String unit : splitIntoUnits(decodedToken)) {
-        addNormalisedVariants(unit, codePoints, strings);
+        addCasedVariants(unit, codePoints, strings);
       }
     }
 
@@ -185,7 +182,7 @@ final class CldrExemplarCharactersReader {
 
     for (int index = 0; index < decodedToken.length(); ) {
       final int codePoint = decodedToken.codePointAt(index);
-      if (currentUnit.length() > 0 && !isCombiningMark(codePoint)) {
+      if (!currentUnit.isEmpty() && !isCombiningMark(codePoint)) {
         units.add(currentUnit.toString());
         currentUnit.setLength(0);
       }
@@ -193,41 +190,38 @@ final class CldrExemplarCharactersReader {
       index += Character.charCount(codePoint);
     }
 
-    if (currentUnit.length() > 0) {
+    if (!currentUnit.isEmpty()) {
       units.add(currentUnit.toString());
     }
     return units;
   }
 
-  static void addNormalisedVariants(
-      final String unit,
+  static void addCasedVariants(
+      final String value,
       final LinkedHashSet<Integer> codePoints,
       final LinkedHashSet<String> strings) {
 
-//    final String normalised = Normalizer.normalize(unit, Normalizer.Form.NFC);
-//    final String upperCasedNormalised = Normalizer.normalize(unit.toUpperCase(Locale.ROOT), Normalizer.Form.NFC);
+    final String lowerCased = value;
+    final String upperCased = value.toUpperCase(Locale.ROOT);
 
-    final String lowerCase = unit;
-    final String upperCased = unit.toUpperCase(Locale.ROOT);
-
-    addNormalisedVariant(lowerCase, codePoints, strings);
-    addNormalisedVariant(upperCased, codePoints, strings);
+    addCasedVariant(lowerCased, codePoints, strings);
+    addCasedVariant(upperCased, codePoints, strings);
   }
 
-  static void addNormalisedVariant(
-      final String normalised,
+  static void addCasedVariant(
+      final String value,
       final LinkedHashSet<Integer> codePoints,
       final LinkedHashSet<String> strings) {
 
-    if (normalised.isBlank()) {
+    if (value.isBlank()) {
       return;
     }
 
-    final int[] codePointArray = normalised.codePoints().toArray();
+    final int[] codePointArray = value.codePoints().toArray();
     if (codePointArray.length == 1) {
       codePoints.add(codePointArray[0]);
     } else {
-      strings.add(normalised);
+      strings.add(value);
     }
   }
 

@@ -23,7 +23,6 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.Normalizer;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,24 +108,24 @@ class CldrExemplarCharactersReaderTest {
   }
 
   @Test
-  void addNormalisedVariants_addsSingleCodePointsAndStrings() {
+  void addCasedVariants_addsSingleCodePointsAndStrings() {
     final LinkedHashSet<Integer> codePoints = new LinkedHashSet<>();
     final LinkedHashSet<String> strings = new LinkedHashSet<>();
 
-    CldrExemplarCharactersReader.addNormalisedVariants("a", codePoints, strings);
-    CldrExemplarCharactersReader.addNormalisedVariants("ΐ", codePoints, strings);
-    CldrExemplarCharactersReader.addNormalisedVariants("ab", codePoints, strings);
+    CldrExemplarCharactersReader.addCasedVariants("a", codePoints, strings);
+    CldrExemplarCharactersReader.addCasedVariants("ΐ", codePoints, strings);
+    CldrExemplarCharactersReader.addCasedVariants("ab", codePoints, strings);
 
     assertThat(codePoints).contains((int) 'a', (int) 'A', (int) 'ΐ');
     assertThat(strings).contains("ab", "AB", "Ϊ́");
   }
 
   @Test
-  void addNormalisedVariant_ignoresBlankInput() {
+  void addCasedVariant_ignoresBlankInput() {
     final LinkedHashSet<Integer> codePoints = new LinkedHashSet<>();
     final LinkedHashSet<String> strings = new LinkedHashSet<>();
 
-    CldrExemplarCharactersReader.addNormalisedVariant("", codePoints, strings);
+    CldrExemplarCharactersReader.addCasedVariant("", codePoints, strings);
 
     assertThat(codePoints).isEmpty();
     assertThat(strings).isEmpty();

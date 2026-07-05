@@ -18,15 +18,15 @@ package org.typefactory.unicode.cldr.generator.letters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.Locale;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 class UnicodeCldrHelperTest {
 
@@ -35,13 +35,30 @@ class UnicodeCldrHelperTest {
     final Path cldrMainDirectory = Path.of("target", "classes", "cldr-common", "common", "main");
     org.junit.jupiter.api.Assumptions.assumeTrue(cldrMainDirectory.toFile().isDirectory(), "CLDR resources must be unpacked for this test");
 
-    final List<Path> actual = UnicodeCldrHelper.getCldrLocaleXmlFilePaths();
+    final List<String> actual = UnicodeCldrHelper.getCldrLocaleXmlFilePaths();
 
     assertThat(actual)
         .isNotEmpty()
-        .anySatisfy(path -> assertThat(path.getFileName().toString()).isEqualTo("af.xml"));
-    assertThat(actual)
-        .anySatisfy(path -> assertThat(path.getFileName().toString()).isEqualTo("be_TARASK.xml"));
+        .contains("cldr-common/common/main/af.xml", "cldr-common/common/main/be_TARASK.xml");
+  }
+
+  @Test
+  void getCldrLocaleXmlFilePaths_loadsFromJarClasspathResources() throws Exception {
+    final Path jarFile = Path.of(System.getProperty("java.io.tmpdir"), "cldr-test-" + System.nanoTime() + ".jar");
+    createJarWithCldrResources(jarFile);
+
+    final ClassLoader original = Thread.currentThread().getContextClassLoader();
+    try (URLClassLoader classLoader = new URLClassLoader(new URL[] {jarFile.toUri().toURL()}, null)) {
+      Thread.currentThread().setContextClassLoader(classLoader);
+
+      final List<String> actual = UnicodeCldrHelper.getCldrLocaleXmlFilePaths();
+
+      assertThat(actual).containsExactly(
+          "cldr-common/common/main/af.xml",
+          "cldr-common/common/main/be_TARASK.xml");
+    } finally {
+      Thread.currentThread().setContextClassLoader(original);
+    }
   }
 
   @Test
@@ -50,6 +67,15 @@ class UnicodeCldrHelperTest {
     org.junit.jupiter.api.Assumptions.assumeTrue(localeXml.toFile().isFile(), "CLDR resources must be unpacked for this test");
 
     final CldrLocaleXmlDocument actual = UnicodeCldrHelper.getCldrLocaleParsedXmlDocument(localeXml);
+
+    assertThat(actual.getLocale().getLanguage()).isEqualTo("af");
+    assertThat(actual.getStandardExemplarCharacters().isEmpty()).isFalse();
+  }
+
+  @Test
+  void getCldrLocaleParsedXmlDocument_loadsByResourceName() {
+    final CldrLocaleXmlDocument actual =
+        UnicodeCldrHelper.getCldrLocaleParsedXmlDocument("cldr-common/common/main/af.xml");
 
     assertThat(actual.getLocale().getLanguage()).isEqualTo("af");
     assertThat(actual.getStandardExemplarCharacters().isEmpty()).isFalse();
@@ -107,5 +133,38 @@ class UnicodeCldrHelperTest {
     assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag("af"))).isTrue();
     assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag("zz"))).isFalse();
     assertThat(UnicodeCldrHelper.isIso639Language(Locale.forLanguageTag(""))).isFalse();
+  }
+
+  private static void createJarWithCldrResources(final Path jarFile) throws IOException {
+    try (JarOutputStream jarOutputStream = new JarOutputStream(java.nio.file.Files.newOutputStream(jarFile))) {
+      jarOutputStream.putNextEntry(new JarEntry("cldr-common/common/main/"));
+      jarOutputStream.closeEntry();
+      jarOutputStream.putNextEntry(new JarEntry("cldr-common/common/main/af.xml"));
+      jarOutputStream.write("""
+          <?xml version="1.0" encoding="UTF-8"?>
+          <ldml>
+            <identity>
+              <language type="af"/>
+            </identity>
+            <characters>
+              <exemplarCharacters>[a]</exemplarCharacters>
+            </characters>
+          </ldml>
+          """.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      jarOutputStream.closeEntry();
+      jarOutputStream.putNextEntry(new JarEntry("cldr-common/common/main/be_TARASK.xml"));
+      jarOutputStream.write("""
+          <?xml version="1.0" encoding="UTF-8"?>
+          <ldml>
+            <identity>
+              <language type="be"/>
+            </identity>
+            <characters>
+              <exemplarCharacters>[б]</exemplarCharacters>
+            </characters>
+          </ldml>
+          """.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      jarOutputStream.closeEntry();
+    }
   }
 }
