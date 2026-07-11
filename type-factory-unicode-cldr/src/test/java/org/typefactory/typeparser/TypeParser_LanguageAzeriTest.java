@@ -35,7 +35,7 @@ class TypeParser_LanguageAzeriTest extends AbstractTypeParserTest {
       TypeParser.builder()
           .messageCode(MessageCode.of("must.be.azeri.latin.letters.only","Must be made up of Azeri Latin letters only."))
           .toCharacterNormalizationFormNFC()
-          .acceptSubset(LOCALE_DATA.standardSubset())
+          .acceptSubset(LOCALE_DATA.standardCharactersSubset())
           .normalizeWhitespace()
           .build();
 

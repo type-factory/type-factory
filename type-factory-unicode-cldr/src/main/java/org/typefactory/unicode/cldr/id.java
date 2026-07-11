@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Indonesian language as defined
+ * Provides Type Factory subsets for the Indonesian as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Indonesian language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class id extends root {
 
@@ -32,18 +35,33 @@ public class id extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected id(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Indonesian language.</p>
+   *
+   * <p>Language tag: {@code "id"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("id")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Indonesian language as defined by the
@@ -51,10 +69,13 @@ public class id extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_5a, //  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
           0x61_7a, //  a b c d e f g h i j k l m n o p q r s t u v w x y z
       },
@@ -67,10 +88,13 @@ public class id extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0xc0_cf, //  À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï
           0xd1_d4, //  Ñ Ò Ó Ô
           0xd6_d6, //  Ö
@@ -81,7 +105,7 @@ public class id extends root {
           0xf8_fc, //  ø ù ú û ü
           0xff_ff, //  ÿ
       },
-        new int[]{
+      new int[]{
           0x0100_0103, //  Ā ā Ă ă
           0x0112_0115, //  Ē ē Ĕ ĕ
           0x012a_012d, //  Ī ī Ĭ ĭ
@@ -99,10 +123,13 @@ public class id extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_23, //  ! " #
           0x26_2a, //  & ' ( ) *
           0x2c_2f, //  , - . /
@@ -112,7 +139,7 @@ public class id extends root {
           0x5d_5d, //  ]
           0xa7_a7, //  §
       },
-        new int[]{
+      new int[]{
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
           0x2018_2019, //  ‘ ’
@@ -122,6 +149,19 @@ public class id extends root {
           0x2032_2033, //  ′ ″
       },
       15, 32);
+
+
+  /**
+   * <p>The decimal digit characters for the Indonesian language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

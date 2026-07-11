@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Turkmen language as defined
+ * Provides Type Factory subsets for the Turkmen as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Turkmen language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class tk extends root {
 
@@ -32,18 +35,33 @@ public class tk extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected tk(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Turkmen language.</p>
+   *
+   * <p>Language tag: {@code "tk"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("tk")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Turkmen language as defined by the
@@ -51,10 +69,13 @@ public class tk extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_42, //  A B
           0x44_50, //  D E F G H I J K L M N O P
           0x52_55, //  R S T U
@@ -74,7 +95,7 @@ public class tk extends root {
           0xf6_f6, //  ö
           0xfc_fd, //  ü ý
       },
-        new int[]{
+      new int[]{
           0x0147_0148, //  Ň ň
           0x015e_015f, //  Ş ş
           0x017d_017e, //  Ž ž
@@ -88,10 +109,13 @@ public class tk extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x43_43, //  C
           0x51_51, //  Q
           0x56_56, //  V
@@ -110,10 +134,13 @@ public class tk extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_23, //  ! " #
           0x26_2a, //  & ' ( ) *
           0x2c_2f, //  , - . /
@@ -125,13 +152,31 @@ public class tk extends root {
           0x7d_7d, //  }
           0xa7_a7, //  §
       },
-        new int[]{
+      new int[]{
           0x2011_2011, //  ‑
           0x2013_2014, //  – —
           0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
       14, 27);
+
+
+  /**
+   * <p>The decimal digit characters for the Turkmen language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = Factory.rangedSubset(
+
+      new char[]{
+          0x30_39, //  0 1 2 3 4 5 6 7 8 9
+      },
+      1, 10);
 
 
 }

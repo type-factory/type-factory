@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Telugu language as defined
+ * Provides Type Factory subsets for the Telugu as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Telugu language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class te extends root {
 
@@ -32,18 +35,33 @@ public class te extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected te(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Telugu language.</p>
+   *
+   * <p>Language tag: {@code "te"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("te")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Telugu language as defined by the
@@ -51,10 +69,13 @@ public class te extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new int[]{
+      new int[]{
           0x0c01_0c03, //  ఁ ం ః
           0x0c05_0c0c, //  అ ఆ ఇ ఈ ఉ ఊ ఋ ఌ
           0x0c0e_0c10, //  ఎ ఏ ఐ
@@ -76,10 +97,13 @@ public class te extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new int[]{
+      new int[]{
           0x0c66_0c6f, //  ౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯
           0x200c_200d, //  ‌ ‍
       },
@@ -92,10 +116,13 @@ public class te extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_23, //  ! " #
           0x26_29, //  & ' ( )
           0x2c_2e, //  , - .
@@ -106,12 +133,33 @@ public class te extends root {
           0x7b_7b, //  {
           0x7d_7d, //  }
       },
-        new int[]{
+      new int[]{
           0x2011_2011, //  ‑
           0x2018_2019, //  ‘ ’
           0x201c_201d, //  “ ”
       },
       12, 22);
+
+
+  /**
+   * <p>The decimal digit characters for the Telugu language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = Factory.rangedSubset(
+
+      new char[]{
+          0x30_39, //  0 1 2 3 4 5 6 7 8 9
+      },
+      new int[]{
+          0x0c66_0c6f, //  ౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯
+      },
+      2, 20);
 
 
 }

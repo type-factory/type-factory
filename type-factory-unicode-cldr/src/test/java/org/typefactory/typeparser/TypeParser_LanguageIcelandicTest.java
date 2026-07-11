@@ -35,7 +35,7 @@ class TypeParser_LanguageIcelandicTest extends AbstractTypeParserTest {
       TypeParser.builder()
           .messageCode(MessageCode.of("must.be.icelandic.letters.only", "Must be made up of Icelandic letters only."))
           .toCharacterNormalizationFormNFC()
-          .acceptSubset(LOCALE_DATA.standardSubset())
+          .acceptSubset(LOCALE_DATA.standardCharactersSubset())
           .normalizeWhitespace()
           .build();
 

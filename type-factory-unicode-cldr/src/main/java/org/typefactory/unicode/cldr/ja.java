@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Japanese language as defined
+ * Provides Type Factory subsets for the Japanese as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Japanese language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class ja extends root {
 
@@ -32,18 +35,33 @@ public class ja extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected ja(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Japanese language.</p>
+   *
+   * <p>Language tag: {@code "ja"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("ja")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Japanese language as defined by the
@@ -51,10 +69,14 @@ public class ja extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -76,6 +98,8 @@ public class ja extends root {
         0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 
         0x0068, 0x0069, 0x006a, 0x006b, 0x006c, 0x006d, 0x006e, 0x006f  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -446,10 +470,13 @@ public class ja extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new int[]{
+      new int[]{
           0x4e11_4e11, //  丑
           0x4ea5_4ea5, //  亥
           0x4ea8_4ea8, //  亨
@@ -535,10 +562,14 @@ public class ja extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -547,6 +578,8 @@ public class ja extends root {
 
         0x0000, 0xffff, 0xffff, 0x00ff, 0x0020, 0xffff, 0x0030  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -571,6 +604,19 @@ public class ja extends root {
         37,
         // number of code-points
         87);
+
+
+  /**
+   * <p>The decimal digit characters for the Japanese language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

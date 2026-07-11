@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Estonian language as defined
+ * Provides Type Factory subsets for the Estonian as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Estonian language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class et extends root {
 
@@ -32,18 +35,33 @@ public class et extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected et(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Estonian language.</p>
+   *
+   * <p>Language tag: {@code "et"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("et")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Estonian language as defined by the
@@ -51,10 +69,13 @@ public class et extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_5a, //  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
           0x61_7a, //  a b c d e f g h i j k l m n o p q r s t u v w x y z
           0xc4_c4, //  Ä
@@ -64,7 +85,7 @@ public class et extends root {
           0xf5_f6, //  õ ö
           0xfc_fc, //  ü
       },
-        new int[]{
+      new int[]{
           0x0160_0161, //  Š š
           0x017d_017e, //  Ž ž
       },
@@ -77,10 +98,13 @@ public class et extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0xc0_c3, //  À Á Â Ã
           0xc5_cf, //  Å Æ Ç È É Ê Ë Ì Í Î Ï
           0xd1_d4, //  Ñ Ò Ó Ô
@@ -90,7 +114,7 @@ public class et extends root {
           0xf1_f4, //  ñ ò ó ô
           0xf8_fb, //  ø ù ú û
       },
-        new int[]{
+      new int[]{
           0x0100_0101, //  Ā ā
           0x0112_0113, //  Ē ē
           0x012a_012b, //  Ī ī
@@ -107,10 +131,13 @@ public class et extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_21, //  !
           0x28_29, //  ( )
           0x2c_2e, //  , - .
@@ -121,13 +148,31 @@ public class et extends root {
           0x7b_7b, //  {
           0x7d_7d, //  }
       },
-        new int[]{
+      new int[]{
           0x2011_2011, //  ‑
           0x2013_2013, //  –
           0x201c_201c, //  “
           0x201e_201e, //  „
       },
       13, 18);
+
+
+  /**
+   * <p>The decimal digit characters for the Estonian language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = Factory.rangedSubset(
+
+      new char[]{
+          0x30_39, //  0 1 2 3 4 5 6 7 8 9
+      },
+      1, 10);
 
 
 }

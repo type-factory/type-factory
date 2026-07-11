@@ -1,8 +1,9 @@
 package org.typefactory;
 
 record LocaleDataImpl(
-    Subset standardSubset,
-    Subset auxiliarySubset,
-    Subset punctuationSubset)
+    Subset standardCharactersSubset,
+    Subset auxiliaryCharactersSubset,
+    Subset punctuationCharactersSubset,
+    Subset decimalDigitsSubset)
     implements LocaleData {
 }

@@ -32,7 +32,7 @@ class TypeParser_LanguageFrenchTest extends AbstractTypeParserTest {
   static final LocaleData LOCALE_DATA = LocaleData.getForLocale(Locale.forLanguageTag("fr"));
 
   static final TypeParser TYPE_PARSER = TypeParser.builder()
-      .acceptSubset(LOCALE_DATA.standardSubset())
+      .acceptSubset(LOCALE_DATA.standardCharactersSubset())
       .toCharacterNormalizationFormNFC()
       .convertAllDashesToHyphen()
       .acceptChar('\'')

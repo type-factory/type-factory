@@ -39,7 +39,7 @@ class TypeParser_LanguageArabicTest extends AbstractTypeParserTest {
     final var typeParser = TypeParser.builder()
             .messageCode(MessageCode.of("must.be.arabic.letters.only", "Must be made up of Arabic letters only."))
             .toCharacterNormalizationFormNFC()
-            .acceptSubset(localeData.standardSubset())
+            .acceptSubset(localeData.standardCharactersSubset())
             .normalizeWhitespace()
             .build();
 

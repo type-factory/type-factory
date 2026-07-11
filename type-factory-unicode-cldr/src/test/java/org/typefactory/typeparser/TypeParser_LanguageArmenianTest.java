@@ -39,7 +39,7 @@ class TypeParser_LanguageArmenianTest extends AbstractTypeParserTest {
     final var typeParser = TypeParser.builder()
             .messageCode(MessageCode.of("must.be.armenian.letters.only", "Must be made up of Armenian letters only."))
             .toCharacterNormalizationFormNFC()
-            .acceptSubset(localeData.standardSubset())
+            .acceptSubset(localeData.standardCharactersSubset())
             .normalizeWhitespace()
             .build();
 

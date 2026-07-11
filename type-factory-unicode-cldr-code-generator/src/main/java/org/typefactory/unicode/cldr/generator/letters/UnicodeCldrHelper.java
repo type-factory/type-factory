@@ -164,7 +164,9 @@ public class UnicodeCldrHelper {
 
       if (cldrLocaleXmlDocument.getStandardExemplarCharacters().isEmpty()
           && cldrLocaleXmlDocument.getAuxiliaryExemplarCharacters().isEmpty()
-          && cldrLocaleXmlDocument.getPunctuationExemplarCharacters().isEmpty()) {
+          && cldrLocaleXmlDocument.getPunctuationExemplarCharacters().isEmpty()
+          && cldrLocaleXmlDocument.isNotForLocale(CldrLocaleXmlDocument.NORWEGIAN_BOKMAL_LOCALE)
+          && cldrLocaleXmlDocument.isNotForLocale(CldrLocaleXmlDocument.NORWEGIAN_NYNORSK_LOCALE)) {
         continue;
       }
 

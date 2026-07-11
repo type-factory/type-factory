@@ -18,12 +18,23 @@ public class CldrLocaleXmlDocument {
 
   private static final Logger logger = Logger.getLogger(CldrExemplarCharactersReader.class.getName());
 
+  public static final Locale NORWEGIAN_BOKMAL_LOCALE = new Locale.Builder().setLanguage("nb").build();
+  public static final Locale NORWEGIAN_NYNORSK_LOCALE = new Locale.Builder().setLanguage("nn").build();
+
   private final String resourceName;
   private final Document document;
 
   public CldrLocaleXmlDocument(final String resourceName, final Document document) {
     this.resourceName = resourceName;
     this.document = document;
+  }
+
+  boolean isForLocale(final Locale locale) {
+    return getLocale().equals(locale);
+  }
+
+  boolean isNotForLocale(final Locale locale) {
+    return !isForLocale(locale);
   }
 
   static NodeList getNodes(final Document document, final String xpathExpression) throws XPathExpressionException {
@@ -64,6 +75,12 @@ public class CldrLocaleXmlDocument {
 
     if (isRootCldrResource()) {
       return "AbstractCldrResourceBundle";
+    }
+
+    if (NORWEGIAN_BOKMAL_LOCALE.equals(locale) || NORWEGIAN_NYNORSK_LOCALE.equals(locale)) {
+      // Special case for Norwegian Bokmål and Norwegian Nynorsk, which are both derived from the "no" locale.
+      // See https://icu.unicode.org/design/norwegian-locales-changes-in-v39
+      return "no";
     }
 
     final var s = new StringFormatter()
@@ -113,6 +130,16 @@ public class CldrLocaleXmlDocument {
 
   public Optional<CldrExemplarCharacters> getPunctuationExemplarCharacters() {
     final var optionalNode = getNode(document, "//exemplarCharacters[@type='punctuation']");
+    return optionalNode.map(node -> CldrExemplarCharactersReader.parseExemplarCharacters(node.getTextContent()));
+  }
+
+  public Optional<CldrExemplarCharacters> getNumbersExemplarCharacters() {
+    final var optionalNode = getNode(document, "//exemplarCharacters[@type='numbers']");
+    return optionalNode.map(node -> CldrExemplarCharactersReader.parseExemplarCharacters(node.getTextContent()));
+  }
+
+  public Optional<CldrExemplarCharacters> getDecimalDigitsExemplarCharacters() {
+    final var optionalNode = getNode(document, "//exemplarCharacters[@type='numbers']");
     return optionalNode.map(node -> CldrExemplarCharactersReader.parseExemplarCharacters(node.getTextContent()));
   }
 }

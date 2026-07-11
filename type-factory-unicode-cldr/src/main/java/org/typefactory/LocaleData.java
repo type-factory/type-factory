@@ -7,30 +7,35 @@ import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 
 public interface LocaleData {
 
-  Subset standardSubset();
+  String BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR = "org.typefactory.unicode.cldr";
 
-  Subset auxiliarySubset();
+  Subset standardCharactersSubset();
 
-  Subset punctuationSubset();
+  Subset auxiliaryCharactersSubset();
+
+  Subset punctuationCharactersSubset();
+
+  Subset decimalDigitsSubset();
 
   static LocaleData getForLocale(final Locale locale) throws MissingResourceException {
 
     try {
-      final var resourceBundle = ResourceBundle.getBundle("org.typefactory.unicode.cldr", locale, new LocaleDataControl());
+      final var resourceBundle = ResourceBundle.getBundle(BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR, locale, new LocaleDataControl());
 
       if (resourceBundle instanceof AbstractCldrResourceBundle cldrResourceBundle) {
         return new LocaleDataImpl(
             cldrResourceBundle.getStandardSubset(),
             cldrResourceBundle.getAuxiliarySubset(),
-            cldrResourceBundle.getPunctuationSubset());
+            cldrResourceBundle.getPunctuationSubset(),
+            cldrResourceBundle.getDecimalDigitsSubset());
       }
     } catch (final MissingResourceException ignored) {
       // Ignore and throw a new exception below
     }
 
-    throw new MissingResourceException(
-        "Cannot load locale data for org.typefactory.unicode.cldr." + locale.toLanguageTag(),
-        "org.typefactory.unicode.cldr." + locale.toLanguageTag(), "");
+    final var className = BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR + '.' + locale.toLanguageTag().replaceAll("\\-+", "_");
+
+    throw new MissingResourceException("No LocaleData exists for locale '" + locale.toLanguageTag() + "'", className, "");
   }
 }
 

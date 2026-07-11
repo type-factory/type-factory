@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Chinese language (Traditional script) as defined
+ * Provides Type Factory subsets for the Chinese (Traditional) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Chinese (Traditional) language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class zh_Hant extends zh {
 
@@ -32,29 +35,48 @@ public class zh_Hant extends zh {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected zh_Hant(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
 
   /**
-   * <p>The standard characters for the Chinese language (Traditional script) as defined by the
+   * <p>The Locale represented by this resource bundle for the Chinese (Traditional) language.</p>
+   *
+   * <p>Language tag: {@code "zh-Hant"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("zh")
+          .setScript("Hant")
+          .setRegion("")
+          .setVariant("")
+          .build();
+
+  /**
+   * <p>The standard characters for the Chinese (Traditional) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -73,6 +95,8 @@ public class zh_Hant extends zh {
         0x009a, 0x009b, 0x009c, 0x009d, 0x009e, 0x009f, 0x004e, 0x004f, 
         0x0050, 0x0051  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -431,15 +455,19 @@ public class zh_Hant extends zh {
 
 
   /**
-   * <p>The auxiliary characters for the Chinese language (Traditional script) as defined by the
+   * <p>The auxiliary characters for the Chinese (Traditional) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -458,6 +486,8 @@ public class zh_Hant extends zh {
         0x009a, 0x009b, 0x009c, 0x009d, 0x009e, 0x009f, 0x004e, 0x004f, 
         0x0050, 0x0051  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -650,15 +680,19 @@ public class zh_Hant extends zh {
 
 
   /**
-   * <p>The punctuation characters for the Chinese language (Traditional script) as defined by the
+   * <p>The punctuation characters for the Chinese (Traditional) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -667,6 +701,8 @@ public class zh_Hant extends zh {
 
         0x0000, 0xffff, 0x00fe, 0x00ff, 0x0020, 0xffff, 0x0030  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -695,6 +731,24 @@ public class zh_Hant extends zh {
         42,
         // number of code-points
         132);
+
+
+  /**
+   * <p>The decimal digit characters for the Chinese (Traditional) language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = Factory.rangedSubset(
+
+      new char[]{
+          0x30_39, //  0 1 2 3 4 5 6 7 8 9
+      },
+      1, 10);
 
 
 }

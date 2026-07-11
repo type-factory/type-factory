@@ -1,7 +1,7 @@
 package org.typefactory;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
-import static org.typefactory.assertions.TypeFactoryAssertions.assertThatThrownBy;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -35,7 +35,7 @@ class LocaleDataTest {
 
   @ParameterizedTest(name = "supported locale {0}")
   @MethodSource("supportedLocales")
-  void getInstance_shouldReturnLocaleDataForGeneratedBundles(
+  void getForLocale_shouldReturnLocaleDataForGeneratedBundles(
       final String localeTag,
       final Class<? extends AbstractCldrResourceBundle> expectedBundleType) {
 
@@ -43,23 +43,28 @@ class LocaleDataTest {
 
     final LocaleData actual = LocaleData.getForLocale(locale);
 
-    assertThat(actual.standardSubset()).isNotEmpty();
-    assertThat(actual.auxiliarySubset()).isNotNull();
-    assertThat(actual.punctuationSubset()).isNotNull();
+    assertThat(actual.standardCharactersSubset()).isNotEmpty();
+    assertThat(actual.auxiliaryCharactersSubset()).isNotNull();
+    assertThat(actual.punctuationCharactersSubset()).isNotNull();
+    assertThat(actual.decimalDigitsSubset()).isNotNull();
   }
 
   @ParameterizedTest(name = "unsupported locale {0}")
   @MethodSource("unsupportedLocales")
-  void getInstance_shouldThrowForNonGeneratedBundles(final String localeTag) {
+  void getForLocale_shouldThrowForNonGeneratedBundles(final String localeTag) {
 
-    final Locale locale = Locale.forLanguageTag(localeTag);
+    final var locale = Locale.forLanguageTag(localeTag);
+    final var missingResourceBundleClass =
+        "org.typefactory.unicode.cldr."  + locale.toLanguageTag().replaceAll("\\-+", "_");
 
     synchronized (LocaleDataTest.class) {
       Locale.setDefault(new Locale("zz", "ZZ"));
 
-      assertThatThrownBy(() -> LocaleData.getForLocale(locale))
-          .isInstanceOf(MissingResourceException.class)
-          .hasMessage("Cannot load locale data for org.typefactory.unicode.cldr." + locale.toLanguageTag());
+      assertThatExceptionOfType(MissingResourceException.class)
+          .isThrownBy(() -> LocaleData.getForLocale(locale))
+          .withMessage("No LocaleData exists for locale '" + locale.toLanguageTag() + "'")
+          .satisfies(missingResourceException ->
+              assertThat(missingResourceException.getClassName()).isEqualTo(missingResourceBundleClass));
     }
   }
 
@@ -79,6 +84,9 @@ class LocaleDataTest {
   }
 
   static Stream<String> unsupportedLocales() {
-    return Stream.of(Locale.ROOT.toLanguageTag(), "zz", "zz-ZZ");
+    return Stream.of(
+        Locale.ROOT.toLanguageTag(),
+        "zz",
+        "zz-ZZ");
   }
 }

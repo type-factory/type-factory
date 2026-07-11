@@ -35,7 +35,7 @@ class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
       TypeParser.builder()
           .messageCode(MessageCode.of("must.be.greek.letters.only", "Must be made up of Greek letters only."))
           .toCharacterNormalizationFormNFC()
-          .acceptSubset(LOCALE_DATA.standardSubset())
+          .acceptSubset(LOCALE_DATA.standardCharactersSubset())
           .normalizeWhitespace()
           .build();
 

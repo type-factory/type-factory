@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the German language as defined
+ * Provides Type Factory subsets for the German (Switzerland) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the German (Switzerland) language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class de_CH extends de {
 
@@ -32,29 +35,47 @@ public class de_CH extends de {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected de_CH(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
 
   /**
-   * <p>The standard characters for the German language as defined by the
+   * <p>The Locale represented by this resource bundle for the German (Switzerland) language.</p>
+   *
+   * <p>Language tag: {@code "de-CH"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("de")
+          .setScript("")
+          .setRegion("CH")
+          .setVariant("")
+          .build();
+
+  /**
+   * <p>The standard characters for the German (Switzerland) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_5a, //  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
           0x61_7a, //  a b c d e f g h i j k l m n o p q r s t u v w x y z
           0xc4_c4, //  Ä
@@ -68,23 +89,47 @@ public class de_CH extends de {
 
 
   /**
-   * <p>The auxiliary characters for the German language as defined by the
+   * <p>The auxiliary characters for the German (Switzerland) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = null;
 
 
   /**
-   * <p>The punctuation characters for the German language as defined by the
+   * <p>The punctuation characters for the German (Switzerland) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = null;
+
+
+  /**
+   * <p>The decimal digit characters for the German (Switzerland) language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = Factory.rangedSubset(
+
+      new char[]{
+          0x30_39, //  0 1 2 3 4 5 6 7 8 9
+      },
+      1, 10);
 
 
 }

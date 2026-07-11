@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Inuktitut language (Latin script) as defined
+ * Provides Type Factory subsets for the Inuktitut (Latin) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Inuktitut (Latin) language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class iu_Latn extends iu {
 
@@ -32,29 +35,47 @@ public class iu_Latn extends iu {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected iu_Latn(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
 
   /**
-   * <p>The standard characters for the Inuktitut language (Latin script) as defined by the
+   * <p>The Locale represented by this resource bundle for the Inuktitut (Latin) language.</p>
+   *
+   * <p>Language tag: {@code "iu-Latn"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("iu")
+          .setScript("Latn")
+          .setRegion("")
+          .setVariant("")
+          .build();
+
+  /**
+   * <p>The standard characters for the Inuktitut (Latin) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_41, //  A
           0x47_47, //  G
           0x49_4e, //  I J K L M N
@@ -64,22 +85,25 @@ public class iu_Latn extends iu {
           0x69_6e, //  i j k l m n
           0x70_76, //  p q r s t u v
       },
-        new int[]{
+      new int[]{
           0x0141_0142, //  Ł ł
       },
       9, 32);
 
 
   /**
-   * <p>The auxiliary characters for the Inuktitut language (Latin script) as defined by the
+   * <p>The auxiliary characters for the Inuktitut (Latin) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x42_46, //  B C D E F
           0x48_48, //  H
           0x4f_4f, //  O
@@ -93,13 +117,29 @@ public class iu_Latn extends iu {
 
 
   /**
-   * <p>The punctuation characters for the Inuktitut language (Latin script) as defined by the
+   * <p>The punctuation characters for the Inuktitut (Latin) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = null;
+
+
+  /**
+   * <p>The decimal digit characters for the Inuktitut (Latin) language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

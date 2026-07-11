@@ -14,23 +14,28 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
   public static final String STANDARD_CHARACTERS = "standard.characters";
   public static final String AUXILIARY_CHARACTERS = "auxiliary.characters";
   public static final String PUNCTUATION_CHARACTERS = "punctuation.characters";
+  public static final String DECIMAL_DIGITS = "decimal.digits";
 
   private static final List<String> KEYS = List.of(
       STANDARD_CHARACTERS,
       AUXILIARY_CHARACTERS,
-      PUNCTUATION_CHARACTERS);
+      PUNCTUATION_CHARACTERS,
+      DECIMAL_DIGITS);
 
   private final Subset standardSubset;
   private final Subset auxiliarySubset;
   private final Subset punctuationSubset;
+  private final Subset decimalDigitsSubset;
 
   protected AbstractCldrResourceBundle(
       final Subset standardSubset,
       final Subset auxiliarySubset,
-      final Subset punctuationSubset) {
+      final Subset punctuationSubset,
+      final Subset decimalDigitsSubset) {
     this.standardSubset = Objects.requireNonNullElse(standardSubset, Factory.emptySubset());
     this.auxiliarySubset = Objects.requireNonNullElse(auxiliarySubset, Factory.emptySubset());
     this.punctuationSubset = Objects.requireNonNullElse(punctuationSubset, Factory.emptySubset());
+    this.decimalDigitsSubset = Objects.requireNonNullElse(decimalDigitsSubset, Factory.emptySubset());
   }
 
   @Override
@@ -39,6 +44,7 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
       case STANDARD_CHARACTERS -> standardSubset;
       case AUXILIARY_CHARACTERS -> auxiliarySubset;
       case PUNCTUATION_CHARACTERS -> punctuationSubset;
+      case DECIMAL_DIGITS -> decimalDigitsSubset;
       default -> throw new MissingResourceException(
           "Cannot load locale data " + getClass().getPackageName() + '_' + getClass().getSimpleName(), "", key);
     };
@@ -59,5 +65,9 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
 
   public Subset getPunctuationSubset() {
     return punctuationSubset;
+  }
+
+  public Subset getDecimalDigitsSubset() {
+    return decimalDigitsSubset;
   }
 }

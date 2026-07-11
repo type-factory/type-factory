@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the English language (Shavian script) as defined
+ * Provides Type Factory subsets for the English (Shavian) as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the English (Shavian) language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class en_Shaw extends en {
 
@@ -32,29 +35,47 @@ public class en_Shaw extends en {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected en_Shaw(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
 
   /**
-   * <p>The standard characters for the English language (Shavian script) as defined by the
+   * <p>The Locale represented by this resource bundle for the English (Shavian) language.</p>
+   *
+   * <p>Language tag: {@code "en-Shaw"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("en")
+          .setScript("Shaw")
+          .setRegion("")
+          .setVariant("")
+          .build();
+
+  /**
+   * <p>The standard characters for the English (Shavian) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new long[]{
+      new long[]{
           0x00010450_0001047fL, //  𐑐 𐑑 𐑒 𐑓 𐑔 𐑕 𐑖 𐑗 𐑘 𐑙 𐑚 𐑛 𐑜 𐑝 𐑞 𐑟 𐑠 𐑡 𐑢 𐑣 𐑤 𐑥 𐑦 𐑧 𐑨 𐑩 𐑪 𐑫 𐑬 𐑭
                                 //  𐑮 𐑯 𐑰 𐑱 𐑲 𐑳 𐑴 𐑵 𐑶 𐑷 𐑸 𐑹 𐑺 𐑻 𐑼 𐑽 𐑾 𐑿
       },
@@ -62,25 +83,31 @@ public class en_Shaw extends en {
 
 
   /**
-   * <p>The auxiliary characters for the English language (Shavian script) as defined by the
+   * <p>The auxiliary characters for the English (Shavian) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = null;
 
 
   /**
-   * <p>The punctuation characters for the English language (Shavian script) as defined by the
+   * <p>The punctuation characters for the English (Shavian) language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_21, //  !
           0x23_23, //  #
           0x26_2a, //  & ' ( ) *
@@ -93,7 +120,7 @@ public class en_Shaw extends en {
           0xab_ab, //  «
           0xbb_bb, //  »
       },
-        new int[]{
+      new int[]{
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
           0x2020_2021, //  † ‡
@@ -102,6 +129,19 @@ public class en_Shaw extends en {
           0x2039_203a, //  ‹ ›
       },
       17, 31);
+
+
+  /**
+   * <p>The decimal digit characters for the English (Shavian) language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

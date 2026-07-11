@@ -52,7 +52,7 @@ public interface SubsetWrapper extends Subset {
     return wrap(subsetBuilder.build());
   }
 
-  private static SubsetWrapper wrap(final Subset subset) {
+  static SubsetWrapper wrap(final Subset subset) {
     if (subset instanceof RangedSubsetImpl rangedSubset) {
       return new RangedSubsetWrapper(rangedSubset);
     }

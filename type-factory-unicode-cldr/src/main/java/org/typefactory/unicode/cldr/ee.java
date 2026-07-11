@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Ewe language as defined
+ * Provides Type Factory subsets for the Ewe as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Ewe language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class ee extends root {
 
@@ -32,18 +35,33 @@ public class ee extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected ee(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Ewe language.</p>
+   *
+   * <p>Language tag: {@code "ee"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("ee")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Ewe language as defined by the
@@ -51,10 +69,14 @@ public class ee extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
 
-      // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+      // Optimised hashing has one less level of indirection.
+      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
       //
       //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
       //       │
@@ -63,6 +85,8 @@ public class ee extends root {
 
         0x0000, 0x0001, 0x0002, 0x0003, 0xffff, 0xffff, 0x001e, 0xffff  },
 
+      // Optimised hashing has one less level of indirection.
+      //
       //       ┌──── hashIndex           - an index to the hash-bucket
       //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
       //       │  │
@@ -97,10 +121,13 @@ public class ee extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x43_43, //  C
           0x4a_4a, //  J
           0x51_51, //  Q
@@ -127,7 +154,7 @@ public class ee extends root {
           0xfb_fc, //  û ü
           0xff_ff, //  ÿ
       },
-        new int[]{
+      new int[]{
           0x0100_0103, //  Ā ā Ă ă
           0x0114_0115, //  Ĕ ĕ
           0x012c_012d, //  Ĭ ĭ
@@ -145,10 +172,13 @@ public class ee extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_23, //  ! " #
           0x26_2a, //  & ' ( ) *
           0x2c_2f, //  , - . /
@@ -160,7 +190,7 @@ public class ee extends root {
           0x7d_7d, //  }
           0xa7_a7, //  §
       },
-        new int[]{
+      new int[]{
           0x2010_2011, //  ‐ ‑
           0x2013_2014, //  – —
           0x2018_2019, //  ‘ ’
@@ -170,6 +200,19 @@ public class ee extends root {
           0x2032_2033, //  ′ ″
       },
       17, 34);
+
+
+  /**
+   * <p>The decimal digit characters for the Ewe language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

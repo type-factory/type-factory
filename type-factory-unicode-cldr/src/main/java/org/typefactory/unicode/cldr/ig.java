@@ -15,16 +15,19 @@
 */
 package org.typefactory.unicode.cldr;
 
+import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Igbo language as defined
+ * Provides Type Factory subsets for the Igbo as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
-    comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+    comments = """
+        This file for the Igbo language is generated from the
+        Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class ig extends root {
 
@@ -32,18 +35,33 @@ public class ig extends root {
     super(
         STANDARD_CHARACTERS_SUBSET,
         AUXILIARY_CHARACTERS_SUBSET,
-        PUNCTUATION_CHARACTERS_SUBSET);
+        PUNCTUATION_CHARACTERS_SUBSET,
+        DECIMAL_DIGITS_SUBSET);
   }
 
   protected ig(
           final Subset standardSubset,
           final Subset auxiliarySubset,
-          final Subset punctuationSubset) {
+          final Subset punctuationSubset,
+          final Subset decimalDigitsSubset) {
     super(
         standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
         auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+        punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+        decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
   }
+
+  /**
+   * <p>The Locale represented by this resource bundle for the Igbo language.</p>
+   *
+   * <p>Language tag: {@code "ig"}</p>
+   */
+  static final Locale LOCALE = new Locale.Builder()
+          .setLanguage("ig")
+          .setScript("")
+          .setRegion("")
+          .setVariant("")
+          .build();
 
   /**
    * <p>The standard characters for the Igbo language as defined by the
@@ -51,10 +69,13 @@ public class ig extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the standard characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x41_50, //  A B C D E F G H I J K L M N O P
           0x52_57, //  R S T U V W
           0x59_5a, //  Y Z
@@ -62,7 +83,7 @@ public class ig extends root {
           0x72_77, //  r s t u v w
           0x79_7a, //  y z
       },
-        new int[]{
+      new int[]{
           0x1e44_1e45, //  Ṅ ṅ
           0x1eca_1ecd, //  Ị ị Ọ ọ
           0x1ee4_1ee5, //  Ụ ụ
@@ -76,10 +97,13 @@ public class ig extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the auxiliary characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x43_43, //  C
           0x4d_4d, //  M
           0x51_51, //  Q
@@ -101,7 +125,7 @@ public class ig extends root {
           0xf2_f3, //  ò ó
           0xf9_fa, //  ù ú
       },
-        new int[]{
+      new int[]{
           0x0100_0101, //  Ā ā
           0x0112_0113, //  Ē ē
           0x012a_012b, //  Ī ī
@@ -123,10 +147,13 @@ public class ig extends root {
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
    *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the punctuation characters
+   *    are inherited from the superclass.</p>
    */
   static final Subset PUNCTUATION_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-        new char[]{
+      new char[]{
           0x21_21, //  !
           0x28_29, //  ( )
           0x2c_2e, //  , - .
@@ -137,12 +164,25 @@ public class ig extends root {
           0x7b_7b, //  {
           0x7d_7d, //  }
       },
-        new int[]{
+      new int[]{
           0x2011_2011, //  ‑
           0x2018_2019, //  ‘ ’
           0x201c_201d, //  “ ”
       },
       12, 18);
+
+
+  /**
+   * <p>The decimal digit characters for the Igbo language as defined by the
+   *    Unicode Common Locale Data Repository (CLDR).</p>
+   *
+   * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+   *    element in the CLDR dataset.</p>
+   *
+   * <p>A {@code null} value indicates that the decimal digit characters
+   *    are inherited from the superclass.</p>
+   */
+  static final Subset DECIMAL_DIGITS_SUBSET = null;
 
 
 }

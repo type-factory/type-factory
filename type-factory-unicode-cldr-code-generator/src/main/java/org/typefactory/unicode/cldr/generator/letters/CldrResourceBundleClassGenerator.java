@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.typefactory.StringFormatter;
+import org.typefactory.Subset;
 import org.typefactory.impl.HashedRangedSubsetWrapper;
 import org.typefactory.impl.InternalSubsetUtils;
 import org.typefactory.impl.OptimalHashedRangedSubsetWrapper;
@@ -60,6 +61,7 @@ public class CldrResourceBundleClassGenerator {
     logger.info(() -> "Creating subset for " + lettersClassName);
 
     final String language = locale.getDisplayLanguage();
+    final String displayName = locale.getDisplayName();
 
     final String script = locale.getDisplayScript().isEmpty()
         ? ""
@@ -74,23 +76,44 @@ public class CldrResourceBundleClassGenerator {
     final Optional<SubsetWrapper> punctuationCharactersSubset =
         cldrLocaleXmlDocument.getPunctuationExemplarCharacters().map(SubsetWrapper::optimisedSubset);
 
+    final Optional<SubsetWrapper> numbersCharactersSubset =
+        cldrLocaleXmlDocument.getNumbersExemplarCharacters().map(SubsetWrapper::optimisedSubset);
+
+    final Optional<SubsetWrapper> decimalDigitsCharactersSubset = numbersCharactersSubset
+        .map(subsetWrapper -> {
+          final var subsetBuilder = Subset.builder();
+          subsetWrapper.ranges().forEach(codePointRange -> {
+            for (int codePoint = codePointRange.inclusiveFrom; codePoint <= codePointRange.inclusiveTo; ++codePoint) {
+              if (Character.isDigit(codePoint)) {
+                subsetBuilder.includeCodePoint(codePoint);
+              }
+            }
+          });
+          return SubsetWrapper.wrap(subsetBuilder.build());
+        });
+
     final String extendsClass = cldrLocaleXmlDocument.extendsClassName();
+
+    final String privateUseExtension = locale.getExtension(Locale.PRIVATE_USE_EXTENSION);
 
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
         .append(String.format("""
             package org.typefactory.unicode.cldr;
             
+            import java.util.Locale;
             import javax.annotation.processing.Generated;
             import org.typefactory.Subset;
             import org.typefactory.impl.Factory;
             
             /**
-             * Provides Type Factory subsets for the %s language%s as defined
+             * Provides Type Factory subsets for the %s as defined
              * by the Unicode Common Locale Data Repository (CLDR).
              */
             @Generated(
-                comments = "This file is generated from the Unicode Common Locale Data Repository (CLDR) datasets.",
+                comments = \"""
+                    This file for the %s language is generated from the
+                    Unicode Common Locale Data Repository (CLDR) datasets.\""",
                 value = "org.typefactory:type-factory-unicode-cldr-code-generator")
             public class %s extends %s {
             
@@ -98,55 +121,101 @@ public class CldrResourceBundleClassGenerator {
                 super(
                     STANDARD_CHARACTERS_SUBSET,
                     AUXILIARY_CHARACTERS_SUBSET,
-                    PUNCTUATION_CHARACTERS_SUBSET);
+                    PUNCTUATION_CHARACTERS_SUBSET,
+                    DECIMAL_DIGITS_SUBSET);
               }
             
               protected %s(
                       final Subset standardSubset,
                       final Subset auxiliarySubset,
-                      final Subset punctuationSubset) {
+                      final Subset punctuationSubset,
+                      final Subset decimalDigitsSubset) {
                 super(
                     standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
                     auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-                    punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset);
+                    punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
+                    decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
               }
             
-            """, language, script, lettersClassName, extendsClass, lettersClassName, lettersClassName))
+            """, displayName, displayName, lettersClassName, extendsClass, lettersClassName, lettersClassName))
+        .append(String.format("""
+                  /**
+                   * <p>The Locale represented by this resource bundle for the %s language.</p>
+                   *
+                   * <p>Language tag: {@code "%s"}</p>
+                   */
+                  static final Locale LOCALE = new Locale.Builder()
+                          .setLanguage("%s")
+                          .setScript("%s")
+                          .setRegion("%s")
+                          .setVariant("%s")%s
+                          .build();
+                
+                """,
+            displayName, locale.toLanguageTag(),
+            locale.getLanguage(), locale.getScript(), locale.getCountry(), locale.getVariant(),
+            privateUseExtension == null
+                ? ""
+                : "\n                      .setExtension(Locale.PRIVATE_USE_EXTENSION, \"" + privateUseExtension + "\")"))
         .append(String.format("""
               /**
-               * <p>The standard characters for the %s language%s as defined by the
+               * <p>The standard characters for the %s language as defined by the
                *    Unicode Common Locale Data Repository (CLDR).</p>
                *
                * <p>These are the characters in the {@code <exemplarCharacters>}
                *    element in the CLDR dataset.</p>
+               *
+               * <p>A {@code null} value indicates that the standard characters
+               *    are inherited from the superclass.</p>
                */
-            """, language, script))
+            """, displayName))
         .append("  static final Subset STANDARD_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, standardCharactersSubset))
         .appendNewline()
         .append(String.format("""
               /**
-               * <p>The auxiliary characters for the %s language%s as defined by the
+               * <p>The auxiliary characters for the %s language as defined by the
                *    Unicode Common Locale Data Repository (CLDR).</p>
                *
                * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
                *    element in the CLDR dataset.</p>
+               *
+               * <p>A {@code null} value indicates that the auxiliary characters
+               *    are inherited from the superclass.</p>
                */
-            """, language, script))
+            """, displayName))
         .append("  static final Subset AUXILIARY_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, auxiliaryCharactersSubset))
         .appendNewline()
         .append(String.format("""
               /**
-               * <p>The punctuation characters for the %s language%s as defined by the
+               * <p>The punctuation characters for the %s language as defined by the
                *    Unicode Common Locale Data Repository (CLDR).</p>
                *
                * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
                *    element in the CLDR dataset.</p>
+               *
+               * <p>A {@code null} value indicates that the punctuation characters
+               *    are inherited from the superclass.</p>
                */
-            """, language, script))
+            """, displayName))
         .append("  static final Subset PUNCTUATION_CHARACTERS_SUBSET = ")
         .apply(appendSubset(locale, punctuationCharactersSubset))
+        .appendNewline()
+        .append(String.format("""
+              /**
+               * <p>The decimal digit characters for the %s language as defined by the
+               *    Unicode Common Locale Data Repository (CLDR).</p>
+               *
+               * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
+               *    element in the CLDR dataset.</p>
+               *
+               * <p>A {@code null} value indicates that the decimal digit characters
+               *    are inherited from the superclass.</p>
+               */
+            """, displayName))
+        .append("  static final Subset DECIMAL_DIGITS_SUBSET = ")
+        .apply(appendSubset(locale, decimalDigitsCharactersSubset))
         .appendNewline()
         .append('}')
         .appendNewline();
@@ -204,36 +273,19 @@ public class CldrResourceBundleClassGenerator {
       final int to = range.inclusiveTo;
       if (from <= rangeEnd && to >= rangeStart) {
         if (!arrayStarted) {
-          switch (locale.getCountry()) {
-            case "ja", "zh":
-              s.appendNewline().append("      // See Javadoc for full set of unicode code points in the following ranges.");
-              break;
-            default:
-              break;
-          }
-          s.appendNewline().append("        new ").append(rangeArrayType).append("[]{").appendNewline();
+          s.appendNewline().append("      new ").append(rangeArrayType).append("[]{").appendNewline();
           arrayStarted = true;
         }
         s.append(String.format(indentedRangeFormat, max(rangeStart, from), min(rangeEnd, to)));
         numberOfCodePointRanges++;
         numberOfCodePointsInCodePointRanges += (to - from + 1);
-        switch (locale.getCountry()) {
-          case "ja", "zh":
-            for (int c = from; c <= min(to, from + 20); ++c) {
-              s.append(' ').appendCodePoint(c);
-            }
-            s.append(" ...").appendNewline();
-            break;
-          default:
-            for (int c = from, i = 1; c <= to; ++c, ++i) {
-              s.append(' ').appendCodePoint(c);
-              if (i % 30 == 0 && to - c > 2) {
-                s.appendNewline().append(indent).append("// ");
-              }
-            }
-            s.appendNewline();
-            break;
+        for (int c = from, i = 1; c <= to; ++c, ++i) {
+          s.append(' ').appendCodePoint(c);
+          if (i % 30 == 0 && to - c > 2) {
+            s.appendNewline().append(indent).append("// ");
+          }
         }
+        s.appendNewline();
       }
     }
     if (arrayStarted) {
@@ -321,7 +373,7 @@ public class CldrResourceBundleClassGenerator {
           .appendNewline()
           .appendNewline()
           .append("""
-                    // Hash-buckets with 0..n keys – null indicates an empty hash-bucket.
+                    // Hash-buckets contain 0..n keys – null indicates an empty hash-bucket.
                     //
                     //       ┌──── hashIndex       - an index to the hash-bucket
                     //       │  ┌─ hashBucketIndex - an index to the key within the hash-bucket
@@ -442,7 +494,8 @@ public class CldrResourceBundleClassGenerator {
           .appendNewline()
           .appendNewline()
           .append("""
-                    // Hash-buckets with 0..1 keys – 0xffff indicates an empty hash-bucket.
+                    // Optimised hashing has one less level of indirection.
+                    // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
                     //
                     //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
                     //       │
@@ -461,6 +514,8 @@ public class CldrResourceBundleClassGenerator {
           .appendNewline()
           .appendNewline()
           .append("""
+                    // Optimised hashing has one less level of indirection.
+                    //
                     //       ┌──── hashIndex           - an index to the hash-bucket
                     //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
                     //       │  │
