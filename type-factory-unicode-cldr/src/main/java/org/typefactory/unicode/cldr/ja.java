@@ -16,7 +16,6 @@
 package org.typefactory.unicode.cldr;
 
 import java.util.Locale;
-import java.util.Objects;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -46,10 +45,10 @@ public class ja extends root {
           final Subset punctuationSubset,
           final Subset decimalDigitsSubset) {
     super(
-        Objects.requireNonNullElse(standardSubset, STANDARD_CHARACTERS_SUBSET),
-        Objects.requireNonNullElse(auxiliarySubset, AUXILIARY_CHARACTERS_SUBSET),
-        Objects.requireNonNullElse(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
-        Objects.requireNonNullElse(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
+        defaultIfNull(standardSubset, STANDARD_CHARACTERS_SUBSET),
+        defaultIfNull(auxiliarySubset, AUXILIARY_CHARACTERS_SUBSET),
+        defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
+        defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
 
   /**

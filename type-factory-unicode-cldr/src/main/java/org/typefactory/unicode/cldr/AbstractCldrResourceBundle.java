@@ -38,6 +38,16 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
     this.decimalDigitsSubset = Objects.requireNonNullElse(decimalDigitsSubset, Factory.emptySubset());
   }
 
+  /**
+   * Returns the provided {@code subset} if not {@code null}, otherwise returns the provided {@code defaultSubset} which may also be null.
+   * @param subset the subset to be returned if not null.
+   * @param defaultSubset the default subset to return, this may also be null.
+   * @return the provided {@code subset} if not {@code null}, otherwise returns the provided {@code defaultSubset} which may also be null.
+   */
+  protected static Subset defaultIfNull(final Subset subset, final Subset defaultSubset) {
+    return subset == null ? defaultSubset : subset;
+  }
+
   @Override
   protected Subset handleGetObject(final String key) {
     return switch (key) {
