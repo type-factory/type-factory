@@ -52,18 +52,6 @@ public class lo extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Lao language.</p>
-   *
-   * <p>Language tag: {@code "lo"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("lo")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Lao language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -50,18 +49,6 @@ public class ak extends root {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Akan language.</p>
-   *
-   * <p>Language tag: {@code "ak"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("ak")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Akan language as defined by the

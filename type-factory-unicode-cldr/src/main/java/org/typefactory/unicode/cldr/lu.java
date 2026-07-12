@@ -52,18 +52,6 @@ public class lu extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Luba-Katanga language.</p>
-   *
-   * <p>Language tag: {@code "lu"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("lu")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Luba-Katanga language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

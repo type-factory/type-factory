@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -50,18 +49,6 @@ public class ff_Adlm extends ff {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Fulah (Adlam) language.</p>
-   *
-   * <p>Language tag: {@code "ff-Adlm"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("ff")
-          .setScript("Adlm")
-          .setRegion("")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Fulah (Adlam) language as defined by the

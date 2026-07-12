@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 
@@ -49,18 +48,6 @@ public class nb extends no {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Norwegian Bokmål language.</p>
-   *
-   * <p>Language tag: {@code "nb"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("nb")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Norwegian Bokmål language as defined by the

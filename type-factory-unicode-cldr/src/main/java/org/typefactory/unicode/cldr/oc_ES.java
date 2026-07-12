@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -50,18 +49,6 @@ public class oc_ES extends oc {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Occitan (Spain) language.</p>
-   *
-   * <p>Language tag: {@code "oc-ES"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("oc")
-          .setScript("")
-          .setRegion("ES")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Occitan (Spain) language as defined by the

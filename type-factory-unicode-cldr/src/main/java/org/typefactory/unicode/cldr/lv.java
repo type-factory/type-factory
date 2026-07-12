@@ -52,18 +52,6 @@ public class lv extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Latvian language.</p>
-   *
-   * <p>Language tag: {@code "lv"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("lv")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Latvian language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

@@ -15,9 +15,12 @@
 */
 package org.typefactory.unicode.cldr;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
+import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -31,6 +34,40 @@ import org.junit.jupiter.params.provider.CsvSource;
         from the Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 class ar_MA_Test extends ar_Test {
+
+  @Test
+  void defaultConstructor_successfullyCreatesInstance() {
+
+    final var instance = new ar_MA();
+
+    assertThat(instance)
+        .isInstanceOf(ar_MA.class)
+        .isInstanceOf(root.class)
+        .isInstanceOf(AbstractCldrResourceBundle.class)
+        .isInstanceOf(ResourceBundle.class);
+
+    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+  }
+
+  @Test
+  void constructor_successfullyCreatesInstanceWithNullParameters() {
+
+    final var instance = new ar_MA(null, null, null, null);
+
+    assertThat(instance)
+        .isInstanceOf(ar_MA.class)
+        .isInstanceOf(root.class)
+        .isInstanceOf(AbstractCldrResourceBundle.class)
+        .isInstanceOf(ResourceBundle.class);
+
+    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+  }
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """

@@ -15,7 +15,12 @@
 */
 package org.typefactory.unicode.cldr;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+
+import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the Norwegian Bokmål language 'nb' resource bundle as defined
@@ -27,5 +32,39 @@ import javax.annotation.processing.Generated;
         from the Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 class nb_Test extends no_Test {
+
+  @Test
+  void defaultConstructor_successfullyCreatesInstance() {
+
+    final var instance = new nb();
+
+    assertThat(instance)
+        .isInstanceOf(nb.class)
+        .isInstanceOf(root.class)
+        .isInstanceOf(AbstractCldrResourceBundle.class)
+        .isInstanceOf(ResourceBundle.class);
+
+    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+  }
+
+  @Test
+  void constructor_successfullyCreatesInstanceWithNullParameters() {
+
+    final var instance = new nb(null, null, null, null);
+
+    assertThat(instance)
+        .isInstanceOf(nb.class)
+        .isInstanceOf(root.class)
+        .isInstanceOf(AbstractCldrResourceBundle.class)
+        .isInstanceOf(ResourceBundle.class);
+
+    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+  }
 
 }

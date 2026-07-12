@@ -52,18 +52,6 @@ public class mg extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Malagasy language.</p>
-   *
-   * <p>Language tag: {@code "mg"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("mg")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Malagasy language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

@@ -52,18 +52,6 @@ public class mk extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Macedonian language.</p>
-   *
-   * <p>Language tag: {@code "mk"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("mk")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Macedonian language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

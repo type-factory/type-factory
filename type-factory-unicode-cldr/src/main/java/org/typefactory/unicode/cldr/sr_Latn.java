@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -50,18 +49,6 @@ public class sr_Latn extends sr {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Serbian (Latin) language.</p>
-   *
-   * <p>Language tag: {@code "sr-Latn"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("sr")
-          .setScript("Latn")
-          .setRegion("")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Serbian (Latin) language as defined by the

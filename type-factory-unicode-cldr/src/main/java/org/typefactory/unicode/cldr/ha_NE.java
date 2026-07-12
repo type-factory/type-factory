@@ -15,7 +15,6 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
@@ -50,18 +49,6 @@ public class ha_NE extends ha {
         defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
         defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
   }
-
-  /**
-   * <p>The Locale represented by this resource bundle for the Hausa (Niger) language.</p>
-   *
-   * <p>Language tag: {@code "ha-NE"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("ha")
-          .setScript("")
-          .setRegion("NE")
-          .setVariant("")
-          .build();
 
   /**
    * <p>The standard characters for the Hausa (Niger) language as defined by the

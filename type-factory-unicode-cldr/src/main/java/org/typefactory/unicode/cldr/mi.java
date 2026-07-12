@@ -52,18 +52,6 @@ public class mi extends root {
   }
 
   /**
-   * <p>The Locale represented by this resource bundle for the Maori language.</p>
-   *
-   * <p>Language tag: {@code "mi"}</p>
-   */
-  static final Locale LOCALE = new Locale.Builder()
-          .setLanguage("mi")
-          .setScript("")
-          .setRegion("")
-          .setVariant("")
-          .build();
-
-  /**
    * <p>The standard characters for the Maori language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *

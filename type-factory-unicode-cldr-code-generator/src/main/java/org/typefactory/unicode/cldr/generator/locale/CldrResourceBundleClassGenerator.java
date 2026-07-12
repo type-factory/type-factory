@@ -169,25 +169,6 @@ public class CldrResourceBundleClassGenerator {
             
             """, displayName, displayName, resourceBundleClassName, resourceBundleSuperClassName, resourceBundleClassName, resourceBundleClassName))
         .append(String.format("""
-                  /**
-                   * <p>The Locale represented by this resource bundle for the %s language.</p>
-                   *
-                   * <p>Language tag: {@code "%s"}</p>
-                   */
-                  static final Locale LOCALE = new Locale.Builder()
-                          .setLanguage("%s")
-                          .setScript("%s")
-                          .setRegion("%s")
-                          .setVariant("%s")%s
-                          .build();
-                
-                """,
-            displayName, locale.toLanguageTag(),
-            locale.getLanguage(), locale.getScript(), locale.getCountry(), locale.getVariant(),
-            privateUseExtension == null
-                ? ""
-                : "\n                      .setExtension(Locale.PRIVATE_USE_EXTENSION, \"" + privateUseExtension + "\")"))
-        .append(String.format("""
               /**
                * <p>The standard characters for the %s language as defined by the
                *    Unicode Common Locale Data Repository (CLDR).</p>
@@ -306,9 +287,12 @@ public class CldrResourceBundleClassGenerator {
         .append(String.format("""
                 package org.typefactory.unicode.cldr;
                 
+                import static org.assertj.core.api.Assertions.assertThatNoException;
                 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
                 
+                import java.util.ResourceBundle;
                 import javax.annotation.processing.Generated;
+                import org.junit.jupiter.api.Test;
                 import org.junit.jupiter.params.ParameterizedTest;
                 import org.junit.jupiter.params.provider.CsvSource;
                 
@@ -323,10 +307,46 @@ public class CldrResourceBundleClassGenerator {
                     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
                 class %s extends %s {
                 
+                  @Test
+                  void defaultConstructor_successfullyCreatesInstance() {
+                
+                    final var instance = new %s();
+                
+                    assertThat(instance)
+                        .isInstanceOf(%s.class)
+                        .isInstanceOf(root.class)
+                        .isInstanceOf(AbstractCldrResourceBundle.class)
+                        .isInstanceOf(ResourceBundle.class);
+                
+                    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+                    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+                    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+                    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+                  }
+                
+                  @Test
+                  void constructor_successfullyCreatesInstanceWithNullParameters() {
+                
+                    final var instance = new %s(null, null, null, null);
+                
+                    assertThat(instance)
+                        .isInstanceOf(%s.class)
+                        .isInstanceOf(root.class)
+                        .isInstanceOf(AbstractCldrResourceBundle.class)
+                        .isInstanceOf(ResourceBundle.class);
+                
+                    assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
+                    assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
+                    assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
+                    assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+                  }
+                
                 """,
             displayName, resourceBundleClassName,
             displayName, resourceBundleClassName,
-            resourceBundleTestClassName, resourceBundleTestSuperClassName))
+            resourceBundleTestClassName, resourceBundleTestSuperClassName,
+            resourceBundleClassName, resourceBundleClassName,
+            resourceBundleClassName, resourceBundleClassName))
         .when(standardCharactersSubset.isPresent() && standardCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
                           @ParameterizedTest
