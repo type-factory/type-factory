@@ -70,6 +70,7 @@
           <arguments>
             <argument>${project.parent.basedir}/src/license/license-header.java.txt</argument>
             <argument>${project.basedir}/src/main/java/org/typefactory/unicode/cldr</argument>
+            <argument>${project.basedir}/src/test/java/org/typefactory/unicode/cldr</argument>
           </arguments>
         </configuration>
         <dependencies>
