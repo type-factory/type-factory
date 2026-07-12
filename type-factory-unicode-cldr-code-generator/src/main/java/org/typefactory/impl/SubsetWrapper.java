@@ -18,9 +18,13 @@ package org.typefactory.impl;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
-import org.typefactory.unicode.cldr.generator.letters.CldrExemplarCharacters;
+import org.typefactory.unicode.cldr.generator.unicode.cldr.CldrExemplarCharacters;
 
 public interface SubsetWrapper extends Subset {
+
+  static SubsetWrapper empty() {
+    return wrap(Subset.builder().build());
+  }
 
   static SubsetWrapper optimisedSubset(final UnicodeSet unicodeSet) {
 

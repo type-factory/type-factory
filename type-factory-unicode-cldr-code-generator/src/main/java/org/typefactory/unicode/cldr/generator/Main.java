@@ -23,8 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
-import org.typefactory.unicode.cldr.generator.letters.UnicodeCldrHelper;
-import org.typefactory.unicode.cldr.generator.unicodedata.UnicodeGroupData;
+import org.typefactory.unicode.cldr.generator.locale.CldrResourceBundleClassGenerator;
+import org.typefactory.unicode.cldr.generator.unicode.core.UnicodeGroupData;
 
 public class Main {
 
@@ -37,17 +37,19 @@ public class Main {
 
   public static void main(final String[] args) {
 
-    if (args.length != 2) {
+    if (args.length != 3) {
       logger.severe("""
           You must specify the following command line parameters:
           - The path the license header file.
-          - Output directory to generate the Letters class.
+          - Output directory to generate the Unicode CLDR locale resource bundle classes.
+          - Output directory to generate the Unicode CLDR locale resource bundle classes.
           """);
       System.exit(1);
     }
 
     final String licenseHeader = getLicenseHeader(args[0]);
     final File outputDirectory = new File(args[1]);
+    final File outputTestDirectory = new File(args[2]);
 
     if (!outputDirectory.exists() || !outputDirectory.isDirectory()) {
       logger.severe("""
@@ -56,12 +58,19 @@ public class Main {
       System.exit(1);
     }
 
+    if (!outputTestDirectory.exists() || !outputTestDirectory.isDirectory()) {
+      logger.severe("""
+          The output test directory to generate the Language test class in must exist.
+          """);
+      System.exit(1);
+    }
+
     final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
 
-    final UnicodeCldrHelper unicodeCldrHelper =
-        new UnicodeCldrHelper(licenseHeader, outputDirectory, unicodeGroupData);
+    final CldrResourceBundleClassGenerator cldrResourceBundleClassGenerator
+        = new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory, outputTestDirectory);
 
-    unicodeCldrHelper.generateLanguageClass();
+    cldrResourceBundleClassGenerator.generateUnicodeCldrResourceBundles();
   }
 
   private static String getLicenseHeader(final String licenseFilePath) {

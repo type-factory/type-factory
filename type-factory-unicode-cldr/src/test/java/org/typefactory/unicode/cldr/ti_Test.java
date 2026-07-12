@@ -1,0 +1,114 @@
+/*
+   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+package org.typefactory.unicode.cldr;
+
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+
+import javax.annotation.processing.Generated;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+/**
+ * Unit tests for the Tigrinya language 'ti' resource bundle as defined
+ * by the Unicode Common Locale Data Repository (CLDR).
+ */
+@Generated(
+    comments = """
+        This file of unit tests for the Tigrinya language 'ti' resource bundle is generated
+        from the Unicode Common Locale Data Repository (CLDR) datasets.""",
+    value = "org.typefactory:type-factory-unicode-cldr-code-generator")
+class ti_Test extends root_Test {
+
+  @ParameterizedTest
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      VALID_FROM | VALID_TO
+      0x001200   | 0x001206
+      0x001208   | 0x001246
+      0x001248   | 0x001248
+      0x00124a   | 0x00124d
+      0x001250   | 0x001256
+      0x001258   | 0x001258
+      0x00125a   | 0x00125d
+      0x001260   | 0x001286
+      0x001288   | 0x001288
+      0x00128a   | 0x00128d
+      0x001290   | 0x0012ae
+      0x0012b0   | 0x0012b0
+      0x0012b2   | 0x0012b5
+      0x0012b8   | 0x0012be
+      0x0012c0   | 0x0012c0
+      0x0012c2   | 0x0012c5
+      0x0012c8   | 0x0012ce
+      0x0012d0   | 0x0012d6
+      0x0012d8   | 0x0012ee
+      0x0012f0   | 0x0012f7
+      0x001300   | 0x00130e
+      0x001310   | 0x001310
+      0x001312   | 0x001315
+      0x001320   | 0x001357
+      0x00135f   | 0x00135f
+      """)
+  void getStandardSubset_containsExpectedCodePoints(
+      final int validFromCodePoint,
+      final int validToCodePoint) {
+
+    final var subset = new ti().getStandardSubset();
+
+    assertThat(subset)
+        .containsCodePoint(validFromCodePoint)
+        .containsCodePoint(validToCodePoint)
+        .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      VALID_FROM | VALID_TO
+      0x001207   | 0x001207
+      0x001247   | 0x001247
+      0x001287   | 0x001287
+      0x0012af   | 0x0012af
+      0x0012cf   | 0x0012cf
+      0x0012ef   | 0x0012ef
+      0x0012f8   | 0x0012ff
+      0x00130f   | 0x00130f
+      0x001318   | 0x00131f
+      0x001358   | 0x00135a
+      0x001380   | 0x001399
+      0x002d80   | 0x002d96
+      0x002da0   | 0x002da6
+      0x002da8   | 0x002dae
+      0x002db0   | 0x002db6
+      0x002db8   | 0x002dbe
+      0x002dc0   | 0x002dc6
+      0x002dc8   | 0x002dce
+      0x002dd0   | 0x002dd6
+      0x002dd8   | 0x002dde
+      """)
+  void getAuxiliarySubset_containsExpectedCodePoints(
+      final int validFromCodePoint,
+      final int validToCodePoint) {
+
+    final var subset = new ti().getAuxiliarySubset();
+
+    assertThat(subset)
+        .containsCodePoint(validFromCodePoint)
+        .containsCodePoint(validToCodePoint)
+        .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+
+}
