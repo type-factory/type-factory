@@ -301,9 +301,9 @@ public class CldrResourceBundleClassGenerator {
                  * by the Unicode Common Locale Data Repository (CLDR).
                  */
                 @Generated(
-                    comments = ""\"
+                    comments = \"""
                         This file of unit tests for the %s language '%s' resource bundle is generated
-                        from the Unicode Common Locale Data Repository (CLDR) datasets.""\",
+                        from the Unicode Common Locale Data Repository (CLDR) datasets.\""",
                     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
                 class %s extends %s {
                 
@@ -350,7 +350,7 @@ public class CldrResourceBundleClassGenerator {
         .when(standardCharactersSubset.isPresent() && standardCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
                           @ParameterizedTest
-                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = ""\"
+                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = \"""
                               VALID_FROM | VALID_TO
                         """,
                     resourceBundleClassName, displayName, displayName,
@@ -363,7 +363,7 @@ public class CldrResourceBundleClassGenerator {
                         .append(String.format("0x%06x", range.inclusiveTo))
                         .appendNewline())
                 .append(String.format("""
-                          ""\")
+                          \""")
                       void getStandardSubset_containsExpectedCodePoints(
                           final int validFromCodePoint,
                           final int validToCodePoint) {
@@ -381,7 +381,7 @@ public class CldrResourceBundleClassGenerator {
         .when(auxiliaryCharactersSubset.isPresent() && auxiliaryCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
                           @ParameterizedTest
-                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = ""\"
+                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = \"""
                               VALID_FROM | VALID_TO
                         """,
                     resourceBundleClassName, displayName, displayName,
@@ -394,7 +394,7 @@ public class CldrResourceBundleClassGenerator {
                         .append(String.format("0x%06x", range.inclusiveTo))
                         .appendNewline())
                 .append(String.format("""
-                          ""\")
+                          \""")
                       void getAuxiliarySubset_containsExpectedCodePoints(
                           final int validFromCodePoint,
                           final int validToCodePoint) {
@@ -412,7 +412,7 @@ public class CldrResourceBundleClassGenerator {
         .when(punctuationCharactersSubset.isPresent() && punctuationCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
                           @ParameterizedTest
-                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = ""\"
+                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = \"""
                               VALID_FROM | VALID_TO
                         """,
                     resourceBundleClassName, displayName, displayName,
@@ -425,7 +425,7 @@ public class CldrResourceBundleClassGenerator {
                         .append(String.format("0x%06x", range.inclusiveTo))
                         .appendNewline())
                 .append(String.format("""
-                          ""\")
+                          \""")
                       void getPunctuationSubset_containsExpectedCodePoints(
                           final int validFromCodePoint,
                           final int validToCodePoint) {
@@ -443,7 +443,7 @@ public class CldrResourceBundleClassGenerator {
         .when(decimalDigitsCharactersSubset.isPresent() && decimalDigitsCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
                           @ParameterizedTest
-                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = ""\"
+                          @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = \"""
                               VALID_FROM | VALID_TO
                         """,
                     resourceBundleClassName, displayName, displayName,
@@ -456,7 +456,7 @@ public class CldrResourceBundleClassGenerator {
                         .append(String.format("0x%06x", range.inclusiveTo))
                         .appendNewline())
                 .append(String.format("""
-                          ""\")
+                          \""")
                       void getDecimalDigitsSubset_containsExpectedCodePoints(
                           final int validFromCodePoint,
                           final int validToCodePoint) {

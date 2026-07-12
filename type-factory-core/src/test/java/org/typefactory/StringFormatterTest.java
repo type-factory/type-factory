@@ -431,9 +431,9 @@ class StringFormatterTest {
     final var builder = new StringFormatter()
         .apply(sb -> sb.append("a"))
         .when(false, sb -> sb.append("b"))
-        .forEach(List.of("c", "d"), (sb, value) -> sb.append(value))
+        .forEach(List.of("c", "d"), StringFormatter::append)
         .repeat(2, sb -> sb.append("e"))
-        .repeat(3, (sb, index) -> sb.append(index))
+        .repeat(3, StringFormatter::append)
         .appendFill('-', 3)
         .appendFill('x', 2)
         .appendPadding(1)
@@ -448,7 +448,7 @@ class StringFormatterTest {
   void forEach_treatsNullIterableAsEmpty() {
 
     final var builder = new StringFormatter()
-        .forEach(null, (sb, value) -> sb.append(value));
+        .forEach(null, StringFormatter::append);
 
     assertThatObject(builder).hasToString("");
   }
@@ -645,7 +645,7 @@ class StringFormatterTest {
     assertThat(builder.charAt(0)).isEqualTo('h');
     assertThat(builder.substring(0)).isEqualTo("hall");
     assertThat(builder.substring(0, 4)).isEqualTo("hall");
-    assertThat(builder.subSequence(0, 2).toString()).isEqualTo("ha");
+    assertThat(builder.subSequence(0, 2)).hasToString("ha");
     assertThat(builder.offsetByCodePoints(0, 2)).isEqualTo(2);
     assertThat(builder.codePointAt(0)).isEqualTo('h');
     assertThat(builder.codePointBefore(2)).isEqualTo('a');
