@@ -132,6 +132,7 @@ public class CldrResourceBundleClassGenerator {
             package org.typefactory.unicode.cldr;
             
             import java.util.Locale;
+            import java.util.Objects;
             import javax.annotation.processing.Generated;
             import org.typefactory.Subset;
             import org.typefactory.impl.Factory;
@@ -161,10 +162,10 @@ public class CldrResourceBundleClassGenerator {
                       final Subset punctuationSubset,
                       final Subset decimalDigitsSubset) {
                 super(
-                    standardSubset == null ? STANDARD_CHARACTERS_SUBSET : standardSubset,
-                    auxiliarySubset == null ? AUXILIARY_CHARACTERS_SUBSET : auxiliarySubset,
-                    punctuationSubset == null ? PUNCTUATION_CHARACTERS_SUBSET : punctuationSubset,
-                    decimalDigitsSubset == null ? DECIMAL_DIGITS_SUBSET : decimalDigitsSubset);
+                    Objects.requireNonNullElse(standardSubset, STANDARD_CHARACTERS_SUBSET),
+                    Objects.requireNonNullElse(auxiliarySubset, AUXILIARY_CHARACTERS_SUBSET),
+                    Objects.requireNonNullElse(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
+                    Objects.requireNonNullElse(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
               }
             
             """, displayName, displayName, resourceBundleClassName, resourceBundleSuperClassName, resourceBundleClassName, resourceBundleClassName))
