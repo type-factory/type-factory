@@ -244,7 +244,6 @@ public class CldrResourceBundleClassGenerator {
       final CldrLocaleXmlDocument cldrLocaleXmlDocument) {
 
     final String resourceBundleClassName = cldrLocaleXmlDocument.getResourceBundleClassName();
-    final String resourceBundleSuperClassName = cldrLocaleXmlDocument.getResourceBundleSuperClassName();
     final String resourceBundleTestClassName = cldrLocaleXmlDocument.getResourceBundleTestClassName();
     final String resourceBundleTestSuperClassName = cldrLocaleXmlDocument.getResourceBundleTestSuperClassName();
 
@@ -278,16 +277,12 @@ public class CldrResourceBundleClassGenerator {
           return SubsetWrapper.wrap(subsetBuilder.build());
         });
 
-    final String extendsClass = cldrLocaleXmlDocument.getResourceBundleSuperClassName();
-
-    final String privateUseExtension = locale.getExtension(Locale.PRIVATE_USE_EXTENSION);
-
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
         .append(String.format("""
                 package org.typefactory.unicode.cldr;
                 
-                import static org.assertj.core.api.Assertions.assertThatNoException;
+                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
                 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
                 
                 import java.util.ResourceBundle;
@@ -295,6 +290,8 @@ public class CldrResourceBundleClassGenerator {
                 import org.junit.jupiter.api.Test;
                 import org.junit.jupiter.params.ParameterizedTest;
                 import org.junit.jupiter.params.provider.CsvSource;
+                import org.junit.jupiter.params.provider.MethodSource;
+                import org.typefactory.Subset;
                 
                 /**
                  * Unit tests for the %s language '%s' resource bundle as defined
@@ -324,10 +321,15 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
                   }
                 
-                  @Test
-                  void constructor_successfullyCreatesInstanceWithNullParameters() {
+                  @ParameterizedTest
+                  @MethodSource("org.typefactory.unicode.cldr.AbstractCldrResourceBundle_Test#constructorTestArguments")
+                  void constructor_successfullyCreatesInstanceWithParameters(
+                      final Subset standardSubset,
+                      final Subset auxiliarySubset,
+                      final Subset punctuationSubset,
+                      final Subset decimalDigitsSubset) {
                 
-                    final var instance = new %s(null, null, null, null);
+                    final var instance = new %s(standardSubset, auxiliarySubset, punctuationSubset, decimalDigitsSubset);
                 
                     assertThat(instance)
                         .isInstanceOf(%s.class)
@@ -339,6 +341,11 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
                     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
                     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+                
+                    if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
+                    if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
+                    if (punctuationSubset != null) assertThat(instance.getPunctuationSubset()).isSameAs(punctuationSubset);
+                    if (decimalDigitsSubset != null) assertThat(instance.getDecimalDigitsSubset()).isSameAs(decimalDigitsSubset);
                   }
                 
                 """,

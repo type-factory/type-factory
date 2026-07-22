@@ -15,12 +15,15 @@
 */
 package org.typefactory.unicode.cldr;
 
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 
 import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.Subset;
 
 /**
  * Unit tests for the Norwegian Nynorsk language 'nn' resource bundle as defined
@@ -50,10 +53,15 @@ class nn_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
   }
 
-  @Test
-  void constructor_successfullyCreatesInstanceWithNullParameters() {
+  @ParameterizedTest
+  @MethodSource("org.typefactory.unicode.cldr.AbstractCldrResourceBundle_Test#constructorTestArguments")
+  void constructor_successfullyCreatesInstanceWithParameters(
+      final Subset standardSubset,
+      final Subset auxiliarySubset,
+      final Subset punctuationSubset,
+      final Subset decimalDigitsSubset) {
 
-    final var instance = new nn(null, null, null, null);
+    final var instance = new nn(standardSubset, auxiliarySubset, punctuationSubset, decimalDigitsSubset);
 
     assertThat(instance)
         .isInstanceOf(nn.class)
@@ -65,6 +73,11 @@ class nn_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+
+    if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
+    if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
+    if (punctuationSubset != null) assertThat(instance.getPunctuationSubset()).isSameAs(punctuationSubset);
+    if (decimalDigitsSubset != null) assertThat(instance.getDecimalDigitsSubset()).isSameAs(decimalDigitsSubset);
   }
 
 }

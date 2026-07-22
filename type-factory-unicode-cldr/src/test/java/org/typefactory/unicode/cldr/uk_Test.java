@@ -15,14 +15,16 @@
 */
 package org.typefactory.unicode.cldr;
 
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 
 import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.Subset;
 
 /**
  * Unit tests for the Ukrainian language 'uk' resource bundle as defined
@@ -52,10 +54,15 @@ class uk_Test extends root_Test {
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
   }
 
-  @Test
-  void constructor_successfullyCreatesInstanceWithNullParameters() {
+  @ParameterizedTest
+  @MethodSource("org.typefactory.unicode.cldr.AbstractCldrResourceBundle_Test#constructorTestArguments")
+  void constructor_successfullyCreatesInstanceWithParameters(
+      final Subset standardSubset,
+      final Subset auxiliarySubset,
+      final Subset punctuationSubset,
+      final Subset decimalDigitsSubset) {
 
-    final var instance = new uk(null, null, null, null);
+    final var instance = new uk(standardSubset, auxiliarySubset, punctuationSubset, decimalDigitsSubset);
 
     assertThat(instance)
         .isInstanceOf(uk.class)
@@ -67,6 +74,11 @@ class uk_Test extends root_Test {
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+
+    if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
+    if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
+    if (punctuationSubset != null) assertThat(instance.getPunctuationSubset()).isSameAs(punctuationSubset);
+    if (decimalDigitsSubset != null) assertThat(instance.getDecimalDigitsSubset()).isSameAs(decimalDigitsSubset);
   }
 
   @ParameterizedTest

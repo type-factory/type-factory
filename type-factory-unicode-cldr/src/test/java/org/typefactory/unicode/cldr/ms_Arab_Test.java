@@ -15,7 +15,7 @@
 */
 package org.typefactory.unicode.cldr;
 
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
 
 import java.util.ResourceBundle;
@@ -23,6 +23,8 @@ import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.Subset;
 
 /**
  * Unit tests for the Malay (Arabic) language 'ms_Arab' resource bundle as defined
@@ -52,10 +54,15 @@ class ms_Arab_Test extends ms_Test {
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
   }
 
-  @Test
-  void constructor_successfullyCreatesInstanceWithNullParameters() {
+  @ParameterizedTest
+  @MethodSource("org.typefactory.unicode.cldr.AbstractCldrResourceBundle_Test#constructorTestArguments")
+  void constructor_successfullyCreatesInstanceWithParameters(
+      final Subset standardSubset,
+      final Subset auxiliarySubset,
+      final Subset punctuationSubset,
+      final Subset decimalDigitsSubset) {
 
-    final var instance = new ms_Arab(null, null, null, null);
+    final var instance = new ms_Arab(standardSubset, auxiliarySubset, punctuationSubset, decimalDigitsSubset);
 
     assertThat(instance)
         .isInstanceOf(ms_Arab.class)
@@ -67,6 +74,11 @@ class ms_Arab_Test extends ms_Test {
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+
+    if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
+    if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
+    if (punctuationSubset != null) assertThat(instance.getPunctuationSubset()).isSameAs(punctuationSubset);
+    if (decimalDigitsSubset != null) assertThat(instance.getDecimalDigitsSubset()).isSameAs(decimalDigitsSubset);
   }
 
   @ParameterizedTest
