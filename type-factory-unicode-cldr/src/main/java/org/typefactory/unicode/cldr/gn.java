@@ -1,5 +1,5 @@
 /*
-   Copyright 2021-2022 Evan Toliopoulos (typefactory.org)
+   Copyright 2021-2026 Evan Toliopoulos (typefactory.org)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
