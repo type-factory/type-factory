@@ -139,6 +139,20 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
+   * Formats null values as the supplied text.
+   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
+   *
+   * @param value the replacement text to use when a null value is encountered.
+   *              If {@code null} is supplied then the replacement text will default to "null".
+   * @return this formatter
+   * @see #formatNullsAsEmptyString()
+   */
+  public StringFormatter formatNullsAs(final String value) {
+    this.nullReplacementText = value == null ? "null" : value;
+    return this;
+  }
+
+  /**
    * <p>Invokes the consumer unconditionally. Provide a fluent mechanism
    *    to delegate to another method to further append to the string formatter.</p>
    *
@@ -562,7 +576,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @return this formatter
    */
   public StringFormatter leftAppend(final CharSequence value, final int width) {
-    return appendAlignedLeft(defaultReplacementTextIfNull(value), width);
+    return appendAlignedLeft(value, width);
   }
 
   /**
@@ -576,7 +590,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @return this formatter
    */
   public StringFormatter rightAppend(final CharSequence value, final int width) {
-    return appendAlignedRight(defaultReplacementTextIfNull(value), width);
+    return appendAlignedRight(value, width);
   }
 
   /**
@@ -824,7 +838,11 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final Object value) {
-    delegate.append(value == null ? nullReplacementText : value);
+    if (value == null) {
+      delegate.append(nullReplacementText);
+    } else {
+      delegate.append(value);
+    }
     return this;
   }
 
@@ -841,7 +859,11 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final String value) {
-    delegate.append(value == null ? nullReplacementText : value);
+    if (value == null) {
+      delegate.append(nullReplacementText);
+    } else {
+      delegate.append(value);
+    }
     return this;
   }
 
@@ -879,7 +901,11 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final CharSequence value) {
-    delegate.append(value == null ? nullReplacementText : value);
+    if (value == null) {
+      delegate.append(nullReplacementText);
+    } else {
+      delegate.append(value);
+    }
     return this;
   }
 
@@ -1620,16 +1646,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Returns the supplied value, or the current null replacement text when null.
-   *
-   * @param value the value to resolve
-   * @return the value or the current null replacement text
-   */
-  private CharSequence defaultReplacementTextIfNull(final CharSequence value) {
-    return value == null ? nullReplacementText : value;
-  }
-
-  /**
    * Appends a value followed by any required trailing padding.
    *
    * @param value the text to append
@@ -1637,7 +1653,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   private StringFormatter appendAlignedLeft(final CharSequence value, final int width) {
     requireNonNegative(width, WIDTH);
-    final CharSequence text = value == null ? nullReplacementText : value;
+    final CharSequence text = (value == null ? nullReplacementText : value);
     delegate.append(text);
     appendPadding(Math.max(0, width - text.length()));
     return this;
@@ -1651,7 +1667,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   private StringFormatter appendAlignedRight(final CharSequence value, final int width) {
     requireNonNegative(width, WIDTH);
-    final CharSequence text = value == null ? nullReplacementText : value;
+    final CharSequence text = (value == null ? nullReplacementText : value);
     appendPadding(Math.max(0, width - text.length()));
     delegate.append(text);
     return this;
