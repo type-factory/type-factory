@@ -131,7 +131,6 @@ public class CldrResourceBundleClassGenerator {
         .append(String.format("""
             package org.typefactory.unicode.cldr;
             
-            import java.util.Locale;
             import javax.annotation.processing.Generated;
             import org.typefactory.Subset;
             import org.typefactory.impl.Factory;
@@ -282,8 +281,8 @@ public class CldrResourceBundleClassGenerator {
         .append(String.format("""
                 package org.typefactory.unicode.cldr;
                 
-                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
                 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
                 
                 import java.util.ResourceBundle;
                 import javax.annotation.processing.Generated;
@@ -698,21 +697,21 @@ public class CldrResourceBundleClassGenerator {
             s.setLength(s.length() - 2);
             s.append("},");
             if (hashBucketIndex < keyBuckets.length - 1) {
-              s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
+              s.appendPaddingToDistanceFromLastNewline(83).append("//").append(c);
               c.setLength(0);
             }
           }
           s.setLength(s.length() - 1);
           s.append(" }, ");
           if (hashIndex < keys.length - 1) {
-            s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
+            s.appendPaddingToDistanceFromLastNewline(83).append("//").append(c);
             c.setLength(0);
           }
         }
       }
       s.setLength(s.length() - 2)
           .append(" },")
-          .appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c)
+          .appendPaddingToDistanceFromLastNewline(83).append("//").append(c)
           .appendNewline().append("        // number of code-point ranges")
           .appendNewline().appendPadding(8).append(hashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",")
           .appendNewline().append("        // number of code-points")
@@ -802,14 +801,14 @@ public class CldrResourceBundleClassGenerator {
           s.setLength(s.length() - 2);
           s.append(" },");
           if (hashIndex < keys.length - 1) {
-            s.appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c);
+            s.appendPaddingToDistanceFromLastNewline(83).append("//").append(c);
             c.setLength(0);
           }
         }
       }
       s.setLength(s.length() - 1)
           .append(" },")
-          .appendPaddingToDistanceFromLastLineSeparator(83).append("//").append(c)
+          .appendPaddingToDistanceFromLastNewline(83).append("//").append(c)
           .appendNewline().append("        // number of code-point ranges")
           .appendNewline().appendPadding(8).append(optimalHashedRangedSubsetWrapper.numberOfCodePointRanges()).append(",")
           .appendNewline().append("        // number of code-points")

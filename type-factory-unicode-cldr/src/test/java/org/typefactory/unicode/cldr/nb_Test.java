@@ -15,14 +15,13 @@
 */
 package org.typefactory.unicode.cldr;
 
-import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 
 import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.typefactory.Subset;
 

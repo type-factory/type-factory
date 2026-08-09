@@ -15,8 +15,8 @@
 */
 package org.typefactory.unicode.cldr;
 
-import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 
 import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;

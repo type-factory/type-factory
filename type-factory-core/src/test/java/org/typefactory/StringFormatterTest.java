@@ -27,8 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -118,10 +117,8 @@ class StringFormatterTest {
     final var consumerCount = new AtomicInteger();
     final var indexedCount = new AtomicInteger();
 
-    builder.repeat(0, sb -> consumerCount.incrementAndGet());
     builder.repeat(0, (sb, index) -> indexedCount.incrementAndGet());
-    builder.repeat(0, (Consumer<StringFormatter>) null);
-    builder.repeat(0, (BiConsumer<StringFormatter, Integer>) null);
+    builder.repeat(0, (ObjIntConsumer<StringFormatter>) null);
 
     assertThat(consumerCount.get()).isZero();
     assertThat(indexedCount.get()).isZero();
@@ -132,10 +129,6 @@ class StringFormatterTest {
   void repeat_rejectsNegativeCounts() {
     final var builder = new StringFormatter();
 
-    assertThatThrownBy(() -> builder.repeat(-1, sb -> sb.append("x")))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("count must be >= 0");
-
     assertThatThrownBy(() -> builder.repeat(-1, (sb, index) -> sb.append("x")))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("count must be >= 0");
@@ -143,6 +136,7 @@ class StringFormatterTest {
 
   @Test
   void appendFill_andPadding_andSeparators_workAsExpected() {
+
     final var builder = new StringFormatter();
 
     builder
@@ -321,12 +315,18 @@ class StringFormatterTest {
   @Test
   void formatNullsAs_acceptsNullAndRestoresEmptyNullHandling() {
     final var builder = new StringFormatter()
+        .append('/')
         .formatNullsAs("missing")
         .append((String) null)
+        .append('/')
+        .formatNullsAs("")
+        .append((String) null)
+        .append('/')
         .formatNullsAs(null)
-        .append((String) null);
+        .append((String) null)
+        .append('/');
 
-    assertThatObject(builder).hasToString("missing");
+    assertThatObject(builder).hasToString("/missing//null/");
   }
 
   @Test
@@ -432,7 +432,7 @@ class StringFormatterTest {
         .apply(sb -> sb.append("a"))
         .when(false, sb -> sb.append("b"))
         .forEach(List.of("c", "d"), StringFormatter::append)
-        .repeat(2, sb -> sb.append("e"))
+        .forEach(new String[]{"ee", "ff"}, StringFormatter::append)
         .repeat(3, StringFormatter::append)
         .appendFill('-', 3)
         .appendFill('x', 2)
@@ -441,14 +441,14 @@ class StringFormatterTest {
         .appendSpace()
         .append("z");
 
-    assertThatObject(builder).hasToString("acdee012---xx " + System.lineSeparator() + " z");
+    assertThatObject(builder).hasToString("acdeeff012---xx " + System.lineSeparator() + " z");
   }
 
   @Test
   void forEach_treatsNullIterableAsEmpty() {
 
     final var builder = new StringFormatter()
-        .forEach(null, StringFormatter::append);
+        .forEach((Iterable<?>)null, StringFormatter::append);
 
     assertThatObject(builder).hasToString("");
   }
@@ -460,6 +460,30 @@ class StringFormatterTest {
     final var visited = new ArrayList<String>();
 
     builder.forEach(Arrays.asList("a", "b", "c"), (sb, value) -> {
+      visited.add(value);
+      sb.append(value);
+    });
+
+    assertThat(visited).containsExactly("a", "b", "c");
+    assertThatObject(builder).hasToString("abc");
+  }
+
+  @Test
+  <T> void forEach_treatsNullArrayAsEmpty() {
+
+    final var builder = new StringFormatter()
+        .forEach((T [])null, StringFormatter::append);
+
+    assertThatObject(builder).hasToString("");
+  }
+
+  @Test
+  void forEach_iteratesOverArrayValuesInOrder() {
+
+    final var builder = new StringFormatter();
+    final var visited = new ArrayList<String>();
+
+    builder.forEach(new String[]{"a", "b", "c"}, (sb, value) -> {
       visited.add(value);
       sb.append(value);
     });

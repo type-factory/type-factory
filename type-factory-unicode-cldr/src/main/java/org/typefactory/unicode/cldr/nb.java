@@ -15,10 +15,8 @@
 */
 package org.typefactory.unicode.cldr;
 
-import java.util.Locale;
 import javax.annotation.processing.Generated;
 import org.typefactory.Subset;
-import org.typefactory.impl.Factory;
 
 /**
  * Provides Type Factory subsets for the Norwegian Bokmål as defined

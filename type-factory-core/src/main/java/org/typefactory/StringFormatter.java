@@ -24,11 +24,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+import java.util.stream.IntStream;
 
 /**
  * A fluent wrapper around {@link StringBuilder}.
  *
- * <p>The wrapper keeps call chains alive for conditional and repeated appends.
+ * <p>The wrapper keeps call chains alive for conditional and repeated appending.
  * For the low-level behavior of the wrapped operations, refer to the matching
  * {@link StringBuilder} methods.
  */
@@ -36,13 +38,17 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
   private static final char[] SPACES = "                                                                                ".toCharArray();
+  private static final String CONSUMER = "consumer";
+  private static final String WIDTH = "width";
+  private static final String COUNT = "count";
 
   private final StringBuilder delegate;
   private Locale locale;
-  private String nullText;
+  private String nullReplacementText;
 
   /**
-   * Creates a builder with default capacity and the default formatting locale.
+   * Creates a builder with the default capacity and the default formatting locale
+   * as provided by {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
    *
    * @see StringBuilder#StringBuilder()
    */
@@ -51,10 +57,10 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Creates a builder with the supplied initial capacity and the default formatting locale.
+   * Creates a builder with the supplied initial capacity and the default formatting locale
+   * as provided by {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
    *
    * @param capacity the initial capacity
-   * @return a new formatter
    * @see StringBuilder#StringBuilder(int)
    */
   public StringFormatter(final int capacity) {
@@ -65,7 +71,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Creates a builder with default capacity and the supplied formatting locale.
    *
    * @param locale the formatting locale, or the default formatting locale when null
-   * @return a new formatter
    * @see StringBuilder#StringBuilder()
    */
   public StringFormatter(final Locale locale) {
@@ -92,18 +97,15 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   private StringFormatter(final StringBuilder delegate, final Locale locale) {
     this.delegate = delegate;
     this.locale = Objects.requireNonNullElse(locale, Locale.getDefault(Locale.Category.FORMAT));
-    this.nullText = "";
+    this.nullReplacementText = "";
   }
 
   /**
-   * Sets the locale used for subsequent number formatting operations.
+   * Sets the locale used for numeric formatting operations.
+   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
    * @param locale the formatting locale, or the default formatting locale when null
    * @return this formatter
-   * @see #append(int)
-   * @see #append(long)
-   * @see #append(float)
-   * @see #append(double)
    */
   public StringFormatter setLocale(final Locale locale) {
     this.locale = Objects.requireNonNullElse(locale, Locale.getDefault(Locale.Category.FORMAT));
@@ -111,55 +113,101 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Formats future null values as empty strings.
+   * Formats null values as empty strings.
+   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
    */
   public StringFormatter formatNullsAsEmptyString() {
-    this.nullText = "";
+    this.nullReplacementText = "";
     return this;
   }
 
   /**
-   * Formats future null values as the supplied text.
+   * Formats null values as the supplied text.
+   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
-   * @param value the text to use when a null value is encountered
+   * @param value the replacement text to use when a null value is encountered. 
+   *              If {@code null} is supplied then the replacement text will default to "null".
    * @return this formatter
    * @see #formatNullsAsEmptyString()
    */
   public StringFormatter formatNullsAs(final CharSequence value) {
-    this.nullText = value == null ? "" : value.toString();
+    this.nullReplacementText = value == null ? "null" : value.toString();
     return this;
   }
 
   /**
-   * Returns the supplied value, or the current null replacement text when null.
+   * <p>Invokes the consumer unconditionally. Provide a fluent mechanism
+   *    to delegate to another method to further append to the string formatter.</p>
    *
-   * @param value the value to resolve
-   * @return the value or the current null replacement text
-   */
-  private CharSequence nullSafe(final CharSequence value) {
-    return value == null ? nullText : value;
-  }
-
-  /**
-   * Invokes the consumer unconditionally.
+   * <p>Example 1 &ndash; delegate to a consumer to further append to the string formatter</p>
+   * <pre>{@code
+   * public class ReceiptCreator {
    *
-   * <p>See {@link StringBuilder} for the behavior of any delegated append calls.
+   *   public String createReceipt(Iterable<Item> items) {
+   *     return new StringFormatter()
+   *       .apply(ReceiptCreator::header) // delegate to a consumer to append the header
+   *       .forEach(items, (sf, item) ->
+   *           sf.leftAppend(item.name, 30)
+   *             .rightAppend(item.cost, 10)
+   *             .appendNewline())
+   *       .apply(ReceiptCreator::footer) // delegate to a consumer to append the footer
+   *       .toString();
+   *   }
+   *
+   *   public static void header(StringFormatter sf) {
+   *     sf.append("Acme Department Store")
+   *       ... // append other header information
+   *   }
+   *   public static void footer(StringFormatter sf) {
+   *     sf.append("sales@acme-deptartment-store.com")
+   *       ... // append other footer information
+   *   }
+   * }
+   * }</pre>
    *
    * @param consumer the consumer to invoke
    * @return this formatter
    */
   public StringFormatter apply(final Consumer<StringFormatter> consumer) {
-    Objects.requireNonNull(consumer, "consumer").accept(this);
+    Objects.requireNonNull(consumer, CONSUMER).accept(this);
     return this;
   }
 
   /**
-   * Invokes the consumer when the condition is true.
+   * <p>Invokes the consumer when the condition is true. Provide a fluent mechanism
+   * to delegate to another method to further append to the string formatter.</p>
    *
-   * <p>See {@link StringBuilder} for the behavior of any delegated append calls.
+   * <p>Example 1 &ndash; delegate to a consumer to further append to the string formatter</p>
+   *
+   * <pre>{@code
+   * public class ReceiptCreator {
+   *
+   *   public String createReceipt(Iterable<Item> items, boolean includeHeaderAndFooter) {
+   *     return new StringFormatter()
+   *        // delegate to a consumer to append the header when the condition is true
+   *       .when(includeHeaderAndFooter, ReceiptCreator::header)
+   *       .forEach(items, (sf, item) ->
+   *           sf.leftAppend(item.name, 30)
+   *             .rightAppend(item.cost, 10)
+   *             .appendNewline())
+   *        // delegate to a consumer to append the header when the condition is true
+   *       .when(includeHeaderAndFooter, ReceiptCreator::footer)
+   *       .toString();
+   *   }
+   *
+   *   public static void header(StringFormatter sf) {
+   *     sf.append("Acme Department Store")
+   *       ... // append other header information
+   *   }
+   *   public static void footer(StringFormatter sf) {
+   *     sf.append("sales@acme-deptartment-store.com")
+   *       ... // append other footer information
+   *   }
+   * }
+   * }</pre>
    *
    * @param condition whether to invoke the consumer
    * @param consumer the consumer to invoke when the condition is true
@@ -169,18 +217,34 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
       final boolean condition,
       final Consumer<StringFormatter> consumer) {
     if (condition) {
-      Objects.requireNonNull(consumer, "consumer").accept(this);
+      Objects.requireNonNull(consumer, CONSUMER).accept(this);
     }
     return this;
   }
 
   /**
-   * Invokes the consumer for each element in the iterable.
+   * <p>Invokes the consumer for each element in the iterable.</p>
    *
-   * <p>A null iterable is treated as empty. See {@link StringBuilder} for the
-   * behavior of any delegated append calls.
+   * <p>A {@code null} iterable is treated as empty.</p>
    *
-   * @param iterable the values to visit, or null to skip the loop
+   * <p>Example</p>
+   *
+   * <pre>{@code
+   *   public String createReceipt(Iterable<Item> items) {
+   *     return new StringFormatter()
+   *       .append("Acme Department Store").appendNewline()
+   *       .append("-------------------------").appendNewline()
+   *       .forEach(items, (sf, item) ->
+   *           sf.leftAppend(item.name, 30)
+   *             .rightAppend(item.cost, 10)
+   *             .appendNewline())
+   *       .append("-------------------------").appendNewline()
+   *       .append("sales@acme-deptartment-store.com")
+   *       .toString();
+   *   }
+   * }</pre>
+   *
+   * @param iterable the values to visit. May be {@code null} or empty.
    * @param consumer the consumer to invoke for each value
    * @param <T> the iterable element type
    * @return this formatter
@@ -188,7 +252,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   public <T> StringFormatter forEach(
       final Iterable<T> iterable,
       final BiConsumer<StringFormatter, T> consumer) {
-    final BiConsumer<StringFormatter, T> nonNullConsumer = Objects.requireNonNull(consumer, "consumer");
+    final BiConsumer<StringFormatter, T> nonNullConsumer = Objects.requireNonNull(consumer, CONSUMER);
     if (iterable == null) {
       return this;
     }
@@ -199,49 +263,82 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Repeats the consumer the requested number of times.
+   * <p>Invokes the consumer for each element in the array.</p>
    *
-   * <p>See {@link StringBuilder} for the behavior of any delegated append calls.
+   * <p>A {@code null} array is treated as empty.</p>
    *
-   * @param count the number of times to invoke the consumer
-   * @param consumer the consumer to invoke
+   * <p>Example</p>
+   *
+   * <pre>{@code
+   *   public String createReceipt(Item [] items) {
+   *     return new StringFormatter()
+   *       .append("Acme Department Store").appendNewline()
+   *       .append("-------------------------").appendNewline()
+   *       .forEach(items, (sf, item) ->
+   *           sf.leftAppend(item.name, 30)
+   *             .rightAppend(item.cost, 10)
+   *             .appendNewline())
+   *       .append("-------------------------").appendNewline()
+   *       .append("sales@acme-deptartment-store.com")
+   *       .toString();
+   *   }
+   * }</pre>
+   *
+   * @param elements the array elements to visit. May be {@code null} or empty.
+   * @param consumer the consumer to invoke for each value
+   * @param <T> the array element type
    * @return this formatter
    */
-  public StringFormatter repeat(
-      final int count,
-      final Consumer<StringFormatter> consumer) {
-    if (count < 0) {
-      throw new IllegalArgumentException("count must be >= 0");
-    }
-    if (count == 0) {
+  public <T> StringFormatter forEach(
+      final T [] elements,
+      final BiConsumer<StringFormatter, T> consumer) {
+
+    final BiConsumer<StringFormatter, T> nonNullConsumer = Objects.requireNonNull(consumer, CONSUMER);
+    if (elements == null) {
       return this;
     }
-    final Consumer<StringFormatter> nonNullConsumer = Objects.requireNonNull(consumer, "consumer");
-    for (int i = 0; i < count; ++i) {
-      nonNullConsumer.accept(this);
+    for (T value : elements) {
+      nonNullConsumer.accept(this, value);
     }
     return this;
   }
 
   /**
-   * Repeats the consumer the requested number of times, passing the zero-based index.
+   * <p>Repeats the consumer the requested number of times, passing the zero-based index.</p>
    *
-   * <p>See {@link StringBuilder} for the behavior of any delegated append calls.
+   * <p>Example</p>
+   *
+   * <pre>{@code
+   *   public String createTimesTables() {
+   *     // Create 3-times tables from 3x0 to 3x12
+   *     return new StringFormatter()
+   *       .append("3-times tables").appendNewline()
+   *       .append("--------------").appendNewline()
+   *       .repeat(13, (sf, index) ->
+   *           sf.append("3 x ")
+   *             .append(index)
+   *             .append(" = ")
+   *             .appendRight(3 * index, 2)
+   *             .appendNewline())
+   *       .append("--------------").appendNewline()
+   *       .toString();
+   *   }
+   * }</pre>
    *
    * @param count the number of times to invoke the consumer
-   * @param consumer the consumer to invoke with the index
+   * @param consumer the consumer to invoke with the zero-based index
    * @return this formatter
+   * @throws IllegalArgumentException if the count is less than zero
+   * @throws NullPointerException if the consumer is null
    */
   public StringFormatter repeat(
       final int count,
-      final BiConsumer<StringFormatter, Integer> consumer) {
-    if (count < 0) {
-      throw new IllegalArgumentException("count must be >= 0");
-    }
+      final ObjIntConsumer<StringFormatter> consumer) {
+    requireNonNegative(count, COUNT);
     if (count == 0) {
       return this;
     }
-    final BiConsumer<StringFormatter, Integer> nonNullConsumer = Objects.requireNonNull(consumer, "consumer");
+    final var nonNullConsumer = Objects.requireNonNull(consumer, CONSUMER);
     for (int i = 0; i < count; ++i) {
       nonNullConsumer.accept(this, i);
     }
@@ -249,7 +346,20 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends the supplied character the requested number of times.
+   * <p>Appends the supplied character the requested number of times.</p>
+   *
+   * <p>Example</p>
+   *
+   * <pre>{@code
+   *   return new StringFormatter()
+   *     .append("Username: ")
+   *     .append(username)
+   *     .appendNewline()
+   *     .append("Password: ")
+   *     .appendFill('*', 12) // append 12 asterisks to mask the password
+   *     .appendNewline()
+   *     .toString();
+   * }</pre>
    *
    * @param value the character to append
    * @param width the number of copies to append
@@ -257,7 +367,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see StringBuilder#append(char)
    */
   public StringFormatter appendFill(final char value, final int width) {
-    requireNonNegative(width, "width");
+    requireNonNegative(width, WIDTH);
     for (int i = 0; i < width; ++i) {
       delegate.append(value);
     }
@@ -265,7 +375,21 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends the supplied code point the requested number of times.
+   *
+   * <p>Appends the supplied codepoint the requested number of times.</p>
+   *
+   * <p>Example</p>
+   *
+   * <pre>{@code
+   *   return new StringFormatter()
+   *     .append("Username: ")
+   *     .append(username)
+   *     .appendNewline()
+   *     .append("Password: ")
+   *     .appendFill(0x1F6AB, 12) // append 12 'prohibited' emoji characters: 🚫U+1F6AB
+   *     .appendNewline()
+   *     .toString();
+   * }</pre>
    *
    * @param codePoint the code point to append
    * @param width the number of copies to append
@@ -273,7 +397,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see StringBuilder#appendCodePoint(int)
    */
   public StringFormatter appendFill(final int codePoint, final int width) {
-    requireNonNegative(width, "width");
+    requireNonNegative(width, WIDTH);
     for (int i = 0; i < width; ++i) {
       delegate.appendCodePoint(codePoint);
     }
@@ -281,7 +405,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends spaces the requested number of times.
+   * Appends spaces as padding the requested number of times.
    *
    * @param width the number of spaces to append
    * @return this formatter
@@ -348,23 +472,24 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends the newline character.
+   * Appends the newline character {@code "\n"}.
    *
    * @return this formatter
    * @see #appendLineSeparator()
    * @see StringBuilder#append(String)
    */
   public StringFormatter appendNewline() {
-    delegate.append(LINE_SEPARATOR);
+    delegate.append('\n');
     return this;
   }
 
   /**
-   * Appends the platform line separator.
+   * Appends the platform-dependent line separator; usually either {@code "\n"} or {@code "\r\n"}.
    *
    * @return this formatter
-   * #see #appendNewline()
+   * @see #appendNewline()
    * @see StringBuilder#append(String)
+   * @see System#lineSeparator()
    */
   public StringFormatter appendLineSeparator() {
     delegate.append(LINE_SEPARATOR);
@@ -372,7 +497,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends a single space.
+   * Appends a single space character {@code " "}.
    *
    * @return this formatter
    * @see StringBuilder#append(char)
@@ -383,7 +508,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends a tilde character.
+   * Appends a tilde character {@code "~"}.
    *
    * @return this formatter
    * @see StringBuilder#append(char)
@@ -394,7 +519,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends a tab character.
+   * Appends a tab character {@code "\t"}.
    *
    * @return this formatter
    * @see StringBuilder#append(char)
@@ -405,7 +530,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends a pipe character.
+   * Appends a pipe character {@code "|"}.
    *
    * @return this formatter
    * @see StringBuilder#append(char)
@@ -416,7 +541,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends a comma character.
+   * Appends a comma character {@code ","}.
    *
    * @return this formatter
    * @see StringBuilder#append(char)
@@ -437,7 +562,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @return this formatter
    */
   public StringFormatter leftAppend(final CharSequence value, final int width) {
-    return appendAlignedLeft(nullSafe(value), width);
+    return appendAlignedLeft(defaultReplacementTextIfNull(value), width);
   }
 
   /**
@@ -451,7 +576,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @return this formatter
    */
   public StringFormatter rightAppend(final CharSequence value, final int width) {
-    return appendAlignedRight(nullSafe(value), width);
+    return appendAlignedRight(defaultReplacementTextIfNull(value), width);
   }
 
   /**
@@ -492,7 +617,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   public StringFormatter leftAppend(final Long value, final int width) {
     if (value == null) {
-      return leftAppend(nullText, width);
+      return leftAppend(nullReplacementText, width);
     }
     return leftAppend(value.longValue(), width);
   }
@@ -509,7 +634,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   public StringFormatter leftAppend(final BigInteger value, final int width) {
     if (value == null) {
-      return leftAppend(nullText, width);
+      return leftAppend(nullReplacementText, width);
     }
     return appendAlignedLeft(formatInteger(value), width);
   }
@@ -529,19 +654,21 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends the formatted boxed double left-justified within the supplied width.
+   * <p>Appends the formatted boxed double left-justified within the supplied width.</p>
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder#append(double)}.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter leftAppend(final Double value, final int width, final int precision) {
     if (value == null) {
-      return leftAppend(nullText, width);
+      return leftAppend(nullReplacementText, width);
     }
     return leftAppend(value.doubleValue(), width, precision);
   }
@@ -549,17 +676,19 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends the formatted big decimal left-justified within the supplied width.
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder} for the delegate contract.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter leftAppend(final BigDecimal value, final int width, final int precision) {
     if (value == null) {
-      return leftAppend(nullText, width);
+      return leftAppend(nullReplacementText, width);
     }
     return appendAlignedLeft(formatDecimal(value, precision), width);
   }
@@ -593,16 +722,18 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends the formatted boxed long right-justified within the supplied width.
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder#append(long)}.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter rightAppend(final Long value, final int width) {
     if (value == null) {
-      return rightAppend(nullText, width);
+      return rightAppend(nullReplacementText, width);
     }
     return rightAppend(value.longValue(), width);
   }
@@ -610,16 +741,18 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends the formatted big integer right-justified within the supplied width.
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder} for the delegate contract.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter rightAppend(final BigInteger value, final int width) {
     if (value == null) {
-      return rightAppend(nullText, width);
+      return rightAppend(nullReplacementText, width);
     }
     return appendAlignedRight(formatInteger(value), width);
   }
@@ -641,17 +774,19 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends the formatted boxed double right-justified within the supplied width.
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder#append(double)}.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter rightAppend(final Double value, final int width, final int precision) {
     if (value == null) {
-      return rightAppend(nullText, width);
+      return rightAppend(nullReplacementText, width);
     }
     return rightAppend(value.doubleValue(), width, precision);
   }
@@ -659,17 +794,19 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends the formatted big decimal right-justified within the supplied width.
    *
-   * <p>Null values are replaced with the current null-formatting text. See
-   * {@link StringBuilder} for the delegate contract.
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append, or null for an empty string
    * @param width the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter rightAppend(final BigDecimal value, final int width, final int precision) {
     if (value == null) {
-      return rightAppend(nullText, width);
+      return rightAppend(nullReplacementText, width);
     }
     return appendAlignedRight(formatDecimal(value, precision), width);
   }
@@ -678,13 +815,16 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends an object value when it is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append
    * @return this formatter
    * @see StringBuilder#append(Object)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final Object value) {
-    delegate.append(value == null ? nullText : value);
+    delegate.append(value == null ? nullReplacementText : value);
     return this;
   }
 
@@ -692,13 +832,16 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends a string value when it is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append
    * @return this formatter
    * @see StringBuilder#append(String)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final String value) {
-    delegate.append(value == null ? nullText : value);
+    delegate.append(value == null ? nullReplacementText : value);
     return this;
   }
 
@@ -706,14 +849,17 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends a string buffer value when it is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append
    * @return this formatter
    * @see StringBuilder#append(StringBuffer)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final StringBuffer value) {
     if (value == null) {
-      delegate.append(nullText);
+      delegate.append(nullReplacementText);
     } else {
       delegate.append(value);
     }
@@ -724,33 +870,39 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends a character sequence value when it is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append
    * @return this formatter
    * @see StringBuilder#append(CharSequence)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final CharSequence value) {
-    delegate.append(value == null ? nullText : value);
+    delegate.append(value == null ? nullReplacementText : value);
     return this;
   }
 
   /**
-   * Appends a sub-sequence when the input value is non-null.
+   * Appends a subsequence when the input value is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the value to append
    * @param start the start index
    * @param end the end index
    * @return this formatter
    * @see StringBuilder#append(CharSequence, int, int)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(
       final CharSequence value,
       final int start,
       final int end) {
     if (value == null) {
-      delegate.append(nullText);
+      delegate.append(nullReplacementText);
     } else {
       delegate.append(value, start, end);
     }
@@ -761,14 +913,17 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends a character array when it is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the array to append
    * @return this formatter
    * @see StringBuilder#append(char[])
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(final char[] value) {
     if (value == null) {
-      delegate.append(nullText);
+      delegate.append(nullReplacementText);
     } else {
       delegate.append(value);
     }
@@ -779,19 +934,22 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Appends a character array slice when the input array is non-null.
    *
    * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param value the array to append
    * @param offset the starting offset within the array
    * @param len the number of characters to append
    * @return this formatter
    * @see StringBuilder#append(char[], int, int)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter append(
       final char[] value,
       final int offset,
       final int len) {
     if (value == null) {
-      delegate.append(nullText);
+      delegate.append(nullReplacementText);
     } else {
       delegate.append(value, offset, len);
     }
@@ -979,7 +1137,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see StringBuilder#insert(int, Object)
    */
   public StringFormatter insert(final int offset, final Object obj) {
-    delegate.insert(offset, obj == null ? nullText : obj);
+    delegate.insert(offset, obj == null ? nullReplacementText : obj);
     return this;
   }
 
@@ -993,7 +1151,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @see StringBuilder#insert(int, String)
    */
   public StringFormatter insert(final int offset, final String str) {
-    delegate.insert(offset, str == null ? nullText : str);
+    delegate.insert(offset, str == null ? nullReplacementText : str);
     return this;
   }
 
@@ -1008,7 +1166,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   public StringFormatter insert(final int offset, final char[] str) {
     if (str == null) {
-      delegate.insert(offset, nullText);
+      delegate.insert(offset, nullReplacementText);
     } else {
       delegate.insert(offset, str);
     }
@@ -1018,19 +1176,27 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Inserts a character sequence at the supplied offset.
    *
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
+   *
    * @param offset the insertion index
    * @param csq the value to insert
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, CharSequence)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter insert(final int offset, final CharSequence csq) {
-    delegate.insert(offset, csq == null ? nullText : csq);
+    delegate.insert(offset, csq == null ? nullReplacementText : csq);
     return this;
   }
 
   /**
-   * Inserts a sub-sequence at the supplied offset.
+   * Inserts a subsequence at the supplied offset.
+   *
+   * <p>Null values are replaced with the current null-formatting text.
+   * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param offset the insertion index
    * @param csq the value to insert
@@ -1039,6 +1205,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, CharSequence, int, int)
+   * @see #formatNullsAs(CharSequence)
+   * @see #formatNullsAsEmptyString()
    */
   public StringFormatter insert(
       final int offset,
@@ -1046,7 +1214,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
       final int start,
       final int end) {
     if (csq == null) {
-      delegate.insert(offset, nullText);
+      delegate.insert(offset, nullReplacementText);
     } else {
       delegate.insert(offset, csq, start, end);
     }
@@ -1370,6 +1538,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @see StringBuilder#isEmpty()
    */
+  @Override
   public boolean isEmpty() {
     return delegate.isEmpty();
   }
@@ -1427,25 +1596,37 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Returns an {@link java.util.stream.IntStream} over the UTF-16 code units.
+   * Returns an {@link IntStream} over the UTF-16 code units.
    *
    * @return a stream of UTF-16 code units
    *
    * @see StringBuilder#chars()
    */
-  public java.util.stream.IntStream chars() {
+  @Override
+  public IntStream chars() {
     return delegate.chars();
   }
 
   /**
-   * Returns an {@link java.util.stream.IntStream} over the Unicode code points.
+   * Returns an {@link IntStream} over the Unicode code points.
    *
    * @return a stream of Unicode code points
    *
    * @see StringBuilder#codePoints()
    */
-  public java.util.stream.IntStream codePoints() {
+  @Override
+  public IntStream codePoints() {
     return delegate.codePoints();
+  }
+
+  /**
+   * Returns the supplied value, or the current null replacement text when null.
+   *
+   * @param value the value to resolve
+   * @return the value or the current null replacement text
+   */
+  private CharSequence defaultReplacementTextIfNull(final CharSequence value) {
+    return value == null ? nullReplacementText : value;
   }
 
   /**
@@ -1455,8 +1636,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @param width the minimum field width
    */
   private StringFormatter appendAlignedLeft(final CharSequence value, final int width) {
-    requireNonNegative(width, "width");
-    final CharSequence text = value == null ? nullText : value;
+    requireNonNegative(width, WIDTH);
+    final CharSequence text = value == null ? nullReplacementText : value;
     delegate.append(text);
     appendPadding(Math.max(0, width - text.length()));
     return this;
@@ -1469,8 +1650,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * @param width the minimum field width
    */
   private StringFormatter appendAlignedRight(final CharSequence value, final int width) {
-    requireNonNegative(width, "width");
-    final CharSequence text = value == null ? nullText : value;
+    requireNonNegative(width, WIDTH);
+    final CharSequence text = value == null ? nullReplacementText : value;
     appendPadding(Math.max(0, width - text.length()));
     delegate.append(text);
     return this;
@@ -1507,7 +1688,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   private String formatInteger(final BigInteger value) {
     final NumberFormat format = NumberFormat.getIntegerInstance(locale);
     format.setGroupingUsed(false);
-    return format.format((Object) value);
+    return format.format(value);
   }
 
   /**
@@ -1539,7 +1720,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
     format.setMinimumFractionDigits(precision);
     format.setMaximumFractionDigits(precision);
     format.setRoundingMode(RoundingMode.HALF_UP);
-    return format.format((Object) scaled);
+    return format.format(scaled);
   }
 
   /**
