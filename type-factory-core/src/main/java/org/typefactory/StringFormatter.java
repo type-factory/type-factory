@@ -31,8 +31,7 @@ import java.util.stream.IntStream;
  * A fluent wrapper around {@link StringBuilder}.
  *
  * <p>The wrapper keeps call chains alive for conditional and repeated appending.
- * For the low-level behavior of the wrapped operations, refer to the matching
- * {@link StringBuilder} methods.
+ * For the low-level behavior of the wrapped operations, refer to the matching {@link StringBuilder} methods.
  */
 public final class StringFormatter implements CharSequence, Comparable<StringFormatter> {
 
@@ -47,8 +46,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   private String nullReplacementText;
 
   /**
-   * Creates a builder with the default capacity and the default formatting locale
-   * as provided by {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
+   * Creates a builder with the default capacity and the default formatting locale as provided by
+   * {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
    *
    * @see StringBuilder#StringBuilder()
    */
@@ -57,8 +56,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Creates a builder with the supplied initial capacity and the default formatting locale
-   * as provided by {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
+   * Creates a builder with the supplied initial capacity and the default formatting locale as provided by
+   * {@link Locale#getDefault(Locale.Category) Locale#getDefault(Locale.Category.FORMAT)}.
    *
    * @param capacity the initial capacity
    * @see StringBuilder#StringBuilder(int)
@@ -81,7 +80,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Creates a builder with the supplied initial capacity and formatting locale.
    *
    * @param capacity the initial capacity
-   * @param locale the formatting locale, or the default formatting locale when null
+   * @param locale   the formatting locale, or the default formatting locale when null
    * @see StringBuilder#StringBuilder(int)
    */
   public StringFormatter(final int capacity, final Locale locale) {
@@ -92,7 +91,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Creates a builder around the supplied delegate.
    *
    * @param delegate the wrapped string builder
-   * @param locale the formatting locale
+   * @param locale   the formatting locale
    */
   private StringFormatter(final StringBuilder delegate, final Locale locale) {
     this.delegate = delegate;
@@ -101,8 +100,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Sets the locale used for numeric formatting operations.
-   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
+   * Sets the locale used for numeric formatting operations. Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
    * @param locale the formatting locale, or the default formatting locale when null
    * @return this formatter
@@ -113,8 +111,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Formats null values as empty strings.
-   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
+   * Formats null values as empty strings. Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
@@ -125,11 +122,10 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Formats null values as the supplied text.
-   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
+   * Formats null values as the supplied text. Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
-   * @param value the replacement text to use when a null value is encountered. 
-   *              If {@code null} is supplied then the replacement text will default to "null".
+   * @param value the replacement text to use when a null value is encountered. If {@code null} is supplied then the replacement text will default to
+   *              "null".
    * @return this formatter
    * @see #formatNullsAsEmptyString()
    */
@@ -139,11 +135,10 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Formats null values as the supplied text.
-   * Applies to subsequent calls to the fluent {@code StringFormatter} methods.
+   * Formats null values as the supplied text. Applies to subsequent calls to the fluent {@code StringFormatter} methods.
    *
-   * @param value the replacement text to use when a null value is encountered.
-   *              If {@code null} is supplied then the replacement text will default to "null".
+   * @param value the replacement text to use when a null value is encountered. If {@code null} is supplied then the replacement text will default to
+   *              "null".
    * @return this formatter
    * @see #formatNullsAsEmptyString()
    */
@@ -154,7 +149,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
 
   /**
    * <p>Invokes the consumer unconditionally. Provide a fluent mechanism
-   *    to delegate to another method to further append to the string formatter.</p>
+   * to delegate to another method to further append to the string formatter.</p>
    *
    * <p>Example 1 &ndash; delegate to a consumer to further append to the string formatter</p>
    * <pre>{@code
@@ -224,7 +219,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * }</pre>
    *
    * @param condition whether to invoke the consumer
-   * @param consumer the consumer to invoke when the condition is true
+   * @param consumer  the consumer to invoke when the condition is true
    * @return this formatter
    */
   public StringFormatter when(
@@ -260,7 +255,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param iterable the values to visit. May be {@code null} or empty.
    * @param consumer the consumer to invoke for each value
-   * @param <T> the iterable element type
+   * @param <T>      the iterable element type
    * @return this formatter
    */
   public <T> StringFormatter forEach(
@@ -300,11 +295,11 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param elements the array elements to visit. May be {@code null} or empty.
    * @param consumer the consumer to invoke for each value
-   * @param <T> the array element type
+   * @param <T>      the array element type
    * @return this formatter
    */
   public <T> StringFormatter forEach(
-      final T [] elements,
+      final T[] elements,
       final BiConsumer<StringFormatter, T> consumer) {
 
     final BiConsumer<StringFormatter, T> nonNullConsumer = Objects.requireNonNull(consumer, CONSUMER);
@@ -339,11 +334,11 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *   }
    * }</pre>
    *
-   * @param count the number of times to invoke the consumer
+   * @param count    the number of times to invoke the consumer
    * @param consumer the consumer to invoke with the zero-based index
    * @return this formatter
    * @throws IllegalArgumentException if the count is less than zero
-   * @throws NullPointerException if the consumer is null
+   * @throws NullPointerException     if the consumer is null
    */
   public StringFormatter repeat(
       final int count,
@@ -406,7 +401,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * }</pre>
    *
    * @param codePoint the code point to append
-   * @param width the number of copies to append
+   * @param width     the number of copies to append
    * @return this formatter
    * @see StringBuilder#appendCodePoint(int)
    */
@@ -427,7 +422,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    */
   public StringFormatter appendPadding(int width) {
     if (width < SPACES.length) {
-        return append(SPACES, 0, width);
+      return append(SPACES, 0, width);
     }
     while (width > 0) {
       final int chunk = Math.min(width, SPACES.length);
@@ -438,14 +433,13 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
-   * Appends spaces so the distance from the last occurrence of the supplied string reaches the
-   * requested width.
+   * Appends spaces so the distance from the last occurrence of the supplied string reaches the requested width.
    *
    * <p>When the string is not present, the distance is measured from the start of the current
    * contents.
    *
    * @param width the minimum distance from the last occurrence of the supplied string
-   * @param str the string to measure from
+   * @param str   the string to measure from
    * @return this formatter
    */
   private StringFormatter appendPaddingToDistanceFromLastString(final int width, final String str) {
@@ -658,8 +652,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * <p>See {@link StringBuilder#append(double)} for the delegate contract.
    *
-   * @param value the value to append
-   * @param width the field width
+   * @param value     the value to append
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    */
@@ -673,8 +667,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * <p>Null values are replaced with the current null-formatting text.
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
-   * @param value the value to append, or null for an empty string
-   * @param width the field width
+   * @param value     the value to append, or null for an empty string
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
@@ -693,8 +687,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * <p>Null values are replaced with the current null-formatting text.
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
-   * @param value the value to append, or null for an empty string
-   * @param width the field width
+   * @param value     the value to append, or null for an empty string
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
@@ -776,8 +770,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * <p>See {@link StringBuilder#append(double)} for the delegate contract.
    *
-   * @param value the value to append
-   * @param width the field width
+   * @param value     the value to append
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    */
@@ -791,8 +785,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * <p>Null values are replaced with the current null-formatting text.
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
-   * @param value the value to append, or null for an empty string
-   * @param width the field width
+   * @param value     the value to append, or null for an empty string
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
@@ -811,8 +805,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * <p>Null values are replaced with the current null-formatting text.
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
-   * @param value the value to append, or null for an empty string
-   * @param width the field width
+   * @param value     the value to append, or null for an empty string
+   * @param width     the field width
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see #formatNullsAs(CharSequence)
@@ -917,7 +911,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param value the value to append
    * @param start the start index
-   * @param end the end index
+   * @param end   the end index
    * @return this formatter
    * @see StringBuilder#append(CharSequence, int, int)
    * @see #formatNullsAs(CharSequence)
@@ -962,9 +956,9 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * <p>Null values are replaced with the current null-formatting text.
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
-   * @param value the array to append
+   * @param value  the array to append
    * @param offset the starting offset within the array
-   * @param len the number of characters to append
+   * @param len    the number of characters to append
    * @return this formatter
    * @see StringBuilder#append(char[], int, int)
    * @see #formatNullsAs(CharSequence)
@@ -1045,7 +1039,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends a float formatted with the configured locale and fixed precision.
    *
-   * @param value the value to append
+   * @param value     the value to append
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see StringBuilder#append(float)
@@ -1070,7 +1064,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Appends a double formatted with the configured locale and fixed precision.
    *
-   * @param value the value to append
+   * @param value     the value to append
    * @param precision the number of fractional digits to preserve
    * @return this formatter
    * @see StringBuilder#append(double)
@@ -1096,7 +1090,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Deletes the characters in the supplied range.
    *
    * @param start the start index, inclusive
-   * @param end the end index, exclusive
+   * @param end   the end index, exclusive
    * @return this formatter
    * @see StringBuilder#delete(int, int)
    */
@@ -1121,8 +1115,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Replaces the characters in the supplied range with the provided string.
    *
    * @param start the start index, inclusive
-   * @param end the end index, exclusive
-   * @param str the replacement text
+   * @param end   the end index, exclusive
+   * @param str   the replacement text
    * @return this formatter
    * @see StringBuilder#replace(int, int, String)
    */
@@ -1137,10 +1131,10 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Inserts a character array slice at the supplied offset.
    *
-   * @param offset the insertion index
-   * @param str the source array
+   * @param offset    the insertion index
+   * @param str       the source array
    * @param strOffset the source array offset
-   * @param len the number of characters to insert
+   * @param len       the number of characters to insert
    * @return this formatter
    * @see StringBuilder#insert(int, char[], int, int)
    */
@@ -1157,7 +1151,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts an object at the supplied offset.
    *
    * @param offset the insertion index
-   * @param obj the value to insert
+   * @param obj    the value to insert
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, Object)
@@ -1171,7 +1165,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a string at the supplied offset.
    *
    * @param offset the insertion index
-   * @param str the value to insert
+   * @param str    the value to insert
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, String)
@@ -1185,7 +1179,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a character array at the supplied offset.
    *
    * @param offset the insertion index
-   * @param str the value to insert
+   * @param str    the value to insert
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, char[])
@@ -1206,7 +1200,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param offset the insertion index
-   * @param csq the value to insert
+   * @param csq    the value to insert
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, CharSequence)
@@ -1225,9 +1219,9 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * See {@link #formatNullsAs(CharSequence)} and {@link #formatNullsAsEmptyString()}.</p>
    *
    * @param offset the insertion index
-   * @param csq the value to insert
-   * @param start the start index
-   * @param end the end index
+   * @param csq    the value to insert
+   * @param start  the start index
+   * @param end    the end index
    * @return this formatter
    * <p>Null values are inserted using the current null-formatting text.
    * @see StringBuilder#insert(int, CharSequence, int, int)
@@ -1251,7 +1245,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a boolean at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, boolean)
    */
@@ -1264,7 +1258,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a character at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, char)
    */
@@ -1277,7 +1271,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts an integer at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, int)
    */
@@ -1290,7 +1284,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a long at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, long)
    */
@@ -1303,7 +1297,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a float at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, float)
    */
@@ -1316,7 +1310,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Inserts a double at the supplied offset.
    *
    * @param offset the insertion index
-   * @param value the value to insert
+   * @param value  the value to insert
    * @return this formatter
    * @see StringBuilder#insert(int, double)
    */
@@ -1330,7 +1324,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param str the text to search for
    * @return the first matching index, or -1 when the text is not present
-   *
    * @see StringBuilder#indexOf(String)
    */
   public int indexOf(final String str) {
@@ -1340,10 +1333,9 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Returns the first index of the supplied string at or after the offset.
    *
-   * @param str the text to search for
+   * @param str       the text to search for
    * @param fromIndex the index to start searching from
    * @return the first matching index, or -1 when the text is not present
-   *
    * @see StringBuilder#indexOf(String, int)
    */
   public int indexOf(final String str, final int fromIndex) {
@@ -1355,7 +1347,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param str the text to search for
    * @return the last matching index, or -1 when the text is not present
-   *
    * @see StringBuilder#lastIndexOf(String)
    */
   public int lastIndexOf(final String str) {
@@ -1365,10 +1356,9 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Returns the last index of the supplied string at or before the offset.
    *
-   * @param str the text to search for
+   * @param str       the text to search for
    * @param fromIndex the index to start searching backwards from
    * @return the last matching index, or -1 when the text is not present
-   *
    * @see StringBuilder#lastIndexOf(String, int)
    */
   public int lastIndexOf(final String str, final int fromIndex) {
@@ -1379,7 +1369,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Reverses the current contents.
    *
    * @return this formatter
-   *
    * @see StringBuilder#reverse()
    */
   public StringFormatter reverse() {
@@ -1391,7 +1380,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the current contents as a string.
    *
    * @return the current contents
-   *
    * @see StringBuilder#toString()
    */
   @Override
@@ -1404,7 +1392,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param minimumCapacity the minimum required capacity
    * @return this formatter
-   *
    * @see StringBuilder#ensureCapacity(int)
    */
   public StringFormatter ensureCapacity(final int minimumCapacity) {
@@ -1416,7 +1403,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Trims the capacity to the current size.
    *
    * @return this formatter
-   *
    * @see StringBuilder#trimToSize()
    */
   public StringFormatter trimToSize() {
@@ -1429,7 +1415,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param newLength the new length
    * @return this formatter
-   *
    * @see StringBuilder#setLength(int)
    */
   public StringFormatter setLength(final int newLength) {
@@ -1441,9 +1426,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Replaces the character at the supplied index.
    *
    * @param index the character index
-   * @param ch the replacement character
+   * @param ch    the replacement character
    * @return this formatter
-   *
    * @see StringBuilder#setCharAt(int, char)
    */
   public StringFormatter setCharAt(final int index, final char ch) {
@@ -1455,11 +1439,10 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Copies characters into the supplied destination array.
    *
    * @param srcBegin the start index, inclusive
-   * @param srcEnd the end index, exclusive
-   * @param dst the destination array
+   * @param srcEnd   the end index, exclusive
+   * @param dst      the destination array
    * @param dstBegin the destination offset
    * @return this formatter
-   *
    * @see StringBuilder#getChars(int, int, char[], int)
    */
   public StringFormatter getChars(
@@ -1474,10 +1457,9 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Returns the offset by code points from the supplied index.
    *
-   * @param index the starting index
+   * @param index           the starting index
    * @param codePointOffset the number of code points to move
    * @return the resulting UTF-16 index
-   *
    * @see StringBuilder#offsetByCodePoints(int, int)
    */
   public int offsetByCodePoints(final int index, final int codePointOffset) {
@@ -1488,9 +1470,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the number of code points in the supplied range.
    *
    * @param beginIndex the start index, inclusive
-   * @param endIndex the end index, exclusive
+   * @param endIndex   the end index, exclusive
    * @return the number of code points in the range
-   *
    * @see StringBuilder#codePointCount(int, int)
    */
   public int codePointCount(final int beginIndex, final int endIndex) {
@@ -1502,7 +1483,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param index the character index
    * @return the code point immediately before the supplied index
-   *
    * @see StringBuilder#codePointBefore(int)
    */
   public int codePointBefore(final int index) {
@@ -1514,7 +1494,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param index the character index
    * @return the code point at the supplied index
-   *
    * @see StringBuilder#codePointAt(int)
    */
   public int codePointAt(final int index) {
@@ -1526,7 +1505,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param index the character index
    * @return the character at the supplied index
-   *
    * @see StringBuilder#charAt(int)
    */
   @Override
@@ -1538,7 +1516,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the current length.
    *
    * @return the current length
-   *
    * @see StringBuilder#length()
    */
   @Override
@@ -1550,7 +1527,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the current capacity.
    *
    * @return the current capacity
-   *
    * @see StringBuilder#capacity()
    */
   public int capacity() {
@@ -1561,7 +1537,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns whether the builder contains no characters.
    *
    * @return true when the builder is empty
-   *
    * @see StringBuilder#isEmpty()
    */
   @Override
@@ -1573,9 +1548,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the requested sub-sequence.
    *
    * @param start the start index, inclusive
-   * @param end the end index, exclusive
+   * @param end   the end index, exclusive
    * @return the requested sub-sequence
-   *
    * @see StringBuilder#subSequence(int, int)
    */
   @Override
@@ -1588,7 +1562,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param start the start index, inclusive
    * @return the substring from the supplied index
-   *
    * @see StringBuilder#substring(int)
    */
   public String substring(final int start) {
@@ -1599,9 +1572,8 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns the substring for the supplied range.
    *
    * @param start the start index, inclusive
-   * @param end the end index, exclusive
+   * @param end   the end index, exclusive
    * @return the substring for the supplied range
-   *
    * @see StringBuilder#substring(int, int)
    */
   public String substring(final int start, final int end) {
@@ -1613,7 +1585,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    *
    * @param other the other formatter
    * @return the comparison result
-   *
    * @see StringBuilder#compareTo(StringBuilder)
    */
   @Override
@@ -1622,10 +1593,30 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   }
 
   /**
+   * Returns {@code true} if this string formatter instance contains the same sequence of characters as the other string formatter instance.
+   * Otherwise, returns {@code false}.
+   *
+   * @param other the reference object with which to compare.
+   * @return {@code true} if this string formatter instance contains the same sequence of characters as the other string formatter instance.
+   * Otherwise, returns {@code false}.
+   */
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof StringFormatter otherStringFormatter) {
+      return delegate.compareTo(otherStringFormatter.delegate) == 0;
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
+  /**
    * Returns an {@link IntStream} over the UTF-16 code units.
    *
    * @return a stream of UTF-16 code units
-   *
    * @see StringBuilder#chars()
    */
   @Override
@@ -1637,7 +1628,6 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Returns an {@link IntStream} over the Unicode code points.
    *
    * @return a stream of Unicode code points
-   *
    * @see StringBuilder#codePoints()
    */
   @Override
@@ -1723,7 +1713,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
   /**
    * Formats a decimal using the configured locale and fixed precision.
    *
-   * @param value the value to format
+   * @param value     the value to format
    * @param precision the number of fractional digits to preserve
    * @return the localized text representation
    */
@@ -1743,7 +1733,7 @@ public final class StringFormatter implements CharSequence, Comparable<StringFor
    * Validates that a numeric argument is non-negative.
    *
    * @param value the numeric value to validate
-   * @param name the argument name
+   * @param name  the argument name
    */
   private static void requireNonNegative(final int value, final String name) {
     if (value < 0) {

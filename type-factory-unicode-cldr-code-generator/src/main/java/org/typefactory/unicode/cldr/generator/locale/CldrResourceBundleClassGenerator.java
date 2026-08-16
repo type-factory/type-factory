@@ -283,7 +283,9 @@ public class CldrResourceBundleClassGenerator {
                 
                 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
                 import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
+                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
                 
+                import java.util.MissingResourceException;
                 import java.util.ResourceBundle;
                 import javax.annotation.processing.Generated;
                 import org.junit.jupiter.api.Test;
@@ -313,6 +315,8 @@ public class CldrResourceBundleClassGenerator {
                         .isInstanceOf(root.class)
                         .isInstanceOf(AbstractCldrResourceBundle.class)
                         .isInstanceOf(ResourceBundle.class);
+        
+                    assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_%s");
                 
                     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
                     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
@@ -333,6 +337,10 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
+
+                    assertThatExceptionOfType(MissingResourceException.class)
+                        .isThrownBy(() -> instance.getObject("nonexistent_key"))
+                        .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_%s");
                   }
                 
                   @ParameterizedTest
@@ -350,6 +358,8 @@ public class CldrResourceBundleClassGenerator {
                         .isInstanceOf(root.class)
                         .isInstanceOf(AbstractCldrResourceBundle.class)
                         .isInstanceOf(ResourceBundle.class);
+        
+                    assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_%s");
                 
                     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
                     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
@@ -370,6 +380,10 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
+
+                    assertThatExceptionOfType(MissingResourceException.class)
+                        .isThrownBy(() -> instance.getObject("nonexistent_key"))
+                        .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_%s");
                 
                     if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
                     if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
@@ -381,6 +395,8 @@ public class CldrResourceBundleClassGenerator {
             displayName, resourceBundleClassName,
             displayName, resourceBundleClassName,
             resourceBundleTestClassName, resourceBundleTestSuperClassName,
+            resourceBundleClassName, resourceBundleClassName,
+            resourceBundleClassName, resourceBundleClassName,
             resourceBundleClassName, resourceBundleClassName,
             resourceBundleClassName, resourceBundleClassName))
         .when(standardCharactersSubset.isPresent() && standardCharactersSubset.get().isNotEmpty(), sf1 ->

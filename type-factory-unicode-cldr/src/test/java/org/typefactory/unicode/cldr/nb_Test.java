@@ -16,8 +16,10 @@
 package org.typefactory.unicode.cldr;
 
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
 
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,8 @@ class nb_Test extends no_Test {
         .isInstanceOf(AbstractCldrResourceBundle.class)
         .isInstanceOf(ResourceBundle.class);
 
+    assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_nb");
+
     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
@@ -66,6 +70,10 @@ class nb_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
+
+    assertThatExceptionOfType(MissingResourceException.class)
+        .isThrownBy(() -> instance.getObject("nonexistent_key"))
+        .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_nb");
   }
 
   @ParameterizedTest
@@ -84,6 +92,8 @@ class nb_Test extends no_Test {
         .isInstanceOf(AbstractCldrResourceBundle.class)
         .isInstanceOf(ResourceBundle.class);
 
+    assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_nb");
+
     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
@@ -103,6 +113,10 @@ class nb_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
+
+    assertThatExceptionOfType(MissingResourceException.class)
+        .isThrownBy(() -> instance.getObject("nonexistent_key"))
+        .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_nb");
 
     if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
     if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);

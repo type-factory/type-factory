@@ -60,7 +60,7 @@ public abstract class AbstractCldrResourceBundle extends ResourceBundle {
       case PUNCTUATION_CHARACTERS -> punctuationSubset;
       case DECIMAL_DIGITS -> decimalDigitsSubset;
       default -> throw new MissingResourceException(
-          "Cannot load locale data for " + resourceBundleName(), "", key);
+          "Cannot load locale data for key '" + key + "' from resource " + resourceBundleName(), "", key);
     };
   }
 

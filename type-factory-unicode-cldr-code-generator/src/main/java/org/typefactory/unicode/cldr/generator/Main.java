@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 import org.typefactory.unicode.cldr.generator.locale.CldrResourceBundleClassGenerator;
-import org.typefactory.unicode.cldr.generator.unicode.core.UnicodeGroupData;
 
 public class Main {
 
@@ -64,8 +63,6 @@ public class Main {
           """);
       System.exit(1);
     }
-
-    final UnicodeGroupData unicodeGroupData = UnicodeGroupData.INSTANCE;
 
     final CldrResourceBundleClassGenerator cldrResourceBundleClassGenerator
         = new CldrResourceBundleClassGenerator(licenseHeader, outputDirectory, outputTestDirectory);
