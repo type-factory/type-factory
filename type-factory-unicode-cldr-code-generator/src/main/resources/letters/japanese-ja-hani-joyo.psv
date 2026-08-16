@@ -1,0 +1,2143 @@
+Unicode|Character New/Shinjitai|Order|Old/Kyūjitai|Radical|Strokes|Grade|Year added|English meaning|Readings|Readings Rōmaji
+# Source wikipedia https://en.wikipedia.org/wiki/List_of_jōyō_kanji
+# Note [4] – These characters are Unicode CJK Unified Ideographs for which the old form (kyūjitai) and the new form (shinjitai) have been unified under the Unicode standard. Although the old and new forms are distinguished under the JIS X 0213 standard, the old forms map to Unicode CJK Compatibility Ideographs which are considered by Unicode to be canonically equivalent to the new forms and may not be distinguished by user agents. Therefore depending on the user environment, it may not be possible to see the distinction between old and new forms of the characters. In particular, all Unicode normalization methods merge the old characters with the new ones.
+#      [5] – The 5 kanji 茨・牙・韓・𠮟・栃 have specifically designated design variations described in the official Jōyō Kanji list, which apply only to those individual kanji.
+#      [6] – These kanji readings are offset by one character to the right in the official Jōyō Kanji list, and are followed by a Japanese prefecture name in the remarks column. Therefore, in principal, these readings will only ever be used for those specific prefecture names and not in any other words.
+#      [7] – The official Jōyō Kanji list states that "Due to the print typefaces which are currently available in computer systems, it is acceptable to use characters different from the ones show in this list (e.g. using 頬・賭・剥 instead of 頰・賭・剝, etc.)". Although the official document does not specifically designate the characters which this statement applies to, it is likely that it is applicable to the following 14 characters: 淫・葛・僅・煎・詮・嘲・捗・溺・塡・賭・剝・箸・蔽・頰.
+#      [8] – The 5 kanji 餌・遡・遜・謎・餅 use one of the radicals 辶 / 𩙿. As stated on the first page of the official Jōyō Kanji list, although the officially correct form of those characters uses the forms 辶 / 𩙿, it is permissible to use instead the forms 辶 / 飠, which are indicated in square brackets in the official list.
+0x004e9c|亜|1|亞|二|7|S||sub-, Asia|ア|a
+0x0054c0|哀|2||口|9|S||pathetic|アイ、あわ-れ、あわ-れむ|ai, awa-re, awa-remu
+0x006328|挨|3||手|10|S|2010|push open|アイ|ai
+0x00611b|愛|4||心|13|4||love|アイ|ai
+0x0066d6|曖|5||日|17|S|2010|not clear|アイ|ai
+0x0060aa|悪|6|惡|心|11|3||bad|アク、オ、わる-い|aku, o, waru-i
+0x0063e1|握|7||手|12|S||grip|アク、にぎ-る|aku, nigi-ru
+0x005727|圧|8|壓|土|5|5||pressure|アツ|atsu
+0x006271|扱|9||手|6|S||handle|あつか-う|atsuka-u
+0x005b9b|宛|10||宀|8|S|2010|allocate|あ-てる|a-teru
+0x005d50|嵐|11||山|12|S|2010|storm|あらし|arashi
+0x005b89|安|12||宀|6|3||cheap|アン、やす-い|an, yasu-i
+0x006848|案|13||木|10|4||plan|アン|an
+0x006697|暗|14||日|13|3||dark|アン、くら-い|an, kura-i
+0x004ee5|以|15||人|5|4||by means of|イ|i
+0x008863|衣|16||衣|6|4||clothes|イ、ころも|i, koromo
+0x004f4d|位|17||人|7|4||rank|イ、くらい|i, kurai
+0x0056f2|囲|18|圍|囗|7|5||surround|イ、かこ-む、かこ-う|i, kako-mu, kako-u
+0x00533b|医|19|醫|酉|7|3||doctor|イ|i
+0x004f9d|依|20||人|8|S||reliant|イ、（エ）|i, (e)
+0x0059d4|委|21||女|8|3||committee|イ、ゆだ-ねる|i, yuda-neru
+0x005a01|威|22||女|9|S||intimidate|イ|i
+0x0070ba|為|23|爲|爪|9|S||do|イ|i
+0x00754f|畏|24||田|9|S|2010|fear|イ、おそ-れる|i, oso-reru
+0x0080c3|胃|25||肉|9|6||stomach|イ|i
+0x005c09|尉|26||寸|11|S||military officer|イ|i
+0x007570|異|27||田|11|6||uncommon|イ、こと|i, koto
+0x0079fb|移|28||禾|11|5||shift|イ、うつ-る、うつ-す|i, utsu-ru, utsu-su
+0x00840e|萎|29||艸|11|S|2010|wither|イ、な-える|i, na-eru
+0x005049|偉|30||人|12|S||admirable|イ、えら-い|i, era-i
+0x006905|椅|31||木|12|S|2010|chair|イ|i
+0x005f59|彙|32||彐|13|S|2010|same kind|イ|i
+0x00610f|意|33||心|13|3||idea|イ|i
+0x009055|違|34||辵|13|S||differ|イ、ちが-う、ちが-える|i, chiga-u, chiga-eru
+0x007dad|維|35||糸|14|S||fiber|イ|i
+0x006170|慰|36||心|15|S||consolation|イ、なぐさ-める、なぐさ-む|i, nagusa-meru, nagusa-mu
+0x00907a|遺|37||辵|15|6||bequeath|イ、（ユイ）|i, (yui)
+0x007def|緯|38||糸|16|S||horizontal|イ|i
+0x0057df|域|39||土|11|6||range|イキ|iki
+0x0080b2|育|40||肉|8|3||nurture|イク、そだ-つ、そだ-てる、はぐく-む|iku, soda-tsu, soda-teru, haguku-mu
+0x004e00|一|41||一|1|1||one|イチ、イツ、ひと、ひと-つ|ichi, itsu, hito, hito-tsu
+0x0058f1|壱|42|壹|士|7|S||one (falsification prevention)|イチ|ichi
+0x009038|逸|43|逸 [4]|辵|11|S||deviate|イツ|itsu
+0x008328|茨 [5]|44||艸|9|4|2010|thorn|（いばら）[6]|(ibara)
+0x00828b|芋|45||艸|6|S||potato|いも|imo
+0x005f15|引|46||弓|4|2||pull|イン、ひ-く、ひ-ける|in, hi-ku, hi-keru
+0x005370|印|47||卩|6|4||mark|イン、しるし|in, shirushi
+0x0056e0|因|48||囗|6|5||cause|イン、よ-る|in, yo-ru
+0x0054bd|咽|49||口|9|S|2010|throat|イン|in
+0x0059fb|姻|50||女|9|S||matrimony|イン|in
+0x0054e1|員|51||口|10|3||member|イン|in
+0x009662|院|52||阜|10|3||institution|イン|in
+0x006deb|淫 [7]|53||水|11|S|2010|lewdness|イン、みだ-ら|in, mida-ra
+0x009670|陰|54||阜|11|S||shade|イン、かげ、かげ-る|in, kage, kage-ru
+0x0098f2|飲|55||食|12|3||drink|イン、の-む|in, no-mu
+0x0096a0|隠|56|隱|阜|14|S||conceal|イン、かく-す、かく-れる|in, kaku-su, kaku-reru
+0x0097fb|韻|57||音|19|S||rhyme|イン|in
+0x0053f3|右|58||口|5|1||right (direction)|ウ、ユウ、みぎ|u, yū, migi
+0x005b87|宇|59||宀|6|6||eaves|ウ|u
+0x007fbd|羽|60||羽|6|2||feather|ウ、は、はね|u, ha, hane
+0x0096e8|雨|61||雨|8|1||rain|ウ、あめ、（あま）|u, ame, (ama)
+0x005504|唄|62||口|10|S|2010|songs with samisen|（うた）|(uta)
+0x009b31|鬱|63||鬯|29|S|2010|gloom|ウツ|utsu
+0x00755d|畝|64||田|10|S||furrow|うね|une
+0x006d66|浦|65||水|10|S||bay|うら|ura
+0x00904b|運|66||辵|12|3||carry|ウン、はこ-ぶ|un, hako-bu
+0x0096f2|雲|67||雨|12|2||cloud|ウン、くも|un, kumo
+0x006c38|永|68||水|5|5||eternity|エイ、なが-い|ei, naga-i
+0x006cf3|泳|69||水|8|3||swim|エイ、およ-ぐ|ei, oyo-gu
+0x0082f1|英|70||艸|8|4||England|エイ|ei
+0x006620|映|71||日|9|6||reflect|エイ、うつ-る、うつ-す、は-える|ei, utsu-ru, utsu-su, ha-eru
+0x006804|栄|72|榮|木|9|4||prosperity|エイ、さか-える、は-え、は-える|ei, saka-eru, ha-e, ha-eru
+0x0055b6|営|73|營|火|12|5||manage|エイ、いとな-む|ei, itona-mu
+0x008a60|詠|74||言|12|S||recitation|エイ、よ-む|ei, yo-mu
+0x005f71|影|75||彡|15|S||shadow|エイ、かげ|ei, kage
+0x0092ed|鋭|76||金|15|S||pointed|エイ、するど-い|ei, surudo-i
+0x00885b|衛|77|衞|行|16|5||defense|エイ|ei
+0x006613|易|78||日|8|5||easy|エキ、イ、やさ-しい|eki, i, yasa-shii
+0x0075ab|疫|79||疒|9|S||epidemic|エキ、（ヤク）|eki, (yaku)
+0x0076ca|益|80||皿|10|5||benefit|エキ、（ヤク）|eki, (yaku)
+0x006db2|液|81||水|11|5||fluid|エキ|eki
+0x0099c5|駅|82|驛|馬|14|3||station|エキ|eki
+0x0060a6|悦|83||心|10|S||ecstasy|エツ|etsu
+0x008d8a|越|84||走|12|S||cross over|エツ、こ-す、こ-える|etsu, ko-su, ko-eru
+0x008b01|謁|85|謁 [4]|言|15|S||audience|エツ|etsu
+0x0095b2|閲|86||門|15|S||review|エツ|etsu
+0x005186|円|87|圓|囗|4|1||round, yen|エン、まる-い|en, maru-i
+0x005ef6|延|88||廴|8|6||prolong|エン、の-びる、の-べる、の-ばす|en, no-biru, no-beru, no-basu
+0x006cbf|沿|89||水|8|6||run alongside|エン、そ-う|en, so-u
+0x00708e|炎|90||火|8|S||inflammation|エン、ほのお|en, honoo
+0x006028|怨|91||心|9|S|2010|grudge|エン、オン|en, on
+0x005bb4|宴|92||宀|10|S||banquet|エン|en
+0x005a9b|媛|93||女|12|4|2010|princess; beautiful woman|エン|en
+0x0063f4|援|94||手|12|S||aid|エン|en
+0x005712|園|95||囗|13|2||garden|エン、その|en, sono
+0x007159|煙|96||火|13|S||smoke|エン、けむ-る、けむり、けむ-い|en, kemu-ru, kemuri, kemu-i
+0x00733f|猿|97||犬|13|S|1981|monkey|エン、さる|en, saru
+0x009060|遠|98||辵|13|2||far|エン、（オン）、とお-い|en, (on), too-i
+0x00925b|鉛|99||金|13|S||lead|エン、なまり|en, namari
+0x005869|塩|100|鹽|鹵|13|4||salt|エン、しお|en, shio
+0x006f14|演|101||水|14|5||perform|エン|en
+0x007e01|縁|102|緣|糸|15|S||affinity|エン、ふち|en, fuchi
+0x008276|艶|103|艷|色|19|S|2010|glossy|エン、つや|en, tsuya
+0x006c5a|汚|104||水|6|S||dirty|オ、けが-す、けが-れる、けが-らわしい、よご-す、よご-れる、きたな-い|o, kega-su, kega-reru, kega-rawashii, yogo-su, yogo-reru, kitana-i
+0x00738b|王|105||玉|4|1||king|オウ|ō
+0x0051f9|凹|106||凵|5|S|1981|concave|オウ|ō
+0x00592e|央|107||大|5|3||center|オウ|ō
+0x005fdc|応|108|應|心|7|5||respond|オウ、こた-える|ō, kota-eru
+0x005f80|往|109||彳|8|5||outward journey|オウ|ō
+0x0062bc|押|110||手|8|S||pushed|オウ、お-す、お-さえる|ō, o-su, o-saeru
+0x0065fa|旺|111||日|8|S|2010|flourishing|オウ|ō
+0x006b27|欧|112|歐|欠|8|S||Europe|オウ|ō
+0x006bb4|殴|113|毆|殳|8|S||assault|オウ、なぐ-る|ō, nagu-ru
+0x00685c|桜|114|櫻|木|10|5||cherry tree|オウ、さくら|ō, sakura
+0x007fc1|翁|115||羽|10|S||venerable old man|オウ|ō
+0x005965|奥|116|奧|大|12|S||heart|オウ、おく|ō, oku
+0x006a2a|横|117|橫|木|15|3||side|オウ、よこ|ō, yoko
+0x005ca1|岡|118||山|8|4|2010|hill|（おか）[6]|(oka)
+0x005c4b|屋|119||尸|9|3||roof|オク、や|oku, ya
+0x005104|億|120||人|15|4||hundred million|オク|oku
+0x0061b6|憶|121||心|16|S||recollection|オク|oku
+0x0081c6|臆|122||肉|17|S|2010|timidity|オク|oku
+0x00865e|虞|123||虍|13|S||uneasiness|おそれ|osore
+0x004e59|乙|124||乙|1|S||the latter|オツ|otsu
+0x004ffa|俺|125||人|10|S|2010|I, we, myself|おれ|ore
+0x005378|卸|126||卩|9|S||wholesale|おろ-す、おろし|oro-su, oroshi
+0x0097f3|音|127||音|9|1||sound|オン、イン、おと、ね|on, in, oto, ne
+0x006069|恩|128||心|10|6||grace|オン|on
+0x006e29|温|129|溫|水|12|3||warm|オン、あたた-か、あたた-かい、あたた-まる、あたた-める|on, atata-ka, atata-kai, atata-maru, atata-meru
+0x007a4f|穏|130|穩|禾|16|S||calm|オン、おだ-やか|on, oda-yaka
+0x004e0b|下|131||一|3|1||below|カ、ゲ、した、しも、もと、さ-げる、さ-がる、くだ-る、くだ-す、くだ-さる、お-ろす、お-りる|ka, ge, shita, shimo, moto, sa-geru, sa-garu, kuda-ru, kuda-su, kuda-saru, o-rosu, o-riru
+0x005316|化|132||匕|4|3||change|カ、ケ、ば-ける、ば-かす|ka, ke, ba-keru, ba-kasu
+0x00706b|火|133||火|4|1||fire|カ、ひ、（ほ）|ka, hi, (ho)
+0x0052a0|加|134||力|5|4||add|カ、くわ-える、くわ-わる|ka, kuwa-eru, kuwa-waru
+0x0053ef|可|135||口|5|5||possible|カ|ka
+0x004eee|仮|136|假|人|6|5||temporary|カ、（ケ）、かり|ka, (ke), kari
+0x004f55|何|137||人|7|2||what|カ、なに、（なん）|ka, nani, (nan)
+0x0082b1|花|138||艸|7|1||flower|カ、はな|ka, hana
+0x004f73|佳|139||人|8|S||excellent|カ|ka
+0x004fa1|価|140|價|人|8|5||value|カ、あたい|ka, atai
+0x00679c|果|141||木|8|4||fruit|カ、は-たす、は-てる、は-て|ka, ha-tasu, ha-teru, ha-te
+0x006cb3|河|142||水|8|5||river|カ、かわ|ka, kawa
+0x0082db|苛|143||艸|8|S|2010|torment|カ|ka
+0x0079d1|科|144||禾|9|2||section|カ|ka
+0x0067b6|架|145||木|9|S||rack|カ、か-ける、か-かる|ka, ka-keru, ka-karu
+0x00590f|夏|146||夊|10|2||summer|カ、（ゲ）、なつ|ka, (ge), natsu
+0x005bb6|家|147||宀|10|2||house|カ、ケ、いえ、や|ka, ke, ie, ya
+0x008377|荷|148||艸|10|3||luggage|カ、に|ka, ni
+0x0083ef|華|149||艸|10|S||splendor|カ、（ケ）、はな|ka, (ke), hana
+0x0083d3|菓|150||艸|11|S||confectionery|カ|ka
+0x008ca8|貨|151||貝|11|4||freight|カ|ka
+0x006e26|渦|152||水|12|S|1981|whirlpool|カ、うず|ka, uzu
+0x00904e|過|153||辵|12|5||go beyond|カ、す-ぎる、す-ごす、あやま-つ、あやま-ち|ka, su-giru, su-gosu, ayama-tsu, ayama-chi
+0x005ac1|嫁|154||女|13|S||marry into|カ、よめ、とつ-ぐ|ka, yome, totsu-gu
+0x006687|暇|155||日|13|S||spare time|カ、ひま|ka, hima
+0x00798d|禍|156|禍 [4]|示|13|S||calamity|カ|ka
+0x009774|靴|157||革|13|S|1981|shoes|カ、くつ|ka, kutsu
+0x005be1|寡|158||宀|14|S||widow|カ|ka
+0x006b4c|歌|159||欠|14|2||song|カ、うた、うた-う|ka, uta, uta-u
+0x007b87|箇|160||竹|14|S||counters for things|カ|ka
+0x007a3c|稼|161||禾|15|S|1981|earnings|カ、かせ-ぐ|ka, kase-gu
+0x008ab2|課|162||言|15|4||section|カ|ka
+0x00868a|蚊|163||虫|10|S||mosquito|か|ka
+0x007259|牙 [5]|164||牙|4|S|2010|tusk|ガ、（ゲ）、きば|ga, (ge), kiba
+0x0074e6|瓦|165||瓦|5|S|2010|tile|ガ、かわら|ga, kawara
+0x006211|我|166||戈|7|6||ego, I, we|ガ、われ、わ|ga, ware, wa
+0x00753b|画|167|畫|田|8|2||tableau|ガ、カク|ga, kaku
+0x0082bd|芽|168||艸|8|4||bud|ガ、め|ga, me
+0x008cc0|賀|169||貝|12|4||congratulations|ガ|ga
+0x0096c5|雅|170||隹|13|S||gracious|ガ|ga
+0x009913|餓|171||食|15|S||starve|ガ|ga
+0x004ecb|介|172||人|4|S||jammed in|カイ|kai
+0x0056de|回|173||囗|6|2||times|カイ、（エ）、まわ-る、まわ-す|kai, (e), mawa-ru, mawa-su
+0x007070|灰|174||火|6|6||ashes|カイ、はい|kai, hai
+0x004f1a|会|175|會|曰|6|2||association|カイ、エ、あ-う|kai, e, a-u
+0x005feb|快|176||心|7|5||cheerful|カイ、こころよ-い|kai, kokoroyo-i
+0x006212|戒|177||戈|7|S||commandment|カイ、いまし-める|kai, imashi-meru
+0x006539|改|178||攴|7|4||reformation|カイ、あらた-める、あらた-まる|kai, arata-meru, arata-maru
+0x00602a|怪|179||心|8|S||suspicious|カイ、あや-しい、あや-しむ|kai, aya-shii, aya-shimu
+0x0062d0|拐|180||手|8|S|1981|kidnap|カイ|kai
+0x006094|悔|181|悔 [4]|心|9|S||repent|カイ、く-いる、く-やむ、くや-しい|kai, ku-iru, ku-yamu, kuya-shii
+0x006d77|海|182|海 [4]|水|9|2||sea|カイ、うみ|kai, umi
+0x00754c|界|183||田|9|3||world|カイ|kai
+0x007686|皆|184||白|9|S||all|カイ、みな|kai, mina
+0x0068b0|械|185||木|11|4||contraption|カイ|kai
+0x007d75|絵|186|繪|糸|12|2||picture|カイ、エ|kai, e
+0x00958b|開|187||門|12|3||open|カイ、ひら-く、ひら-ける、あ-く、あ-ける|kai, hira-ku, hira-keru, a-ku, a-keru
+0x00968e|階|188||阜|12|3||floor of a building|カイ|kai
+0x00584a|塊|189||土|13|S||clod|カイ、かたまり|kai, katamari
+0x006977|楷|190||木|13|S|2010|square character style|カイ|kai
+0x0089e3|解|191||角|13|5||untie|カイ、ゲ、と-く、と-かす、と-ける|kai, ge, to-ku, to-kasu, to-keru
+0x006f70|潰|192||水|15|S|2010|crush|カイ、つぶ-す、つぶ-れる|kai, tsubu-su, tsubu-reru
+0x0058ca|壊|193|壞|土|16|S||demolition|カイ、こわ-す、こわ-れる|kai, kowa-su, kowa-reru
+0x0061d0|懐|194|懷|心|16|S||pocket|カイ、ふところ、なつ-かしい、なつ-かしむ、なつ-く、なつ-ける|kai, futokoro, natsu-kashii, natsu-kashimu, natsu-ku, natsu-keru
+0x008ae7|諧|195||言|16|S|2010|harmony|カイ|kai
+0x008c9d|貝|196||貝|7|1||shellfish|かい|kai
+0x005916|外|197||夕|5|2||outside|ガイ、ゲ、そと、ほか、はず-す、はず-れる|gai, ge, soto, hoka, hazu-su, hazu-reru
+0x0052be|劾|198||力|8|S||censure|ガイ|gai
+0x005bb3|害|199||宀|10|4||harm|ガイ|gai
+0x005d16|崖|200||山|11|S|2010|cliff|ガイ、がけ|gai, gake
+0x006daf|涯|201||水|11|S|1981|horizon|ガイ|gai
+0x008857|街|202||行|12|4||street|ガイ、（カイ）、まち|gai, (kai), machi
+0x006168|慨|203|慨 [4]|心|13|S||rue|ガイ|gai
+0x0084cb|蓋|204||艸|13|S|2010|cover|ガイ、ふた|gai, futa
+0x008a72|該|205||言|13|S||above-stated|ガイ|gai
+0x006982|概|206|槪|木|14|S||outline|ガイ|gai
+0x009ab8|骸|207||骨|16|S|2010|dead remains|ガイ|gai
+0x0057a3|垣|208||土|9|S|1981|hedge|かき|kaki
+0x0067ff|柿|209||木|9|S|2010|persimmon|かき|kaki
+0x005404|各|210||口|6|4||each|カク、おのおの|kaku, onoono
+0x0089d2|角|211||角|7|2||angle|カク、かど、つの|kaku, kado, tsuno
+0x0062e1|拡|212|擴|手|8|6||broaden|カク|kaku
+0x009769|革|213||革|9|6||leather|カク、かわ|kaku, kawa
+0x00683c|格|214||木|10|5||status|カク、（コウ）|kaku, (kō)
+0x006838|核|215||木|10|S||nucleus|カク|kaku
+0x006bbb|殻|216|殼|殳|11|S|1981|husk|カク、から|kaku, kara
+0x0090ed|郭|217||邑|11|S||enclosure|カク|kaku
+0x00899a|覚|218|覺|見|12|4||memorize|カク、おぼ-える、さ-ます、さ-める|kaku, obo-eru, sa-masu, sa-meru
+0x008f03|較|219||車|13|S||contrast|カク|kaku
+0x009694|隔|220||阜|13|S||isolate|カク、へだ-てる、へだ-たる|kaku, heda-teru, heda-taru
+0x0095a3|閣|221||門|14|6||tall|カク|kaku
+0x0078ba|確|222||石|15|5||certain|カク、たし-か、たし-かめる|kaku, tashi-ka, tashi-kameru
+0x007372|獲|223||犬|16|S||seize|カク、え-る|kaku, e-ru
+0x005687|嚇|224||口|17|S||menacing|カク|kaku
+0x007a6b|穫|225||禾|18|S||harvest|カク|kaku
+0x005b66|学|226|學|子|8|1||study|ガク、まな-ぶ|gaku, mana-bu
+0x005cb3|岳|227|嶽|山|8|S||point|ガク、たけ|gaku, take
+0x00697d|楽|228|樂|木|13|2||pleasure|ガク、ラク、たの-しい、たの-しむ|gaku, raku, tano-shii, tano-shimu
+0x00984d|額|229||頁|18|5||amount|ガク、ひたい|gaku, hitai
+0x00984e|顎|230||頁|18|S|2010|jaw|ガク、あご|gaku, ago
+0x00639b|掛|231||手|11|S||hang|か-ける、か-かる、かかり|ka-keru, ka-karu, kakari
+0x006f5f|潟|232||水|15|4|1981|lagoon|かた|kata
+0x0062ec|括|233||手|9|S||fasten|カツ|katsu
+0x006d3b|活|234||水|9|2||active|カツ|katsu
+0x00559d|喝|235|喝 [4]|口|11|S|1981|hoarse|カツ|katsu
+0x006e07|渇|236|渴|水|11|S||thirst|カツ、かわ-く|katsu, kawa-ku
+0x005272|割|237||刀|12|6||divide|カツ、わ-る、わり、わ-れる、さ-く|katsu, wa-ru, wari, wa-reru, sa-ku
+0x00845b|葛 [7]|238||艸|12|S|2010|arrowroot|カツ、くず|katsu, kuzu
+0x006ed1|滑|239||水|13|S||slippery|カツ、コツ、すべ-る、なめ-らか|katsu, kotsu, sube-ru, name-raka
+0x008910|褐|240|褐 [4]|衣|13|S|1981|brown|カツ|katsu
+0x008f44|轄|241||車|17|S||control|カツ|katsu
+0x004e14|且|242||一|5|S||moreover|か-つ|ka-tsu
+0x00682a|株|243||木|10|6||stocks|かぶ|kabu
+0x0091dc|釜|244||金|10|S|2010|kettle|かま|kama
+0x00938c|鎌|245||金|18|S|2010|sickle|かま|kama
+0x005208|刈|246||刀|4|S||reap|か-る|ka-ru
+0x005e72|干|247||干|3|6||dry|カン、ほ-す、ひ-る|kan, ho-su, hi-ru
+0x00520a|刊|248||刀|5|5||publish|カン|kan
+0x007518|甘|249||甘|5|S||sweet|カン、あま-い、あま-える、あま-やかす|kan, ama-i, ama-eru, ama-yakasu
+0x006c57|汗|250||水|6|S||sweat|カン、あせ|kan, ase
+0x007f36|缶|251|罐|缶|6|S|1981|tin can|カン|kan
+0x005b8c|完|252||宀|7|4||perfect|カン|kan
+0x00809d|肝|253||肉|7|S||liver|カン、きも|kan, kimo
+0x005b98|官|254||宀|8|4||government official|カン|kan
+0x0051a0|冠|255||冖|9|S||crown|カン、かんむり|kan, kanmuri
+0x005dfb|巻|256|卷|卩|9|6||scroll|カン、ま-く、まき|kan, ma-ku, maki
+0x00770b|看|257||目|9|6||watch over|カン|kan
+0x009665|陥|258|陷|阜|10|S||collapse|カン、おちい-る、おとしい-れる|kan, ochii-ru, otoshii-reru
+0x004e7e|乾|259||乙|11|S||dry|カン、かわ-く、かわ-かす|kan, kawa-ku, kawa-kasu
+0x0052d8|勘|260||力|11|S||intuition|カン|kan
+0x0060a3|患|261||心|11|S||afflicted|カン、わずら-う|kan, wazura-u
+0x008cab|貫|262||貝|11|S||pierce|カン、つらぬ-く|kan, tsuranu-ku
+0x005bd2|寒|263||宀|12|3||cold|カン、さむ-い|kan, samu-i
+0x00559a|喚|264||口|12|S||yell|カン|kan
+0x00582a|堪|265||土|12|S||withstand|カン、た-える|kan, ta-eru
+0x0063db|換|266||手|12|S||interchange|カン、か-える、か-わる|kan, ka-eru, ka-waru
+0x006562|敢|267||攴|12|S||daring|カン|kan
+0x0068fa|棺|268||木|12|S||coffin|カン|kan
+0x006b3e|款|269||欠|12|S||goodwill|カン|kan
+0x009593|間|270||門|12|2||interval|カン、ケン、あいだ、ま|kan, ken, aida, ma
+0x009591|閑|271||門|12|S||leisure|カン|kan
+0x0052e7|勧|272|勸|力|13|S||persuade|カン、すす-める|kan, susu-meru
+0x005bdb|寛|273|寬|宀|13|S||tolerant|カン|kan
+0x005e79|幹|274||干|13|5||tree-trunk|カン、みき|kan, miki
+0x00611f|感|275||心|13|3||feeling|カン|kan
+0x006f22|漢|276|漢 [4]|水|13|3||China|カン|kan
+0x006163|慣|277||心|14|5||accustomed|カン、な-れる、な-らす|kan, na-reru, na-rasu
+0x007ba1|管|278||竹|14|4||pipe|カン、くだ|kan, kuda
+0x0095a2|関|279|關|門|14|4||related|カン、せき、かか-わる|kan, seki, kaka-waru
+0x006b53|歓|280|歡|欠|15|S||delight|カン|kan
+0x0076e3|監|281||皿|15|S||oversee|カン|kan
+0x007de9|緩|282||糸|15|S||slacken|カン、ゆる-い、ゆる-やか、ゆる-む、ゆる-める|kan, yuru-i, yuru-yaka, yuru-mu, yuru-meru
+0x0061be|憾|283||心|16|S||remorse|カン|kan
+0x009084|還|284||辵|16|S||send back|カン|kan
+0x009928|館|285||食|16|3||public building|カン、やかた|kan, yakata
+0x0074b0|環|286||玉|17|S||ring|カン|kan
+0x007c21|簡|287||竹|18|6||simplicity|カン|kan
+0x0089b3|観|288|觀|見|18|4||observe|カン|kan
+0x0097d3|韓 [5]|289||韋|18|S|2010|Korea|カン|kan
+0x008266|艦|290||舟|21|S||warship|カン|kan
+0x009451|鑑|291||金|23|S||specimen|カン、かんが-みる|kan, kanga-miru
+0x004e38|丸|292||丶|3|2||circle|ガン、まる、まる-い、まる-める|gan, maru, maru-i, maru-meru
+0x00542b|含|293||口|7|S||include|ガン、ふく-む、ふく-める|gan, fuku-mu, fuku-meru
+0x005cb8|岸|294||山|8|3||beach|ガン、きし|gan, kishi
+0x005ca9|岩|295||山|8|2||boulder|ガン、いわ|gan, iwa
+0x0073a9|玩|296||玉|8|S|2010|trifle with|ガン|gan
+0x00773c|眼|297||目|11|5||eyeball|ガン、（ゲン）、まなこ|gan, (gen), manako
+0x009811|頑|298||頁|13|S|1981|stubborn|ガン|gan
+0x009854|顔|299||頁|18|2||face|ガン、かお|gan, kao
+0x009858|願|300||頁|19|4||request|ガン、ねが-う|gan, nega-u
+0x004f01|企|301||人|6|S||plan|キ、くわだ-てる|ki, kuwada-teru
+0x004f0e|伎|302||人|6|S|2010|deed|キ|ki
+0x005371|危|303||卩|6|6||dangerous|キ、あぶ-ない、あや-うい、あや-ぶむ|ki, abu-nai, aya-ui, aya-bumu
+0x00673a|机|304||木|6|6||desk|キ、つくえ|ki, tsukue
+0x006c17|気|305|氣|气|6|1||feeling|キ、ケ|ki, ke
+0x005c90|岐|306||山|7|4||branch off|キ|ki
+0x005e0c|希|307||巾|7|4||hope|キ|ki
+0x005fcc|忌|308||心|7|S||mourning|キ、い-む、い-まわしい|ki, i-mu, i-mawashii
+0x006c7d|汽|309||水|7|2||steam|キ|ki
+0x005947|奇|310||大|8|S||strange|キ|ki
+0x007948|祈|311|祈 [4]|示|8|S||pray|キ、いの-る|ki, ino-ru
+0x005b63|季|312||子|8|4||seasons|キ|ki
+0x007d00|紀|313||糸|9|5||chronicle|キ|ki
+0x008ecc|軌|314||車|9|S||rut|キ|ki
+0x0065e2|既|315|既 [4]|无|10|S||previously|キ、すで-に|ki, sude-ni
+0x008a18|記|316||言|10|2||write down|キ、しる-す|ki, shiru-su
+0x008d77|起|317||走|10|3||wake up|キ、お-きる、お-こる、お-こす|ki, o-kiru, o-koru, o-kosu
+0x0098e2|飢|318||食|10|S||hungry|キ、う-える|ki, u-eru
+0x009b3c|鬼|319||鬼|10|S||ghost|キ、おに|ki, oni
+0x005e30|帰|320|歸|止|10|2||return|キ、かえ-る、かえ-す|ki, kae-ru, kae-su
+0x0057fa|基|321||土|11|5||foundation|キ、もと、もとい|ki, moto, motoi
+0x005bc4|寄|322||宀|11|5||approach|キ、よ-る、よ-せる|ki, yo-ru, yo-seru
+0x00898f|規|323||見|11|5||rule|キ|ki
+0x004e80|亀|324|龜|龜|11|S|2010|turtle|キ、かめ|ki, kame
+0x00559c|喜|325||口|12|5||rejoice|キ、よろこ-ぶ|ki, yoroko-bu
+0x005e7e|幾|326||幺|12|S||how many|キ、いく|ki, iku
+0x0063ee|揮|327||手|12|6||brandish|キ|ki
+0x00671f|期|328||月|12|3||period of time|キ、（ゴ）|ki, (go)
+0x0068cb|棋|329||木|12|S||chess piece|キ|ki
+0x008cb4|貴|330||貝|12|6||precious|キ、たっと-い、とうと-い、たっと-ぶ、とうと-ぶ|ki, tatto-i, tōto-i, tatto-bu, tōto-bu
+0x0068c4|棄|331||木|13|S||abandon|キ|ki
+0x006bc0|毀|332||殳|13|S|2010|destroy|キ|ki
+0x0065d7|旗|333||方|14|4||national flag|キ、はた|ki, hata
+0x005668|器|334|器 [4]|口|15|4||container|キ、うつわ|ki, utsuwa
+0x00757f|畿|335||田|15|S|2010|capital|キ|ki
+0x008f1d|輝|336||車|15|S||radiance|キ、かがや-く|ki, kagaya-ku
+0x006a5f|機|337||木|16|4||machine|キ、はた|ki, hata
+0x009a0e|騎|338||馬|18|S||equestrian|キ|ki
+0x006280|技|339||手|7|5||skill|ギ、わざ|gi, waza
+0x005b9c|宜|340||宀|8|S||best regards|ギ|gi
+0x00507d|偽|341|僞|人|11|S||falsehood|ギ、いつわ-る、にせ|gi, itsuwa-ru, nise
+0x006b3a|欺|342||欠|12|S||deceit|ギ、あざむ-く|gi, azamu-ku
+0x007fa9|義|343||羊|13|5||righteousness|ギ|gi
+0x007591|疑|344||疋|14|6||doubt|ギ、うたが-う|gi, utaga-u
+0x005100|儀|345||人|15|S||ceremony|ギ|gi
+0x00622f|戯|346|戲|戈|15|S||frolic|ギ、たわむ-れる|gi, tawamu-reru
+0x0064ec|擬|347||手|17|S||mimic|ギ|gi
+0x0072a0|犠|348|犧|牛|17|S||sacrifice|ギ|gi
+0x008b70|議|349||言|20|4||deliberation|ギ|gi
+0x0083ca|菊|350||艸|11|S||chrysanthemum|キク|kiku
+0x005409|吉|351||口|6|S||good luck|キチ、キツ|kichi, kitsu
+0x0055ab|喫|352||口|12|S||consume|キツ|kitsu
+0x008a70|詰|353||言|13|S||packed|キツ、つ-める、つ-まる、つ-む|kitsu, tsu-meru, tsu-maru, tsu-mu
+0x005374|却|354||卩|7|S||instead|キャク|kyaku
+0x005ba2|客|355||宀|9|3||guest|キャク、カク|kyaku, kaku
+0x00811a|脚|356||肉|11|S||leg|キャク、（キャ）、あし|kyaku, (kya), ashi
+0x009006|逆|357||辵|9|5||inverted|ギャク、さか、さか-らう|gyaku, saka, saka-rau
+0x008650|虐|358||虍|9|S||tyrannize|ギャク、しいた-げる|gyaku, shiita-geru
+0x004e5d|九|359||乙|2|1||nine|キュウ、ク、ここの、ここの-つ|kyū, ku, kokono, kokono-tsu
+0x004e45|久|360||丿|3|5||long time|キュウ、（ク）、ひさ-しい|kyū, (ku), hisa-shii
+0x0053ca|及|361||又|3|S||reach out|キュウ、およ-ぶ、およ-び、およ-ぼす|kyū, oyo-bu, oyo-bi, oyo-bosu
+0x005f13|弓|362||弓|3|2||bow (archery, violin)|キュウ、ゆみ|kyū, yumi
+0x004e18|丘|363||一|5|S||hill|キュウ、おか|kyū, oka
+0x0065e7|旧|364|舊|臼|5|5||old times|キュウ|kyū
+0x004f11|休|365||人|6|1||rest|キュウ、やす-む、やす-まる、やす-める|kyū, yasu-mu, yasu-maru, yasu-meru
+0x005438|吸|366||口|6|6||suck|キュウ、す-う|kyū, su-u
+0x00673d|朽|367||木|6|S||decay|キュウ、く-ちる|kyū, ku-chiru
+0x0081fc|臼|368||臼|6|S|2010|mortar|キュウ、うす|kyū, usu
+0x006c42|求|369||水|7|4||request|キュウ、もと-める|kyū, moto-meru
+0x007a76|究|370||穴|7|3||research|キュウ、きわ-める|kyū, kiwa-meru
+0x006ce3|泣|371||水|8|4||cry|キュウ、な-く|kyū, na-ku
+0x006025|急|372||心|9|3||hurry|キュウ、いそ-ぐ|kyū, iso-gu
+0x007d1a|級|373||糸|9|3||rank|キュウ|kyū
+0x007cfe|糾|374||糸|9|S||twist|キュウ|kyū
+0x005bae|宮|375||宀|10|3||Shinto shrine|キュウ、グウ、（ク）、みや|kyū, gū, (ku), miya
+0x006551|救|376||攴|11|5||salvation|キュウ、すく-う|kyū, suku-u
+0x007403|球|377||玉|11|3||sphere|キュウ、たま|kyū, tama
+0x007d66|給|378||糸|12|4||salary|キュウ|kyū
+0x0055c5|嗅|379||口|13|S|2010|smell|キュウ、か-ぐ|kyū, ka-gu
+0x007aae|窮|380||穴|15|S||hard up|キュウ、きわ-める、きわ-まる|kyū, kiwa-meru, kiwa-maru
+0x00725b|牛|381||牛|4|2||cow|ギュウ、うし|gyū, ushi
+0x0053bb|去|382||厶|5|3||leave|キョ、コ、さ-る|kyo, ko, sa-ru
+0x005de8|巨|383||工|4|S||gigantic|キョ|kyo
+0x005c45|居|384||尸|8|5||reside|キョ、い-る|kyo, i-ru
+0x0062d2|拒|385||手|8|S||repel|キョ、こば-む|kyo, koba-mu
+0x0062e0|拠|386|據|手|8|S||foothold|キョ、コ|kyo, ko
+0x006319|挙|387|擧|手|10|4||raise|キョ、あ-げる、あ-がる|kyo, a-geru, a-garu
+0x00865a|虚|388|虛|虍|11|S||void|キョ、（コ）|kyo, (ko)
+0x008a31|許|389||言|11|5||permit|キョ、ゆる-す|kyo, yuru-su
+0x008ddd|距|390||足|12|S||long-distance|キョ|kyo
+0x009b5a|魚|391||魚|11|2||fish|ギョ、うお、さかな|gyo, uo, sakana
+0x005fa1|御|392||彳|12|S||honorable|ギョ、ゴ、おん|gyo, go, on
+0x006f01|漁|393||水|14|4||fishing|ギョ、リョウ|gyo, ryō
+0x0051f6|凶|394||凵|4|S||villain|キョウ|kyō
+0x005171|共|395||八|6|4||together|キョウ、とも|kyō, tomo
+0x0053eb|叫|396||口|6|S||shout|キョウ、さけ-ぶ|kyō, sake-bu
+0x0072c2|狂|397||犬|7|S||lunatic|キョウ、くる-う、くる-おしい|kyō, kuru-u, kuru-oshii
+0x004eac|京|398||亠|8|2||capital|キョウ、ケイ|kyō, kei
+0x004eab|享|399||亠|8|S||receive|キョウ|kyō
+0x004f9b|供|400||人|8|6||offer|キョウ、（ク）、そな-える、とも|kyō, (ku), sona-eru, tomo
+0x005354|協|401||十|8|4||cooperation|キョウ|kyō
+0x006cc1|況|402||水|8|S||condition|キョウ|kyō
+0x005ce1|峡|403|峽|山|9|S||gorge|キョウ|kyō
+0x00631f|挟|404|挾|手|9|S|1981|pinch|キョウ、はさ-む、はさ-まる|kyō, hasa-mu, hasa-maru
+0x0072ed|狭|405|狹|犬|9|S||cramped|キョウ、せま-い、せば-める、せば-まる|kyō, sema-i, seba-meru, seba-maru
+0x006050|恐|406||心|10|S||fear|キョウ、おそ-れる、おそ-ろしい|kyō, oso-reru, oso-roshii
+0x00606d|恭|407||心|10|S||respect|キョウ、うやうや-しい|kyō, uyauya-shii
+0x0080f8|胸|408||肉|10|6||bosom|キョウ、むね、（むな）|kyō, mune, (muna)
+0x008105|脅|409||肉|10|S||threaten|キョウ、おびや-かす、おど-す、おど-かす|kyō, obiya-kasu, odo-su, odo-kasu
+0x005f37|強|410||弓|11|2||strong|キョウ、ゴウ、つよ-い、つよ-まる、つよ-める、し-いる|kyō, gō, tsuyo-i, tsuyo-maru, tsuyo-meru, shi-iru
+0x006559|教|411||攴|11|2||teach|キョウ、おし-える、おそ-わる|kyō, oshi-eru, oso-waru
+0x0090f7|郷|412|鄕|邑|11|6||home town|キョウ、ゴウ|kyō, gō
+0x005883|境|413||土|14|5||boundary|キョウ、（ケイ）、さかい|kyō, (kei), sakai
+0x006a4b|橋|414||木|16|3||bridge|キョウ、はし|kyō, hashi
+0x0077ef|矯|415||矢|17|S|1981|rectify|キョウ、た-める|kyō, ta-meru
+0x0093e1|鏡|416||金|19|4||mirror|キョウ、かがみ|kyō, kagami
+0x007af6|競|417||立|20|4||compete|キョウ、ケイ、きそ-う、せ-る|kyō, kei, kiso-u, se-ru
+0x0097ff|響|418|響 [4]|音|20|S||echo|キョウ、ひび-く|kyō, hibi-ku
+0x009a5a|驚|419||馬|22|S||wonder|キョウ、おどろ-く、おどろ-かす|kyō, odoro-ku, odoro-kasu
+0x004ef0|仰|420||人|6|S||face-up|ギョウ、（コウ）、あお-ぐ、おお-せ|gyō, (kō), ao-gu, oo-se
+0x006681|暁|421|曉|日|12|S||daybreak|ギョウ、あかつき|gyō, akatsuki
+0x00696d|業|422||木|13|3||business|ギョウ、ゴウ、わざ|gyō, gō, waza
+0x0051dd|凝|423||冫|16|S||congeal|ギョウ、こ-る、こ-らす|gyō, ko-ru, ko-rasu
+0x0066f2|曲|424||曰|6|3||musical composition|キョク、ま-がる、ま-げる|kyoku, ma-garu, ma-geru
+0x005c40|局|425||尸|7|3||office|キョク|kyoku
+0x006975|極|426||木|12|4||poles|キョク、ゴク、きわ-める、きわ-まる、きわ-み|kyoku, goku, kiwa-meru, kiwa-maru, kiwa-mi
+0x007389|玉|427||玉|5|1||ball|ギョク、たま|gyoku, tama
+0x005dfe|巾|428||巾|3|S|2010|towel|キン|kin
+0x0065a4|斤|429||斤|4|S||axe|キン|kin
+0x005747|均|430||土|7|5||level|キン|kin
+0x008fd1|近|431||辵|7|2||near|キン、ちか-い|kin, chika-i
+0x0091d1|金|432||金|8|1||gold|キン、コン、かね、（かな）|kin, kon, kane, (kana)
+0x0083cc|菌|433||艸|11|S||germ|キン|kin
+0x0052e4|勤|434|勤 [4]|力|12|6||diligence|キン、（ゴン）、つと-める、つと-まる|kin, (gon), tsuto-meru, tsuto-maru
+0x007434|琴|435||玉|12|S||harp|キン、こと|kin, koto
+0x007b4b|筋|436||竹|12|6||muscle|キン、すじ|kin, suji
+0x0050c5|僅 [7]|437||人|13|S|2010|a wee bit|キン、わず-か|kin, wazu-ka
+0x007981|禁|438||示|13|5||prohibition|キン|kin
+0x007dca|緊|439||糸|15|S||tense|キン|kin
+0x009326|錦|440||金|16|S|2010|brocade|キン、にしき|kin, nishiki
+0x008b39|謹|441|謹 [4]|言|17|S||discreet|キン、つつし-む|kin, tsutsushi-mu
+0x00895f|襟|442||衣|18|S|1981|collar|キン、えり|kin, eri
+0x00541f|吟|443||口|7|S||versify|ギン|gin
+0x009280|銀|444||金|14|3||silver|ギン|gin
+0x00533a|区|445|區|匸|4|3||ward|ク|ku
+0x0053e5|句|446||口|5|5||phrase|ク|ku
+0x0082e6|苦|447||艸|8|3||suffer|ク、くる-しい、くる-しむ、くる-しめる、にが-い、にが-る|ku, kuru-shii, kuru-shimu, kuru-shimeru, niga-i, niga-ru
+0x0099c6|駆|448|驅|馬|14|S||drive|ク、か-ける、か-る|ku, ka-keru, ka-ru
+0x005177|具|449||八|8|3||tool|グ|gu
+0x0060e7|惧|450||心|11|S|2010|dread|グ|gu
+0x00611a|愚|451||心|13|S||foolish|グ、おろ-か|gu, oro-ka
+0x007a7a|空|452||穴|8|1||sky|クウ、そら、あ-く、あ-ける、から|kū, sora, a-ku, a-keru, kara
+0x005076|偶|453||人|11|S||accidentally|グウ|gū
+0x009047|遇|454||辵|12|S||interview|グウ|gū
+0x009685|隅|455||阜|12|S|1981|corner|グウ、すみ|gū, sumi
+0x004e32|串|456||丨|7|S|2010|skewer|くし|kushi
+0x005c48|屈|457||尸|8|S||yield|クツ|kutsu
+0x006398|掘|458||手|11|S||dig|クツ、ほ-る|kutsu, ho-ru
+0x007a9f|窟|459||穴|13|S|2010|cavern|クツ|kutsu
+0x00718a|熊|460||火|14|4|2010|bear|くま|kuma
+0x007e70|繰|461||糸|19|S||winding|く-る|ku-ru
+0x00541b|君|462||口|7|3||you|クン、きみ|kun, kimi
+0x008a13|訓|463||言|10|4||instruction|クン|kun
+0x0052f2|勲|464|勳|力|15|S||meritorious deed|クン|kun
+0x0085ab|薫|465|薰|艸|16|S||fragrant|クン、かお-る|kun, kao-ru
+0x008ecd|軍|466||車|9|4||army|グン|gun
+0x0090e1|郡|467||邑|10|4||county|グン|gun
+0x007fa4|群|468||羊|13|4||flock|グン、む-れる、む-れ、（むら）|gun, mu-reru, mu-re, (mura)
+0x005144|兄|469||儿|5|2||older brother|ケイ、（キョウ）、あに|kei, (kyō), ani
+0x005211|刑|470||刀|6|S||punish|ケイ|kei
+0x005f62|形|471||彡|7|2||shape|ケイ、ギョウ、かた、かたち|kei, gyō, kata, katachi
+0x007cfb|系|472||糸|7|6||lineage|ケイ|kei
+0x005f84|径|473|徑|彳|8|4||diameter|ケイ|kei
+0x00830e|茎|474|莖|艸|8|S||stalk|ケイ、くき|kei, kuki
+0x004fc2|係|475||人|9|3||person in charge|ケイ、かか-る、かかり|kei, kaka-ru, kakari
+0x00578b|型|476||土|9|5||model|ケイ、かた|kei, kata
+0x005951|契|477||大|9|S||pledge|ケイ、ちぎ-る|kei, chigi-ru
+0x008a08|計|478||言|9|2||measure|ケイ、はか-る、はか-らう|kei, haka-ru, haka-rau
+0x006075|恵|479|惠|心|10|S||favor|ケイ、エ、めぐ-む|kei, e, megu-mu
+0x005553|啓|480||口|11|S||disclose|ケイ|kei
+0x0063b2|掲|481|揭|手|11|S||put up (a notice)|ケイ、かか-げる|kei, kaka-geru
+0x006e13|渓|482|溪|水|11|S|1981|mountain stream|ケイ|kei
+0x007d4c|経|483|經|糸|11|5||manage|ケイ、キョウ、へ-る|kei, kyō, he-ru
+0x0086cd|蛍|484|螢|虫|11|S|1981|lightning-bug|ケイ、ほたる|kei, hotaru
+0x00656c|敬|485||攴|12|6||respect|ケイ、うやま-う|kei, uyama-u
+0x00666f|景|486||日|12|4||scenery|ケイ|kei
+0x008efd|軽|487|輕|車|12|3||light|ケイ、かる-い、かろ-やか|kei, karu-i, karo-yaka
+0x0050be|傾|488||人|13|S||lean|ケイ、かたむ-く、かたむ-ける|kei, katamu-ku, katamu-keru
+0x00643a|携|489||手|13|S||portable|ケイ、たずさ-える、たずさ-わる|kei, tazusa-eru, tazusa-waru
+0x007d99|継|490|繼|糸|13|S||inherit|ケイ、つ-ぐ|kei, tsu-gu
+0x008a63|詣|491||言|13|S|2010|visit a temple|ケイ、もう-でる|kei, mō-deru
+0x006176|慶|492||心|15|S||jubilation|ケイ|kei
+0x0061ac|憬|493||心|15|S|2010|long for|ケイ|kei
+0x007a3d|稽|494||禾|15|S|2010|consider|ケイ|kei
+0x0061a9|憩|495||心|16|S||recess|ケイ、いこ-い、いこ-う|kei, iko-i, iko-u
+0x008b66|警|496||言|19|6||guard against|ケイ|kei
+0x009d8f|鶏|497|鷄|鳥|19|S||chicken|ケイ、にわとり|kei, niwatori
+0x0082b8|芸|498|藝|艸|7|4||art|ゲイ|gei
+0x008fce|迎|499||辵|7|S||welcome|ゲイ、むか-える|gei, muka-eru
+0x009be8|鯨|500||魚|19|S||whale|ゲイ、くじら|gei, kujira
+0x009699|隙|501||阜|13|S|2010|fissure|ゲキ、すき|geki, suki
+0x005287|劇|502||刀|15|6||drama|ゲキ|geki
+0x006483|撃|503|擊|手|15|S||beat|ゲキ、う-つ|geki, u-tsu
+0x006fc0|激|504||水|16|6||violent|ゲキ、はげ-しい|geki, hage-shii
+0x006841|桁|505||木|10|S|2010|beam|けた|keta
+0x006b20|欠|506|缺|缶|4|4||lack|ケツ、か-ける、か-く|ketsu, ka-keru, ka-ku
+0x007a74|穴|507||穴|5|6||hole|ケツ、あな|ketsu, ana
+0x008840|血|508||血|6|3||blood|ケツ、ち|ketsu, chi
+0x006c7a|決|509||水|7|3||decide|ケツ、き-める、き-まる|ketsu, ki-meru, ki-maru
+0x007d50|結|510||糸|12|4||tie|ケツ、むす-ぶ、ゆ-う、ゆ-わえる|ketsu, musu-bu, yu-u, yu-waeru
+0x005091|傑|511||人|13|S||greatness|ケツ|ketsu
+0x006f54|潔|512||水|15|5||undefiled|ケツ、いさぎよ-い|ketsu, isagiyo-i
+0x006708|月|513||月|4|1||month, moon|ゲツ、ガツ、つき|getsu, gatsu, tsuki
+0x0072ac|犬|514||犬|4|1||dog|ケン、いぬ|ken, inu
+0x004ef6|件|515||人|6|5||affair|ケン|ken
+0x00898b|見|516||見|7|1||see|ケン、み-る、み-える、み-せる|ken, mi-ru, mi-eru, mi-seru
+0x005238|券|517||刀|8|6||ticket|ケン|ken
+0x0080a9|肩|518||肉|8|S||shoulder|ケン、かた|ken, kata
+0x005efa|建|519||廴|9|4||build|ケン、（コン）、た-てる、た-つ|ken, (kon), ta-teru, ta-tsu
+0x007814|研|520|硏|石|9|3||sharpen|ケン、と-ぐ|ken, to-gu
+0x00770c|県|521|縣|糸|9|3||prefecture|ケン|ken
+0x005039|倹|522|儉|人|10|S||frugal|ケン|ken
+0x00517c|兼|523||八|10|S||concurrently|ケン、か-ねる|ken, ka-neru
+0x005263|剣|524|劍|刀|10|S||sabre|ケン、つるぎ|ken, tsurugi
+0x0062f3|拳|525||手|10|S|2010|fist|ケン、こぶし|ken, kobushi
+0x008ed2|軒|526||車|10|S||flats|ケン、のき|ken, noki
+0x005065|健|527||人|11|4||healthy|ケン、すこ-やか|ken, suko-yaka
+0x00967a|険|528|險|阜|11|5||precipitous|ケン、けわ-しい|ken, kewa-shii
+0x00570f|圏|529|圈|囗|12|S||sphere|ケン|ken
+0x005805|堅|530||土|12|S||strict|ケン、かた-い|ken, kata-i
+0x00691c|検|531|檢|木|12|5||examine|ケン|ken
+0x005acc|嫌|532||女|13|S|1981|dislike|ケン、（ゲン）、きら-う、いや|ken, (gen), kira-u, iya
+0x00732e|献|533|獻|犬|13|S||offering|ケン、（コン）|ken, (kon)
+0x007d79|絹|534||糸|13|6||silk|ケン、きぬ|ken, kinu
+0x009063|遣|535||辵|13|S||dispatch|ケン、つか-う、つか-わす|ken, tsuka-u, tsuka-wasu
+0x006a29|権|536|權|木|15|6||rights|ケン、（ゴン）|ken, (gon)
+0x0061b2|憲|537||心|16|6||constitution|ケン|ken
+0x008ce2|賢|538||貝|16|S||intelligent|ケン、かしこ-い|ken, kashiko-i
+0x008b19|謙|539||言|17|S||self-effacing|ケン|ken
+0x009375|鍵|540||金|17|S|2010|key|ケン、かぎ|ken, kagi
+0x007e6d|繭|541||糸|18|S||cocoon|ケン、まゆ|ken, mayu
+0x009855|顕|542|顯|頁|18|S||appear|ケン|ken
+0x009a13|験|543|驗|馬|18|4||test|ケン、（ゲン）|ken, (gen)
+0x0061f8|懸|544||心|20|S||suspend|ケン、（ケ）、か-ける、か-かる|ken, (ke), ka-keru, ka-karu
+0x005143|元|545||儿|4|2||origin|ゲン、ガン、もと|gen, gan, moto
+0x005e7b|幻|546||幺|4|S||phantasm|ゲン、まぼろし|gen, maboroshi
+0x007384|玄|547||玄|5|S||mysterious|ゲン|gen
+0x008a00|言|548||言|7|2||say|ゲン、ゴン、い-う、こと|gen, gon, i-u, koto
+0x005f26|弦|549||弓|8|S||bowstring|ゲン、つる|gen, tsuru
+0x009650|限|550||阜|9|5||limit|ゲン、かぎ-る|gen, kagi-ru
+0x00539f|原|551||厂|10|2||field|ゲン、はら|gen, hara
+0x0073fe|現|552||玉|11|5||appear|ゲン、あらわ-れる、あらわ-す|gen, arawa-reru, arawa-su
+0x008237|舷|553||舟|11|S|2010|gunwale|ゲン|gen
+0x006e1b|減|554||水|12|5||decrease|ゲン、へ-る、へ-らす|gen, he-ru, he-rasu
+0x006e90|源|555||水|13|6||origin|ゲン、みなもと|gen, minamoto
+0x0053b3|厳|556|嚴|口|17|6||strict|ゲン、（ゴン）、おごそ-か、きび-しい|gen, (gon), ogoso-ka, kibi-shii
+0x005df1|己|557||己|3|6||self|コ、キ、おのれ|ko, ki, onore
+0x006238|戸|558||戶|4|2||door|コ、と|ko, to
+0x0053e4|古|559||口|5|2||old|コ、ふる-い、ふる-す|ko, furu-i, furu-su
+0x00547c|呼|560||口|8|6||call|コ、よ-ぶ|ko, yo-bu
+0x0056fa|固|561||囗|8|4||hard|コ、かた-める、かた-まる、かた-い|ko, kata-meru, kata-maru, kata-i
+0x0080a1|股|562||肉|8|S|2010|crotch|コ、また|ko, mata
+0x00864e|虎|563||虍|8|S|2010|tiger|コ、とら|ko, tora
+0x005b64|孤|564||子|9|S||orphan|コ|ko
+0x005f27|弧|565||弓|9|S||arc|コ|ko
+0x006545|故|566||攴|9|5||circumstances|コ、ゆえ|ko, yue
+0x0067af|枯|567||木|9|S||wither|コ、か-れる、か-らす|ko, ka-reru, ka-rasu
+0x00500b|個|568||人|10|5||individual|コ|ko
+0x005eab|庫|569||广|10|3||warehouse|コ、（ク）|ko, (ku)
+0x006e56|湖|570||水|12|3||lake|コ、みずうみ|ko, mizūmi
+0x0096c7|雇|571||隹|12|S||employ|コ、やと-う|ko, yato-u
+0x008a87|誇|572||言|13|S||boast|コ、ほこ-る|ko, hoko-ru
+0x009f13|鼓|573||鼓|13|S||drum|コ、つづみ|ko, tsuzumi
+0x00932e|錮|574||金|16|S|2010|tie up|コ|ko
+0x009867|顧|575||頁|21|S||look back|コ、かえり-みる|ko, kaeri-miru
+0x004e94|五|576||二|4|1||five|ゴ、いつ、いつ-つ|go, itsu, itsu-tsu
+0x004e92|互|577||二|4|S||mutually|ゴ、たが-い|go, taga-i
+0x005348|午|578||十|4|2||noon|ゴ|go
+0x005449|呉|579||口|7|S||give|ゴ|go
+0x005f8c|後|580||彳|9|2||behind|ゴ、コウ、のち、うし-ろ、あと、おく-れる|go, kō, nochi, ushi-ro, ato, oku-reru
+0x005a2f|娯|581||女|10|S||recreation|ゴ|go
+0x00609f|悟|582||心|10|S||enlightenment|ゴ、さと-る|go, sato-ru
+0x007881|碁|583||石|13|S||Go|ゴ|go
+0x008a9e|語|584||言|14|2||language|ゴ、かた-る、かた-らう|go, kata-ru, kata-rau
+0x008aa4|誤|585||言|14|6||mistake|ゴ、あやま-る|go, ayama-ru
+0x008b77|護|586||言|20|5||safeguard|ゴ|go
+0x0053e3|口|587||口|3|1||mouth|コウ、ク、くち|kō, ku, kuchi
+0x005de5|工|588||工|3|2||craft|コウ、ク|kō, ku
+0x00516c|公|589||八|4|2||public|コウ、おおやけ|kō, ooyake
+0x0052fe|勾|590||勹|4|S|2010|capture|コウ|kō
+0x005b54|孔|591||子|4|S||cavity|コウ|kō
+0x00529f|功|592||力|5|4||achievement|コウ、（ク）|kō, (ku)
+0x005de7|巧|593||工|5|S||adroit|コウ、たく-み|kō, taku-mi
+0x005e83|広|594|廣|广|5|2||wide|コウ、ひろ-い、ひろ-まる、ひろ-める、ひろ-がる、ひろ-げる|kō, hiro-i, hiro-maru, hiro-meru, hiro-garu, hiro-geru
+0x007532|甲|595||田|5|S||armor|コウ、カン|kō, kan
+0x004ea4|交|596||亠|6|2||mix|コウ、まじ-わる、まじ-える、ま-じる、ま-ざる、ま-ぜる、か-う、か-わす|kō, maji-waru, maji-eru, ma-jiru, ma-zaru, ma-zeru, ka-u, ka-wasu
+0x005149|光|597||儿|6|2||ray|コウ、ひか-る、ひかり|kō, hika-ru, hikari
+0x005411|向|598||口|6|3||over there|コウ、む-く、む-ける、む-かう、む-こう|kō, mu-ku, mu-keru, mu-kau, mu-kō
+0x00540e|后|599||口|6|6||empress|コウ|kō
+0x00597d|好|600||女|6|4||like|コウ、この-む、す-く|kō, kono-mu, su-ku
+0x006c5f|江|601||水|6|S||inlet|コウ、え|kō, e
+0x008003|考|602||老|6|2||think|コウ、かんが-える|kō, kanga-eru
+0x00884c|行|603||行|6|2||go|コウ、ギョウ、（アン）、い-く、ゆ-く、おこな-う|kō, gyō, (an), i-ku, yu-ku, okona-u
+0x005751|坑|604||土|7|S||pit|コウ|kō
+0x005b5d|孝|605||子|7|6||filial piety|コウ|kō
+0x006297|抗|606||手|7|S||confront|コウ|kō
+0x00653b|攻|607||攴|7|S||aggression|コウ、せ-める|kō, se-meru
+0x0066f4|更|608||曰|7|S||grow late|コウ、さら、ふ-ける、ふ-かす|kō, sara, fu-keru, fu-kasu
+0x0052b9|効|609|效|力|8|5||effect|コウ、き-く|kō, ki-ku
+0x005e78|幸|610||干|8|3||happiness|コウ、さいわ-い、さち、しあわ-せ|kō, saiwa-i, sachi, shiawa-se
+0x0062d8|拘|611||手|8|S||arrest|コウ|kō
+0x0080af|肯|612||肉|8|S||agreement|コウ|kō
+0x004faf|侯|613||人|9|S||marquis|コウ|kō
+0x00539a|厚|614||厂|9|5||thick|コウ、あつ-い|kō, atsu-i
+0x006052|恒|615|恆|心|9|S||constancy|コウ|kō
+0x006d2a|洪|616||水|9|S|1981|deluge|コウ|kō
+0x007687|皇|617||白|9|6||emperor|コウ、オウ|kō, ō
+0x007d05|紅|618||糸|9|6||deep red|コウ、（ク）、べに、くれない|kō, (ku), beni, kurenai
+0x008352|荒|619||艸|9|S||laid waste|コウ、あら-い、あ-れる、あ-らす|kō, ara-i, a-reru, a-rasu
+0x0090ca|郊|620||邑|9|S||outskirts|コウ|kō
+0x009999|香|621||香|9|4||incense|コウ、（キョウ）、か、かお-り、かお-る|kō, (kyō), ka, kao-ri, kao-ru
+0x005019|候|622||人|10|4||climate|コウ、そうろう|kō, sōrō
+0x006821|校|623||木|10|1||school|コウ|kō
+0x008015|耕|624||耒|10|5||till|コウ、たがや-す|kō, tagaya-su
+0x00822a|航|625||舟|10|5||cruise|コウ|kō
+0x008ca2|貢|626||貝|10|S||tribute|コウ、（ク）、みつ-ぐ|kō, (ku), mitsu-gu
+0x00964d|降|627||阜|10|6||descend|コウ、お-りる、お-ろす、ふ-る|kō, o-riru, o-rosu, fu-ru
+0x009ad8|高|628||高|10|2||tall, expensive|コウ、たか-い、たか、たか-まる、たか-める|kō, taka-i, taka, taka-maru, taka-meru
+0x005eb7|康|629||广|11|4||health|コウ|kō
+0x0063a7|控|630||手|11|S||withdraw|コウ、ひか-える|kō, hika-eru
+0x006897|梗|631||木|11|S|2010|close up|コウ|kō
+0x009ec4|黄|632|黃|黃|11|2||yellow|コウ、オウ、き、（こ）|kō, ō, ki, (ko)
+0x005589|喉|633||口|12|S|2010|throat|コウ、のど|kō, nodo
+0x00614c|慌|634||心|12|S||disconcerted|コウ、あわ-てる、あわ-ただしい|kō, awa-teru, awa-tadashii
+0x006e2f|港|635||水|12|3||harbor|コウ、みなと|kō, minato
+0x00786c|硬|636||石|12|S||stiff|コウ、かた-い|kō, kata-i
+0x007d5e|絞|637||糸|12|S||strangle|コウ、しぼ-る、し-める、し-まる|kō, shibo-ru, shi-meru, shi-maru
+0x009805|項|638||頁|12|S||paragraph|コウ|kō
+0x006e9d|溝|639||水|13|S|1981|gutter|コウ、みぞ|kō, mizo
+0x009271|鉱|640|鑛|金|13|5||mineral|コウ|kō
+0x0069cb|構|641||木|14|5||construct|コウ、かま-える、かま-う|kō, kama-eru, kama-u
+0x007db1|綱|642||糸|14|S||hawser|コウ、つな|kō, tsuna
+0x009175|酵|643||酉|14|S||fermentation|コウ|kō
+0x007a3f|稿|644||禾|15|S||draft|コウ|kō
+0x008208|興|645||臼|16|5||entertain|コウ、キョウ、おこ-る、おこ-す|kō, kyō, oko-ru, oko-su
+0x008861|衡|646||行|16|S||equilibrium|コウ|kō
+0x0092fc|鋼|647||金|16|6||steel|コウ、はがね|kō, hagane
+0x008b1b|講|648||言|17|5||lecture|コウ|kō
+0x008cfc|購|649||貝|17|S||subscription|コウ|kō
+0x004e5e|乞|650||乙|3|S|2010|beg|こ-う|ko-u
+0x0053f7|号|651|號|虍|5|3||number|ゴウ|gō
+0x005408|合|652||口|6|2||fit|ゴウ、ガッ、（カッ）、あ-う、あ-わす、あ-わせる|gō, ga', (ka'), a-u, a-wasu, a-waseru
+0x0062f7|拷|653||手|9|S||torture|ゴウ|gō
+0x00525b|剛|654||刀|10|S||sturdy|ゴウ|gō
+0x0050b2|傲|655||人|13|S|2010|be proud|ゴウ|gō
+0x008c6a|豪|656||豕|14|S||overpowering|ゴウ|gō
+0x00514b|克|657||儿|7|S||overcome|コク|koku
+0x00544a|告|658||口|7|5||tell|コク、つ-げる|koku, tsu-geru
+0x008c37|谷|659||谷|7|2||valley|コク、たに|koku, tani
+0x00523b|刻|660||刀|8|6||engrave|コク、きざ-む|koku, kiza-mu
+0x0056fd|国|661|國|囗|8|2||country|コク、くに|koku, kuni
+0x009ed2|黒|662|黑|黑|11|2||black|コク、くろ、くろ-い|koku, kuro, kuro-i
+0x007a40|穀|663|穀 [4]|禾|14|6||cereals|コク|koku
+0x009177|酷|664||酉|14|S||cruel|コク|koku
+0x007344|獄|665||犬|14|S||prison|ゴク|goku
+0x009aa8|骨|666||骨|10|6||bone|コツ、ほね|kotsu, hone
+0x0099d2|駒|667||馬|15|S|2010|horse|こま|koma
+0x008fbc|込|668||辵|5|S||crowded|こ-む、こ-める|ko-mu, ko-meru
+0x009803|頃|669||頁|11|S|2010|times|ころ|koro
+0x004eca|今|670||人|4|2||now|コン、キン、いま|kon, kin, ima
+0x0056f0|困|671||囗|7|6||become distressed|コン、こま-る|kon, koma-ru
+0x006606|昆|672||日|8|S|1981|descendants|コン|kon
+0x006068|恨|673||心|9|S||rancor|コン、うら-む、うら-めしい|kon, ura-mu, ura-meshii
+0x006839|根|674||木|10|3||root|コン、ね|kon, ne
+0x005a5a|婚|675||女|11|S||marriage|コン|kon
+0x006df7|混|676||水|11|5||mix|コン、ま-じる、ま-ざる、ま-ぜる、こ-む|kon, ma-jiru, ma-zaru, ma-zeru, ko-mu
+0x0075d5|痕|677||疒|11|S|2010|mark|コン、あと|kon, ato
+0x007d3a|紺|678||糸|11|S||dark blue|コン|kon
+0x009b42|魂|679||鬼|14|S||soul|コン、たましい|kon, tamashii
+0x0058be|墾|680||土|16|S||ground-breaking|コン|kon
+0x0061c7|懇|681||心|17|S||sociable|コン、ねんご-ろ|kon, nengo-ro
+0x005de6|左|682||工|5|1||left (direction)|サ、ひだり|sa, hidari
+0x004f50|佐|683||人|7|4||help|サ|sa
+0x006c99|沙|684||水|7|S|2010|sand|サ|sa
+0x0067fb|査|685||木|9|5||investigate|サ|sa
+0x007802|砂|686||石|9|6||sand|サ、シャ、すな|sa, sha, suna
+0x005506|唆|687||口|10|S||tempt|サ、そそのか-す|sa, sosonoka-su
+0x005dee|差|688||工|10|4||distinction|サ、さ-す|sa, sa-su
+0x008a50|詐|689||言|12|S||lie|サ|sa
+0x009396|鎖|690||金|18|S||chain|サ、くさり|sa, kusari
+0x005ea7|座|691||广|10|6||sit|ザ、すわ-る|za, suwa-ru
+0x00632b|挫|692||手|10|S|2010|sprain|ザ|za
+0x00624d|才|693||手|3|2||genius|サイ|sai
+0x00518d|再|694||冂|6|5||again|サイ、（サ）、ふたた-び|sai, (sa), futata-bi
+0x00707d|災|695||火|7|5||disaster|サイ、わざわ-い|sai, wazawa-i
+0x0059bb|妻|696||女|8|5||wife|サイ、つま|sai, tsuma
+0x0091c7|采|697||釆|8|S|2010|form|サイ|sai
+0x007815|砕|698|碎|石|9|S||smash|サイ、くだ-く、くだ-ける|sai, kuda-ku, kuda-keru
+0x005bb0|宰|699||宀|10|S||superintend|サイ|sai
+0x00683d|栽|700||木|10|S||plantation|サイ|sai
+0x005f69|彩|701||彡|11|S||coloring|サイ、いろど-る|sai, irodo-ru
+0x0063a1|採|702||手|11|5||pick|サイ、と-る|sai, to-ru
+0x006e08|済|703|濟|水|11|6||settle|サイ、す-む、す-ます|sai, su-mu, su-masu
+0x00796d|祭|704||示|11|3||festival|サイ、まつ-る、まつ-り|sai, matsu-ru, matsu-ri
+0x00658e|斎|705|齋|齊|11|S||purification|サイ|sai
+0x007d30|細|706||糸|11|2||thin|サイ、ほそ-い、ほそ-る、こま-か、こま-かい|sai, hoso-i, hoso-ru, koma-ka, koma-kai
+0x0083dc|菜|707||艸|11|4||vegetable|サイ、な|sai, na
+0x006700|最|708||曰|12|4||most|サイ、もっと-も|sai, motto-mo
+0x0088c1|裁|709||衣|12|6||judge|サイ、た-つ、さば-く|sai, ta-tsu, saba-ku
+0x0050b5|債|710||人|13|S||bond|サイ|sai
+0x0050ac|催|711||人|13|S||sponsor|サイ、もよお-す|sai, moyoo-su
+0x00585e|塞|712||土|13|S|2010|obstruct|サイ、ソク、ふさ-ぐ、ふさ-がる|sai, soku, fusa-gu, fusa-garu
+0x006b73|歳|713||止|13|S||year-end|サイ、（セイ）|sai, (sei)
+0x008f09|載|714||車|13|S||ride|サイ、の-せる、の-る|sai, no-seru, no-ru
+0x00969b|際|715||阜|14|5||occasion|サイ、きわ|sai, kiwa
+0x0057fc|埼|716||土|11|4|2010|cape (geography)|（さい）[6]|(sai)
+0x005728|在|717||土|6|5||exist|ザイ、あ-る|zai, a-ru
+0x006750|材|718||木|7|4||lumber|ザイ|zai
+0x005264|剤|719|劑|刀|10|S||dose|ザイ|zai
+0x008ca1|財|720||貝|10|5||wealth|ザイ、（サイ）|zai, (sai)
+0x007f6a|罪|721||网|13|5||guilt|ザイ、つみ|zai, tsumi
+0x005d0e|崎|722||山|11|4|1981|promontory|さき|saki
+0x004f5c|作|723||人|7|2||make|サク、サ、つく-る|saku, sa, tsuku-ru
+0x00524a|削|724||刀|9|S||plane|サク、けず-る|saku, kezu-ru
+0x006628|昨|725||日|9|4||previous|サク|saku
+0x0067f5|柵|726||木|9|S|2010|fence|サク|saku
+0x007d22|索|727||糸|10|S||cord|サク|saku
+0x007b56|策|728||竹|12|6||scheme|サク|saku
+0x009162|酢|729||酉|12|S||vinegar|サク、す|saku, su
+0x00643e|搾|730||手|13|S||squeeze|サク、しぼ-る|saku, shibo-ru
+0x00932f|錯|731||金|16|S||confused|サク|saku
+0x0054b2|咲|732||口|9|S||blossom|さ-く|sa-ku
+0x00518a|冊|733||冂|5|6||counter for books|サツ、サク|satsu, saku
+0x00672d|札|734||木|5|4||tag|サツ、ふだ|satsu, fuda
+0x005237|刷|735||刀|8|4||printing|サツ、す-る|satsu, su-ru
+0x005239|刹|736||刀|8|S|2010|temple|サツ、セツ|satsu, setsu
+0x0062f6|拶|737||手|9|S|2010|be imminent|サツ|satsu
+0x006bba|殺|738|殺 [4]|殳|10|5||kill|サツ、（サイ）、（セツ）、ころ-す|satsu, (sai), (setsu), koro-su
+0x005bdf|察|739||宀|14|4||guess|サツ|satsu
+0x0064ae|撮|740||手|15|S||snapshot|サツ、と-る|satsu, to-ru
+0x0064e6|擦|741||手|17|S||grate|サツ、す-る、す-れる|satsu, su-ru, su-reru
+0x0096d1|雑|742|雜|隹|14|5||miscellaneous|ザツ、ゾウ|zatsu, zō
+0x0076bf|皿|743||皿|5|3|1981|dish|さら|sara
+0x004e09|三|744||一|3|1||three|サン、み、み-つ、みっ-つ|san, mi, mi-tsu, mi'-tsu
+0x005c71|山|745||山|3|1||mountain|サン、やま|san, yama
+0x0053c2|参|746|參|厶|8|4||participate|サン、まい-る|san, mai-ru
+0x00685f|桟|747|棧|木|10|S|1981|scaffold|サン|san
+0x008695|蚕|748|蠶|虫|10|6||silkworm|サン、かいこ|san, kaiko
+0x0060e8|惨|749|慘|心|11|S||wretched|サン、ザン、みじ-め|san, zan, miji-me
+0x007523|産|750||生|11|4||give birth|サン、う-む、う-まれる、うぶ|san, u-mu, u-mareru, ubu
+0x005098|傘|751||人|12|S|1981|umbrella|サン、かさ|san, kasa
+0x006563|散|752||攴|12|4||scatter|サン、ち-る、ち-らす、ち-らかす、ち-らかる|san, chi-ru, chi-rasu, chi-rakasu, chi-rakaru
+0x007b97|算|753||竹|14|2||calculate|サン|san
+0x009178|酸|754||酉|14|5||acid|サン、す-い|san, su-i
+0x008cdb|賛|755|贊|貝|15|5||approve|サン|san
+0x006b8b|残|756|殘|歹|10|4||remainder|ザン、のこ-る、のこ-す|zan, noko-ru, noko-su
+0x0065ac|斬|757||斤|11|S|2010|kill by slicing|ザン、き-る|zan, ki-ru
+0x0066ab|暫|758||日|15|S||temporarily|ザン|zan
+0x0058eb|士|759||士|3|5||gentleman|シ|shi
+0x005b50|子|760||子|3|1||child|シ、ス、こ|shi, su, ko
+0x00652f|支|761||支|4|5||branch|シ、ささ-える|shi, sasa-eru
+0x006b62|止|762||止|4|2||stop|シ、と-まる、と-める|shi, to-maru, to-meru
+0x006c0f|氏|763||氏|4|4||family name|シ、うじ|shi, uji
+0x004ed5|仕|764||人|5|3||do|シ、（ジ）、つか-える|shi, (ji), tsuka-eru
+0x0053f2|史|765||口|5|5||history|シ|shi
+0x0053f8|司|766||口|5|4||director|シ|shi
+0x0056db|四|767||囗|5|1||four|シ、よ、よ-つ、よっ-つ、よん|shi, yo, yo-tsu, yo'-tsu, yon
+0x005e02|市|768||巾|5|2||market|シ、いち|shi, ichi
+0x0077e2|矢|769||矢|5|2||arrow|シ、や|shi, ya
+0x0065e8|旨|770||日|6|S||delicious|シ、むね|shi, mune
+0x006b7b|死|771||歹|6|3||death|シ、し-ぬ|shi, shi-nu
+0x007cf8|糸|772|絲|糸|6|1||thread|シ、いと|shi, ito
+0x0081f3|至|773||至|6|6||climax|シ、いた-る|shi, ita-ru
+0x004f3a|伺|774||人|7|S||pay respects|シ、うかが-う|shi, ukaga-u
+0x005fd7|志|775||心|7|5||intention|シ、こころざ-す、こころざし|shi, kokoroza-su, kokorozashi
+0x0079c1|私|776||禾|7|6||me|シ、わたくし、わたし|shi, watakushi, watashi
+0x004f7f|使|777||人|8|3||use|シ、つか-う|shi, tsuka-u
+0x00523a|刺|778||刀|8|S||thorn|シ、さ-す、さ-さる|shi, sa-su, sa-saru
+0x0059cb|始|779||女|8|3||begin|シ、はじ-める、はじ-まる|shi, haji-meru, haji-maru
+0x0059c9|姉|780||女|8|2||older sister|シ、あね|shi, ane
+0x00679d|枝|781||木|8|5||branch|シ、えだ|shi, eda
+0x007949|祉|782|祉 [4]|示|8|S||welfare|シ|shi
+0x0080a2|肢|783||肉|8|S|1981|limb|シ|shi
+0x0059ff|姿|784||女|9|6||figure|シ、すがた|shi, sugata
+0x00601d|思|785||心|9|2||think|シ、おも-う|shi, omo-u
+0x006307|指|786||手|9|3||finger|シ、ゆび、さ-す|shi, yubi, sa-su
+0x0065bd|施|787||方|9|S||carry out|シ、セ、ほどこ-す|shi, se, hodoko-su
+0x005e2b|師|788||巾|10|5||expert|シ|shi
+0x006063|恣|789||心|10|S|2010|selfish|シ|shi
+0x007d19|紙|790||糸|10|2||paper|シ、かみ|shi, kami
+0x008102|脂|791||肉|10|S||fat|シ、あぶら|shi, abura
+0x008996|視|792|視 [4]|見|11|6||look at|シ|shi
+0x007d2b|紫|793||糸|12|S||purple|シ、むらさき|shi, murasaki
+0x008a5e|詞|794||言|12|6||poetry|シ|shi
+0x006b6f|歯|795|齒|齒|12|3||tooth|シ、は|shi, ha
+0x0055e3|嗣|796||口|13|S||heir|シ|shi
+0x008a66|試|797||言|13|4||test|シ、こころ-みる、ため-す|shi, kokoro-miru, tame-su
+0x008a69|詩|798||言|13|3||poem|シ|shi
+0x008cc7|資|799||貝|13|5||resources|シ|shi
+0x0098fc|飼|800||食|13|5||domesticate|シ、か-う|shi, ka-u
+0x008a8c|誌|801||言|14|6||document|シ|shi
+0x0096cc|雌|802||隹|14|S||feminine|シ、め、めす|shi, me, mesu
+0x00646f|摯|803||手|15|S|2010|seriousness|シ|shi
+0x008cdc|賜|804||貝|15|S||grant|シ、たまわ-る|shi, tamawa-ru
+0x008aee|諮|805||言|16|S||consult with|シ、はか-る|shi, haka-ru
+0x00793a|示|806||示|5|5||indicate|ジ、シ、しめ-す|ji, shi, shime-su
+0x005b57|字|807||子|6|1||letter|ジ、あざ|ji, aza
+0x005bfa|寺|808||寸|6|2||Buddhist temple|ジ、てら|ji, tera
+0x006b21|次|809||欠|6|3||next|ジ、シ、つ-ぐ、つぎ|ji, shi, tsu-gu, tsugi
+0x008033|耳|810||耳|6|1||ear|ジ、みみ|ji, mimi
+0x0081ea|自|811||自|6|2||oneself|ジ、シ、みずか-ら|ji, shi, mizuka-ra
+0x004f3c|似|812||人|7|5||becoming|ジ、に-る|ji, ni-ru
+0x005150|児|813|兒|儿|7|4||child|ジ、（ニ）|ji, (ni)
+0x004e8b|事|814||亅|8|3||abstract thing|ジ、（ズ）、こと|ji, (zu), koto
+0x004f8d|侍|815||人|8|S||waiter|ジ、さむらい|ji, samurai
+0x006cbb|治|816||水|8|4||govern|ジ、チ、おさ-める、おさ-まる、なお-る、なお-す|ji, chi, osa-meru, osa-maru, nao-ru, nao-su
+0x006301|持|817||手|9|3||hold|ジ、も-つ|ji, mo-tsu
+0x006642|時|818||日|10|2||time|ジ、とき|ji, toki
+0x006ecb|滋|819||水|12|4||nourishing|ジ|ji
+0x006148|慈|820||心|13|S||mercy|ジ、いつく-しむ|ji, itsuku-shimu
+0x008f9e|辞|821|辭|辛|13|4||resign|ジ、や-める|ji, ya-meru
+0x0078c1|磁|822||石|14|6||magnet|ジ|ji
+0x00990c|餌 [8]|823||食|15|S|2010|bait|ジ、えさ、え|ji, esa, e
+0x0074bd|璽|824||玉|19|S||emperor's seal|ジ|ji
+0x009e7f|鹿|825||鹿|11|4|2010|deer|しか、（か）|shika, (ka)
+0x005f0f|式|826||弋|6|3||style|シキ|shiki
+0x008b58|識|827||言|19|5||discriminating|シキ|shiki
+0x008ef8|軸|828||車|12|S||axis|ジク|jiku
+0x004e03|七|829||一|2|1||seven|シチ、なな、なな-つ、（なの）|shichi, nana, nana-tsu, (nano)
+0x020b9f|𠮟 [5]|830||口|5|S|2010|scold|シツ、しか-る|shitsu, shika-ru
+0x005931|失|831||大|5|4||lose|シツ、うしな-う|shitsu, ushina-u
+0x005ba4|室|832||宀|9|2||room|シツ、むろ|shitsu, muro
+0x0075be|疾|833||疒|10|S||rapidly|シツ|shitsu
+0x0057f7|執|834||土|11|S||tenacious|シツ、シュウ、と-る|shitsu, shū, to-ru
+0x006e7f|湿|835|濕|水|12|S||damp|シツ、しめ-る、しめ-す|shitsu, shime-ru, shime-su
+0x005ac9|嫉|836||女|13|S|2010|envy|シツ|shitsu
+0x006f06|漆|837||水|14|S||lacquer|シツ、うるし|shitsu, urushi
+0x008cea|質|838||貝|15|5||quality|シツ、シチ、（チ）|shitsu, shichi, (chi)
+0x005b9f|実|839|實|宀|8|3||truth|ジツ、み、みの-る|jitsu, mi, mino-ru
+0x00829d|芝|840||艸|6|S||turf|しば|shiba
+0x005199|写|841|寫|宀|5|3||copy|シャ、うつ-す、うつ-る|sha, utsu-su, utsu-ru
+0x00793e|社|842|社 [4]|示|7|2||company|シャ、やしろ|sha, yashiro
+0x008eca|車|843||車|7|1||car|シャ、くるま|sha, kuruma
+0x00820e|舎|844|舍|舌|8|5||cottage|シャ|sha
+0x008005|者|845|者 [4]|老|8|3||someone|シャ、もの|sha, mono
+0x005c04|射|846||寸|10|6||shoot|シャ、い-る|sha, i-ru
+0x006368|捨|847||手|11|6||throw away|シャ、す-てる|sha, su-teru
+0x008d66|赦|848||赤|11|S||pardon|シャ|sha
+0x00659c|斜|849||斗|11|S||diagonal|シャ、なな-め|sha, nana-me
+0x00716e|煮|850|煮 [4]|火|12|S||boil|シャ、に-る、に-える、に-やす|sha, ni-ru, ni-eru, ni-yasu
+0x00906e|遮|851||辵|14|S|1981|intercept|シャ、さえぎ-る|sha, saegi-ru
+0x008b1d|謝|852||言|17|5||apologize|シャ、あやま-る|sha, ayama-ru
+0x0090aa|邪|853||邑|8|S||wicked|ジャ|ja
+0x0086c7|蛇|854||虫|11|S|1981|snake|ジャ、ダ、へび|ja, da, hebi
+0x005c3a|尺|855||尸|4|6||shaku|シャク|shaku
+0x00501f|借|856||人|10|4||borrow|シャク、か-りる|shaku, ka-riru
+0x00914c|酌|857||酉|10|S|1981|bartending|シャク、く-む|shaku, ku-mu
+0x0091c8|釈|858|釋|釆|11|S||explanation|シャク|shaku
+0x007235|爵|859||爪|17|S||baron|シャク|shaku
+0x0082e5|若|860||艸|8|6||young|ジャク、（ニャク）、わか-い、も-しくは|jaku, (nyaku), waka-i, mo-shikuha
+0x005f31|弱|861||弓|10|2||weak|ジャク、よわ-い、よわ-る、よわ-まる、よわ-める|jaku, yowa-i, yowa-ru, yowa-maru, yowa-meru
+0x005bc2|寂|862||宀|11|S||loneliness|ジャク、（セキ）、さび、さび-しい、さび-れる|jaku, (seki), sabi, sabi-shii, sabi-reru
+0x00624b|手|863||手|4|1||hand|シュ、て、（た）|shu, te, (ta)
+0x004e3b|主|864||丶|5|3||master|シュ、（ス）、ぬし、おも|shu, (su), nushi, omo
+0x005b88|守|865||宀|6|3||protect|シュ、（ス）、まも-る、も-り|shu, (su), mamo-ru, mo-ri
+0x006731|朱|866||木|6|S||vermilion|シュ|shu
+0x0053d6|取|867||又|8|3||take|シュ、と-る|shu, to-ru
+0x0072e9|狩|868||犬|9|S||hunt|シュ、か-る、か-り|shu, ka-ru, ka-ri
+0x009996|首|869||首|9|2||neck|シュ、くび|shu, kubi
+0x006b8a|殊|870||歹|10|S||particularly|シュ、こと|shu, koto
+0x0073e0|珠|871||玉|10|S||pearl|シュ|shu
+0x009152|酒|872||酉|10|3||alcoholic drink|シュ、さけ、（さか）|shu, sake, (saka)
+0x00816b|腫|873||肉|13|S|2010|tumor|シュ、は-れる、は-らす|shu, ha-reru, ha-rasu
+0x007a2e|種|874||禾|14|4||kind|シュ、たね|shu, tane
+0x008da3|趣|875||走|15|S||gist|シュ、おもむき|shu, omomuki
+0x005bff|寿|876|壽|士|7|S||longevity|ジュ、ことぶき|ju, kotobuki
+0x0053d7|受|877||又|8|3||accept|ジュ、う-ける、う-かる|ju, u-keru, u-karu
+0x00546a|呪|878||口|8|S|2010|curse|ジュ、のろ-う|ju, noro-u
+0x006388|授|879||手|11|5||instruct|ジュ、さず-ける、さず-かる|ju, sazu-keru, sazu-karu
+0x009700|需|880||雨|14|S||demand|ジュ|ju
+0x005112|儒|881||人|16|S||Confucian|ジュ|ju
+0x006a39|樹|882||木|16|6||trees|ジュ|ju
+0x0053ce|収|883|收|攴|4|6||take in|シュウ、おさ-める、おさ-まる|shū, osa-meru, osa-maru
+0x0056da|囚|884||囗|5|S||captured|シュウ|shū
+0x005dde|州|885||巛|6|3||state|シュウ、す|shū, su
+0x00821f|舟|886||舟|6|S||boat|シュウ、ふね、（ふな）|shū, fune, (funa)
+0x0079c0|秀|887||禾|7|S||excel|シュウ、ひい-でる|shū, hii-deru
+0x005468|周|888||口|8|4||circumference|シュウ、まわ-り|shū, mawa-ri
+0x005b97|宗|889||宀|8|6||religion|シュウ、ソウ|shū, sō
+0x0062fe|拾|890||手|9|3||pick up|シュウ、ジュウ、ひろ-う|shū, jū, hiro-u
+0x0079cb|秋|891||禾|9|2||autumn|シュウ、あき|shū, aki
+0x0081ed|臭|892|臭 [4]|自|9|S||stinking|シュウ、くさ-い、にお-う|shū, kusa-i, nio-u
+0x004fee|修|893||人|10|5||discipline|シュウ、（シュ）、おさ-める、おさ-まる|shū, (shu), osa-meru, osa-maru
+0x008896|袖|894||衣|10|S|2010|sleeve|シュウ、そで|shū, sode
+0x007d42|終|895||糸|11|3||end|シュウ、お-わる、お-える|shū, o-waru, o-eru
+0x007f9e|羞|896||羊|11|S|2010|feel ashamed|シュウ|shū
+0x007fd2|習|897||羽|11|3||learn|シュウ、なら-う|shū, nara-u
+0x009031|週|898||辵|11|2||week|シュウ|shū
+0x005c31|就|899||尢|12|6||concerning|シュウ、（ジュ）、つ-く、つ-ける|shū, (ju), tsu-ku, tsu-keru
+0x008846|衆|900||血|12|6||masses|シュウ、（シュ）|shū, (shu)
+0x0096c6|集|901||隹|12|3||collect|シュウ、あつ-まる、あつ-める、つど-う|shū, atsu-maru, atsu-meru, tsudo-u
+0x006101|愁|902||心|13|S||distress|シュウ、うれ-える、うれ-い|shū, ure-eru, ure-i
+0x00916c|酬|903||酉|13|S||repay|シュウ|shū
+0x00919c|醜|904||酉|17|S||ugly|シュウ、みにく-い|shū, miniku-i
+0x008e74|蹴|905||足|19|S|2010|kick|シュウ、け-る|shū, ke-ru
+0x008972|襲|906||衣|22|S||attack|シュウ、おそ-う|shū, oso-u
+0x005341|十|907||十|2|1||ten|ジュウ、ジッ、とお、と|jū, ji', too, to
+0x006c41|汁|908||水|5|S|1981|soup|ジュウ、しる|jū, shiru
+0x005145|充|909||儿|6|S||allot|ジュウ、あ-てる|jū, a-teru
+0x004f4f|住|910||人|7|3||dwelling|ジュウ、す-む、す-まう|jū, su-mu, su-mau
+0x0067d4|柔|911||木|9|S||tender|ジュウ、ニュウ、やわ-らか、やわ-らかい|jū, nyū, yawa-raka, yawa-rakai
+0x0091cd|重|912||里|9|3||heavy|ジュウ、チョウ、え、おも-い、かさ-ねる、かさ-なる|jū, chō, e, omo-i, kasa-neru, kasa-naru
+0x005f93|従|913|從|彳|10|6||obey|ジュウ、（ショウ）、（ジュ）、したが-う、したが-える|jū, (shō), (ju), shitaga-u, shitaga-eru
+0x006e0b|渋|914|澁|水|11|S||astringent|ジュウ、しぶ、しぶ-い、しぶ-る|jū, shibu, shibu-i, shibu-ru
+0x009283|銃|915||金|14|S||gun|ジュウ|jū
+0x007363|獣|916|獸|犬|16|S||animal|ジュウ、けもの|jū, kemono
+0x007e26|縦|917|縱|糸|16|6||vertical|ジュウ、たて|jū, tate
+0x0053d4|叔|918||又|8|S||uncle|シュク|shuku
+0x00795d|祝|919|祝 [4]|示|9|4||celebrate|シュク、（シュウ）、いわ-う|shuku, (shū), iwa-u
+0x005bbf|宿|920||宀|11|3||inn|シュク、やど、やど-る、やど-す|shuku, yado, yado-ru, yado-su
+0x006dd1|淑|921||水|11|S||graceful|シュク|shuku
+0x007c9b|粛|922|肅|聿|11|S||solemn|シュク|shuku
+0x007e2e|縮|923||糸|17|6||shrink|シュク、ちぢ-む、ちぢ-まる、ちぢ-める、ちぢ-れる、ちぢ-らす|shuku, chiji-mu, chiji-maru, chiji-meru, chiji-reru, chiji-rasu
+0x00587e|塾|924||土|14|S|1981|cram school|ジュク|juku
+0x00719f|熟|925||火|15|6||ripen|ジュク、う-れる|juku, u-reru
+0x0051fa|出|926||凵|5|1||exit|シュツ、（スイ）、で-る、だ-す|shutsu, (sui), de-ru, da-su
+0x008ff0|述|927||辵|8|5||mention|ジュツ、の-べる|jutsu, no-beru
+0x008853|術|928||行|11|5||art|ジュツ|jutsu
+0x004fca|俊|929||人|9|S||genius|シュン|shun
+0x006625|春|930||日|9|2||springtime|シュン、はる|shun, haru
+0x0077ac|瞬|931||目|18|S||wink|シュン、またた-く|shun, matata-ku
+0x0065ec|旬|932||日|6|S||10-day period (of the month)|ジュン、（シュン）|jun, (shun)
+0x005de1|巡|933||巛|6|S||patrol|ジュン、めぐ-る|jun, megu-ru
+0x0076fe|盾|934||目|9|S||shield|ジュン、たて|jun, tate
+0x0051c6|准|935||冫|10|S||quasi-|ジュン|jun
+0x006b89|殉|936||歹|10|S||martyrdom|ジュン|jun
+0x007d14|純|937||糸|10|6||genuine|ジュン|jun
+0x005faa|循|938||彳|12|S||sequential|ジュン|jun
+0x009806|順|939||頁|12|4||obey|ジュン|jun
+0x006e96|準|940||水|13|5||standard|ジュン|jun
+0x006f64|潤|941||水|15|S||wet|ジュン、うるお-う、うるお-す、うる-む|jun, uruo-u, uruo-su, uru-mu
+0x009075|遵|942||辵|15|S||abide by|ジュン|jun
+0x0051e6|処|943|處|虍|5|6||dispose|ショ|sho
+0x00521d|初|944||刀|7|4||first|ショ、はじ-め、はじ-めて、はつ、うい、そ-める|sho, haji-me, haji-mete, hatsu, ui, so-meru
+0x006240|所|945||戶|8|3||place|ショ、ところ|sho, tokoro
+0x0066f8|書|946||曰|10|2||write|ショ、か-く|sho, ka-ku
+0x005eb6|庶|947||广|11|S||commoner|ショ|sho
+0x006691|暑|948|暑 [4]|日|12|3||hot|ショ、あつ-い|sho, atsu-i
+0x007f72|署|949|署 [4]|网|13|6||government office|ショ|sho
+0x007dd2|緒|950|緖|糸|14|S||thong|ショ、（チョ）、お|sho, (cho), o
+0x008af8|諸|951|諸 [4]|言|15|6||various|ショ|sho
+0x005973|女|952||女|3|1||woman|ジョ、ニョ、（ニョウ）、おんな、め|jo, nyo, (nyō), onna, me
+0x005982|如|953||女|6|S||likeness|ジョ、ニョ|jo, nyo
+0x0052a9|助|954||力|7|3||help|ジョ、たす-ける、たす-かる、すけ|jo, tasu-keru, tasu-karu, suke
+0x005e8f|序|955||广|7|5||preface|ジョ|jo
+0x0053d9|叙|956|敍|攴|9|S||confer|ジョ|jo
+0x005f90|徐|957||彳|10|S||gradually|ジョ|jo
+0x009664|除|958||阜|10|6||exclude|ジョ、（ジ）、のぞ-く|jo, (ji), nozo-ku
+0x005c0f|小|959||小|3|1||small|ショウ、ちい-さい、こ、お|shō, chii-sai, ko, o
+0x005347|升|960||十|4|S||measuring box|ショウ、ます|shō, masu
+0x005c11|少|961||小|4|2||few|ショウ、すく-ない、すこ-し|shō, suku-nai, suko-shi
+0x0053ec|召|962||口|5|S||summon|ショウ、め-す|shō, me-su
+0x005320|匠|963||匚|6|S||artisan|ショウ|shō
+0x005e8a|床|964||广|7|S||bed|ショウ、とこ、ゆか|shō, toko, yuka
+0x006284|抄|965||手|7|S||extract|ショウ|shō
+0x008096|肖|966||肉|7|S||resemblance|ショウ|shō
+0x005c1a|尚|967||小|8|S|1981|esteem|ショウ|shō
+0x0062db|招|968||手|8|5||beckon|ショウ、まね-く|shō, mane-ku
+0x00627f|承|969||手|8|6||acquiesce|ショウ、うけたまわ-る|shō, uketamawa-ru
+0x006607|昇|970||日|8|S||rise up|ショウ、のぼ-る|shō, nobo-ru
+0x00677e|松|971||木|8|4||pine|ショウ、まつ|shō, matsu
+0x006cbc|沼|972||水|8|S||marsh|ショウ、ぬま|shō, numa
+0x00662d|昭|973||日|9|3||shining|ショウ|shō
+0x005bb5|宵|974||宀|10|S|1981|wee hours|ショウ、よい|shō, yoi
+0x005c06|将|975|將|寸|10|6||leader|ショウ|shō
+0x006d88|消|976||水|10|3||extinguish|ショウ、き-える、け-す|shō, ki-eru, ke-su
+0x0075c7|症|977||疒|10|S||symptoms|ショウ|shō
+0x007965|祥|978|祥 [4]|示|10|S||auspicious|ショウ|shō
+0x0079f0|称|979|稱|禾|10|S||appellation|ショウ|shō
+0x007b11|笑|980||竹|10|4||laugh|ショウ、わら-う、え-む|shō, wara-u, e-mu
+0x005531|唱|981||口|11|4||chant|ショウ、とな-える|shō, tona-eru
+0x005546|商|982||口|11|3||sell|ショウ、あきな-う|shō, akina-u
+0x006e09|渉|983|涉|水|11|S||ford|ショウ|shō
+0x007ae0|章|984||立|11|3||chapter|ショウ|shō
+0x007d39|紹|985||糸|11|S||introduce|ショウ|shō
+0x008a1f|訟|986||言|11|S||sue|ショウ|shō
+0x0052dd|勝|987||力|12|3||win|ショウ、か-つ、まさ-る|shō, ka-tsu, masa-ru
+0x00638c|掌|988||手|12|S||manipulate|ショウ|shō
+0x006676|晶|989||日|12|S||sparkle|ショウ|shō
+0x00713c|焼|990|燒|火|12|4||bake|ショウ、や-く、や-ける|shō, ya-ku, ya-keru
+0x007126|焦|991||火|12|S||char|ショウ、こ-げる、こ-がす、こ-がれる、あせ-る|shō, ko-geru, ko-gasu, ko-gareru, ase-ru
+0x00785d|硝|992||石|12|S||nitrate|ショウ|shō
+0x007ca7|粧|993||米|12|S||cosmetics|ショウ|shō
+0x008a54|詔|994||言|12|S||imperial edict|ショウ、みことのり|shō, mikotonori
+0x008a3c|証|995|證|言|12|5||evidence|ショウ|shō
+0x008c61|象|996||豕|12|5||elephant|ショウ、ゾウ|shō, zō
+0x0050b7|傷|997||人|13|6||wound|ショウ、きず、いた-む、いた-める|shō, kizu, ita-mu, ita-meru
+0x005968|奨|998|奬|大|13|S||exhort|ショウ|shō
+0x007167|照|999||火|13|4||illuminate|ショウ、て-る、て-らす、て-れる|shō, te-ru, te-rasu, te-reru
+0x008a73|詳|1000||言|13|S||detailed|ショウ、くわ-しい|shō, kuwa-shii
+0x005f70|彰|1001||彡|14|S||patent|ショウ|shō
+0x00969c|障|1002||阜|14|6||hurt|ショウ、さわ-る|shō, sawa-ru
+0x0061a7|憧|1003||心|15|S|2010|desire|ショウ、あこが-れる|shō, akoga-reru
+0x00885d|衝|1004||行|15|S||collide|ショウ|shō
+0x008cde|賞|1005||貝|15|5||prize|ショウ|shō
+0x00511f|償|1006||人|17|S||reparation|ショウ、つぐな-う|shō, tsuguna-u
+0x007901|礁|1007||石|17|S||reef|ショウ|shō
+0x009418|鐘|1008||金|20|S||bell|ショウ、かね|shō, kane
+0x004e0a|上|1009||一|3|1||up|ジョウ、（ショウ）、うえ、（うわ）、かみ、あ-げる、あ-がる、のぼ-る、のぼ-せる、のぼ-す|jō, (shō), ue, (uwa), kami, a-geru, a-garu, nobo-ru, nobo-seru, nobo-su
+0x004e08|丈|1010||一|3|S||length|ジョウ、たけ|jō, take
+0x005197|冗|1011||冖|4|S||superfluous|ジョウ|jō
+0x006761|条|1012|條|木|7|5||clause|ジョウ|jō
+0x0072b6|状|1013|狀|犬|7|5||form|ジョウ|jō
+0x004e57|乗|1014|乘|丿|9|3||ride|ジョウ、の-る、の-せる|jō, no-ru, no-seru
+0x0057ce|城|1015||土|9|4||castle|ジョウ、しろ|jō, shiro
+0x006d44|浄|1016|淨|水|9|S||clean|ジョウ|jō
+0x005270|剰|1017|剩|刀|11|S||surplus|ジョウ|jō
+0x005e38|常|1018||巾|11|5||normal|ジョウ、つね、とこ|jō, tsune, toko
+0x0060c5|情|1019||心|11|5||feelings|ジョウ、（セイ）、なさ-け|jō, (sei), nasa-ke
+0x005834|場|1020||土|12|2||place|ジョウ、ば|jō, ba
+0x007573|畳|1021|疊|田|12|S||tatami mat|ジョウ、たた-む、たたみ|jō, tata-mu, tatami
+0x0084b8|蒸|1022||艸|13|6||steam|ジョウ、む-す、む-れる、む-らす|jō, mu-su, mu-reru, mu-rasu
+0x007e04|縄|1023|繩|糸|15|4|1981|straw rope|ジョウ、なわ|jō, nawa
+0x0058cc|壌|1024|壤|土|16|S|1981|lot|ジョウ|jō
+0x005b22|嬢|1025|孃|女|16|S||lass|ジョウ|jō
+0x009320|錠|1026||金|16|S||lock|ジョウ|jō
+0x008b72|譲|1027|讓|言|20|S||defer|ジョウ、ゆず-る|jō, yuzu-ru
+0x0091b8|醸|1028|釀|酉|20|S||brew|ジョウ、かも-す|jō, kamo-su
+0x008272|色|1029||色|6|2||color|ショク、シキ、いろ|shoku, shiki, iro
+0x0062ed|拭|1030||手|9|S|2010|wipe|ショク、ふ-く、ぬぐ-う|shoku, fu-ku, nugu-u
+0x0098df|食|1031||食|9|2||eat, meal|ショク、（ジキ）、く-う、く-らう、た-べる|shoku, (jiki), ku-u, ku-rau, ta-beru
+0x00690d|植|1032||木|12|3||plant|ショク、う-える、う-わる|shoku, u-eru, u-waru
+0x006b96|殖|1033||歹|12|S||augment|ショク、ふ-える、ふ-やす|shoku, fu-eru, fu-yasu
+0x0098fe|飾|1034||食|13|S||decorate|ショク、かざ-る|shoku, kaza-ru
+0x0089e6|触|1035|觸|角|13|S||contact|ショク、ふ-れる、さわ-る|shoku, fu-reru, sawa-ru
+0x005631|嘱|1036|囑|口|15|S||entrust|ショク|shoku
+0x007e54|織|1037||糸|18|5||weave|ショク、シキ、お-る|shoku, shiki, o-ru
+0x008077|職|1038||耳|18|5||employment|ショク|shoku
+0x008fb1|辱|1039||辰|10|S||embarrass|ジョク、はずかし-める|joku, hazukashi-meru
+0x005c3b|尻|1040||尸|5|S|2010|buttocks|しり|shiri
+0x005fc3|心|1041||心|4|2||heart|シン、こころ|shin, kokoro
+0x007533|申|1042||田|5|3||say|シン、もう-す|shin, mō-su
+0x004f38|伸|1043||人|7|S||lengthen|シン、の-びる、の-ばす、の-べる|shin, no-biru, no-basu, no-beru
+0x0081e3|臣|1044||臣|7|4||retainer|シン、ジン|shin, jin
+0x0082af|芯|1045||艸|7|S|2010|core|シン|shin
+0x008eab|身|1046||身|7|3||body|シン、み|shin, mi
+0x008f9b|辛|1047||辛|7|S||spicy|シン、から-い|shin, kara-i
+0x004fb5|侵|1048||人|9|S||encroach|シン、おか-す|shin, oka-su
+0x004fe1|信|1049||人|9|4||trust|シン|shin
+0x006d25|津|1050||水|9|S||haven|シン、つ|shin, tsu
+0x00795e|神|1051|神 [4]|示|9|3||god|シン、ジン、かみ、（かん）、（こう）|shin, jin, kami, (kan), (kō)
+0x005507|唇|1052||口|10|S|1981|lips|シン、くちびる|shin, kuchibiru
+0x005a20|娠|1053||女|10|S||with child|シン|shin
+0x00632f|振|1054||手|10|S||shake|シン、ふ-る、ふ-るう、ふ-れる|shin, fu-ru, fu-rū, fu-reru
+0x006d78|浸|1055||水|10|S||immersed|シン、ひた-す、ひた-る|shin, hita-su, hita-ru
+0x00771f|真|1056|眞|目|10|3||TRUE|シン、ま|shin, ma
+0x0091dd|針|1057||金|10|6||needle|シン、はり|shin, hari
+0x006df1|深|1058||水|11|3||deep|シン、ふか-い、ふか-まる、ふか-める|shin, fuka-i, fuka-maru, fuka-meru
+0x007d33|紳|1059||糸|11|S||sire|シン|shin
+0x009032|進|1060||辵|11|3||advance|シン、すす-む、すす-める|shin, susu-mu, susu-meru
+0x0068ee|森|1061||木|12|1||forest|シン、もり|shin, mori
+0x008a3a|診|1062||言|12|S||checkup|シン、み-る|shin, mi-ru
+0x005bdd|寝|1063|寢|宀|13|S||lie down|シン、ね-る、ね-かす|shin, ne-ru, ne-kasu
+0x00614e|慎|1064|愼|心|13|S||humility|シン、つつし-む|shin, tsutsushi-mu
+0x0065b0|新|1065||斤|13|2||new|シン、あたら-しい、あら-た、にい|shin, atara-shii, ara-ta, nii
+0x005be9|審|1066||宀|15|S||examine|シン|shin
+0x009707|震|1067||雨|15|S||quake|シン、ふる-う、ふる-える|shin, furu-u, furu-eru
+0x0085aa|薪|1068||艸|16|S||fuel|シン、たきぎ|shin, takigi
+0x0089aa|親|1069||見|16|2||parent|シン、おや、した-しい、した-しむ|shin, oya, shita-shii, shita-shimu
+0x004eba|人|1070||人|2|1||person|ジン、ニン、ひと|jin, nin, hito
+0x005203|刃|1071||刀|3|S||blade|ジン、は|jin, ha
+0x004ec1|仁|1072||人|4|6||humanity|ジン、（ニ）|jin, (ni)
+0x005c3d|尽|1073|盡|皿|6|S||exhaust|ジン、つ-くす、つ-きる、つ-かす|jin, tsu-kusu, tsu-kiru, tsu-kasu
+0x008fc5|迅|1074||辵|6|S||swift|ジン|jin
+0x00751a|甚|1075||甘|9|S|1981|tremendously|ジン、はなは-だ、はなは-だしい|jin, hanaha-da, hanaha-dashii
+0x009663|陣|1076||阜|10|S||camp|ジン|jin
+0x005c0b|尋|1077||寸|12|S||inquire|ジン、たず-ねる|jin, tazu-neru
+0x00814e|腎|1078||肉|13|S|2010|kidney|ジン|jin
+0x009808|須|1079||頁|12|S|2010|by all means|ス|su
+0x0056f3|図|1080|圖|囗|7|2||diagram|ズ、ト、はか-る|zu, to, haka-ru
+0x006c34|水|1081||水|4|1||water|スイ、みず|sui, mizu
+0x005439|吹|1082||口|7|S||blow|スイ、ふ-く|sui, fu-ku
+0x005782|垂|1083||土|8|6||droop|スイ、た-れる、た-らす|sui, ta-reru, ta-rasu
+0x00708a|炊|1084||火|8|S||cook|スイ、た-く|sui, ta-ku
+0x005e25|帥|1085||巾|9|S||commander|スイ|sui
+0x007c8b|粋|1086|粹|米|10|S||chic|スイ、いき|sui, iki
+0x008870|衰|1087||衣|10|S||decline|スイ、おとろ-える|sui, otoro-eru
+0x0063a8|推|1088||手|11|6||infer|スイ、お-す|sui, o-su
+0x009154|酔|1089|醉|酉|11|S||drunk|スイ、よ-う|sui, yo-u
+0x009042|遂|1090||辵|12|S||consummate|スイ、と-げる|sui, to-geru
+0x007761|睡|1091||目|13|S||drowsy|スイ|sui
+0x007a42|穂|1092|穗|禾|15|S||ear|スイ、ほ|sui, ho
+0x00968f|随|1093|隨|阜|12|S||follow|ズイ|zui
+0x009ac4|髄|1094|髓|骨|19|S||marrow|ズイ|zui
+0x0067a2|枢|1095|樞|木|8|S||hinge|スウ|sū
+0x005d07|崇|1096||山|11|S||adore|スウ|sū
+0x006570|数|1097|數|攴|13|2||number|スウ、（ス）、かず、かぞ-える|sū, (su), kazu, kazo-eru
+0x00636e|据|1098||手|11|S|1981|set|す-える、す-わる|su-eru, su-waru
+0x006749|杉|1099||木|7|S|1981|cedar|すぎ|sugi
+0x0088fe|裾|1100||衣|13|S|2010|cuff|すそ|suso
+0x005bf8|寸|1101||寸|3|6||measurement|スン|sun
+0x00702c|瀬|1102|瀨|水|19|S||rapids|せ|se
+0x00662f|是|1103||日|9|S||just so|ゼ|ze
+0x004e95|井|1104||二|4|4||well|セイ、（ショウ）、い|sei, (shō), i
+0x004e16|世|1105||一|5|3||world|セイ、セ、よ|sei, se, yo
+0x006b63|正|1106||止|5|1||correct|セイ、ショウ、ただ-しい、ただ-す、まさ|sei, shō, tada-shii, tada-su, masa
+0x00751f|生|1107||生|5|1||life|セイ、ショウ、い-きる、い-かす、い-ける、う-まれる、う-む、お-う、は-える、は-やす、き、なま|sei, shō, i-kiru, i-kasu, i-keru, u-mareru, u-mu, o-u, ha-eru, ha-yasu, ki, nama
+0x006210|成|1108||戈|6|4||become|セイ、（ジョウ）、な-る、な-す|sei, (jō), na-ru, na-su
+0x00897f|西|1109||襾|6|2||west|セイ、サイ、にし|sei, sai, nishi
+0x0058f0|声|1110|聲|耳|7|2||voice|セイ、（ショウ）、こえ、（こわ）|sei, (shō), koe, (kowa)
+0x005236|制|1111||刀|8|5||control|セイ|sei
+0x0059d3|姓|1112||女|8|S||surname|セイ、ショウ|sei, shō
+0x005f81|征|1113||彳|8|S||subjugate|セイ|sei
+0x006027|性|1114||心|8|5||gender|セイ、ショウ|sei, shō
+0x009752|青|1115||靑|8|1||blue|セイ、（ショウ）、あお、あお-い|sei, (shō), ao, ao-i
+0x006589|斉|1116|齊|齊|8|S|1981|adjusted|セイ|sei
+0x00653f|政|1117||攴|9|5||politics|セイ、（ショウ）、まつりごと|sei, (shō), matsurigoto
+0x00661f|星|1118||日|9|2||star|セイ、（ショウ）、ほし|sei, (shō), hoshi
+0x007272|牲|1119||牛|9|S||animal sacrifice|セイ|sei
+0x007701|省|1120||目|9|4||government ministry|セイ、ショウ、かえり-みる、はぶ-く|sei, shō, kaeri-miru, habu-ku
+0x0051c4|凄|1121||冫|10|S|2010|uncanny|セイ|sei
+0x00901d|逝|1122||辵|10|S|1981|departed|セイ、ゆ-く、い-く|sei, yu-ku, i-ku
+0x006e05|清|1123||水|11|4||pure|セイ、（ショウ）、きよ-い、きよ-まる、きよ-める|sei, (shō), kiyo-i, kiyo-maru, kiyo-meru
+0x0076db|盛|1124||皿|11|6||prosper|セイ、（ジョウ）、も-る、さか-る、さか-ん|sei, (jō), mo-ru, saka-ru, saka-n
+0x005a7f|婿|1125||女|12|S||bridegroom|セイ、むこ|sei, muko
+0x006674|晴|1126||日|12|2||clear up|セイ、は-れる、は-らす|sei, ha-reru, ha-rasu
+0x0052e2|勢|1127||力|13|5||power|セイ、いきお-い|sei, ikio-i
+0x008056|聖|1128||耳|13|6||holy|セイ|sei
+0x008aa0|誠|1129||言|13|6||sincerity|セイ、まこと|sei, makoto
+0x007cbe|精|1130||米|14|5||refined|セイ、（ショウ）|sei, (shō)
+0x0088fd|製|1131||衣|14|5||manufacture|セイ|sei
+0x008a93|誓|1132||言|14|S||vow|セイ、ちか-う|sei, chika-u
+0x009759|静|1133|靜|靑|14|4||quiet|セイ、（ジョウ）、しず、しず-か、しず-まる、しず-める|sei, (jō), shizu, shizu-ka, shizu-maru, shizu-meru
+0x008acb|請|1134||言|15|S||solicit|セイ、（シン）、こ-う、う-ける|sei, (shin), ko-u, u-keru
+0x006574|整|1135||攴|16|3||put in order|セイ、ととの-える、ととの-う|sei, totono-eru, totono-u
+0x009192|醒|1136||酉|16|S|2010|be disillusioned|セイ|sei
+0x007a0e|税|1137||禾|12|5||tax|ゼイ|zei
+0x005915|夕|1138||夕|3|1||evening|セキ、ゆう|seki, yū
+0x0065a5|斥|1139||斤|5|S||reject|セキ|seki
+0x0077f3|石|1140||石|5|1||stone|セキ、（シャク）、（コク）、いし|seki, (shaku), (koku), ishi
+0x008d64|赤|1141||赤|7|1||red|セキ、（シャク）、あか、あか-い、あか-らむ、あか-らめる|seki, (shaku), aka, aka-i, aka-ramu, aka-rameru
+0x006614|昔|1142||日|8|3||long ago|セキ、（シャク）、むかし|seki, (shaku), mukashi
+0x006790|析|1143||木|8|S||chop|セキ|seki
+0x005e2d|席|1144||巾|10|4||seat|セキ|seki
+0x00810a|脊|1145||肉|10|S|2010|stature|セキ|seki
+0x0096bb|隻|1146||隹|10|S||vessels|セキ|seki
+0x0060dc|惜|1147||心|11|S||pity|セキ、お-しい、お-しむ|seki, o-shii, o-shimu
+0x00621a|戚|1148||戈|11|S|2010|grieve|セキ|seki
+0x008cac|責|1149||貝|11|5||blame|セキ、せ-める|seki, se-meru
+0x008de1|跡|1150||足|13|S||tracks|セキ、あと|seki, ato
+0x007a4d|積|1151||禾|16|4||accumulate|セキ、つ-む、つ-もる|seki, tsu-mu, tsu-moru
+0x007e3e|績|1152||糸|17|5||exploits|セキ|seki
+0x007c4d|籍|1153||竹|20|S||enroll|セキ|seki
+0x005207|切|1154||刀|4|2||cut|セツ、（サイ）、き-る、き-れる|setsu, (sai), ki-ru, ki-reru
+0x006298|折|1155||手|7|4||fold|セツ、お-る、おり、お-れる|setsu, o-ru, ori, o-reru
+0x0062d9|拙|1156||手|8|S||bungling|セツ、つたな-い|setsu, tsutana-i
+0x007a83|窃|1157|竊|穴|9|S||stealth|セツ|setsu
+0x0063a5|接|1158||手|11|5||contact|セツ、つ-ぐ|setsu, tsu-gu
+0x008a2d|設|1159||言|11|5||establish|セツ、もう-ける|setsu, mō-keru
+0x0096ea|雪|1160||雨|11|2||snow|セツ、ゆき|setsu, yuki
+0x006442|摂|1161|攝|手|13|S||vicarious|セツ|setsu
+0x007bc0|節|1162|節 [4]|竹|13|4||node|セツ、（セチ）、ふし|setsu, (sechi), fushi
+0x008aac|説|1163||言|14|4||theory|セツ、（ゼイ）、と-く|setsu, (zei), to-ku
+0x00820c|舌|1164||舌|6|6||tongue|ゼツ、した|zetsu, shita
+0x007d76|絶|1165|絕|糸|12|5||discontinue|ゼツ、た-える、た-やす、た-つ|zetsu, ta-eru, ta-yasu, ta-tsu
+0x005343|千|1166||十|3|1||thousand|セン、ち|sen, chi
+0x005ddd|川|1167||巛|3|1||river|セン、かわ|sen, kawa
+0x004ed9|仙|1168||人|5|S|1981|hermit|セン|sen
+0x005360|占|1169||卜|5|S||fortune telling|セン、し-める、うらな-う|sen, shi-meru, urana-u
+0x005148|先|1170||儿|6|1||previous|セン、さき|sen, saki
+0x005ba3|宣|1171||宀|9|6||proclaim|セン|sen
+0x005c02|専|1172|專|寸|9|6||specialty|セン、もっぱ-ら|sen, moppa-ra
+0x006cc9|泉|1173||水|9|6||spring|セン、いずみ|sen, izumi
+0x006d45|浅|1174|淺|水|9|4||shallow|セン、あさ-い|sen, asa-i
+0x006d17|洗|1175||水|9|6||wash|セン、あら-う|sen, ara-u
+0x0067d3|染|1176||木|9|6||dye|セン、そ-める、そ-まる、し-みる、し-み|sen, so-meru, so-maru, shi-miru, shi-mi
+0x006247|扇|1177||戶|10|S||fan|セン、おうぎ|sen, ōgi
+0x006813|栓|1178||木|10|S|1981|plug|セン|sen
+0x0065cb|旋|1179||方|11|S||rotation|セン|sen
+0x008239|船|1180||舟|11|2||boat|セン、ふね、（ふな）|sen, fune, (funa)
+0x006226|戦|1181|戰|戈|13|4||war|セン、いくさ、たたか-う|sen, ikusa, tataka-u
+0x00714e|煎 [7]|1182||火|13|S|2010|broil|セン、い-る|sen, i-ru
+0x007fa8|羨|1183||羊|13|S|2010|envy|セン、うらや-む、うらや-ましい|sen, uraya-mu, uraya-mashii
+0x00817a|腺|1184||肉|13|S|2010|gland|セン|sen
+0x008a6e|詮 [7]|1185||言|13|S|2010|discussion|セン|sen
+0x008df5|践|1186|踐|足|13|S||tread|セン|sen
+0x007b8b|箋|1187||竹|14|S|2010|paper|セン|sen
+0x0092ad|銭|1188|錢|金|14|6||coin|セン、ぜに|sen, zeni
+0x006f5c|潜|1189|潛|水|15|S||submerge|セン、ひそ-む、もぐ-る|sen, hiso-mu, mogu-ru
+0x007dda|線|1190||糸|15|2||line|セン|sen
+0x009077|遷|1191||辵|15|S||transition|セン|sen
+0x009078|選|1192||辵|15|4||choose|セン、えら-ぶ|sen, era-bu
+0x0085a6|薦|1193||艸|16|S||recommend|セン、すす-める|sen, susu-meru
+0x007e4a|繊|1194|纖|糸|17|S||slender|セン|sen
+0x009bae|鮮|1195||魚|17|S||fresh|セン、あざ-やか|sen, aza-yaka
+0x005168|全|1196||入|6|3||whole|ゼン、まった-く、すべ-て|zen, matta-ku, sube-te
+0x00524d|前|1197||刀|9|2||in front|ゼン、まえ|zen, mae
+0x005584|善|1198||口|12|6||good|ゼン、よ-い|zen, yo-i
+0x007136|然|1199||火|12|4||so|ゼン、ネン|zen, nen
+0x007985|禅|1200|禪|示|13|S||Zen|ゼン|zen
+0x006f38|漸|1201||水|14|S||steadily|ゼン|zen
+0x0081b3|膳|1202||肉|16|S|2010|tray|ゼン|zen
+0x007e55|繕|1203||糸|18|S||darning|ゼン、つくろ-う|zen, tsukuro-u
+0x0072d9|狙|1204||犬|8|S|2010|aim at|ソ、ねら-う|so, nera-u
+0x00963b|阻|1205||阜|8|S||thwart|ソ、はば-む|so, haba-mu
+0x007956|祖|1206|祖 [4]|示|9|5||ancestor|ソ|so
+0x0079df|租|1207||禾|10|S||tariff|ソ|so
+0x007d20|素|1208||糸|10|5||elementary|ソ、ス|so, su
+0x0063aa|措|1209||手|11|S||set aside|ソ|so
+0x007c97|粗|1210||米|11|S||coarse|ソ、あら-い|so, ara-i
+0x007d44|組|1211||糸|11|2||association|ソ、く-む、くみ|so, ku-mu, kumi
+0x00758e|疎|1212||疋|12|S||alienate|ソ、うと-い、うと-む|so, uto-i, uto-mu
+0x008a34|訴|1213||言|12|S||sue|ソ、うった-える|so, utta-eru
+0x005851|塑|1214||土|13|S||model|ソ|so
+0x009061|遡 [8]|1215||辵|14|S|2010|go upstream|ソ、さかのぼ-る|so, sakanobo-ru
+0x00790e|礎|1216||石|18|S||cornerstone|ソ、いしずえ|so, ishizue
+0x0053cc|双|1217|雙|隹|4|S||pair|ソウ、ふた|sō, futa
+0x0058ee|壮|1218|壯|士|6|S||robust|ソウ|sō
+0x0065e9|早|1219||日|6|1||early|ソウ、（サッ）、はや-い、はや-まる、はや-める|sō, (sa'), haya-i, haya-maru, haya-meru
+0x004e89|争|1220|爭|爪|6|4||conflict|ソウ、あらそ-う|sō, araso-u
+0x008d70|走|1221||走|7|2||run|ソウ、はし-る|sō, hashi-ru
+0x00594f|奏|1222||大|9|6||play music|ソウ、かな-でる|sō, kana-deru
+0x0076f8|相|1223||目|9|3||mutual|ソウ、ショウ、あい|sō, shō, ai
+0x008358|荘|1224|莊|艸|9|S||villa|ソウ|sō
+0x008349|草|1225||艸|9|1||grass|ソウ、くさ|sō, kusa
+0x009001|送|1226||辵|9|3||send|ソウ、おく-る|sō, oku-ru
+0x005009|倉|1227||人|10|4||warehouse|ソウ、くら|sō, kura
+0x00635c|捜|1228|搜|手|10|S||search|ソウ、さが-す|sō, saga-su
+0x00633f|挿|1229|插|手|10|S|1981|insert|ソウ、さ-す|sō, sa-su
+0x006851|桑|1230||木|10|S||mulberry|ソウ、くわ|sō, kuwa
+0x005de3|巣|1231|巢|巛|11|4||nest|ソウ、す|sō, su
+0x006383|掃|1232||手|11|S||sweep|ソウ、は-く|sō, ha-ku
+0x0066f9|曹|1233||曰|11|S|1981|cadet|ソウ|sō
+0x0066fd|曽|1234|曾|曰|11|S|2010|formerly|ソウ、（ゾ）|sō, (zo)
+0x00723d|爽|1235||爻|11|S|2010|refreshing|ソウ、さわ-やか|sō, sawa-yaka
+0x007a93|窓|1236||穴|11|6||window|ソウ、まど|sō, mado
+0x005275|創|1237||刀|12|6||create|ソウ、つく-る|sō, tsuku-ru
+0x0055aa|喪|1238||口|12|S||miss|ソウ、も|sō, mo
+0x0075e9|痩|1239|瘦|疒|12|S|2010|get thin|ソウ、や-せる|sō, ya-seru
+0x00846c|葬|1240||艸|12|S||interment|ソウ、ほうむ-る|sō, hōmu-ru
+0x0088c5|装|1241|裝|衣|12|6||attire|ソウ、ショウ、よそお-う|sō, shō, yosoo-u
+0x0050e7|僧|1242|僧 [4]|人|13|S||Buddhist priest|ソウ|sō
+0x0060f3|想|1243||心|13|3||concept|ソウ、（ソ）|sō, (so)
+0x005c64|層|1244|層 [4]|尸|14|6||stratum|ソウ|sō
+0x007dcf|総|1245|總|糸|14|5||whole|ソウ|sō
+0x00906d|遭|1246||辵|14|S||encounter|ソウ、あ-う|sō, a-u
+0x0069fd|槽|1247||木|15|S|1981|vat|ソウ|sō
+0x008e2a|踪|1248||足|15|S|2010|remains|ソウ|sō
+0x0064cd|操|1249||手|16|6||maneuver|ソウ、みさお、あやつ-る|sō, misao, ayatsu-ru
+0x0071e5|燥|1250||火|17|S||parch|ソウ|sō
+0x00971c|霜|1251||雨|17|S||frost|ソウ、しも|sō, shimo
+0x009a12|騒|1252|騷|馬|18|S||boisterous|ソウ、さわ-ぐ|sō, sawa-gu
+0x0085fb|藻|1253||艸|19|S|1981|seaweed|ソウ、も|sō, mo
+0x009020|造|1254||辵|10|5||create|ゾウ、つく-る|zō, tsuku-ru
+0x0050cf|像|1255||人|14|5||statue|ゾウ|zō
+0x005897|増|1256|增|土|14|5||increase|ゾウ、ま-す、ふ-える、ふ-やす|zō, ma-su, fu-eru, fu-yasu
+0x00618e|憎|1257|憎 [4]|心|14|S||hate|ゾウ、にく-む、にく-い、にく-らしい、にく-しみ|zō, niku-mu, niku-i, niku-rashii, niku-shimi
+0x008535|蔵|1258|藏|艸|15|6||warehouse|ゾウ、くら|zō, kura
+0x008d08|贈|1259|贈 [4]|貝|18|S||presents|ゾウ、（ソウ）、おく-る|zō, (sō), oku-ru
+0x0081d3|臓|1260|臟|肉|19|6||entrails|ゾウ|zō
+0x005373|即|1261|卽|卩|7|S||instant|ソク|soku
+0x00675f|束|1262||木|7|4||bundle|ソク、たば|soku, taba
+0x008db3|足|1263||足|7|1||foot|ソク、あし、た-りる、た-る、た-す|soku, ashi, ta-riru, ta-ru, ta-su
+0x004fc3|促|1264||人|9|S||stimulate|ソク、うなが-す|soku, unaga-su
+0x005247|則|1265||刀|9|5||rule|ソク|soku
+0x00606f|息|1266||心|10|3||breath|ソク、いき|soku, iki
+0x006349|捉|1267||手|10|S|2010|capture|ソク、とら-える|soku, tora-eru
+0x00901f|速|1268||辵|10|3||fast|ソク、はや-い、はや-める、はや-まる、すみ-やか|soku, haya-i, haya-meru, haya-maru, sumi-yaka
+0x005074|側|1269||人|11|4||side|ソク、がわ|soku, gawa
+0x006e2c|測|1270||水|12|5||fathom|ソク、はか-る|soku, haka-ru
+0x004fd7|俗|1271||人|9|S||vulgar|ゾク|zoku
+0x0065cf|族|1272||方|11|3||tribe|ゾク|zoku
+0x005c5e|属|1273|屬|尸|12|5||belong|ゾク|zoku
+0x008cca|賊|1274||貝|13|S||burglar|ゾク|zoku
+0x007d9a|続|1275|續|糸|13|4||continue|ゾク、つづ-く、つづ-ける|zoku, tsuzu-ku, tsuzu-keru
+0x005352|卒|1276||十|8|4||graduate|ソツ|sotsu
+0x007387|率|1277||玄|11|5||rate|ソツ、リツ、ひき-いる|sotsu, ritsu, hiki-iru
+0x005b58|存|1278||子|6|6||suppose|ソン、ゾン|son, zon
+0x006751|村|1279||木|7|1||village|ソン、むら|son, mura
+0x005b6b|孫|1280||子|10|4||grandchild|ソン、まご|son, mago
+0x005c0a|尊|1281||寸|12|6||revered|ソン、たっと-い、とうと-い、たっと-ぶ、とうと-ぶ|son, tatto-i, tōto-i, tatto-bu, tōto-bu
+0x00640d|損|1282||手|13|5||loss|ソン、そこ-なう、そこ-ねる|son, soko-nau, soko-neru
+0x00905c|遜 [8]|1283||辵|14|S|2010|humble|ソン|son
+0x004ed6|他|1284||人|5|3||other|タ、ほか|ta, hoka
+0x00591a|多|1285||夕|6|2||many|タ、おお-い|ta, oo-i
+0x006c70|汰|1286||水|7|S|2010|luxury|タ|ta
+0x006253|打|1287||手|5|3||hit|ダ、う-つ|da, u-tsu
+0x0059a5|妥|1288||女|7|S||gentle|ダ|da
+0x00553e|唾|1289||口|11|S|2010|saliva|ダ、つば|da, tsuba
+0x005815|堕|1290|墮|土|12|S||degenerate|ダ|da
+0x0060f0|惰|1291||心|12|S||lazy|ダ|da
+0x0099c4|駄|1292||馬|14|S|1981|burdensome|ダ|da
+0x00592a|太|1293||大|4|2||thick|タイ、タ、ふと-い、ふと-る|tai, ta, futo-i, futo-ru
+0x005bfe|対|1294|對|寸|7|3||opposite|タイ、ツイ|tai, tsui
+0x004f53|体|1295|體|骨|7|2||body|タイ、テイ、からだ|tai, tei, karada
+0x008010|耐|1296||而|9|S||resistant|タイ、た-える|tai, ta-eru
+0x005f85|待|1297||彳|9|3||wait|タイ、ま-つ|tai, ma-tsu
+0x006020|怠|1298||心|9|S||neglect|タイ、おこた-る、なま-ける|tai, okota-ru, nama-keru
+0x0080ce|胎|1299||肉|9|S||womb|タイ|tai
+0x009000|退|1300||辵|9|6||retreat|タイ、しりぞ-く、しりぞ-ける|tai, shirizo-ku, shirizo-keru
+0x005e2f|帯|1301|帶|巾|10|4||sash|タイ、お-びる、おび|tai, o-biru, obi
+0x006cf0|泰|1302||水|10|S||peaceful|タイ|tai
+0x005806|堆|1303||土|11|S|2010|piled high|タイ|tai
+0x00888b|袋|1304||衣|11|S||sack|タイ、ふくろ|tai, fukuro
+0x00902e|逮|1305||辵|11|S||apprehend|タイ|tai
+0x0066ff|替|1306||曰|12|S||exchange|タイ、か-える、か-わる|tai, ka-eru, ka-waru
+0x008cb8|貸|1307||貝|12|5||lend|タイ、か-す|tai, ka-su
+0x00968a|隊|1308||阜|12|4||group|タイ|tai
+0x006ede|滞|1309|滯|水|13|S||stagnate|タイ、とどこお-る|tai, todokoo-ru
+0x00614b|態|1310||心|14|5||condition|タイ|tai
+0x006234|戴|1311||戈|17|S|2010|be crowned with|タイ|tai
+0x005927|大|1312||大|3|1||large|ダイ、タイ、おお、おお-きい、おお-いに|dai, tai, oo, oo-kii, oo-ini
+0x004ee3|代|1313||人|5|3||substitute|ダイ、タイ、か-わる、か-える、よ、しろ|dai, tai, ka-waru, ka-eru, yo, shiro
+0x0053f0|台|1314|臺|至|5|2||pedestal|ダイ、タイ|dai, tai
+0x007b2c|第|1315||竹|11|3||ordinal number prefix|ダイ|dai
+0x00984c|題|1316||頁|18|3||topic|ダイ|dai
+0x006edd|滝|1317|瀧|水|13|S||waterfall|たき|taki
+0x005b85|宅|1318||宀|6|6||home|タク|taku
+0x00629e|択|1319|擇|手|7|S||choose|タク|taku
+0x006ca2|沢|1320|澤|水|7|S||swamp|タク、さわ|taku, sawa
+0x005353|卓|1321||十|8|S||eminent|タク|taku
+0x0062d3|拓|1322||手|8|S||clear (the land)|タク|taku
+0x008a17|託|1323||言|10|S||consign|タク|taku
+0x006fef|濯|1324||水|17|S|1981|laundry|タク|taku
+0x008afe|諾|1325||言|15|S||consent|ダク|daku
+0x006fc1|濁|1326||水|16|S||voiced|ダク、にご-る、にご-す|daku, nigo-ru, nigo-su
+0x004f46|但|1327||人|7|S||however|ただ-し|tada-shi
+0x009054|達|1328||辵|12|4||attain|タツ|tatsu
+0x008131|脱|1329||肉|11|S||undress|ダツ、ぬ-ぐ、ぬ-げる|datsu, nu-gu, nu-geru
+0x00596a|奪|1330||大|14|S||rob|ダツ、うば-う|datsu, uba-u
+0x0068da|棚|1331||木|12|S|1981|shelf|たな|tana
+0x008ab0|誰|1332||言|15|S|2010|who (question word)|だれ|dare
+0x004e39|丹|1333||丶|4|S||cinnabar|タン|tan
+0x0065e6|旦|1334||日|5|S|2010|daybreak|タン、ダン|tan, dan
+0x0062c5|担|1335|擔|手|8|6||shouldering|タン、かつ-ぐ、にな-う|tan, katsu-gu, nina-u
+0x005358|単|1336|單|口|9|4||simple|タン|tan
+0x0070ad|炭|1337||火|9|3||charcoal|タン、すみ|tan, sumi
+0x0080c6|胆|1338|膽|肉|9|S||gall bladder|タン|tan
+0x0063a2|探|1339||手|11|6||grope|タン、さぐ-る、さが-す|tan, sagu-ru, saga-su
+0x006de1|淡|1340||水|11|S||thin|タン、あわ-い|tan, awa-i
+0x0077ed|短|1341||矢|12|3||short|タン、みじか-い|tan, mijika-i
+0x005606|嘆|1342|嘆 [4]|口|13|S||sigh|タン、なげ-く、なげ-かわしい|tan, nage-ku, nage-kawashii
+0x007aef|端|1343||立|14|S||edge|タン、はし、は、はた|tan, hashi, ha, hata
+0x007dbb|綻|1344||糸|14|S|2010|rip|タン、ほころ-びる|tan, hokoro-biru
+0x008a95|誕|1345||言|15|6||nativity|タン|tan
+0x00935b|鍛|1346||金|17|S||forge|タン、きた-える|tan, kita-eru
+0x0056e3|団|1347|團|囗|6|5||group|ダン、（トン）|dan, (ton)
+0x007537|男|1348||田|7|1||male|ダン、ナン、おとこ|dan, nan, otoko
+0x006bb5|段|1349||殳|9|6||steps|ダン|dan
+0x0065ad|断|1350|斷|斤|11|5||cut off|ダン、た-つ、ことわ-る|dan, ta-tsu, kotowa-ru
+0x005f3e|弾|1351|彈|弓|12|S||bullet|ダン、ひ-く、はず-む、たま|dan, hi-ku, hazu-mu, tama
+0x006696|暖|1352||日|13|6||warmth|ダン、あたた-か、あたた-かい、あたた-まる、あたた-める|dan, atata-ka, atata-kai, atata-maru, atata-meru
+0x008ac7|談|1353||言|15|3||discuss|ダン|dan
+0x0058c7|壇|1354||土|16|S||podium|ダン、（タン）|dan, (tan)
+0x005730|地|1355||土|6|2||ground|チ、ジ|chi, ji
+0x006c60|池|1356||水|6|2||pond|チ、いけ|chi, ike
+0x0077e5|知|1357||矢|8|2||know|チ、し-る|chi, shi-ru
+0x005024|値|1358||人|10|6||value|チ、ね、あたい|chi, ne, atai
+0x006065|恥|1359||心|10|S||shame|チ、は-じる、はじ、は-じらう、は-ずかしい|chi, ha-jiru, haji, ha-jirau, ha-zukashii
+0x0081f4|致|1360||至|10|S||(to) do|チ、いた-す|chi, ita-su
+0x009045|遅|1361|遲|辵|12|S||slow|チ、おく-れる、おく-らす、おそ-い|chi, oku-reru, oku-rasu, oso-i
+0x0075f4|痴|1362|癡|疒|13|S||stupid|チ|chi
+0x007a1a|稚|1363||禾|13|S||immature|チ|chi
+0x007f6e|置|1364||网|13|4||put|チ、お-く|chi, o-ku
+0x007dfb|緻|1365||糸|16|S|2010|fine (not coarse)|チ|chi
+0x007af9|竹|1366||竹|6|1||bamboo|チク、たけ|chiku, take
+0x00755c|畜|1367||田|10|S||livestock|チク|chiku
+0x009010|逐|1368||辵|10|S||pursue|チク|chiku
+0x0084c4|蓄|1369||艸|13|S||amass|チク、たくわ-える|chiku, takuwa-eru
+0x007bc9|築|1370||竹|16|5||fabricate|チク、きず-く|chiku, kizu-ku
+0x0079e9|秩|1371||禾|10|S||regularity|チツ|chitsu
+0x007a92|窒|1372||穴|11|S||plug up|チツ|chitsu
+0x008336|茶|1373||艸|9|2||tea|チャ、サ|cha, sa
+0x007740|着|1374||羊|12|3||wear|チャク、（ジャク）、き-る、き-せる、つ-く、つ-ける|chaku, (jaku), ki-ru, ki-seru, tsu-ku, tsu-keru
+0x005ae1|嫡|1375||女|14|S||legitimate wife|チャク|chaku
+0x004e2d|中|1376||丨|4|1||middle|チュウ、（ジュウ）、なか|chū, (jū), naka
+0x004ef2|仲|1377||人|6|4||relationship|チュウ、なか|chū, naka
+0x00866b|虫|1378|蟲|虫|6|1||insect|チュウ、むし|chū, mushi
+0x006c96|沖|1379||水|7|4||open sea|チュウ、おき|chū, oki
+0x005b99|宙|1380||宀|8|6||mid-air|チュウ|chū
+0x005fe0|忠|1381||心|8|6||loyalty|チュウ|chū
+0x0062bd|抽|1382||手|8|S||pluck|チュウ|chū
+0x006ce8|注|1383||水|8|3||pour|チュウ、そそ-ぐ|chū, soso-gu
+0x00663c|昼|1384|晝|日|9|2||daytime|チュウ、ひる|chū, hiru
+0x0067f1|柱|1385||木|9|3||pillar|チュウ、はしら|chū, hashira
+0x008877|衷|1386||衣|10|S||inmost|チュウ|chū
+0x00914e|酎|1387||酉|10|S|2010|sake|チュウ|chū
+0x0092f3|鋳|1388|鑄|金|15|S||casting|チュウ、い-る|chū, i-ru
+0x0099d0|駐|1389||馬|15|S||stop-over|チュウ|chū
+0x008457|著|1390|著 [4]|艸|11|6||renowned|チョ、あらわ-す、いちじる-しい|cho, arawa-su, ichijiru-shii
+0x008caf|貯|1391||貝|12|5||savings|チョ|cho
+0x004e01|丁|1392||一|2|3||ward|チョウ、テイ|chō, tei
+0x005f14|弔|1393||弓|4|S||condolences|チョウ、とむら-う|chō, tomura-u
+0x005e81|庁|1394|廳|广|5|6||government office|チョウ|chō
+0x005146|兆|1395||儿|6|4||portent, trillion|チョウ、きざ-す、きざ-し|chō, kiza-su, kiza-shi
+0x00753a|町|1396||田|7|1||town|チョウ、まち|chō, machi
+0x009577|長|1397||長|8|2||long|チョウ、なが-い|chō, naga-i
+0x006311|挑|1398||手|9|S|1981|challenge|チョウ、いど-む|chō, ido-mu
+0x005e33|帳|1399||巾|11|3||account book|チョウ|chō
+0x005f35|張|1400||弓|11|5||stretch|チョウ、は-る|chō, ha-ru
+0x005f6b|彫|1401||彡|11|S||carve|チョウ、ほ-る|chō, ho-ru
+0x00773a|眺|1402||目|11|S|1981|stare|チョウ、なが-める|chō, naga-meru
+0x0091e3|釣|1403||金|11|S|1981|angling|チョウ、つ-る|chō, tsu-ru
+0x009802|頂|1404||頁|11|6||place on the head|チョウ、いただ-く、いただき|chō, itada-ku, itadaki
+0x009ce5|鳥|1405||鳥|11|2||bird|チョウ、とり|chō, tori
+0x00671d|朝|1406||月|12|2||morning|チョウ、あさ|chō, asa
+0x008cbc|貼|1407||貝|12|S|2010|paste|チョウ、は-る|chō, ha-ru
+0x008d85|超|1408||走|12|S||transcend|チョウ、こ-える、こ-す|chō, ko-eru, ko-su
+0x008178|腸|1409||肉|13|6||intestines|チョウ|chō
+0x008df3|跳|1410||足|13|S||hop|チョウ、は-ねる、と-ぶ|chō, ha-neru, to-bu
+0x005fb4|徴|1411|徵|彳|14|S||indications|チョウ|chō
+0x005632|嘲 [7]|1412||口|15|S|2010|ridicule|チョウ、あざけ-る|chō, azake-ru
+0x006f6e|潮|1413||水|15|6||tide|チョウ、しお|chō, shio
+0x006f84|澄|1414||水|15|S||lucidity|チョウ、す-む、す-ます|chō, su-mu, su-masu
+0x008abf|調|1415||言|15|3||investigate|チョウ、しら-べる、ととの-う、ととの-える|chō, shira-beru, totono-u, totono-eru
+0x008074|聴|1416|聽|耳|17|S||listen|チョウ、き-く|chō, ki-ku
+0x0061f2|懲|1417|懲 [4]|心|18|S||penal|チョウ、こ-りる、こ-らす、こ-らしめる|chō, ko-riru, ko-rasu, ko-rashimeru
+0x0076f4|直|1418||目|8|2||straight|チョク、ジキ、ただ-ちに、なお-す、なお-る|choku, jiki, tada-chini, nao-su, nao-ru
+0x0052c5|勅|1419|敕|力|9|S||imperial order|チョク|choku
+0x006357|捗 [7]|1420||手|10|S|2010|make progress|チョク|choku
+0x006c88|沈|1421||水|7|S||sink|チン、しず-む、しず-める|chin, shizu-mu, shizu-meru
+0x0073cd|珍|1422||玉|9|S||rare|チン、めずら-しい|chin, mezura-shii
+0x006715|朕|1423||月|10|S||majestic plural|チン|chin
+0x009673|陳|1424||阜|11|S||exhibit|チン|chin
+0x008cc3|賃|1425||貝|13|6||fare|チン|chin
+0x0093ae|鎮|1426|鎭|金|18|S||tranquilize|チン、しず-める、しず-まる|chin, shizu-meru, shizu-maru
+0x008ffd|追|1427||辵|9|3||follow|ツイ、お-う|tsui, o-u
+0x00690e|椎|1428||木|12|S|2010|oak|ツイ|tsui
+0x00589c|墜|1429||土|15|S||crash|ツイ|tsui
+0x00901a|通|1430||辵|10|2||pass through|ツウ、（ツ）、とお-る、とお-す、かよ-う|tsū, (tsu), too-ru, too-su, kayo-u
+0x0075db|痛|1431||疒|12|6||pain|ツウ、いた-い、いた-む、いた-める|tsū, ita-i, ita-mu, ita-meru
+0x00585a|塚|1432|塚 [4]|土|12|S|1981|hillock|つか|tsuka
+0x006f2c|漬|1433||水|14|S|1981|pickling|つ-ける、つ-かる|tsu-keru, tsu-karu
+0x00576a|坪|1434||土|8|S||two-mat area|つぼ|tsubo
+0x00722a|爪|1435||爪|4|S|2010|claw|つめ、（つま）|tsume, (tsuma)
+0x009db4|鶴|1436||鳥|21|S|2010|crane|つる|tsuru
+0x004f4e|低|1437||人|7|4||low|テイ、ひく-い、ひく-める、ひく-まる|tei, hiku-i, hiku-meru, hiku-maru
+0x005448|呈|1438||口|7|S||display|テイ|tei
+0x005ef7|廷|1439||廴|7|S||courts|テイ|tei
+0x005f1f|弟|1440||弓|7|2||younger brother|テイ、（ダイ）、（デ）、おとうと|tei, (dai), (de), otōto
+0x005b9a|定|1441||宀|8|3||decide|テイ、ジョウ、さだ-める、さだ-まる、さだ-か|tei, jō, sada-meru, sada-maru, sada-ka
+0x005e95|底|1442||广|8|4||bottom|テイ、そこ|tei, soko
+0x0062b5|抵|1443||手|8|S||resist|テイ|tei
+0x0090b8|邸|1444||邑|8|S||residence|テイ|tei
+0x004ead|亭|1445||亠|9|S|1981|pavilion|テイ|tei
+0x008c9e|貞|1446||貝|9|S||upright|テイ|tei
+0x005e1d|帝|1447||巾|9|S||sovereign|テイ|tei
+0x008a02|訂|1448||言|9|S||revise|テイ|tei
+0x005ead|庭|1449||广|10|3||garden|テイ、にわ|tei, niwa
+0x009013|逓|1450|遞|辵|10|S||relay|テイ|tei
+0x00505c|停|1451||人|11|5||halt|テイ|tei
+0x005075|偵|1452||人|11|S|1981|spy|テイ|tei
+0x005824|堤|1453||土|12|S||dike|テイ、つつみ|tei, tsutsumi
+0x0063d0|提|1454||手|12|5||present|テイ、さ-げる|tei, sa-geru
+0x007a0b|程|1455||禾|12|5||extent|テイ、ほど|tei, hodo
+0x008247|艇|1456||舟|13|S||rowboat|テイ|tei
+0x007de0|締|1457||糸|15|S||tighten|テイ、し-まる、し-める|tei, shi-maru, shi-meru
+0x008ae6|諦|1458||言|16|S|2010|abandon|テイ、あきら-める|tei, akira-meru
+0x006ce5|泥|1459||水|8|S|1981|mud|デイ、どろ|dei, doro
+0x007684|的|1460||白|8|4||target|テキ、まと|teki, mato
+0x007b1b|笛|1461||竹|11|3||flute|テキ、ふえ|teki, fue
+0x006458|摘|1462||手|14|S||pinch|テキ、つ-む|teki, tsu-mu
+0x006ef4|滴|1463||水|14|S||drip|テキ、しずく、したた-る|teki, shizuku, shitata-ru
+0x009069|適|1464||辵|14|5||suitable|テキ|teki
+0x006575|敵|1465||攴|15|6||enemy|テキ、かたき|teki, kataki
+0x006eba|溺 [7]|1466||水|13|S|2010|drown|デキ、おぼ-れる|deki, obo-reru
+0x008fed|迭|1467||辵|8|S||transfer|テツ|tetsu
+0x0054f2|哲|1468||口|10|S||philosophy|テツ|tetsu
+0x009244|鉄|1469|鐵|金|13|3||iron|テツ|tetsu
+0x005fb9|徹|1470||彳|15|S||penetrate|テツ|tetsu
+0x0064a4|撤|1471||手|15|S||remove|テツ|tetsu
+0x005929|天|1472||大|4|1||heaven|テン、あめ、（あま）|ten, ame, (ama)
+0x005178|典|1473||八|8|4||code|テン|ten
+0x005e97|店|1474||广|8|2||shop|テン、みせ|ten, mise
+0x0070b9|点|1475|點|黑|9|2||point|テン|ten
+0x005c55|展|1476||尸|10|6||expand|テン|ten
+0x006dfb|添|1477||水|11|S||annexed|テン、そ-える、そ-う|ten, so-eru, so-u
+0x008ee2|転|1478|轉|車|11|3||revolve|テン、ころ-がる、ころ-げる、ころ-がす、ころ-ぶ|ten, koro-garu, koro-geru, koro-gasu, koro-bu
+0x005861|塡 [7]|1479||土|13|S|2010|fill in|テン|ten
+0x007530|田|1480||田|5|1||rice paddy|デン、た|den, ta
+0x004f1d|伝|1481|傳|人|6|4||transmit|デン、つた-わる、つた-える、つた-う|den, tsuta-waru, tsuta-eru, tsuta-u
+0x006bbf|殿|1482||殳|13|S||Mr.|デン、テン、との、どの|den, ten, tono, dono
+0x0096fb|電|1483||雨|13|2||electricity|デン|den
+0x006597|斗|1484||斗|4|S||Big Dipper|ト|to
+0x005410|吐|1485||口|6|S||spit|ト、は-く|to, ha-ku
+0x0059ac|妬|1486||女|8|S|2010|jealousy|ト、ねた-む|to, neta-mu
+0x005f92|徒|1487||彳|10|4||junior|ト|to
+0x009014|途|1488||辵|10|S||route|ト|to
+0x0090fd|都|1489|都 [4]|邑|11|3||metropolis|ト、ツ、みやこ|to, tsu, miyako
+0x006e21|渡|1490||水|12|S||transit|ト、わた-る、わた-す|to, wata-ru, wata-su
+0x005857|塗|1491||土|13|S||paint|ト、ぬ-る|to, nu-ru
+0x008ced|賭 [7]|1492||貝|16|S|2010|gamble|ト、か-ける|to, ka-keru
+0x00571f|土|1493||土|3|1||soil|ド、ト、つち|do, to, tsuchi
+0x005974|奴|1494||女|5|S||guy|ド|do
+0x0052aa|努|1495||力|7|4||toil|ド、つと-める|do, tsuto-meru
+0x005ea6|度|1496||广|9|3||degrees|ド、（ト）、（タク）、たび|do, (to), (taku), tabi
+0x006012|怒|1497||心|9|S||angry|ド、いか-る、おこ-る|do, ika-ru, oko-ru
+0x005200|刀|1498||刀|2|2||sword|トウ、かたな|tō, katana
+0x0051ac|冬|1499||冫|5|2||winter|トウ、ふゆ|tō, fuyu
+0x00706f|灯|1500|燈|火|6|4||lamp|トウ、ひ|tō, hi
+0x005f53|当|1501|當|田|6|2||hit|トウ、あ-たる、あ-てる|tō, a-taru, a-teru
+0x006295|投|1502||手|7|3||throw|トウ、な-げる|tō, na-geru
+0x008c46|豆|1503||豆|7|3||beans|トウ、（ズ）、まめ|tō, (zu), mame
+0x006771|東|1504||木|8|2||east|トウ、ひがし|tō, higashi
+0x005230|到|1505||刀|8|S||arrival|トウ|tō
+0x009003|逃|1506||辵|9|S||escape|トウ、に-げる、に-がす、のが-す、のが-れる|tō, ni-geru, ni-gasu, noga-su, noga-reru
+0x005012|倒|1507||人|10|S||overthrow|トウ、たお-れる、たお-す|tō, tao-reru, tao-su
+0x0051cd|凍|1508||冫|10|S||frozen|トウ、こお-る、こご-える|tō, koo-ru, kogo-eru
+0x005510|唐|1509||口|10|S||T'ang|トウ、から|tō, kara
+0x005cf6|島|1510||山|10|3||island|トウ、しま|tō, shima
+0x006843|桃|1511||木|10|S||peach tree|トウ、もも|tō, momo
+0x008a0e|討|1512||言|10|6||chastise|トウ、う-つ|tō, u-tsu
+0x00900f|透|1513||辵|10|S||transparent|トウ、す-く、す-かす、す-ける|tō, su-ku, su-kasu, su-keru
+0x00515a|党|1514|黨|黑|10|6||group|トウ|tō
+0x0060bc|悼|1515||心|11|S||lament|トウ、いた-む|tō, ita-mu
+0x0076d7|盗|1516|盜|皿|11|S||steal|トウ、ぬす-む|tō, nusu-mu
+0x009676|陶|1517||阜|11|S||pottery|トウ|tō
+0x005854|塔|1518||土|12|S||pagoda|トウ|tō
+0x00642d|搭|1519||手|12|S|1981|board|トウ|tō
+0x0068df|棟|1520||木|12|S|1981|ridgepole|トウ、むね、（むな）|tō, mune, (muna)
+0x006e6f|湯|1521||水|12|3||hot water|トウ、ゆ|tō, yu
+0x0075d8|痘|1522||疒|12|S||pox|トウ|tō
+0x00767b|登|1523||癶|12|3||climb|トウ、ト、のぼ-る|tō, to, nobo-ru
+0x007b54|答|1524||竹|12|2||answer|トウ、こた-える、こた-え|tō, kota-eru, kota-e
+0x007b49|等|1525||竹|12|3||class|トウ、ひと-しい|tō, hito-shii
+0x007b52|筒|1526||竹|12|S||cylinder|トウ、つつ|tō, tsutsu
+0x007d71|統|1527||糸|12|5||unite|トウ、す-べる|tō, su-beru
+0x007a32|稲|1528|稻|禾|14|S||rice plant|トウ、いね、（いな）|tō, ine, (ina)
+0x008e0f|踏|1529||足|15|S||step|トウ、ふ-む、ふ-まえる|tō, fu-mu, fu-maeru
+0x007cd6|糖|1530||米|16|6||sugar|トウ|tō
+0x00982d|頭|1531||頁|16|2||head|トウ、ズ、（ト）、あたま、かしら|tō, zu, (to), atama, kashira
+0x008b04|謄|1532||言|17|S||mimeograph|トウ|tō
+0x0085e4|藤|1533||艸|18|S|2010|wisteria|トウ、ふじ|tō, fuji
+0x0095d8|闘|1534|鬭|鬥|18|S||fight|トウ、たたか-う|tō, tataka-u
+0x009a30|騰|1535||馬|20|S||inflation|トウ|tō
+0x00540c|同|1536||口|6|2||same|ドウ、おな-じ|dō, ona-ji
+0x006d1e|洞|1537||水|9|S|1981|den|ドウ、ほら|dō, hora
+0x0080f4|胴|1538||肉|10|S||trunk|ドウ|dō
+0x0052d5|動|1539||力|11|3||move|ドウ、うご-く、うご-かす|dō, ugo-ku, ugo-kasu
+0x005802|堂|1540||土|11|5||public chamber|ドウ|dō
+0x007ae5|童|1541||立|12|3||juvenile|ドウ、わらべ|dō, warabe
+0x009053|道|1542||辵|12|2||road|ドウ、（トウ）、みち|dō, (tō), michi
+0x0050cd|働|1543||人|13|4||work|ドウ、はたら-く|dō, hatara-ku
+0x009285|銅|1544||金|14|5||copper|ドウ|dō
+0x005c0e|導|1545||寸|15|5||guide|ドウ、みちび-く|dō, michibi-ku
+0x0077b3|瞳|1546||目|17|S|2010|pupil|ドウ、ひとみ|dō, hitomi
+0x005ce0|峠|1547||山|9|S||mountain peak|とうげ|tōge
+0x00533f|匿|1548||匸|10|S||hide|トク|toku
+0x007279|特|1549||牛|10|4||special|トク|toku
+0x005f97|得|1550||彳|11|5||acquire|トク、え-る、う-る|toku, e-ru, u-ru
+0x007763|督|1551||目|13|S||coach|トク|toku
+0x005fb3|徳|1552|德|彳|14|4||benevolence|トク|toku
+0x007be4|篤|1553||竹|16|S||fervent|トク|toku
+0x006bd2|毒|1554||毋|8|5||poison|ドク|doku
+0x0072ec|独|1555|獨|犬|9|5||alone|ドク、ひと-り|doku, hito-ri
+0x008aad|読|1556|讀|言|14|2||read|ドク、トク、（トウ）、よ-む|doku, toku, (tō), yo-mu
+0x006803|栃 [5]|1557||木|9|4|2010|horse chestnut|（とち）[6]|(tochi)
+0x0051f8|凸|1558||凵|5|S|1981|convex|トツ|totsu
+0x007a81|突|1559|突 [4]|穴|8|S||stab|トツ、つ-く|totsu, tsu-ku
+0x005c4a|届|1560|屆|尸|8|6||deliver|とど-ける、とど-く|todo-keru, todo-ku
+0x005c6f|屯|1561||屮|4|S|1981|barracks|トン|ton
+0x008c5a|豚|1562||豕|11|S||pork|トン、ぶた|ton, buta
+0x009813|頓|1563||頁|13|S|2010|suddenly|トン|ton
+0x008caa|貪|1564||貝|11|S|2010|covet|ドン、むさぼ-る|don, musabo-ru
+0x00920d|鈍|1565||金|12|S||dull|ドン、にぶ-い、にぶ-る|don, nibu-i, nibu-ru
+0x0066c7|曇|1566||日|16|S||cloudy weather|ドン、くも-る|don, kumo-ru
+0x004e3c|丼|1567||丶|5|S|2010|bowl of food|どんぶり、（どん）|donburi, (don)
+0x0090a3|那|1568||邑|7|S|2010|what|ナ|na
+0x005948|奈|1569||大|8|4|2010|what|ナ|na
+0x005185|内|1570||入|4|2||inside|ナイ、（ダイ）、うち|nai, (dai), uchi
+0x0068a8|梨|1571||木|11|4|2010|pear tree|なし|nashi
+0x008b0e|謎 [8]|1572||言|17|S|2010|riddle|なぞ|nazo
+0x00934b|鍋|1573||金|17|S|2010|pot|なべ|nabe
+0x005357|南|1574||十|9|2||south|ナン、（ナ）、みなみ|nan, (na), minami
+0x008edf|軟|1575||車|11|S||soft|ナン、やわ-らか、やわ-らかい|nan, yawa-raka, yawa-rakai
+0x0096e3|難|1576|難 [4]|隹|18|6||difficult|ナン、かた-い、むずか-しい|nan, kata-i, muzuka-shii
+0x004e8c|二|1577||二|2|1||two|ニ、ふた、ふた-つ|ni, futa, futa-tsu
+0x005c3c|尼|1578||尸|5|S||nun|ニ、あま|ni, ama
+0x005f10|弐|1579|貳|貝|6|S||two (falsification prevention)|ニ|ni
+0x005302|匂|1580||勹|4|S|2010|scent|にお-う|nio-u
+0x008089|肉|1581||肉|6|2||meat|ニク|niku
+0x008679|虹|1582||虫|9|S|2010|rainbow|にじ|niji
+0x0065e5|日|1583||日|4|1||day|ニチ、ジツ、ひ、か|nichi, jitsu, hi, ka
+0x005165|入|1584||入|2|1||enter|ニュウ、い-る、い-れる、はい-る|nyū, i-ru, i-reru, hai-ru
+0x004e73|乳|1585||乙|8|6||milk|ニュウ、ちち、ち|nyū, chichi, chi
+0x005c3f|尿|1586||尸|7|S||urine|ニョウ|nyō
+0x004efb|任|1587||人|6|5||responsibility|ニン、まか-せる、まか-す|nin, maka-seru, maka-su
+0x00598a|妊|1588||女|7|S||pregnancy|ニン|nin
+0x005fcd|忍|1589||心|7|S||endure|ニン、しの-ぶ、しの-ばせる|nin, shino-bu, shino-baseru
+0x008a8d|認|1590||言|14|6||recognize|ニン、みと-める|nin, mito-meru
+0x005be7|寧|1591||宀|14|S||rather|ネイ|nei
+0x0071b1|熱|1592||火|15|4||heat|ネツ、あつ-い|netsu, atsu-i
+0x005e74|年|1593||干|6|1||year|ネン、とし|nen, toshi
+0x005ff5|念|1594||心|8|4||thought|ネン|nen
+0x00637b|捻|1595||手|11|S|2010|twist|ネン|nen
+0x007c98|粘|1596||米|11|S||sticky|ネン、ねば-る|nen, neba-ru
+0x0071c3|燃|1597||火|16|5||burn|ネン、も-える、も-やす、も-す|nen, mo-eru, mo-yasu, mo-su
+0x0060a9|悩|1598|惱|心|10|S||trouble|ノウ、なや-む、なや-ます|nō, naya-mu, naya-masu
+0x007d0d|納|1599||糸|10|6||settlement|ノウ、（ナッ）、（ナ）、（ナン）、（トウ）、おさ-める、おさ-まる|nō, (na'), (na), (nan), (tō), osa-meru, osa-maru
+0x0080fd|能|1600||肉|10|5||ability|ノウ|nō
+0x008133|脳|1601|腦|肉|11|6||brain|ノウ|nō
+0x008fb2|農|1602||辰|13|3||farming|ノウ|nō
+0x006fc3|濃|1603||水|16|S||concentrated|ノウ、こ-い|nō, ko-i
+0x00628a|把|1604||手|7|S|1981|grasp|ハ|ha
+0x006ce2|波|1605||水|8|3||wave|ハ、なみ|ha, nami
+0x006d3e|派|1606||水|9|6||sect|ハ|ha
+0x007834|破|1607||石|10|5||rend|ハ、やぶ-る、やぶ-れる|ha, yabu-ru, yabu-reru
+0x008987|覇|1608|霸|雨|19|S|1981|hegemony|ハ|ha
+0x0099ac|馬|1609||馬|10|2||horse|バ、うま、（ま）|ba, uma, (ma)
+0x005a46|婆|1610||女|11|S||old woman|バ|ba
+0x007f75|罵|1611||网|15|S|2010|insult|バ、ののし-る|ba, nonoshi-ru
+0x0062dd|拝|1612|拜|手|8|6||worship|ハイ、おが-む|hai, oga-mu
+0x00676f|杯|1613||木|8|S||counter for cupfuls|ハイ、さかずき|hai, sakazuki
+0x0080cc|背|1614||肉|9|6||back|ハイ、せ、せい、そむ-く、そむ-ける|hai, se, sei, somu-ku, somu-keru
+0x0080ba|肺|1615||肉|9|6||lungs|ハイ|hai
+0x004ff3|俳|1616||人|10|6||haiku|ハイ|hai
+0x00914d|配|1617||酉|10|3||distribute|ハイ、くば-る|hai, kuba-ru
+0x006392|排|1618||手|11|S||repudiate|ハイ|hai
+0x006557|敗|1619||攴|11|4||failure|ハイ、やぶ-れる|hai, yabu-reru
+0x005ec3|廃|1620|廢|广|12|S||abolish|ハイ、すた-れる、すた-る|hai, suta-reru, suta-ru
+0x008f29|輩|1621||車|15|S||comrade|ハイ|hai
+0x0058f2|売|1622|賣|貝|7|2||sell|バイ、う-る、う-れる|bai, u-ru, u-reru
+0x00500d|倍|1623||人|10|3||double|バイ|bai
+0x006885|梅|1624|梅 [4]|木|10|4||ume (Japanese apricot)|バイ、うめ|bai, ume
+0x0057f9|培|1625||土|11|S||cultivate|バイ、つちか-う|bai, tsuchika-u
+0x00966a|陪|1626||阜|11|S||obeisance|バイ|bai
+0x005a92|媒|1627||女|12|S||mediator|バイ|bai
+0x008cb7|買|1628||貝|12|2||buy|バイ、か-う|bai, ka-u
+0x008ce0|賠|1629||貝|15|S||compensation|バイ|bai
+0x00767d|白|1630||白|5|1||white|ハク、ビャク、しろ、（しら）、しろ-い|haku, byaku, shiro, (shira), shiro-i
+0x004f2f|伯|1631||人|7|S||chief|ハク|haku
+0x0062cd|拍|1632||手|8|S||clap|ハク、（ヒョウ）|haku, (hyō)
+0x006cca|泊|1633||水|8|S||overnight|ハク、と-まる、と-める|haku, to-maru, to-meru
+0x008feb|迫|1634||辵|8|S||urge|ハク、せま-る|haku, sema-ru
+0x00525d|剝 [7]|1635||刀|10|S|2010|peel|ハク、は-がす、は-ぐ、は-がれる、は-げる|haku, ha-gasu, ha-gu, ha-gareru, ha-geru
+0x008236|舶|1636||舟|11|S||liner|ハク|haku
+0x00535a|博|1637||十|12|4||Dr.|ハク、（バク）|haku, (baku)
+0x008584|薄|1638||艸|16|S||dilute|ハク、うす-い、うす-める、うす-まる、うす-らぐ、うす-れる|haku, usu-i, usu-meru, usu-maru, usu-ragu, usu-reru
+0x009ea6|麦|1639|麥|麥|7|2||wheat|バク、むぎ|baku, mugi
+0x006f20|漠|1640||水|13|S|1981|vague|バク|baku
+0x007e1b|縛|1641||糸|16|S||truss|バク、しば-る|baku, shiba-ru
+0x007206|爆|1642||火|19|S||explode|バク|baku
+0x007bb1|箱|1643||竹|15|3||box|はこ|hako
+0x007bb8|箸 [7]|1644||竹|15|S|2010|chopsticks|はし|hashi
+0x007551|畑|1645||田|9|3||farm|はた、はたけ|hata, hatake
+0x00808c|肌|1646||肉|6|S|1981|texture|はだ|hada
+0x00516b|八|1647||八|2|1||eight|ハチ、や、や-つ、やっ-つ、（よう）|hachi, ya, ya-tsu, ya'-tsu, (yō)
+0x009262|鉢|1648||金|13|S|1981|bowl|ハチ、（ハツ）|hachi, (hatsu)
+0x00767a|発|1649|發|癶|9|3||departure|ハツ、ホツ|hatsu, hotsu
+0x009aea|髪|1650|髮|髟|14|S||hair of the head|ハツ、かみ|hatsu, kami
+0x004f10|伐|1651||人|6|S||fell|バツ|batsu
+0x00629c|抜|1652|拔|手|7|S||slip out|バツ、ぬ-く、ぬ-ける、ぬ-かす、ぬ-かる|batsu, nu-ku, nu-keru, nu-kasu, nu-karu
+0x007f70|罰|1653||网|14|S||penalty|バツ、バチ|batsu, bachi
+0x0095a5|閥|1654||門|14|S||clique|バツ|batsu
+0x0053cd|反|1655||又|4|3||anti-|ハン、（ホン）、（タン）、そ-る、そ-らす|han, (hon), (tan), so-ru, so-rasu
+0x00534a|半|1656||十|5|2||half|ハン、なか-ば|han, naka-ba
+0x006c3e|氾|1657||水|5|S|2010|spread out|ハン|han
+0x0072af|犯|1658||犬|5|5||crime|ハン、おか-す|han, oka-su
+0x005e06|帆|1659||巾|6|S||sail|ハン、ほ|han, ho
+0x006c4e|汎|1660||水|6|S|2010|pan-|ハン|han
+0x004f34|伴|1661||人|7|S||consort|ハン、バン、ともな-う|han, ban, tomona-u
+0x005224|判|1662||刀|7|5||judge|ハン、バン|han, ban
+0x005742|坂|1663||土|7|3||slope|ハン、さか|han, saka
+0x00962a|阪|1664||阜|7|4|2010|heights|ハン|han
+0x00677f|板|1665||木|8|3||board|ハン、バン、いた|han, ban, ita
+0x007248|版|1666||片|8|5||printing block|ハン|han
+0x0073ed|班|1667||玉|10|6||squad|ハン|han
+0x007554|畔|1668||田|10|S||paddy-ridge|ハン|han
+0x00822c|般|1669||舟|10|S||generally|ハン|han
+0x008ca9|販|1670||貝|11|S||marketing|ハン|han
+0x006591|斑|1671||文|12|S|2010|blemish|ハン|han
+0x0098ef|飯|1672||食|12|4||meal|ハン、めし|han, meshi
+0x00642c|搬|1673||手|13|S||conveyor|ハン|han
+0x007169|煩|1674||火|13|S||anxiety|ハン、（ボン）、わずら-う、わずら-わす|han, (bon), wazura-u, wazura-wasu
+0x009812|頒|1675||頁|13|S||partition|ハン|han
+0x007bc4|範|1676||竹|15|S||pattern|ハン|han
+0x007e41|繁|1677|繁 [4]|糸|16|S||luxuriant|ハン|han
+0x0085e9|藩|1678||艸|18|S||clan|ハン|han
+0x006669|晩|1679|晚|日|12|6||nightfall|バン|ban
+0x00756a|番|1680||田|12|2||one's turn|バン|ban
+0x0086ee|蛮|1681|蠻|虫|12|S||barbarian|バン|ban
+0x0076e4|盤|1682||皿|15|S||tray|バン|ban
+0x006bd4|比|1683||比|4|5||compare|ヒ、くら-べる|hi, kura-beru
+0x0076ae|皮|1684||皮|5|3||skin|ヒ、かわ|hi, kawa
+0x005983|妃|1685||女|6|S||queen|ヒ|hi
+0x005426|否|1686||口|7|6||negate|ヒ、いな|hi, ina
+0x006279|批|1687||手|7|6||criticism|ヒ|hi
+0x005f7c|彼|1688||彳|8|S||he|ヒ、かれ、（かの）|hi, kare, (kano)
+0x0062ab|披|1689||手|8|S|1981|expose|ヒ|hi
+0x0080a5|肥|1690||肉|8|5||fertilizer|ヒ、こ-える、こえ、こ-やす、こ-やし|hi, ko-eru, koe, ko-yasu, ko-yashi
+0x00975e|非|1691||非|8|5||negative|ヒ|hi
+0x005351|卑|1692|卑 [4]|十|9|S||lowly|ヒ、いや-しい、いや-しむ、いや-しめる|hi, iya-shii, iya-shimu, iya-shimeru
+0x0098db|飛|1693||飛|9|4||fly|ヒ、と-ぶ、と-ばす|hi, to-bu, to-basu
+0x0075b2|疲|1694||疒|10|S||exhausted|ヒ、つか-れる|hi, tsuka-reru
+0x0079d8|秘|1695|祕|示|10|6||secret|ヒ、ひ-める|hi, hi-meru
+0x0088ab|被|1696||衣|10|S||incur|ヒ、こうむ-る|hi, kōmu-ru
+0x0060b2|悲|1697||心|12|3||sad|ヒ、かな-しい、かな-しむ|hi, kana-shii, kana-shimu
+0x006249|扉|1698||戶|12|S|1981|front door|ヒ、とびら|hi, tobira
+0x008cbb|費|1699||貝|12|5||expense|ヒ、つい-やす、つい-える|hi, tsui-yasu, tsui-eru
+0x007891|碑|1700|碑 [4]|石|14|S||tombstone|ヒ|hi
+0x007f77|罷|1701||网|15|S||quit|ヒ|hi
+0x00907f|避|1702||辵|16|S||evade|ヒ、さ-ける|hi, sa-keru
+0x005c3e|尾|1703||尸|7|S||tail|ビ、お|bi, o
+0x007709|眉|1704||目|9|S|2010|eyebrow|ビ、（ミ）、まゆ|bi, (mi), mayu
+0x007f8e|美|1705||羊|9|3||beauty|ビ、うつく-しい|bi, utsuku-shii
+0x005099|備|1706||人|12|5||provide|ビ、そな-える、そな-わる|bi, sona-eru, sona-waru
+0x005fae|微|1707||彳|13|S||delicate|ビ|bi
+0x009f3b|鼻|1708||鼻|14|3||nose|ビ、はな|bi, hana
+0x00819d|膝|1709||肉|15|S|2010|knee|ひざ|hiza
+0x008098|肘|1710||肉|7|S|2010|elbow|ひじ|hiji
+0x005339|匹|1711||匸|4|S||equal|ヒツ、ひき|hitsu, hiki
+0x005fc5|必|1712||心|5|4||without fail|ヒツ、かなら-ず|hitsu, kanara-zu
+0x006ccc|泌|1713||水|8|S||ooze|ヒツ、ヒ|hitsu, hi
+0x007b46|筆|1714||竹|12|3||writing brush|ヒツ、ふで|hitsu, fude
+0x0059eb|姫|1715||女|10|S||princess|ひめ|hime
+0x00767e|百|1716||白|6|1||hundred|ヒャク|hyaku
+0x006c37|氷|1717||水|5|3||ice|ヒョウ、こおり、ひ|hyō, koori, hi
+0x008868|表|1718||衣|8|3||express|ヒョウ、おもて、あらわ-す、あらわ-れる|hyō, omote, arawa-su, arawa-reru
+0x004ff5|俵|1719||人|10|6||bag|ヒョウ、たわら|hyō, tawara
+0x007968|票|1720||示|11|4||ballot|ヒョウ|hyō
+0x008a55|評|1721||言|12|5||evaluate|ヒョウ|hyō
+0x006f02|漂|1722||水|14|S||drift|ヒョウ、ただよ-う|hyō, tadayo-u
+0x006a19|標|1723||木|15|4||signpost|ヒョウ|hyō
+0x0082d7|苗|1724||艸|8|S||seedling|ビョウ、なえ、（なわ）|byō, nae, (nawa)
+0x0079d2|秒|1725||禾|9|3||second (part of time)|ビョウ|byō
+0x0075c5|病|1726||疒|10|3||sick|ビョウ、（ヘイ）、や-む、やまい|byō, (hei), ya-mu, yamai
+0x0063cf|描|1727||手|11|S||sketch|ビョウ、えが-く、か-く|byō, ega-ku, ka-ku
+0x00732b|猫|1728||犬|11|S|1981|cat|ビョウ、ねこ|byō, neko
+0x0054c1|品|1729||口|9|3||article|ヒン、しな|hin, shina
+0x006d5c|浜|1730|濱|水|10|S||seacoast|ヒン、はま|hin, hama
+0x008ca7|貧|1731||貝|11|5||poor|ヒン、ビン、まず-しい|hin, bin, mazu-shii
+0x008cd3|賓|1732|賓 [4]|貝|15|S||V.I.P.|ヒン|hin
+0x00983b|頻|1733|頻 [4]|頁|17|S|1981|repeatedly|ヒン|hin
+0x00654f|敏|1734|敏 [4]|攴|10|S||cleverness|ビン|bin
+0x0074f6|瓶|1735|甁|瓦|11|S|1981|flower pot|ビン|bin
+0x004e0d|不|1736||一|4|4||non-|フ、ブ|fu, bu
+0x00592b|夫|1737||大|4|4||husband|フ、（フウ）、おっと|fu, (fū), otto
+0x007236|父|1738||父|4|2||father|フ、ちち|fu, chichi
+0x004ed8|付|1739||人|5|4||attach|フ、つ-ける、つ-く|fu, tsu-keru, tsu-ku
+0x005e03|布|1740||巾|5|5||linen|フ、ぬの|fu, nuno
+0x006276|扶|1741||手|7|S||aid|フ|fu
+0x005e9c|府|1742||广|8|4||urban prefecture|フ|fu
+0x006016|怖|1743||心|8|S||dreadful|フ、こわ-い|fu, kowa-i
+0x00961c|阜|1744||阜|8|4|2010|mound|（フ）[6]|(fu)
+0x009644|附|1745||阜|8|S||affixed|フ|fu
+0x008a03|訃|1746||言|9|S|2010|obituary|フ|fu
+0x008ca0|負|1747||貝|9|3||lose|フ、ま-ける、ま-かす、お-う|fu, ma-keru, ma-kasu, o-u
+0x008d74|赴|1748||走|9|S||proceed|フ、おもむ-く|fu, omomu-ku
+0x006d6e|浮|1749||水|10|S||floating|フ、う-く、う-かれる、う-かぶ、う-かべる|fu, u-ku, u-kareru, u-kabu, u-kaberu
+0x005a66|婦|1750||女|11|5||lady|フ|fu
+0x007b26|符|1751||竹|11|S||token|フ|fu
+0x005bcc|富|1752||宀|12|4||rich|フ、（フウ）、と-む、とみ|fu, (fū), to-mu, tomi
+0x00666e|普|1753||日|12|S||universal|フ|fu
+0x008150|腐|1754||肉|14|S||rot|フ、くさ-る、くさ-れる、くさ-らす|fu, kusa-ru, kusa-reru, kusa-rasu
+0x006577|敷|1755||攴|15|S||spread|フ、し-く|fu, shi-ku
+0x00819a|膚|1756||肉|15|S||skin|フ|fu
+0x008ce6|賦|1757||貝|15|S||levy|フ|fu
+0x008b5c|譜|1758||言|19|S||musical score|フ|fu
+0x004fae|侮|1759|侮 [4]|人|8|S||scorn|ブ、あなど-る|bu, anado-ru
+0x006b66|武|1760||止|8|5||military|ブ、ム|bu, mu
+0x0090e8|部|1761||邑|11|3||part|ブ|bu
+0x00821e|舞|1762||舛|15|S||dance|ブ、ま-う、まい|bu, ma-u, mai
+0x005c01|封|1763||寸|9|S||seal|フウ、ホウ|fū, hō
+0x0098a8|風|1764||風|9|2||wind|フウ、（フ）、かぜ、（かざ）|fū, (fu), kaze, (kaza)
+0x004f0f|伏|1765||人|6|S||prostrated|フク、ふ-せる、ふ-す|fuku, fu-seru, fu-su
+0x00670d|服|1766||月|8|3||clothes|フク|fuku
+0x00526f|副|1767||刀|11|4||vice|フク|fuku
+0x005e45|幅|1768||巾|12|S||breadth|フク、はば|fuku, haba
+0x005fa9|復|1769||彳|12|5||again|フク|fuku
+0x00798f|福|1770|福 [4]|示|13|3||luck|フク|fuku
+0x008179|腹|1771||肉|13|6||abdomen|フク、はら|fuku, hara
+0x008907|複|1772||衣|14|5||duplicate|フク|fuku
+0x008986|覆|1773||襾|18|S||capsize|フク、おお-う、くつがえ-す、くつがえ-る|fuku, oo-u, kutsugae-su, kutsugae-ru
+0x006255|払|1774|拂|手|5|S||pay|フツ、はら-う|futsu, hara-u
+0x006cb8|沸|1775||水|8|S||seethe|フツ、わ-く、わ-かす|futsu, wa-ku, wa-kasu
+0x004ecf|仏|1776|佛|人|4|5||Buddha|ブツ、ほとけ|butsu, hotoke
+0x007269|物|1777||牛|8|3||thing|ブツ、モツ、もの|butsu, motsu, mono
+0x007c89|粉|1778||米|10|5||flour|フン、こ、こな|fun, ko, kona
+0x007d1b|紛|1779||糸|10|S||distract|フン、まぎ-れる、まぎ-らす、まぎ-らわす、まぎ-らわしい|fun, magi-reru, magi-rasu, magi-rawasu, magi-rawashii
+0x0096f0|雰|1780||雨|12|S|1981|atmosphere|フン|fun
+0x005674|噴|1781||口|15|S||erupt|フン、ふ-く|fun, fu-ku
+0x0058b3|墳|1782||土|15|S||tomb|フン|fun
+0x0061a4|憤|1783||心|15|S||aroused|フン、いきどお-る|fun, ikidoo-ru
+0x00596e|奮|1784||大|16|6||stirred up|フン、ふる-う|fun, furu-u
+0x005206|分|1785||刀|4|2||part, minute of time|ブン、フン、ブ、わ-ける、わ-かれる、わ-かる、わ-かつ|bun, fun, bu, wa-keru, wa-kareru, wa-karu, wa-katsu
+0x006587|文|1786||文|4|1||writing|ブン、モン、ふみ|bun, mon, fumi
+0x00805e|聞|1787||耳|14|2||hear|ブン、モン、き-く、き-こえる|bun, mon, ki-ku, ki-koeru
+0x004e19|丙|1788||一|5|S||third class|ヘイ|hei
+0x005e73|平|1789||干|5|3||flat|ヘイ、ビョウ、たい-ら、ひら|hei, byō, tai-ra, hira
+0x005175|兵|1790||八|7|4||soldier|ヘイ、ヒョウ|hei, hyō
+0x004f75|併|1791|倂|人|8|S||join|ヘイ、あわ-せる|hei, awa-seru
+0x004e26|並|1792|竝|立|8|6||line-up|ヘイ、なみ、なら-べる、なら-ぶ、なら-びに|hei, nami, nara-beru, nara-bu, nara-bini
+0x0067c4|柄|1793||木|9|S||design|ヘイ、がら、え|hei, gara, e
+0x00965b|陛|1794||阜|10|6||highness|ヘイ|hei
+0x009589|閉|1795||門|11|6||closed|ヘイ、と-じる、と-ざす、し-める、し-まる|hei, to-jiru, to-zasu, shi-meru, shi-maru
+0x005840|塀|1796|塀 [4]|土|12|S|1981|fence|ヘイ|hei
+0x005e63|幣|1797||巾|15|S||cash|ヘイ|hei
+0x005f0a|弊|1798||廾|15|S||abuse|ヘイ|hei
+0x00853d|蔽 [7]|1799||艸|15|S|2010|cover|ヘイ|hei
+0x009905|餅 [8]|1800|餠|食|15|S|2010|mochi rice cake|ヘイ、もち|hei, mochi
+0x007c73|米|1801||米|6|2||rice|ベイ、マイ、こめ|bei, mai, kome
+0x0058c1|壁|1802||土|16|S||wall|ヘキ、かべ|heki, kabe
+0x0074a7|璧|1803||玉|18|S|2010|sphere|ヘキ|heki
+0x007656|癖|1804||疒|18|S||mannerism|ヘキ、くせ|heki, kuse
+0x005225|別|1805||刀|7|4||separate|ベツ、わか-れる|betsu, waka-reru
+0x008511|蔑|1806||艸|14|S|2010|ignore|ベツ、さげす-む|betsu, sagesu-mu
+0x007247|片|1807||片|4|6||one-sided|ヘン、かた|hen, kata
+0x008fba|辺|1808|邊|辵|5|4||environs|ヘン、あた-り、べ|hen, ata-ri, be
+0x008fd4|返|1809||辵|7|3||return|ヘン、かえ-す、かえ-る|hen, kae-su, kae-ru
+0x005909|変|1810|變|言|9|4||change|ヘン、か-わる、か-える|hen, ka-waru, ka-eru
+0x00504f|偏|1811||人|11|S||partial|ヘン、かたよ-る|hen, katayo-ru
+0x00904d|遍|1812||辵|12|S||everywhere|ヘン|hen
+0x007de8|編|1813||糸|15|5||compile|ヘン、あ-む|hen, a-mu
+0x005f01|弁|1814|辨 瓣 辯|辛 瓜 辛|5|5||valve|ベン|ben
+0x004fbf|便|1815||人|9|4||convenience|ベン、ビン、たよ-り|ben, bin, tayo-ri
+0x0052c9|勉|1816|勉 [4]|力|10|3||exertion|ベン|ben
+0x006b69|歩|1817|步|止|8|2||walk|ホ、ブ、（フ）、ある-く、あゆ-む|ho, bu, (fu), aru-ku, ayu-mu
+0x004fdd|保|1818||人|9|5||preserve|ホ、たも-つ|ho, tamo-tsu
+0x0054fa|哺|1819||口|10|S|2010|suckle|ホ|ho
+0x006355|捕|1820||手|10|S||catch|ホ、と-らえる、と-らわれる、と-る、つか-まえる、つか-まる|ho, to-raeru, to-rawareru, to-ru, tsuka-maeru, tsuka-maru
+0x0088dc|補|1821||衣|12|6||supplement|ホ、おぎな-う|ho, ogina-u
+0x008217|舗|1822||舌|15|S||pavement|ホ|ho
+0x006bcd|母|1823||毋|5|2||mother|ボ、はは|bo, haha
+0x0052df|募|1824||力|12|S||recruit|ボ、つの-る|bo, tsuno-ru
+0x005893|墓|1825||土|13|5||grave|ボ、はか|bo, haka
+0x006155|慕|1826||心|14|S||pining|ボ、した-う|bo, shita-u
+0x0066ae|暮|1827||日|14|6||livelihood|ボ、く-れる、く-らす|bo, ku-reru, ku-rasu
+0x007c3f|簿|1828||竹|19|S||register|ボ|bo
+0x0065b9|方|1829||方|4|2||direction|ホウ、かた|hō, kata
+0x005305|包|1830||勹|5|4||wrap|ホウ、つつ-む|hō, tsutsu-mu
+0x0082b3|芳|1831||艸|7|S||perfume|ホウ、かんば-しい|hō, kanba-shii
+0x0090a6|邦|1832||邑|7|S||home country|ホウ|hō
+0x005949|奉|1833||大|8|S||observance|ホウ、（ブ）、たてまつ-る|hō, (bu), tatematsu-ru
+0x005b9d|宝|1834|寶|宀|8|6||treasure|ホウ、たから|hō, takara
+0x0062b1|抱|1835||手|8|S||embrace|ホウ、だ-く、いだ-く、かか-える|hō, da-ku, ida-ku, kaka-eru
+0x00653e|放|1836||攴|8|3||release|ホウ、はな-す、はな-つ、はな-れる、ほう-る|hō, hana-su, hana-tsu, hana-reru, hō-ru
+0x006cd5|法|1837||水|8|4||method|ホウ、（ハッ）、（ホッ）|hō, (ha'), (ho')
+0x006ce1|泡|1838||水|8|S|1981|bubbles|ホウ、あわ|hō, awa
+0x0080de|胞|1839||肉|9|S||placenta|ホウ|hō
+0x004ff8|俸|1840||人|10|S|1981|salary|ホウ|hō
+0x005023|倣|1841||人|10|S||emulate|ホウ、なら-う|hō, nara-u
+0x005cf0|峰|1842||山|10|S||summit|ホウ、みね|hō, mine
+0x007832|砲|1843||石|10|S||cannon|ホウ|hō
+0x005d29|崩|1844||山|11|S||crumble|ホウ、くず-れる、くず-す|hō, kuzu-reru, kuzu-su
+0x008a2a|訪|1845||言|11|6||visit|ホウ、おとず-れる、たず-ねる|hō, otozu-reru, tazu-neru
+0x005831|報|1846||土|12|5||report|ホウ、むく-いる|hō, muku-iru
+0x008702|蜂|1847||虫|13|S|2010|bee|ホウ、はち|hō, hachi
+0x008c4a|豊|1848|豐|豆|13|5||bountiful|ホウ、ゆた-か|hō, yuta-ka
+0x0098fd|飽|1849||食|13|S||sated|ホウ、あ-きる、あ-かす|hō, a-kiru, a-kasu
+0x008912|褒|1850|襃|衣|15|S|1981|praise|ホウ、ほ-める|hō, ho-meru
+0x007e2b|縫|1851||糸|16|S||sew|ホウ、ぬ-う|hō, nu-u
+0x004ea1|亡|1852||亠|3|6||deceased|ボウ、（モウ）、な-い|bō, (mō), na-i
+0x004e4f|乏|1853||丿|4|S||scarce|ボウ、とぼ-しい|bō, tobo-shii
+0x005fd9|忙|1854||心|6|S||busy|ボウ、いそが-しい|bō, isoga-shii
+0x00574a|坊|1855||土|7|S||boy|ボウ、（ボッ）|bō, (bo')
+0x0059a8|妨|1856||女|7|S||disturb|ボウ、さまた-げる|bō, samata-geru
+0x005fd8|忘|1857||心|7|6||forget|ボウ、わす-れる|bō, wasu-reru
+0x009632|防|1858||阜|7|5||prevent|ボウ、ふせ-ぐ|bō, fuse-gu
+0x00623f|房|1859||戶|8|S||tassel|ボウ、ふさ|bō, fusa
+0x0080aa|肪|1860||肉|8|S||obese|ボウ|bō
+0x0067d0|某|1861||木|9|S||so-and-so|ボウ|bō
+0x005192|冒|1862||冂|9|S||risk|ボウ、おか-す|bō, oka-su
+0x005256|剖|1863||刀|10|S||divide|ボウ|bō
+0x007d21|紡|1864||糸|10|S||spinning|ボウ、つむ-ぐ|bō, tsumu-gu
+0x00671b|望|1865||月|11|4||hope|ボウ、モウ、のぞ-む|bō, mō, nozo-mu
+0x00508d|傍|1866||人|12|S||bystander|ボウ、かたわ-ら|bō, katawa-ra
+0x005e3d|帽|1867||巾|12|S||cap|ボウ|bō
+0x0068d2|棒|1868||木|12|6||rod|ボウ|bō
+0x008cbf|貿|1869||貝|12|5||trade|ボウ|bō
+0x008c8c|貌|1870||豸|14|S|2010|appearance|ボウ|bō
+0x0066b4|暴|1871||日|15|5||outburst|ボウ、（バク）、あば-く、あば-れる|bō, (baku), aba-ku, aba-reru
+0x0081a8|膨|1872||肉|16|S||swell|ボウ、ふく-らむ、ふく-れる|bō, fuku-ramu, fuku-reru
+0x008b00|謀|1873||言|16|S||conspire|ボウ、（ム）、はか-る|bō, (mu), haka-ru
+0x009830|頰 [7]|1874||頁|16|S|2010|cheek|ほお|hoo
+0x005317|北|1875||匕|5|2||north|ホク、きた|hoku, kita
+0x006728|木|1876||木|4|1||tree|ボク、モク、き、（こ）|boku, moku, ki, (ko)
+0x006734|朴|1877||木|6|S|1981|crude|ボク|boku
+0x007267|牧|1878||牛|8|4||breed|ボク、まき|boku, maki
+0x007766|睦|1879||目|13|S|2010|harmonious|ボク|boku
+0x0050d5|僕|1880||人|14|S|1981|me|ボク|boku
+0x0058a8|墨|1881|墨 [4]|土|14|S||black ink|ボク、すみ|boku, sumi
+0x0064b2|撲|1882||手|15|S||slap|ボク|boku
+0x006ca1|没|1883|沒|水|7|S||drown|ボツ|botsu
+0x0052c3|勃|1884||力|9|S|2010|rise|ボツ|botsu
+0x005800|堀|1885||土|11|S|1981|ditch|ほり|hori
+0x00672c|本|1886||木|5|1||book|ホン、もと|hon, moto
+0x005954|奔|1887||大|8|S||bustle|ホン|hon
+0x007ffb|翻|1888|飜|飛|18|S||flip|ホン、ひるがえ-る、ひるがえ-す|hon, hirugae-ru, hirugae-su
+0x0051e1|凡|1889||几|3|S||mediocre|ボン、（ハン）|bon, (han)
+0x0076c6|盆|1890||皿|9|S||basin|ボン|bon
+0x009ebb|麻|1891||麻|11|S||hemp|マ、あさ|ma, asa
+0x006469|摩|1892||手|15|S||chafe|マ|ma
+0x0078e8|磨|1893||石|16|S|1981|grind|マ、みが-く|ma, miga-ku
+0x009b54|魔|1894||鬼|21|S||witch|マ|ma
+0x006bce|毎|1895|每|毋|6|2||every|マイ|mai
+0x0059b9|妹|1896||女|8|2||younger sister|マイ、いもうと|mai, imōto
+0x00679a|枚|1897||木|8|6||sheet of...|マイ|mai
+0x006627|昧|1898||日|9|S|2010|foolish|マイ|mai
+0x0057cb|埋|1899||土|10|S||bury|マイ、う-める、う-まる、う-もれる|mai, u-meru, u-maru, u-moreru
+0x005e55|幕|1900||巾|13|6||curtain|マク、バク|maku, baku
+0x00819c|膜|1901||肉|14|S||membrane|マク|maku
+0x006795|枕|1902||木|8|S|2010|pillow|まくら|makura
+0x0053c8|又|1903||又|2|S||or again|また|mata
+0x00672b|末|1904||木|5|4||end|マツ、バツ、すえ|matsu, batsu, sue
+0x0062b9|抹|1905||手|8|S|1981|rub|マツ|matsu
+0x004e07|万|1906|萬|艸|3|2||ten thousand|マン、バン|man, ban
+0x006e80|満|1907|滿|水|12|4||full|マン、み-ちる、み-たす|man, mi-chiru, mi-tasu
+0x006162|慢|1908||心|14|S||ridicule|マン|man
+0x006f2b|漫|1909||水|14|S||cartoon|マン|man
+0x00672a|未|1910||木|5|4||not yet|ミ|mi
+0x005473|味|1911||口|8|3||flavor|ミ、あじ、あじ-わう|mi, aji, aji-wau
+0x009b45|魅|1912||鬼|15|S||fascination|ミ|mi
+0x005cac|岬|1913||山|8|S|1981|headland|みさき|misaki
+0x005bc6|密|1914||宀|11|6||secrecy|ミツ|mitsu
+0x00871c|蜜|1915||虫|14|S|2010|honey|ミツ|mitsu
+0x008108|脈|1916||肉|10|5||vein|ミャク|myaku
+0x005999|妙|1917||女|7|S||exquisite|ミョウ|myō
+0x006c11|民|1918||氏|5|4||people|ミン、たみ|min, tami
+0x007720|眠|1919||目|10|S||sleep|ミン、ねむ-る、ねむ-い|min, nemu-ru, nemu-i
+0x0077db|矛|1920||矛|5|S||halberd|ム、ほこ|mu, hoko
+0x0052d9|務|1921||力|11|5||duty|ム、つと-める、つと-まる|mu, tsuto-meru, tsuto-maru
+0x007121|無|1922||火|12|4||nothing|ム、ブ、な-い|mu, bu, na-i
+0x005922|夢|1923||夕|13|5||dream|ム、ゆめ|mu, yume
+0x009727|霧|1924||雨|19|S||fog|ム、きり|mu, kiri
+0x005a18|娘|1925||女|10|S||daughter|むすめ|musume
+0x00540d|名|1926||口|6|1||name|メイ、ミョウ、な|mei, myō, na
+0x00547d|命|1927||口|8|3||fate|メイ、ミョウ、いのち|mei, myō, inochi
+0x00660e|明|1928||日|8|2||bright|メイ、ミョウ、あ-かり、あか-るい、あか-るむ、あか-らむ、あき-らか、あ-ける、あ-く、あ-くる、あ-かす|mei, myō, a-kari, aka-rui, aka-rumu, aka-ramu, aki-raka, a-keru, a-ku, a-kuru, a-kasu
+0x008ff7|迷|1929||辵|9|5||astray|メイ、まよ-う|mei, mayo-u
+0x0051a5|冥|1930||冖|10|S|2010|dark|メイ、ミョウ|mei, myō
+0x0076df|盟|1931||皿|13|6||alliance|メイ|mei
+0x009298|銘|1932||金|14|S||inscription|メイ|mei
+0x009cf4|鳴|1933||鳥|14|2||chirp|メイ、な-く、な-る、な-らす|mei, na-ku, na-ru, na-rasu
+0x006ec5|滅|1934||水|13|S||destroy|メツ、ほろ-びる、ほろ-ぼす|metsu, horo-biru, horo-bosu
+0x00514d|免|1935|免 [4]|儿|8|S||excuse|メン、まぬか-れる|men, manuka-reru
+0x009762|面|1936||面|9|3||face|メン、おも、おもて、つら|men, omo, omote, tsura
+0x007dbf|綿|1937||糸|14|5||cotton|メン、わた|men, wata
+0x009eba|麺|1938|麵|麥|16|S|2010|noodles|メン|men
+0x008302|茂|1939||艸|8|S||overgrown|モ、しげ-る|mo, shige-ru
+0x006a21|模|1940||木|14|6||imitation|モ、ボ|mo, bo
+0x006bdb|毛|1941||毛|4|2||hair|モウ、け|mō, ke
+0x005984|妄|1942||女|6|S|1981|delusion|モウ、ボウ|mō, bō
+0x0076f2|盲|1943||目|8|S||blind|モウ|mō
+0x008017|耗|1944||耒|10|S||decrease|モウ、（コウ）|mō, (kō)
+0x00731b|猛|1945||犬|11|S||fierce|モウ|mō
+0x007db2|網|1946||糸|14|S||netting|モウ、あみ|mō, ami
+0x0076ee|目|1947||目|5|1||eye|モク、（ボク）、め、（ま）|moku, (boku), me, (ma)
+0x009ed9|黙|1948|默|黑|15|S||silence|モク、だま-る|moku, dama-ru
+0x009580|門|1949||門|8|2||gates|モン、かど|mon, kado
+0x007d0b|紋|1950||糸|10|S||family crest|モン|mon
+0x00554f|問|1951||口|11|3||question|モン、と-う、と-い、（とん）|mon, to-u, to-i, (ton)
+0x0051b6|冶|1952||冫|7|S|2010|melting|ヤ|ya
+0x00591c|夜|1953||夕|8|2||night|ヤ、よ、よる|ya, yo, yoru
+0x0091ce|野|1954||里|11|2||field|ヤ、の|ya, no
+0x005f25|弥|1955|彌|弓|8|S|2010|all the more|や|ya
+0x005384|厄|1956||厂|4|S|1981|unlucky|ヤク|yaku
+0x005f79|役|1957||彳|7|3||service|ヤク、エキ|yaku, eki
+0x007d04|約|1958||糸|9|4||promise|ヤク|yaku
+0x008a33|訳|1959|譯|言|11|6||translate|ヤク、わけ|yaku, wake
+0x0085ac|薬|1960|藥|艸|16|3||medicine|ヤク、くすり|yaku, kusuri
+0x008e8d|躍|1961||足|21|S||leap|ヤク、おど-る|yaku, odo-ru
+0x0095c7|闇|1962||門|17|S|2010|darkness|やみ|yami
+0x007531|由|1963||田|5|3||reason|ユ、ユウ、（ユイ）、よし|yu, yū, (yui), yoshi
+0x006cb9|油|1964||水|8|3||oil|ユ、あぶら|yu, abura
+0x0055a9|喩|1965||口|12|S|2010|metaphor|ユ|yu
+0x006109|愉|1966||心|12|S||pleasure|ユ|yu
+0x008aed|諭|1967||言|16|S||rebuke|ユ、さと-す|yu, sato-su
+0x008f38|輸|1968||車|16|5||transport|ユ|yu
+0x007652|癒|1969||疒|18|S|1981|healing|ユ、い-える、い-やす|yu, i-eru, i-yasu
+0x00552f|唯|1970||口|11|S||solely|ユイ、（イ）|yui, (i)
+0x0053cb|友|1971||又|4|2||friend|ユウ、とも|yū, tomo
+0x006709|有|1972||月|6|3||have|ユウ、ウ、あ-る|yū, u, a-ru
+0x0052c7|勇|1973||力|9|4||courage|ユウ、いさ-む|yū, isa-mu
+0x005e7d|幽|1974||幺|9|S||seclude|ユウ|yū
+0x0060a0|悠|1975||心|11|S|1981|permanence|ユウ|yū
+0x0090f5|郵|1976||邑|11|6||mail|ユウ|yū
+0x006e67|湧|1977||水|12|S|2010|boil|ユウ、わ-く|yū, wa-ku
+0x007336|猶|1978||犬|12|S||furthermore|ユウ|yū
+0x0088d5|裕|1979||衣|12|S||abundant|ユウ|yū
+0x00904a|遊|1980||辵|12|3||play|ユウ、（ユ）、あそ-ぶ|yū, (yu), aso-bu
+0x0096c4|雄|1981||隹|12|S||male|ユウ、お、おす|yū, o, osu
+0x008a98|誘|1982||言|14|S||entice|ユウ、さそ-う|yū, saso-u
+0x006182|憂|1983||心|15|S||melancholy|ユウ、うれ-える、うれ-い、う-い|yū, ure-eru, ure-i, u-i
+0x00878d|融|1984||虫|16|S||dissolve|ユウ|yū
+0x00512a|優|1985||人|17|6||superior|ユウ、やさ-しい、すぐ-れる|yū, yasa-shii, sugu-reru
+0x004e0e|与|1986|與|臼|3|S||give|ヨ、あた-える|yo, ata-eru
+0x004e88|予|1987|豫|豕|4|3||in advance|ヨ|yo
+0x004f59|余|1988|餘|食|7|5||leave over|ヨ、あま-る、あま-す|yo, ama-ru, ama-su
+0x008a89|誉|1989|譽|言|13|S||reputation|ヨ、ほま-れ|yo, homa-re
+0x009810|預|1990||頁|13|6||deposit|ヨ、あず-ける、あず-かる|yo, azu-keru, azu-karu
+0x005e7c|幼|1991||幺|5|6||infancy|ヨウ、おさな-い|yō, osana-i
+0x007528|用|1992||用|5|2||use|ヨウ、もち-いる|yō, mochi-iru
+0x007f8a|羊|1993||羊|6|3||sheep|ヨウ、ひつじ|yō, hitsuji
+0x005996|妖|1994||女|7|S|2010|bewitching|ヨウ、あや-しい|yō, aya-shii
+0x006d0b|洋|1995||水|9|3||ocean|ヨウ|yō
+0x008981|要|1996||襾|9|4||need|ヨウ、かなめ、い-る|yō, kaname, i-ru
+0x005bb9|容|1997||宀|10|5||contain|ヨウ|yō
+0x005eb8|庸|1998||广|11|S||commonplace|ヨウ|yō
+0x0063da|揚|1999||手|12|S||hoist|ヨウ、あ-げる、あ-がる|yō, a-geru, a-garu
+0x0063fa|揺|2000|搖|手|12|S||swing|ヨウ、ゆ-れる、ゆ-る、ゆ-らぐ、ゆ-るぐ、ゆ-する、ゆ-さぶる、ゆ-すぶる|yō, yu-reru, yu-ru, yu-ragu, yu-rugu, yu-suru, yu-saburu, yu-suburu
+0x008449|葉|2001||艸|12|3||leaf|ヨウ、は|yō, ha
+0x00967d|陽|2002||阜|12|3||sunshine|ヨウ|yō
+0x006eb6|溶|2003||水|13|S||melt|ヨウ、と-ける、と-かす、と-く|yō, to-keru, to-kasu, to-ku
+0x008170|腰|2004||肉|13|S||loins|ヨウ、こし|yō, koshi
+0x0069d8|様|2005|樣|木|14|3||formal title|ヨウ、さま|yō, sama
+0x00760d|瘍|2006||疒|14|S|2010|boil (medical)|ヨウ|yō
+0x008e0a|踊|2007||足|14|S||jump|ヨウ、おど-る、おど-り|yō, odo-ru, odo-ri
+0x007aaf|窯|2008||穴|15|S||kiln|ヨウ、かま|yō, kama
+0x00990a|養|2009||食|15|4||foster|ヨウ、やしな-う|yō, yashina-u
+0x0064c1|擁|2010||手|16|S||embrace|ヨウ|yō
+0x008b21|謡|2011|謠|言|16|S||noh chanting|ヨウ、うたい、うた-う|yō, utai, uta-u
+0x0066dc|曜|2012||日|18|2||day of the week|ヨウ|yō
+0x006291|抑|2013||手|7|S||repress|ヨク、おさ-える|yoku, osa-eru
+0x006c83|沃|2014||水|7|S|2010|fertility|ヨク|yoku
+0x006d74|浴|2015||水|10|4||bathe|ヨク、あ-びる、あ-びせる|yoku, a-biru, a-biseru
+0x006b32|欲|2016||欠|11|6||longing|ヨク、ほっ-する、ほ-しい|yoku, ho'-suru, ho-shii
+0x007fcc|翌|2017||羽|11|6||the following|ヨク|yoku
+0x007ffc|翼|2018||羽|17|S||wing|ヨク、つばさ|yoku, tsubasa
+0x0062c9|拉|2019||手|8|S|2010|crush|ラ|ra
+0x0088f8|裸|2020||衣|13|S||naked|ラ、はだか|ra, hadaka
+0x007f85|羅|2021||网|19|S|1981|gauze|ラ|ra
+0x006765|来|2022|來|人|7|2||come|ライ、く-る、きた-る、きた-す|rai, ku-ru, kita-ru, kita-su
+0x0096f7|雷|2023||雨|13|S||thunder|ライ、かみなり|rai, kaminari
+0x00983c|頼|2024|賴|貝|16|S||trust|ライ、たの-む、たの-もしい、たよ-る|rai, tano-mu, tano-moshii, tayo-ru
+0x007d61|絡|2025||糸|12|S||entwine|ラク、から-む、から-まる、から-める|raku, kara-mu, kara-maru, kara-meru
+0x00843d|落|2026||艸|12|3||fall|ラク、お-ちる、お-とす|raku, o-chiru, o-tosu
+0x00916a|酪|2027||酉|13|S||dairy products|ラク|raku
+0x008fa3|辣|2028||辛|14|S|2010|bitter|ラツ|ratsu
+0x004e71|乱|2029|亂|乙|7|6||riot|ラン、みだ-れる、みだ-す|ran, mida-reru, mida-su
+0x005375|卵|2030||卩|7|6||egg|ラン、たまご|ran, tamago
+0x0089a7|覧|2031|覽|見|17|6||perusal|ラン|ran
+0x006feb|濫|2032||水|18|S||excessive|ラン|ran
+0x0085cd|藍|2033||艸|18|S|2010|indigo|ラン、あい|ran, ai
+0x006b04|欄|2034|欄 [4]|木|20|S||column|ラン|ran
+0x00540f|吏|2035||口|6|S||officer|リ|ri
+0x005229|利|2036||刀|7|4||profit|リ、き-く|ri, ki-ku
+0x0091cc|里|2037||里|7|2||village|リ、さと|ri, sato
+0x007406|理|2038||玉|11|2||reason|リ|ri
+0x0075e2|痢|2039||疒|12|S||diarrhea|リ|ri
+0x0088cf|裏|2040||衣|13|6||back|リ、うら|ri, ura
+0x005c65|履|2041||尸|15|S||footgear|リ、は-く|ri, ha-ku
+0x007483|璃|2042||玉|15|S|2010|glassy|リ|ri
+0x0096e2|離|2043||隹|19|S||detach|リ、はな-れる、はな-す|ri, hana-reru, hana-su
+0x009678|陸|2044||阜|11|4||land|リク|riku
+0x007acb|立|2045||立|5|1||stand up|リツ、（リュウ）、た-つ、た-てる|ritsu, (ryū), ta-tsu, ta-teru
+0x005f8b|律|2046||彳|9|6||law|リツ、（リチ）|ritsu, (richi)
+0x006144|慄|2047||心|13|S|2010|fear|リツ|ritsu
+0x007565|略|2048||田|11|5||abbreviation|リャク|ryaku
+0x0067f3|柳|2049||木|9|S||willow|リュウ、やなぎ|ryū, yanagi
+0x006d41|流|2050||水|10|3||stream|リュウ、（ル）、なが-れる、なが-す|ryū, (ru), naga-reru, naga-su
+0x007559|留|2051||田|10|5||detain|リュウ、（ル）、と-める、と-まる|ryū, (ru), to-meru, to-maru
+0x007adc|竜|2052|龍|龍|10|S|1981|dragon|リュウ、たつ|ryū, tatsu
+0x007c92|粒|2053||米|11|S||grains|リュウ、つぶ|ryū, tsubu
+0x009686|隆|2054|隆 [4]|阜|11|S||hump|リュウ|ryū
+0x00786b|硫|2055||石|12|S||sulphur|リュウ|ryū
+0x004fb6|侶|2056||人|9|S|2010|companion|リョ|ryo
+0x0065c5|旅|2057||方|10|3||trip|リョ、たび|ryo, tabi
+0x00865c|虜|2058|虜 [4]|虍|13|S||captive|リョ|ryo
+0x00616e|慮|2059||心|15|S||prudence|リョ|ryo
+0x004e86|了|2060||亅|2|S||finish|リョウ|ryō
+0x004e21|両|2061|兩|入|6|3||both|リョウ|ryō
+0x00826f|良|2062||艮|7|4||good|リョウ、よ-い|ryō, yo-i
+0x006599|料|2063||斗|10|4||fee|リョウ|ryō
+0x006dbc|涼|2064||水|11|S||refreshing|リョウ、すず-しい、すず-む|ryō, suzu-shii, suzu-mu
+0x00731f|猟|2065|獵|犬|11|S||game-hunting|リョウ|ryō
+0x009675|陵|2066||阜|11|S||mausoleum|リョウ、みささぎ|ryō, misasagi
+0x0091cf|量|2067||里|12|4||quantity|リョウ、はか-る|ryō, haka-ru
+0x0050da|僚|2068||人|14|S||colleague|リョウ|ryō
+0x009818|領|2069||頁|14|5||territory|リョウ|ryō
+0x005bee|寮|2070||宀|15|S||dormitory|リョウ|ryō
+0x007642|療|2071||疒|17|S||heal|リョウ|ryō
+0x0077ad|瞭|2072||目|17|S|2010|clear|リョウ|ryō
+0x007ce7|糧|2073||米|18|S||provisions|リョウ、（ロウ）、かて|ryō, (rō), kate
+0x00529b|力|2074||力|2|1||power|リョク、リキ、ちから|ryoku, riki, chikara
+0x007dd1|緑|2075|綠|糸|14|3||green|リョク、（ロク）、みどり|ryoku, (roku), midori
+0x006797|林|2076||木|8|1||woods|リン、はやし|rin, hayashi
+0x005398|厘|2077||厂|9|S||thousandth|リン|rin
+0x00502b|倫|2078||人|10|S||ethics|リン|rin
+0x008f2a|輪|2079||車|15|4||wheel|リン、わ|rin, wa
+0x0096a3|隣|2080||阜|16|S||neighboring|リン、とな-る、となり|rin, tona-ru, tonari
+0x0081e8|臨|2081||臣|18|6||look to|リン、のぞ-む|rin, nozo-mu
+0x007460|瑠|2082||玉|14|S|2010|lapis lazuli|ル|ru
+0x006d99|涙|2083|淚|水|10|S||tears|ルイ、なみだ|rui, namida
+0x007d2f|累|2084||糸|11|S||accumulate|ルイ|rui
+0x005841|塁|2085|壘|土|12|S||bases|ルイ|rui
+0x00985e|類|2086|類 [4]|頁|18|4||sort|ルイ、たぐ-い|rui, tagu-i
+0x004ee4|令|2087||人|5|4||orders|レイ|rei
+0x00793c|礼|2088|禮|示|5|3||thanks|レイ、ライ|rei, rai
+0x0051b7|冷|2089||冫|7|4||cool|レイ、つめ-たい、ひ-える、ひ-や、ひ-やす、ひ-やかす、さ-める、さ-ます|rei, tsume-tai, hi-eru, hi-ya, hi-yasu, hi-yakasu, sa-meru, sa-masu
+0x0052b1|励|2090|勵|力|7|S||encourage|レイ、はげ-む、はげ-ます|rei, hage-mu, hage-masu
+0x00623b|戻|2091|戾|戶|7|S|1981|re-|レイ、もど-す、もど-る|rei, modo-su, modo-ru
+0x004f8b|例|2092||人|8|4||example|レイ、たと-える|rei, tato-eru
+0x009234|鈴|2093||金|13|S||small bell|レイ、リン、すず|rei, rin, suzu
+0x0096f6|零|2094||雨|13|S||zero|レイ|rei
+0x00970a|霊|2095|靈|雨|15|S||spirits|レイ、リョウ、たま|rei, ryō, tama
+0x0096b7|隷|2096||隶|16|S||slave|レイ|rei
+0x009f62|齢|2097|齡|齒|17|S||age|レイ|rei
+0x009e97|麗|2098||鹿|19|S||lovely|レイ、うるわ-しい|rei, uruwa-shii
+0x0066a6|暦|2099|曆|日|14|S||calendar|レキ、こよみ|reki, koyomi
+0x006b74|歴|2100|歷|止|14|5||curriculum|レキ|reki
+0x005217|列|2101||刀|6|3||row|レツ|retsu
+0x0052a3|劣|2102||力|6|S||inferiority|レツ、おと-る|retsu, oto-ru
+0x0070c8|烈|2103||火|10|S||ardent|レツ|retsu
+0x0088c2|裂|2104||衣|12|S||split|レツ、さ-く、さ-ける|retsu, sa-ku, sa-keru
+0x00604b|恋|2105|戀|心|10|S||romance|レン、こ-う、こい、こい-しい|ren, ko-u, koi, koi-shii
+0x009023|連|2106||辵|10|4||take along|レン、つら-なる、つら-ねる、つ-れる|ren, tsura-naru, tsura-neru, tsu-reru
+0x005ec9|廉|2107||广|13|S||bargain|レン|ren
+0x007df4|練|2108|練 [4]|糸|14|3||practice|レン、ね-る|ren, ne-ru
+0x00932c|錬|2109|鍊|金|16|S||tempering|レン|ren
+0x005442|呂|2110||口|7|S|2010|spine|ロ|ro
+0x007089|炉|2111|爐|火|8|S||hearth|ロ|ro
+0x008cc2|賂|2112||貝|13|S|2010|bribe|ロ|ro
+0x008def|路|2113||足|13|3||road|ロ、じ|ro, ji
+0x009732|露|2114||雨|21|S||dew|ロ、（ロウ）、つゆ|ro, (rō), tsuyu
+0x008001|老|2115||老|6|4||old man|ロウ、お-いる、ふ-ける|rō, o-iru, fu-keru
+0x0052b4|労|2116|勞|力|7|4||labour|ロウ|rō
+0x005f04|弄|2117||廾|7|S|2010|tamper with|ロウ、もてあそ-ぶ|rō, moteaso-bu
+0x0090ce|郎|2118|郞|邑|9|S||son|ロウ|rō
+0x006717|朗|2119|朗 [4]|月|10|6||melodious|ロウ、ほが-らか|rō, hoga-raka
+0x006d6a|浪|2120||水|10|S||wandering|ロウ|rō
+0x005eca|廊|2121|廊 [4]|广|12|S||corridor|ロウ|rō
+0x00697c|楼|2122|樓|木|13|S||watchtower|ロウ|rō
+0x006f0f|漏|2123||水|14|S||leak|ロウ、も-る、も-れる、も-らす|rō, mo-ru, mo-reru, mo-rasu
+0x007c60|籠|2124||竹|22|S|2010|basket|ロウ、かご、こ-もる|rō, kago, ko-moru
+0x00516d|六|2125||八|4|1||six|ロク、む、む-つ、むっ-つ、（むい）|roku, mu, mu-tsu, mu'-tsu, (mui)
+0x009332|録|2126|錄|金|16|4||record|ロク|roku
+0x009e93|麓|2127||鹿|19|S|2010|foot of a mountain|ロク、ふもと|roku, fumoto
+0x008ad6|論|2128||言|15|6||theory|ロン|ron
+0x00548c|和|2129||口|8|3||peace|ワ、（オ）、やわ-らぐ、やわ-らげる、なご-む、なご-やか|wa, (o), yawa-ragu, yawa-rageru, nago-mu, nago-yaka
+0x008a71|話|2130||言|13|2||talk|ワ、はな-す、はなし|wa, hana-su, hanashi
+0x008cc4|賄|2131||貝|13|S||bribe, board|ワイ、まかな-う|wai, makana-u
+0x008107|脇|2132||肉|10|S|2010|aside|わき|waki
+0x0060d1|惑|2133||心|12|S||beguile|ワク、まど-う|waku, mado-u
+0x0067a0|枠|2134||木|8|S|1981|frame|わく|waku
+0x006e7e|湾|2135|灣|水|12|S||gulf|ワン|wan
+0x008155|腕|2136||肉|12|S||arm|ワン、うで|wan, ude

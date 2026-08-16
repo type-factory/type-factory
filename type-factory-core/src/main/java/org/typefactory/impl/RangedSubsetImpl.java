@@ -200,7 +200,7 @@ class RangedSubsetImpl implements RangedSubset {
       s.setLength(s.length() - 1); // remove final comma
       s.append(']');
     }
-    if (s.charAt(s.length() - 1) == ',') {
+    if (!s.isEmpty() && s.charAt(s.length() - 1) == ',') {
       s.setLength(s.length() - 1);
     }
     return s.toString();
