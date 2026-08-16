@@ -7,6 +7,7 @@ on:
   # For Branch-Protection check. Only the default branch is supported. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
   branch_protection_rule:
+
   # To guarantee Maintained check is occasionally updated. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
   schedule:
@@ -14,21 +15,22 @@ on:
   push:
     branches: [ "main" ]
 
-# Declare default permissions as read only.
-permissions: read-all
+# Set the top-level default to minimum read-only permissions
+permissions:
+  contents: read
 
 jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
     permissions:
-      # Needed to upload the results to code-scanning dashboard.
+      # Needed to upload the results as a SARIF file to the code-scanning dashboard.
       security-events: write
-      # Needed to publish results and get a badge (see publish_results below).
+      # Needed to access GitHub's OIDC token for publishing results to OpenSSF API and get a badge (see publish_results below).
       id-token: write
-      # Uncomment the permissions below if installing in a private repository.
-      # contents: read
-      # actions: read
+      # Explicit read scopes for items the runner needs to analyze.
+      contents: read
+      actions: read
 
     steps:
       - name: "Checkout code"
