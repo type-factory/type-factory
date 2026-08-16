@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>type-factory-unicode-cldr-code-generator</artifactId>
+  <packaging>jar</packaging>
+  <name>Type Factory – Unicode CLDR Code Generator</name>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+
+    <!-- TODO add coverage to the generator code -->
+    <sonar.coverage.exclusions>
+      **/org/typefactory/**/*.java
+    </sonar.coverage.exclusions>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.typefactory</groupId>
+      <artifactId>type-factory-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j-charset</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unzip-local-file</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <target>
+                <unzip
+                  src="${project.basedir}/src/main/zip/ucd.all.grouped-17.0.0.zip"
+                  dest="${project.build.outputDirectory}/unicode"
+                  overwrite="true" />
+                <unzip
+                  src="${project.basedir}/src/main/zip/cldr-common-48.2.zip"
+                  dest="${project.build.outputDirectory}/cldr-common"
+                  overwrite="true">
+                  <patternset>
+                    <include name="common/main/*"/>
+                  </patternset>
+                </unzip>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

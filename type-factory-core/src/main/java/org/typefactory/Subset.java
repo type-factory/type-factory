@@ -17,6 +17,8 @@ package org.typefactory;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static org.typefactory.Category.SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS;
+import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -131,6 +133,46 @@ public interface Subset {
    * @return the number of code-points that are contained in all the code-point ranges.
    */
   int numberOfCodePointsInCodePointRanges();
+
+  default String toPattern() {
+    final var s = new StringBuilder(Math.min(numberOfCodePointRanges() * 3, numberOfCodePointsInCodePointRanges()));
+    s.append('[');
+    for (var range : ranges()) {
+      switch (range.inclusiveTo - range.inclusiveFrom) {
+        case 0:
+          appendCodePoint(s, range.inclusiveFrom);
+          break;
+        case 1:
+          appendCodePoint(s, range.inclusiveFrom);
+          appendCodePoint(s, range.inclusiveTo);
+          break;
+        default:
+          appendCodePoint(s, range.inclusiveFrom);
+          s.append('-');
+          appendCodePoint(s, range.inclusiveTo);
+          break;
+      }
+    }
+    return s.append(']').toString();
+  }
+
+  private static void appendCodePoint(final StringBuilder sb, final int cp) {
+    if (codePointIsInOneOfTheCategories(cp, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
+      if (cp < 0x10) {
+        sb.append("\\u000").append(Integer.toString(cp, 16));
+      } else if (cp < 0x100) {
+        sb.append("\\u00").append(Integer.toString(cp, 16));
+      } else if (cp < 0x1000) {
+        sb.append("\\u0").append(Integer.toString(cp, 16));
+      } else if (cp < 0x10000) {
+        sb.append("\\x{0").append(Integer.toString(cp, 16)).append('}');
+      } else {
+        sb.append("\\x{").append(Integer.toString(cp, 16)).append('}');
+      }
+    } else {
+      sb.appendCodePoint(cp);
+    }
+  }
 
   /**
    * <p>Creates a new <em>immutable</em> subset of code-point ranges from the combined code-point ranges of all the provided subsets.
