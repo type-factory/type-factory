@@ -12,6 +12,9 @@
   <artifactId>type-factory-language-code-generator</artifactId>
   <packaging>jar</packaging>
 
+  <name>Type Factory – Language Code Generator</name>
+  <description>The Type Factory language library code generator – Deprecated – contains some useful language alphabets to use with the core library to make creating custom data types easy.</description>
+
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
     <!-- TODO add coverage to the generator code -->
@@ -30,7 +33,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>6.0.3</version>
+      <version>6.1.0</version>
       <scope>test</scope>
     </dependency>
 
