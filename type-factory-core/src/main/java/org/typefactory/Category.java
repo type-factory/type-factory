@@ -439,4 +439,15 @@ public enum Category {
     return (categoryBitFlags & (0x1L << Character.getType(codePoint))) > 0;
   }
 
+  /**
+   * Category bit flags for control and format characters
+   */
+  static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          Category.CONTROL,
+          Category.FORMAT,
+          Category.SPACE_SEPARATOR,
+          Category.LINE_SEPARATOR,
+          Category.PARAGRAPH_SEPARATOR);
+
 }

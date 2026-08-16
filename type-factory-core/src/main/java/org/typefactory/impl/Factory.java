@@ -45,6 +45,10 @@ public class Factory {
   private Factory() {
   }
 
+  public static Subset emptySubset() {
+    return RangedSubsetImpl.EMPTY_SUBSET;
+  }
+
   public static SubsetBuilder subsetBuilder() {
     return new SubsetBuilderImpl();
   }
