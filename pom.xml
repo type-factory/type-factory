@@ -359,8 +359,9 @@
             <licenseSet>
               <header>com/mycila/maven/plugin/license/templates/APACHE-2-noemail.txt</header>
               <excludes>
+                <exclude>/docs/**</exclude>
                 <exclude>**/.gitignore</exclude>
-                <exclude>**/pom.xml</exclude>
+                <exclude>**/*pom.xml</exclude>
                 <exclude>**/README.*</exclude>
                 <exclude>**/CODE_OF_CONDUCT.*</exclude>
                 <exclude>**/LICENSE.*</exclude>
