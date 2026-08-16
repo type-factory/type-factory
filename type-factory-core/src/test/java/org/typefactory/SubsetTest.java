@@ -70,17 +70,18 @@ class SubsetTest {
       delimiter = '|',
       useHeadersInDisplayName = true,
       textBlock = """
-          scenario                      | subsetCharacters  | expectedPattern
-          single character              | A                 | [A]
-          single space character        | ' '               | [\\u0020]
-          single newline character      | '\t'              | [\\u0009]
-          single control character      | '\u000B'          | [\\u000b]
-          two-character range           | AB                | [AB]
-          escaped range                 | '\u001F\u0020'    | [\\u001f\\u0020]
-          three-character range         | ABC               | [A-C]
-          two three-character ranges    | ABCabc            | [A-Ca-c]
-          mixed ranges and characters   | ABCHabch          | [A-CHa-ch]
-          mixed ranges                  | ABC abc\txyz      | [\\u0009\\u0020A-Ca-cx-z]
+          scenario                      | subsetCharacters     | expectedPattern
+          single character              | A                    | [A]
+          single space character        | ' '                  | [\\u0020]
+          single newline character      | '\t'                 | [\\u0009]
+          single control character      | '\u000B'             | [\\u000b]
+          two-character range           | AB                   | [AB]
+          escaped consecutive range     | '\u001F\u0020'       | [\\u001f\\u0020]
+          escaped range                 | '\u001E\u001F\u0020' | [\\u001e-\\u0020]
+          three-character range         | ABC                  | [A-C]
+          two three-character ranges    | ABCabc               | [A-Ca-c]
+          mixed ranges and characters   | ABCHabch             | [A-CHa-ch]
+          mixed ranges                  | ABC abc\txyz         | [\\u0009\\u0020A-Ca-cx-z]
           """)
   void toPattern_shouldRenderExpectedPatterns(
       final String scenario, final String subsetCharacters, final String expectedPattern) {
@@ -92,5 +93,7 @@ class SubsetTest {
     assertThat(actual).isNotEmpty();
     assertThat(actual.toPattern()).isEqualTo(expectedPattern);
   }
+
+
 
 }
