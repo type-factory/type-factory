@@ -46,7 +46,7 @@
     <junit-jupiter.version>6.0.3</junit-jupiter.version>
     <assertj-core.version>3.27.7</assertj-core.version>
     <mockito-bom.version>5.18.0</mockito-bom.version>
-    <icu4j.version>77.1</icu4j.version>
+    <icu4j.version>78.3</icu4j.version>
 
     <sonar.organization>type-factory</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -69,6 +69,8 @@
     <module>type-factory-examples</module>
     <module>type-factory-language-code-generator</module>
     <module>type-factory-language</module>
+    <module>type-factory-unicode-cldr-code-generator</module>
+    <module>type-factory-unicode-cldr</module>
     <module>type-factory-core</module>
     <module>type-factory-test-assertj</module>
     <module>type-factory-bom</module>
@@ -109,6 +111,18 @@
       <dependency>
         <groupId>org.typefactory</groupId>
         <artifactId>type-factory-language</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-unicode-cldr-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.typefactory</groupId>
+        <artifactId>type-factory-unicode-cldr</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -306,6 +320,18 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.6.3</version>
       </plugin>
 
       <plugin>
