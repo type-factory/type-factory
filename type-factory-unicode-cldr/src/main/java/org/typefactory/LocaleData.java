@@ -1,13 +1,14 @@
 package org.typefactory;
 
+import static org.typefactory.LocaleDataControl.RESOURCE_BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR;
+import static org.typefactory.LocaleDataControl.RESOURCE_BUNDLE_CONTROL;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 
 public interface LocaleData {
-
-  String BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR = "org.typefactory.unicode.cldr";
 
   Subset standardCharactersSubset();
 
@@ -20,7 +21,8 @@ public interface LocaleData {
   static LocaleData getForLocale(final Locale locale) throws MissingResourceException {
 
     try {
-      final var resourceBundle = ResourceBundle.getBundle(BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR, locale, new LocaleDataControl());
+      final var resourceBundle = ResourceBundle.getBundle(
+          RESOURCE_BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR, locale, RESOURCE_BUNDLE_CONTROL);
 
       if (resourceBundle instanceof AbstractCldrResourceBundle cldrResourceBundle) {
         return new LocaleDataImpl(
@@ -33,9 +35,14 @@ public interface LocaleData {
       // Ignore and throw a new exception below
     }
 
-    final var className = BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR + '.' + locale.toLanguageTag().replaceAll("\\-+", "_");
+    throw new MissingResourceException(
+        "No LocaleData exists for locale '" + locale.toLanguageTag() + "'",
+        resourceBundleClassName(locale),
+        "");
+  }
 
-    throw new MissingResourceException("No LocaleData exists for locale '" + locale.toLanguageTag() + "'", className, "");
+  private static String resourceBundleClassName(final Locale locale) {
+    return RESOURCE_BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR + '.' + locale.toLanguageTag().replaceAll("\\-+", "_");
   }
 }
 

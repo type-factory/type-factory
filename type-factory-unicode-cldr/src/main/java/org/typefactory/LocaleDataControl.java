@@ -11,6 +11,10 @@ import java.util.ResourceBundle;
  */
 final class LocaleDataControl extends ResourceBundle.Control {
 
+  static final ResourceBundle.Control RESOURCE_BUNDLE_CONTROL = new LocaleDataControl();
+
+  static final String RESOURCE_BASE_NAME_ORG_TYPEFACTORY_UNICODE_CLDR = "org.typefactory.unicode.cldr";
+
   /**
    * Restricts the allowed formats strictly to class-based bundles. This bypasses any check or fallback to ".properties" files.
    */

@@ -51,6 +51,21 @@ class nn_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+
+    assertThat(instance.getKeys())
+        .isInstanceOf(java.util.Enumeration.class)
+        .satisfies(enumeration -> {
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.STANDARD_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.DECIMAL_DIGITS);
+          assertThat(enumeration.hasMoreElements()).isFalse();
+        });
+
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.STANDARD_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
   }
 
   @ParameterizedTest
@@ -73,6 +88,21 @@ class nn_Test extends no_Test {
     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
+
+    assertThat(instance.getKeys())
+        .isInstanceOf(java.util.Enumeration.class)
+        .satisfies(enumeration -> {
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.STANDARD_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS);
+          assertThat(enumeration.nextElement()).isEqualTo(AbstractCldrResourceBundle.DECIMAL_DIGITS);
+          assertThat(enumeration.hasMoreElements()).isFalse();
+        });
+
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.STANDARD_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
+    assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
 
     if (standardSubset != null) assertThat(instance.getStandardSubset()).isSameAs(standardSubset);
     if (auxiliarySubset != null) assertThat(instance.getAuxiliarySubset()).isSameAs(auxiliarySubset);
