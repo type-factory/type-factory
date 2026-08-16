@@ -8,6 +8,8 @@ import java.util.MissingResourceException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +21,7 @@ import org.typefactory.unicode.cldr.az_Arab;
 import org.typefactory.unicode.cldr.az_Cyrl;
 import org.typefactory.unicode.cldr.hy;
 
+@Execution(ExecutionMode.SAME_THREAD) // run sequentially because some tests call Locale.setDefault(...)
 class LocaleDataTest {
 
   private Locale defaultLocale;
