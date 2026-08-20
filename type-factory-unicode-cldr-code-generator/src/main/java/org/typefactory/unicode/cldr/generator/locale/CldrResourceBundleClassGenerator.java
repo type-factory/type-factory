@@ -124,49 +124,61 @@ public class CldrResourceBundleClassGenerator {
           return SubsetWrapper.wrap(subsetBuilder.build());
         });
 
-    final String privateUseExtension = locale.getExtension(Locale.PRIVATE_USE_EXTENSION);
+    final String imports;
+    if (standardCharactersSubset.isEmpty() && auxiliaryCharactersSubset.isEmpty()
+        && punctuationCharactersSubset.isEmpty() && numbersCharactersSubset.isEmpty()) {
+      imports = """
+          import javax.annotation.processing.Generated;
+          import org.typefactory.Subset;
+          """;
+    } else {
+      imports = """
+          import javax.annotation.processing.Generated;
+          import org.typefactory.Subset;
+          import org.typefactory.impl.Factory;
+          """;
+    }
 
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
         .append(String.format("""
-            package org.typefactory.unicode.cldr;
-            
-            import javax.annotation.processing.Generated;
-            import org.typefactory.Subset;
-            import org.typefactory.impl.Factory;
-            
-            /**
-             * Provides Type Factory subsets for the %s as defined
-             * by the Unicode Common Locale Data Repository (CLDR).
-             */
-            @Generated(
-                comments = \"""
-                    This file for the %s language is generated from the
-                    Unicode Common Locale Data Repository (CLDR) datasets.\""",
-                value = "org.typefactory:type-factory-unicode-cldr-code-generator")
-            public class %s extends %s {
-            
-              public %s() {
-                super(
-                    STANDARD_CHARACTERS_SUBSET,
-                    AUXILIARY_CHARACTERS_SUBSET,
-                    PUNCTUATION_CHARACTERS_SUBSET,
-                    DECIMAL_DIGITS_SUBSET);
-              }
-            
-              protected %s(
-                      final Subset standardSubset,
-                      final Subset auxiliarySubset,
-                      final Subset punctuationSubset,
-                      final Subset decimalDigitsSubset) {
-                super(
-                    defaultIfNull(standardSubset, STANDARD_CHARACTERS_SUBSET),
-                    defaultIfNull(auxiliarySubset, AUXILIARY_CHARACTERS_SUBSET),
-                    defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
-                    defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
-              }
-            
-            """, displayName, displayName, resourceBundleClassName, resourceBundleSuperClassName, resourceBundleClassName, resourceBundleClassName))
+                package org.typefactory.unicode.cldr;
+                
+                %s
+                /**
+                 * Provides Type Factory subsets for the %s as defined
+                 * by the Unicode Common Locale Data Repository (CLDR).
+                 */
+                @Generated(
+                    comments = \"""
+                        This file for the %s language is generated from the
+                        Unicode Common Locale Data Repository (CLDR) datasets.\""",
+                    value = "org.typefactory:type-factory-unicode-cldr-code-generator")
+                public class %s extends %s {
+                
+                  public %s() {
+                    super(
+                        STANDARD_CHARACTERS_SUBSET,
+                        AUXILIARY_CHARACTERS_SUBSET,
+                        PUNCTUATION_CHARACTERS_SUBSET,
+                        DECIMAL_DIGITS_SUBSET);
+                  }
+                
+                  protected %s(
+                          final Subset standardSubset,
+                          final Subset auxiliarySubset,
+                          final Subset punctuationSubset,
+                          final Subset decimalDigitsSubset) {
+                    super(
+                        defaultIfNull(standardSubset, STANDARD_CHARACTERS_SUBSET),
+                        defaultIfNull(auxiliarySubset, AUXILIARY_CHARACTERS_SUBSET),
+                        defaultIfNull(punctuationSubset, PUNCTUATION_CHARACTERS_SUBSET),
+                        defaultIfNull(decimalDigitsSubset, DECIMAL_DIGITS_SUBSET));
+                  }
+                
+                """, imports, displayName, displayName,
+            resourceBundleClassName, resourceBundleSuperClassName,
+            resourceBundleClassName, resourceBundleClassName))
         .append(String.format("""
               /**
                * <p>The standard characters for the %s language as defined by the
@@ -276,24 +288,45 @@ public class CldrResourceBundleClassGenerator {
           return SubsetWrapper.wrap(subsetBuilder.build());
         });
 
+    final String imports;
+    if (standardCharactersSubset.isEmpty() && auxiliaryCharactersSubset.isEmpty()
+        && punctuationCharactersSubset.isEmpty() && numbersCharactersSubset.isEmpty()) {
+      imports = """
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
+          
+          import java.util.MissingResourceException;
+          import java.util.ResourceBundle;
+          import javax.annotation.processing.Generated;
+          import org.junit.jupiter.api.Test;
+          import org.junit.jupiter.params.ParameterizedTest;
+          import org.junit.jupiter.params.provider.MethodSource;
+          import org.typefactory.Subset;
+          """;
+    } else {
+      imports = """
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
+          import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
+          
+          import java.util.MissingResourceException;
+          import java.util.ResourceBundle;
+          import javax.annotation.processing.Generated;
+          import org.junit.jupiter.api.Test;
+          import org.junit.jupiter.params.ParameterizedTest;
+          import org.junit.jupiter.params.provider.CsvSource;
+          import org.junit.jupiter.params.provider.MethodSource;
+          import org.typefactory.Subset;
+          """;
+    }
+
     final StringFormatter s = new StringFormatter()
         .append(licenseHeader)
         .append(String.format("""
                 package org.typefactory.unicode.cldr;
                 
-                import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
-                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatExceptionOfType;
-                import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoException;
-                
-                import java.util.MissingResourceException;
-                import java.util.ResourceBundle;
-                import javax.annotation.processing.Generated;
-                import org.junit.jupiter.api.Test;
-                import org.junit.jupiter.params.ParameterizedTest;
-                import org.junit.jupiter.params.provider.CsvSource;
-                import org.junit.jupiter.params.provider.MethodSource;
-                import org.typefactory.Subset;
-                
+                %s
                 /**
                  * Unit tests for the %s language '%s' resource bundle as defined
                  * by the Unicode Common Locale Data Repository (CLDR).
@@ -315,7 +348,7 @@ public class CldrResourceBundleClassGenerator {
                         .isInstanceOf(root.class)
                         .isInstanceOf(AbstractCldrResourceBundle.class)
                         .isInstanceOf(ResourceBundle.class);
-        
+                
                     assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_%s");
                 
                     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
@@ -337,7 +370,7 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
-
+                
                     assertThatExceptionOfType(MissingResourceException.class)
                         .isThrownBy(() -> instance.getObject("nonexistent_key"))
                         .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_%s");
@@ -358,14 +391,14 @@ public class CldrResourceBundleClassGenerator {
                         .isInstanceOf(root.class)
                         .isInstanceOf(AbstractCldrResourceBundle.class)
                         .isInstanceOf(ResourceBundle.class);
-        
+                
                     assertThat(instance.resourceBundleName()).isEqualTo("org.typefactory.unicode.cldr_%s");
                 
                     assertThatNoException().isThrownBy(() -> instance.getStandardSubset());
                     assertThatNoException().isThrownBy(() -> instance.getAuxiliarySubset());
                     assertThatNoException().isThrownBy(() -> instance.getPunctuationSubset());
                     assertThatNoException().isThrownBy(() -> instance.getDecimalDigitsSubset());
-
+                
                     assertThat(instance.getKeys())
                         .isInstanceOf(java.util.Enumeration.class)
                         .satisfies(enumeration -> {
@@ -380,7 +413,7 @@ public class CldrResourceBundleClassGenerator {
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.AUXILIARY_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.PUNCTUATION_CHARACTERS));
                     assertThatNoException().isThrownBy(() -> instance.getObject(AbstractCldrResourceBundle.DECIMAL_DIGITS));
-
+                
                     assertThatExceptionOfType(MissingResourceException.class)
                         .isThrownBy(() -> instance.getObject("nonexistent_key"))
                         .withMessage("Cannot load locale data for key 'nonexistent_key' from resource org.typefactory.unicode.cldr_%s");
@@ -392,6 +425,7 @@ public class CldrResourceBundleClassGenerator {
                   }
                 
                 """,
+            imports,
             displayName, resourceBundleClassName,
             displayName, resourceBundleClassName,
             resourceBundleTestClassName, resourceBundleTestSuperClassName,
