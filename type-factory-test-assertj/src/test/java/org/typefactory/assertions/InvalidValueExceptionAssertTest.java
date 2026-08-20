@@ -28,6 +28,7 @@ import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -38,6 +39,7 @@ import org.typefactory.LongType;
 import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 
+@Isolated // Run this test class by itself because some tests call Locale.setDefault(...)
 @Execution(ExecutionMode.SAME_THREAD) // run sequentially because some tests call Locale.setDefault(...)
 class InvalidValueExceptionAssertTest {
 

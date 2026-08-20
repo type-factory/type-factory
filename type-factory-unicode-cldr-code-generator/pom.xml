@@ -20,6 +20,11 @@
     <sonar.coverage.exclusions>
       **/org/typefactory/**/*.java
     </sonar.coverage.exclusions>
+    <!-- Ignore some code duplication in the CLDR code-generation code -->
+    <sonar.cpd.exclusions>
+      **/org/typefactory/unicode/cldr/generator/locale/CldrResourceBundleClassGenerator.java
+    </sonar.cpd.exclusions>
+
   </properties>
 
   <dependencies>
