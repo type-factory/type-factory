@@ -22,11 +22,16 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import java.util.Locale;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.MessageCode;
 
+@Isolated // Run this test class by itself because some other test classes call Locale.setDefault(...)
+@Execution(ExecutionMode.SAME_THREAD) // run sequentially because some other test classes call Locale.setDefault(...)
 class MessageCodeAssertTest {
 
   @Test
@@ -150,7 +155,7 @@ class MessageCodeAssertTest {
   void hasDefaultMessage_behavesAsExpected(
       final String defaultMessage, final String expectedDefaultMessage, final String expectedExceptionMessage) {
 
-    final var actual = MessageCode.of("some.code.a", defaultMessage);
+    final var actual = MessageCode.of("some.code.b", defaultMessage);
     final var messageCodeAssert = MessageCodeAssert.assertThat(actual);
 
     if (expectedExceptionMessage != null) {
@@ -173,40 +178,40 @@ class MessageCodeAssertTest {
       CODE        | DEFAULT_MESSAGE | EXPECTED_MESSAGE | EXPECTED_EXCEPTION_MESSAGE
       null        | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       null        | null            | ''               |
-      null        | null            | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      null        | null            | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       null        | null            | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
       null        | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       null        | ''              | ''               |
-      null        | ''              | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      null        | ''              | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       null        | ''              | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
       null        | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       null        | some-message    | ''               |
-      null        | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      null        | some-message    | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       null        | some-message    | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
       ''          | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       ''          | null            | ''               |
-      ''          | null            | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      ''          | null            | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       ''          | null            | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
       ''          | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       ''          | ''              | ''               |
-      ''          | ''              | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      ''          | ''              | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       ''          | ''              | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
       ''          | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "" (empty)'
       ''          | some-message    | ''               |
-      ''          | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "" (empty)'
+      ''          | some-message    | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "" (empty)'
       ''          | some-message    | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "" (empty)'
-      some.code.a | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some.code.a"'
-      some.code.a | null            | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some.code.a"'
-      some.code.a | null            | some.code.a      |
-      some.code.a | null            | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "some.code.a"'
-      some.code.a | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some.code.a"'
-      some.code.a | ''              | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some.code.a"'
-      some.code.a | ''              | some.code.a      |
-      some.code.a | ''              | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "some.code.a"'
-      some.code.a | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some-message"'
-      some.code.a | some-message    | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some-message"'
-      some.code.a | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nbut message was:  "some-message"'
-      some.code.a | some-message    | some-message     |
+      some.code.c | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some.code.c"'
+      some.code.c | null            | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some.code.c"'
+      some.code.c | null            | some.code.c      |
+      some.code.c | null            | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "some.code.c"'
+      some.code.c | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some.code.c"'
+      some.code.c | ''              | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some.code.c"'
+      some.code.c | ''              | some.code.c      |
+      some.code.c | ''              | some-message     | '\nExpected actual of type:  MessageCode\nto have message:  "some-message"\nbut message was:  "some.code.c"'
+      some.code.c | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nbut message was:  "some-message"'
+      some.code.c | some-message    | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nbut message was:  "some-message"'
+      some.code.c | some-message    | some.code.c      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.c"\nbut message was:  "some-message"'
+      some.code.c | some-message    | some-message     |
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void hasMessage_behavesAsExpected(
       final String code, final String defaultMessage,
@@ -235,40 +240,40 @@ class MessageCodeAssertTest {
       CODE        | DEFAULT_MESSAGE  | EXPECTED_MESSAGE  | EXPECTED_EXCEPTION_MESSAGE
       null        | null             | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | null             | ''                |
-      null        | null             | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | null             | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | null             | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | ''                |
-      null        | ''               | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | ''               | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | ''                |
-      null        | some-{1}-message | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | some-{1}-message | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | ''                |
-      ''          | null             | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | null             | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | ''                |
-      ''          | ''               | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | ''               | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | ''                |
-      ''          | some-{1}-message | some.code.a       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | some-{1}-message | some.code.d       | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
-      some.code.a | null             | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | null             | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | null             | some.code.a       |
-      some.code.a | null             | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | ''               | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | ''               | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | ''               | some.code.a       |
-      some.code.a | ''               | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.a"'
-      some.code.a | some-{1}-message | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
-      some.code.a | some-{1}-message | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
-      some.code.a | some-{1}-message | some.code.a        | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
-      some.code.a | some-{1}-message | some-arg1-message |
+      some.code.d | null             | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | null             | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | null             | some.code.d       |
+      some.code.d | null             | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | ''               | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | ''               | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | ''               | some.code.d       |
+      some.code.d | ''               | some-arg1-message | '\nExpected actual of type:  MessageCode\nto have message:  "some-arg1-message"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some.code.d"'
+      some.code.d | some-{1}-message | null              | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
+      some.code.d | some-{1}-message | ''                | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
+      some.code.d | some-{1}-message | some.code.d        | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.d"\nfor message-args:  ["arg0", "arg1"]\nbut message was:  "some-arg1-message"'
+      some.code.d | some-{1}-message | some-arg1-message |
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void hasMessageForArgs_behavesAsExpected(
       final String code, final String defaultMessage,
@@ -299,40 +304,40 @@ class MessageCodeAssertTest {
       CODE        | DEFAULT_MESSAGE | EXPECTED_MESSAGE | EXPECTED_EXCEPTION_MESSAGE
       null        | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | null            | ''               |
-      null        | null            | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      null        | null            | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | null            | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | ''              | ''               |
-      null        | ''              | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      null        | ''              | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | ''              | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | some-message    | ''               |
-      null        | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      null        | some-message    | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       null        | some-message    | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | null            | ''               |
-      ''          | null            | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      ''          | null            | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | null            | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | ''              | ''               |
-      ''          | ''              | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      ''          | ''              | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | ''              | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | some-message    | ''               |
-      ''          | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "" (empty)'
+      ''          | some-message    | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "" (empty)'
       ''          | some-message    | eine Nachricht   | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht"\nfor locale:  de-DE\nbut message was:  "" (empty)'
-      some.code.a | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | null            | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | null            | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | null            | eine Nachricht   |
-      some.code.a | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | ''              | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | ''              | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | ''              | eine Nachricht   |
-      some.code.a | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | some-message    | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | some-message    | some.code.a      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.a"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
-      some.code.a | some-message    | eine Nachricht   |
+      some.code.e | null            | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | null            | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | null            | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | null            | eine Nachricht   |
+      some.code.e | ''              | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | ''              | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | ''              | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | ''              | eine Nachricht   |
+      some.code.e | some-message    | null             | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | some-message    | ''               | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | some-message    | some.code.e      | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.e"\nfor locale:  de-DE\nbut message was:  "eine Nachricht"'
+      some.code.e | some-message    | eine Nachricht   |
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void hasMessageForLocale_de_behavesAsExpected(
       final String code, final String defaultMessage,
@@ -361,40 +366,40 @@ class MessageCodeAssertTest {
       CODE        | DEFAULT_MESSAGE  | EXPECTED_MESSAGE             | EXPECTED_EXCEPTION_MESSAGE
       null        | null             | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | null             | ''                           |
-      null        | null             | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | null             | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | null             | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | ''                           |
-      null        | ''               | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | ''               | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | ''               | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | ''                           |
-      null        | some-{1}-message | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      null        | some-{1}-message | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       null        | some-{1}-message | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | ''                           |
-      ''          | null             | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | null             | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | null             | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | ''                           |
-      ''          | ''               | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | ''               | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | ''               | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | ''                           |
-      ''          | some-{1}-message | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
+      ''          | some-{1}-message | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
       ''          | some-{1}-message | eine Nachricht mit Wert arg1 | '\nExpected actual of type:  MessageCode\nto have message:  "eine Nachricht mit Wert arg1"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "" (empty)'
-      some.code.b | null             | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | null             | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | null             | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | null             | eine Nachricht mit Wert arg1 |
-      some.code.b | ''               | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | ''               | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | ''               | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | ''               | eine Nachricht mit Wert arg1 |
-      some.code.b | some-{1}-message | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | some-{1}-message | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | some-{1}-message | some.code.b                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.b"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
-      some.code.b | some-{1}-message | eine Nachricht mit Wert arg1 |
+      some.code.f | null             | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | null             | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | null             | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | null             | eine Nachricht mit Wert arg1 |
+      some.code.f | ''               | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | ''               | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | ''               | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | ''               | eine Nachricht mit Wert arg1 |
+      some.code.f | some-{1}-message | null                         | '\nExpected actual of type:  MessageCode\nto have message:  null\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | some-{1}-message | ''                           | '\nExpected actual of type:  MessageCode\nto have message:  "" (empty)\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | some-{1}-message | some.code.f                  | '\nExpected actual of type:  MessageCode\nto have message:  "some.code.f"\nfor locale:  de-DE\nand for message-args:  ["arg0", "arg1"]\nbut message was:  "eine Nachricht mit Wert arg1"'
+      some.code.f | some-{1}-message | eine Nachricht mit Wert arg1 |
       """, delimiter = '|', nullValues = "null", useHeadersInDisplayName = true)
   void hasMessageForLocaleAndArgs_behavesAsExpected(
       final String code, final String defaultMessage,

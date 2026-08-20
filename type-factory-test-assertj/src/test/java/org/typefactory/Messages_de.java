@@ -23,8 +23,8 @@ public class Messages_de extends ListResourceBundle {
   protected Object[][] getContents() {
     return new Object[][]{
         {"some.code", "eine Nachricht"},
-        {"some.code.a", "eine Nachricht"},
-        {"some.code.b", "eine Nachricht mit Wert {1}"},
+        {"some.code.e", "eine Nachricht"},
+        {"some.code.f", "eine Nachricht mit Wert {1}"},
     };
   }
 }
