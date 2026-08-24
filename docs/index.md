@@ -1,37 +1,19 @@
-## Welcome to GitHub Pages
+# Type Factory
 
-You can use the [editor on GitHub](https://github.com/evantoli/type-factory/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Type Factory helps you create small, explicit Java types for values such as currency codes, account numbers, identifiers, names, and other strings that need validation.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Use it when a raw `String` is too loose, but a full custom coded domain object would be too much.
 
-### Markdown
+## Documentation
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+- [Alphabets, scripts, blocks and categories](regex-validation-pitfalls.md)
 
-```markdown
-Syntax highlighted value block
+## Release notes
 
-# Header 1
-## Header 2
-### Header 3
+- [Release notes - v1.1.0](release-notes/release-notes-v1.1.0.md)
 
-- Bulleted
-- List
+## Project
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/evantoli/type-factory/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+- [Source code](https://github.com/type-factory/type-factory)
+- [Maven Central](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
+- [Javadocs](https://javadoc.io/doc/org.typefactory/type-factory-core)
