@@ -1,5 +1,53 @@
 # Release notes &ndash; version v1.1.0
 
+## Using this release version with Maven / Gradle
+
+<details name="import-coordinates" open>
+<summary>Maven</summary>
+
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.typefactory</groupId>
+      <artifactId>type-factory-bom</artifactId>
+      <version>1.1.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>  <!-- Required: the core Type Factory module. -->
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory-core</artifactId>
+  </dependency>
+  <dependency>  <!-- Optional: locale Unicode CLDR module. -->
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory-unicode-cldr</artifactId>
+  </dependency>
+</dependencies>
+```
+</details>
+
+<details name="import-coordinates">
+<summary>Gradle</summary>
+
+```groovy
+dependencies {
+  implementation platform("org.typefactory:type-factory-bom:1.1.0")
+
+  // Required: the core Type Factory module. 
+  implementation "org.typefactory:type-factory-core"
+
+  // Optional: locale Unicode CLDR module.
+  implementation "org.typefactory:type-factory-unicode-cldr"
+}
+```
+
+</details>
+
 ## Unicode categories
 
 The Category enumeration now has methods to help discern if a code point is in a set of Unicode categories based on their bitflags.
