@@ -6,7 +6,6 @@ custom_css:
   - assets/css/style.scss
 
 plugins: []
-#  - jekyll-default-layout
 
 enable_copy_code_button: true
 
@@ -14,7 +13,15 @@ exclude:
   - drafts/
 
 nav_external_links:
-  - title: Type Factory on GitHub
+  - title: Javadocs
+    url: https://javadoc.io/doc/org.typefactory/type-factory-core
+    hide_icon: false
+    opens_in_new_tab: true
+  - title: On GitHub
     url: https://github.com/type-factory/type-factory
+    hide_icon: false
+    opens_in_new_tab: true
+  - title: On Maven Central
+    url: https://central.sonatype.com/search?q=g:org.typefactory
     hide_icon: false
     opens_in_new_tab: true

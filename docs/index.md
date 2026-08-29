@@ -12,9 +12,9 @@ Use it when a raw `String` is too loose, repeated annotation and regex validatio
 
 
 
-## What it gives you
+## What it provides
 
-- Immutable custom types backed by clear parsing and validation rules.
+- Immutable custom-types (value objects) backed by clear parsing and validation rules.
 - Reusable `TypeParser` definitions for cleanup, formatting, regex checks, and custom validators.
 - Consistent boundary validation, so invalid values fail before they spread through your application.
 - Built-in `equals`, `hashCode`, `compareTo`, and `toString` behavior for objects that extend `StringType` which also implements `CharSequence` and `Comparable`.
@@ -23,11 +23,6 @@ Use it when a raw `String` is too loose, repeated annotation and regex validatio
 
 - [Getting started](getting-started.md) &ndash; add Type Factory to a Maven or Gradle project and create your first custom types.
 - [Regex validation pitfalls](regex-validation-pitfalls.md) &ndash; understand when Unicode scripts, blocks, categories, and regex validation are broader than the business rule you need.
-
-## Documentation
-
-- [Getting started](getting-started.md)
-- [Regex validation pitfalls](regex-validation-pitfalls.md)
 
 ## Release notes
 

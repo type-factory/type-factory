@@ -10,13 +10,94 @@ import com.ibm.icu.util.LocaleData;
 import com.ibm.icu.util.ULocale;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.InvalidValueException;
 import org.typefactory.TypeParser;
 
 
-class Icu4jPatternTests {
+class RegexValidationPitfallsTests {
+
+  /**
+   * Test the intention of a regex when the intention to allow only letters from a specific alphabet.
+   * It shows that using a regex that employs Unicode categories is not adequate.
+   */
+  @Test
+  void regexUnicodeCategoryTest() {
+
+    // These pass the intention of the regex.
+    assertThat("Nicholas".matches("\\p{L}+")).isTrue();  // true - ✅ valid English letters
+    assertThat("Νικόλαος".matches("\\p{L}+")).isTrue();  // true - ✅ valid Greek letters
+
+    // These fail the intention of the regex, but pass the regex because they are Unicode letters
+    assertThat("Νichοlas".matches("\\p{L}+")).isTrue();  // true - ❌ Homoglyphs, looks English, but contains Greek N and o
+    assertThat("Ŋʅʗƕᴑꝲɐƨ".matches("\\p{L}+")).isTrue();  // true - ❌ Unicode letters but not from the English alphabet!
+    assertThat("ͶͱϏϖϡἇϙϟ".matches("\\p{L}+")).isTrue();  // true - ❌ Unicode letters but not from the Greek alphabet!
+  }
+
+  /**
+   * Test the intention of a regex when the intention to allow only letters from a specific alphabet.
+   * It shows that using a regex that employs Unicode scripts is not adequate.
+   */
+  @Test
+  void regexUnicodeScriptTest() {
+
+    // These pass the intention of the regex.
+    assertThat("Nicholas".matches("\\p{IsLatin}+")).isTrue();  // true  - ✅ valid English letters
+    assertThat("Νichοlas".matches("\\p{IsLatin}+")).isFalse(); // false - ✅ stopped homoglyphs, looks English, contains Greek N and o
+    assertThat("Νικόλαος".matches("\\p{IsGreek}+")).isTrue();  // true  - ✅ valid Greek letters
+
+    // These fail the intention of the regex, but pass the regex because they are in the Unicode script
+    assertThat("Ŋʅʗƕᴑꝲɐƨ".matches("\\p{IsLatin}+")).isTrue();  // true - ❌ Unicode letters but not from the English alphabet!
+    assertThat("ͶͱϏϖϡἇϙϟ".matches("\\p{IsGreek}+")).isTrue();  // true - ❌ Unicode letters but not from the Greek alphabet!
+  }
+
+  /**
+   * Test the intention of a regex when the intention to allow only letters from a specific alphabet.
+   * It shows that using a regex that employs Unicode blocks is not adequate.
+   */
+  @Test
+  void regexUnicodeBlockTest() {
+
+    // These pass the intention of the regex.
+    assertThat("Nicholas".matches("\\p{InBasicLatin}+")).isTrue();      // true  - ✅ valid English letters
+    assertThat("Νichοlas".matches("\\p{InGreekAndCoptic}+")).isFalse(); // false - ✅ stopped homoglyphs, looks English, contains Greek N and o
+    assertThat("Νικόλαος".matches("\\p{InGreekAndCoptic}+")).isTrue();  // true  - ✅ valid Greek letters
+
+    // These fail the intention of the regex, but pass the regex because they are in the Unicode block
+    assertThat("N1(<0L@$".matches("\\p{InBasicLatin}+")).isTrue();      // true - ❌ Unicode letters but not from the English alphabet!
+    assertThat("ͶͱϏϖϡϫϙϟ".matches("\\p{InGreekAndCoptic}+")).isTrue();  // true - ❌ Unicode letters but not from the Greek alphabet!
+  }
+
+  /**
+   * Test the intention of a regex when the intention to allow only letters from a specific alphabet.
+   * It shows that using a regex that employs a combination of Unicode categories and scripts is not adequate.
+   */
+  @Test
+  void regexUnicodeCombiningCategoryAndScriptTest() {
+
+    // These fail the intention of the regex, but pass the regex because they are in the Unicode block
+    assertThat("Ŋʅʗƕᴑꝲɐƨ".matches("[\\p{L}&&[\\p{IsLatin}]]+")).isTrue();  // true - ❌ All letters and in the script but not English!
+    assertThat("ͶͱϏϖϡἇϙϟ".matches("[\\p{L}&&[\\p{IsGreek}]]+")).isTrue();  // true - ❌ All letters and in the script but not Greek!
+  }
+
+  /**
+   * Test the intention of a regex when the intention to allow only letters from a specific alphabet.
+   * It shows that using a regex that employs a hand-coded alphabet.
+   */
+  @Test
+  void regexHandCodedAlphabetTest() {
+
+    // These pass the intention of the regex.
+    assertThat("Nicholas".matches("[a-zA-Z]+")).isTrue();                 // true - ✅ allow English letters only
+    assertThat("Νichοlas".matches("[a-zA-Z]+")).isFalse();                // false - ✅ stopped homoglyphs, looks English, contains Greek N and o
+    assertThat("Νικόλαος".matches("([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́|ΐ|ΰ)+")).isTrue();  // true - ✅ allow Greek letters only
+
+    // These fail the intention of the regex, but pass the regex because they are in the Unicode block
+    assertThat("Ŋʅʗƕᴑꝲɐƨ".matches("[a-zA-Z]+")).isFalse();                 // false - ✅ Not English letters
+    assertThat("ͶͱϏϖϡἇϙϟ".matches("([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́|ΐ|ΰ)+")).isFalse();  // false - ✅ Not Greek letters
+  }
 
 
   @ParameterizedTest
@@ -42,11 +123,6 @@ class Icu4jPatternTests {
 
     assertThat(pattern).hasToString(expectedIcu4jPattern);
     assertThat(matcher.matches()).isEqualTo(expectedMatch);
-
-    System.out.printf("%s matches %s = %b%n", name, pattern, matcher.matches());
-
-    // "Ι ◌̈ ◌́" “ ” (U+202F)
-    //([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́|ΐ|ΰ)+
   }
 
   @ParameterizedTest
@@ -129,17 +205,10 @@ class Icu4jPatternTests {
       final boolean expectedValid, final String expectedExceptionMessage) {
 
     final var locale = Locale.forLanguageTag(localeTag);
+
     final TypeParser parser = TypeParser.builder()
-        .minSize(1)
-        .maxSize(60)
         .acceptSubset(org.typefactory.LocaleData.getForLocale(locale).standardCharactersSubset())
         .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
-        .convertChar('’', '\'') // Convert U+2019 (right single quotation mark) to U+0027 (apostrophe) for system compatibility
-        .convertChar('‐', '-')  // Convert U+2010 (hyphen) to U+002D (hyphen-minus) for system compatibility
-        .convertChar('‑', '-')  // Convert U+2011 (non-breaking hyphen) to U+002D (hyphen-minus) for system compatibility
-        .convertChar('–', '-')  // Convert U+2013 (en dash) to U+002D (hyphen-minus) for system compatibility
-        .normalizeWhitespace()
-        .convertEmptyToNull()
         .build();
 
     if (expectedValid) {
@@ -150,6 +219,4 @@ class Icu4jPatternTests {
           .withMessageContaining(expectedExceptionMessage);
     }
   }
-
-
 }
