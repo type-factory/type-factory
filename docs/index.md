@@ -1,37 +1,40 @@
-## Welcome to GitHub Pages
+---
+layout: page
+title: "Type Factory"
+nav_order: 1000
+---
 
-You can use the [editor on GitHub](https://github.com/evantoli/type-factory/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+# Type Factory
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Type Factory helps Java developers replace loosely validated `String` values with small, explicit custom types.
 
-### Markdown
+Use it when a value has its own rules, but repeated validation logic is hard to maintain and handwritten value objects would add too much boilerplate.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## What it provides
 
-```markdown
-Syntax highlighted value block
+- Immutable, thread-safe `TypeParser` definitions for cleanup, formatting, and validation.
+- Simple creation of immutable custom value-object types from `TypeParser` instances.
+- Consistent boundary validation, so invalid values fail before spreading through your application.
+- Less repeated annotation validation, regex validation, and cleanup boilerplate.
 
-# Header 1
-## Header 2
-### Header 3
+## Start here
 
-- Bulleted
-- List
+- [Getting started](getting-started) &ndash; create your first custom types.
 
-1. Numbered
-2. List
+## Then continue with
 
-**Bold** and _Italic_ and `Code` text
+_There is a lot more to come in this section._
 
-[Link](url) and ![Image](src)
-```
+- [Regex validation pitfalls](regex-validation-pitfalls) &ndash; some regular expression shortcomings and a comparison to TypeFactory types.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Project
 
-### Jekyll Themes
+- [Type Factory on GitHub](https://github.com/type-factory/type-factory)
+- [Type Factory on Maven Central](https://central.sonatype.com/search?q=g:org.typefactory)
+- [Type Factory Javadocs](https://javadoc.io/doc/org.typefactory/type-factory-core)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/evantoli/type-factory/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Release notes
 
-### Support or Contact
+- [Release notes on GitHub](https://github.com/type-factory/type-factory/releases)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+

@@ -51,7 +51,7 @@ public interface Type<V, T extends Type<V, T>> extends Serializable {
 
   /**
    * <p>Returns {@code true} if the result of {@link #value()} is {@code null}.
-   * Whether this make sense for your use-case depends on your design.</p>
+   * Whether this makes sense for your use-case depends on your design.</p>
    *
    * <p>If you would like
    * to ensure that the internal value cannot be {@code null} then consider doing either of:</p>

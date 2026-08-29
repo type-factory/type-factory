@@ -44,7 +44,7 @@ final class TypeFactoryConfig {
     CODE_POINT_NAME_CACHE_SIZE(
         "org.typefactory.codePointNamesCacheSize",
         "ORG_TYPE_FACTORY_CODE_POINT_NAME_CACHE_SIZE",
-        499),
+        500),
     CODE_POINT_NAMES_IN_EXCEPTION_MESSAGES(
         "org.typefactory.codePointNamesInExceptionMessages",
         "ORG_TYPE_FACTORY_CODE_POINT_NAMES_IN_EXCEPTION_MESSAGES",

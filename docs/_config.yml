@@ -1,1 +1,28 @@
-theme: jekyll-theme-cayman
+title: Type Factory
+description: A library for creating custom types backed by clear parsing and validation rules
+theme: just-the-docs
+
+custom_css:
+  - assets/css/style.scss
+
+plugins: []
+
+enable_copy_code_button: true
+
+exclude:
+  - drafts/
+  - release-notes/
+
+nav_external_links:
+  - title: Javadocs
+    url: https://javadoc.io/doc/org.typefactory/type-factory-core
+    hide_icon: false
+    opens_in_new_tab: true
+  - title: On GitHub
+    url: https://github.com/type-factory/type-factory
+    hide_icon: false
+    opens_in_new_tab: true
+  - title: On Maven Central
+    url: https://central.sonatype.com/search?q=g:org.typefactory
+    hide_icon: false
+    opens_in_new_tab: true
