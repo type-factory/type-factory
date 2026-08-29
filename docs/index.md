@@ -27,14 +27,14 @@ _There is a lot more to come in this section._
 
 - [Regex validation pitfalls](regex-validation-pitfalls) &ndash; some regular expression shortcomings and a comparison to TypeFactory types.
 
-## Release notes
-
-- [Release notes on GitHub](https://github.com/type-factory/type-factory/releases)
-
 ## Project
 
 - [Type Factory on GitHub](https://github.com/type-factory/type-factory)
 - [Type Factory on Maven Central](https://central.sonatype.com/search?q=g:org.typefactory)
 - [Type Factory Javadocs](https://javadoc.io/doc/org.typefactory/type-factory-core)
+
+## Release notes
+
+- [Release notes on GitHub](https://github.com/type-factory/type-factory/releases)
 
 
