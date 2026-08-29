@@ -19,12 +19,17 @@ import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
+/**
+ * A currency code type representing a 3-character ISO 4217 alpha currency code.
+ */
 public final class CurrencyCode extends StringType {
 
   public static final CurrencyCode EMPTY_CURRENCY_CODE = new CurrencyCode("");
 
   private static final MessageCode ERROR_MESSAGE =
-      MessageCode.of("invalid.currency.code", "must be a 3-character ISO 4217 alpha currency code");
+      MessageCode.of(
+          "invalid.currency.code",
+          "must be a 3-character ISO 4217 alpha currency code");
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
       .messageCode(ERROR_MESSAGE)
@@ -36,12 +41,19 @@ public final class CurrencyCode extends StringType {
       .toUpperCase()
       .build();
 
+  // Private constructor - use the factory method instead.
   private CurrencyCode(final String value) {
     super(value);
   }
 
+  /**
+   * Creates a CurrencyCode instance from the given CharSequence value, or null if the value is null or empty.
+   *
+   * @param value the CharSequence value to parse into a CurrencyCode.
+   * @return a CurrencyCode instance or null if the value is null or empty.
+   * @throws org.typefactory.InvalidValueException if the value is invalid.
+   */
   public static CurrencyCode of(final CharSequence value) {
     return TYPE_PARSER.parseToStringType(value, CurrencyCode::new);
   }
-
 }
