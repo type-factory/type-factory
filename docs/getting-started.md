@@ -144,10 +144,10 @@ For names, a custom type can centralize locale-specific character rules and Unic
 
 ```java
 import java.util.Locale;
-import org.typefactory.LocaleData;
 import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
+import org.typefactory.unicode.LocaleData;
 
 public class PersonalName_fr extends StringType {
 

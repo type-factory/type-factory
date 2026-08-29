@@ -29,6 +29,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.typefactory.unicode.LocaleData;
 import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 import org.typefactory.unicode.cldr.af;
 import org.typefactory.unicode.cldr.ar;

@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2021-2026 Evan Toliopoulos (typefactory.org)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.typefactory.docs;
 
 import static com.ibm.icu.text.UnicodeSet.ADD_CASE_MAPPINGS;
@@ -207,7 +222,7 @@ class RegexValidationPitfallsTests {
     final var locale = Locale.forLanguageTag(localeTag);
 
     final TypeParser parser = TypeParser.builder()
-        .acceptSubset(org.typefactory.LocaleData.getForLocale(locale).standardCharactersSubset())
+        .acceptSubset(org.typefactory.unicode.LocaleData.getForLocale(locale).standardCharactersSubset())
         .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
         .build();
 

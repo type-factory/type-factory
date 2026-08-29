@@ -322,9 +322,9 @@ void alphabetTypeParserCreatedFromLocaleExemplarSet(
     final boolean expectedValid, final String expectedExceptionMessage) {
 
   final var locale = Locale.forLanguageTag(localeTag);
-  
+
   final TypeParser parser = TypeParser.builder()
-      .acceptSubset(org.typefactory.LocaleData.getForLocale(locale).standardCharactersSubset())
+      .acceptSubset(LocaleData.getForLocale(locale).standardCharactersSubset())
       .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
       .build();
 
@@ -393,10 +393,10 @@ Our `PersonalName` custom type uses the immutable threadsafe `TypeParser` we def
 
 ```java
 import java.util.Locale;
-import org.typefactory.LocaleData;
 import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
+import org.typefactory.unicode.LocaleData;
 
 public final class PersonalName extends StringType {
 
