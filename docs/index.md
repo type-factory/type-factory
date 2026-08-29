@@ -1,3 +1,8 @@
+---
+layout: page
+title: "Type Factory"
+---
+
 # Type Factory
 
 Type Factory helps Java developers create small, explicit custom types for values that need validation or cleanup.

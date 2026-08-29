@@ -1,4 +1,14 @@
-theme: jekyll-theme-cayman
+title: Type Factory
+description: A library for creating custom types backed by clear parsing and validation rules
+theme: just-the-docs
+
+custom_css:
+  - assets/css/style.scss
+
+plugins: []
+#  - jekyll-default-layout
+
+enable_copy_code_button: true
 
 exclude:
   - drafts/

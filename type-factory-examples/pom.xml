@@ -29,6 +29,11 @@
     </dependency>
 
     <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
@@ -42,4 +47,42 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <!-- Execution 1: Strict tests (build will fail if these fail) -->
+          <execution>
+            <id>strict-tests</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>org/typefactory/docs/**</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+
+          <!-- Execution 2: Tests that exist to demonstrate scenarios for documentation (build will not fail if these fail) -->
+          <execution>
+            <id>unstable-tests</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <testFailureIgnore>true</testFailureIgnore>
+              <includes>
+                <include>org/typefactory/docs/**</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

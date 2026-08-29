@@ -1,3 +1,8 @@
+---
+layout: page
+title: "Getting Started"
+---
+
 # Getting Started
 
 Type Factory helps you replace loosely validated `String` values with small, explicit custom types.
@@ -14,7 +19,7 @@ Type Factory requires Java 17 or later.
 
 Import the Type Factory bill-of-materials (BOM), then add the modules you need.
 
-<details name="import-coordinates" open>
+<details name="import-coordinates" markdown="1">
 <summary>Maven</summary>
 
 ```xml
@@ -44,7 +49,7 @@ Import the Type Factory bill-of-materials (BOM), then add the modules you need.
 
 </details>
 
-<details name="import-coordinates">
+<details name="import-coordinates" markdown="1">
 <summary>Gradle</summary>
 
 ```groovy
@@ -74,15 +79,15 @@ public void setCurrencyCode(final String currencyCode) {
 }
 ```
 
-That code can work, but each call site must remember which regex to use, when to trim, when to uppercase, and when the value is safe to pass around.
+This code can work, but every part of your application (or applications) must remember which regex to use, when to trim, when to uppercase, and when the value is safe to pass around.
 
-With Type Factory, the rule moves into the type:
+With Type Factory, the rules move into the type:
 
 ```java
 private CurrencyCode currencyCode;
 ```
 
-`CurrencyCode.of(" usd ")` can clean, validate, normalize, and return a `CurrencyCode`. Invalid input fails at the boundary instead of leaking through the application as a raw string.
+Instantiating with `CurrencyCode.of(" usd ")` will clean, validate, normalize, and return a `CurrencyCode`. Invalid input fails at the boundary instead of leaking through the application as a raw string.
 
 ## Example 1: CurrencyCode
 
@@ -99,16 +104,16 @@ public final class CurrencyCode extends StringType {
 
   private static final MessageCode ERROR_MESSAGE = MessageCode.of(
       "invalid.currency.code",
-      "must be a 3-character ISO 4217 alpha currency code");
+      "must be a 3-character ISO 4217 currency code");
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
       .messageCode(ERROR_MESSAGE)
-      .acceptCharRange('a', 'z')
-      .acceptCharRange('A', 'Z')
+      .acceptCharRange('a', 'z') // Accept lowercase letters
+      .acceptCharRange('A', 'Z') // Accept uppercase letters
+      .toUpperCase()             // Convert to uppercase
       .fixedSize(3)
       .removeAllWhitespace()
-      .convertNullToEmpty()
-      .toUpperCase()
+      .convertNullToEmpty() // Or you could preserveNullAndEmpty() or convertEmptyToNull()
       .build();
 
   private CurrencyCode(final String value) {
@@ -155,11 +160,11 @@ public class PersonalName_fr extends StringType {
       .maxSize(60)
       .acceptSubset(LocaleData.getForLocale(Locale.FRENCH).standardCharactersSubset())
       .acceptChars('\'', '-')
-      .convertChar('’', '\'')
-      .convertChar('‐', '-')
-      .convertChar('‑', '-')
-      .convertChar('–', '-')
-      .toCharacterNormalizationFormNFC()
+      .convertChar('\u2019', '\'') // Convert ’ RIGHT SINGLE QUOTATION to U+0027 APOSTROPHE
+      .convertChar('\u2010', '-')  // Convert ‐ HYPHEN                 to U+002D HYPHEN-MINUS
+      .convertChar('\u2011', '-')  // Convert ‑ NON-BREAKING HYPHEN    to U+002D HYPHEN-MINUS
+      .convertChar('\u2013', '-')  // Convert – EN DASH                to U+002D HYPHEN-MINUS
+      .toCharacterNormalizationFormNFC() // Combine diacritics into characters: e + ◌́ → é
       .normalizeWhitespace()
       .convertEmptyToNull()
       .build();
@@ -177,9 +182,9 @@ public class PersonalName_fr extends StringType {
 Use it like this:
 
 ```java
-PersonalName_fr name = PersonalName_fr.of("  D’Arcy   Jean‑Paul  ");
+PersonalName_fr name = PersonalName_fr.of("  Jean‑Paul    d’Arcy   ");
 
-name.toString(); // "D'Arcy Jean-Paul"
+name.toString(); // "Jean-Paul d'Arcy"
 name.length();   // 16
 ```
 
@@ -187,7 +192,7 @@ Blank input becomes `null`, which lets you use ordinary validation annotations, 
 
 ## Example 3: InternationalBankAccountNumber
 
-Use regex when regex is the right tool, but keep it inside the custom type. This IBAN example combines character rules, cleanup, regex format checking, and custom check-digit validation.
+This IBAN example combines character rules, cleanup, regex format checking, and custom check-digit validation.
 
 ```java
 import java.util.regex.Pattern;
@@ -214,10 +219,10 @@ public final class InternationalBankAccountNumber extends StringType {
       .minSize(5)
       .maxSize(34)
       .removeAllWhitespace()
-      .removeAllChars('.', '-', '–', '—')
+      .removeAllChars('.', '-', '–', '—') // Remove common visual UI separators.
       .toUpperCase()
-      .matchesRegex(VALID_IBAN_PATTERN)
-      .customValidator(InternationalBankAccountNumber::isValidIBAN)
+      .matchesRegex(VALID_IBAN_PATTERN)   // Must match the IBAN format.
+      .customValidator(InternationalBankAccountNumber::isValidIBAN) // Check digit validation.
       .build();
 
   private InternationalBankAccountNumber(final String value) {
