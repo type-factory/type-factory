@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.typefactory;
+package org.typefactory.unicode;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.typefactory.assertions.TypeFactoryAssertions.assertThat;
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.typefactory.unicode.LocaleData;
 import org.typefactory.unicode.cldr.AbstractCldrResourceBundle;
 import org.typefactory.unicode.cldr.af;
 import org.typefactory.unicode.cldr.ar;
