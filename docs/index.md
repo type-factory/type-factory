@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "Type Factory"
+nav_order: 1000
 ---
 
 # Type Factory

@@ -1,16 +1,23 @@
 ---
 layout: page
 title: "Regex Validation Pitfalls"
+nav_order: 3001
 ---
+
+<details markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 # Regex Validation Pitfalls
 
-Most variables or object properties will be composed of alpha and/or numeric characters and perhaps some punctuation or special characters.
+Regular expressions are commonly used to validate values so long as you're familiar with the target alphabets and numeral systems. There is no doubt that regular expressions are powerful.
 
-Regular expressions are commonly used to validate these values so long as you're familiar with the target 
-alphabets and numeral systems. There is no doubt that regular expressions are powerful.
-
-What if you need to limit values to certain character-types, languages, or alphabets? Reading the documentation for the Java [Patttern](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/regex/Pattern.html) class can give the impression that you only need to specify the target Unicode category, script or block.
+What if you need to limit values to certain character-types, languages, or alphabets? Reading the documentation for the Java [Pattern](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/regex/Pattern.html) class can give the impression that you only need to specify the target Unicode category, script or block.
 
 For example, you might try using:
 
@@ -28,15 +35,15 @@ We'll also see some alternatives to help to validate data types for specific alp
 
 Let's first look at the pitfalls of Unicode categories, scripts, and blocks for regex validation.
 
-## Pitfalls of Unicode categories, scripts, and blocks
+# Unicode category, script, and block regex
 
-### Unicode categories
+## Unicode categories
 
 A Unicode general category groups code points by kind, such as letter, decimal digit, punctuation, or symbol. Every Unicode code point belongs to one general category.
 
-Some categories are unions. For example, the `Letter` category includes uppercase letters, lowercase letters, titlecase letters, modifier letters, and other letters.
+Java regular expressions can match categories with `\p{...}` notation.
 
-Java regular expressions can match categories with `\p{...}` notation. 
+Some categories are unions. For example, the `Letter` category includes uppercase letters, lowercase letters, titlecase letters, modifier letters, and other letters.
 
 Imagine we have simplistic name field validation that only allows letters using the Unicode `Letter` category:
 
@@ -56,7 +63,7 @@ to Homoglyph attacks or unwanted and unsearchable characters.
 
 See Java's [`Character`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Character.html) constants for the categories recognised by Java.
 
-### Unicode scripts
+## Unicode scripts
 
 A Unicode script groups characters used by a writing system, such as Latin, Greek, Arabic. Every Unicode code point belongs to one script.
 
@@ -78,7 +85,7 @@ the risk for homoglyph attacks but still leave you open to unwanted and unsearch
 
 See the Unicode Consortium's [ISO 15924 script codes](https://unicode.org/iso15924/iso15924-codes.html) and Java's [`Character.UnicodeScript`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Character.UnicodeScript.html).
 
-### Unicode blocks
+## Unicode blocks
 
 A Unicode block is a contiguous range of code points. Every Unicode code point belongs to one block.
 
@@ -106,7 +113,7 @@ unwanted or unsearchable characters.
 
 See Java's [`Character.UnicodeBlock`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Character.UnicodeBlock.html).
 
-### Combining categories, scripts, and blocks
+## Combining categories, scripts, and blocks
 
 Aha! What about combining categories, scripts, and blocks to get a more specific match? For example, accepting only letters from a specific script:
 
@@ -117,11 +124,11 @@ Aha! What about combining categories, scripts, and blocks to get a more specific
 
 Again, these are still too broad for many fields and can leave you open to Homoglyph attacks or unwanted and unsearchable characters.
 
-## The alternatives
+# Language specific regex
 
 Let's look at some alternatives to help you validate data types for specific alphabets and numeral systems:
 
-### Hand-coded alphabet regex
+## Hand-coded alphabet regex
 
 You can hand-code specific alphabets for your field validation – assuming you know the characters
 that are required for the target language.
@@ -140,9 +147,9 @@ Our hand-coded alphabet regex forbids obsolete characters, punctuation, or symbo
 
 Don't know the alphabet for your field? You can use ICU4J or Type Factory to help you create Locale specific regular expressions.
 
-### ICU4J to help craft regex
+## ICU4J alphabet regex &ndash; simplistic approach
 
-ICU4J (International Components for Unicode for Java) is a Java library that provides Unicode and globalisation support. It can you find information on the letters, numbers, and punctuation used by a language (and much more).
+International Components for Unicode for Java (ICU4J) provide a library for Unicode and globalisation support. Use it to help you find information on the letters, numbers, and punctuation used by a language (and much more).
 
 A simplistic attempt at creating a regex for a name field that only allows letters for a specific language using ICU4J might look like this:
 
@@ -152,13 +159,13 @@ var alphabetSet = LocaleData.getExemplarSet(locale, UnicodeSet.ADD_CASE_MAPPINGS
 var pattern = Pattern.compile(alphabetSet.toPattern(false) + "+");
 ```
 
-This works most of the time but has problems. The ICU4J exemplar sets for some languages sometimes contain strings representing a single letter. For example, calling `toPattern` on the set will result in the following for Greek:
+This works most of the time but has problems. The ICU4J exemplar sets for some languages sometimes contain strings representing a single letter. For example, calling `UnicodeSet.toPattern()` on the will result in the following for Greek:
 
 ```text
 [ΆΈ-ΊΌΎ-ΡΣ-ώ{Ϊ́}{Ϋ́}{ΐ}{ΰ}]
 ```
 
-Why are there curly braces in the pattern? The Greek alphabet contains some letters like `Ϊ́` that are actually a string of three letters `Ι ◌̈ ◌́` &ndash; it doesn't have a single code point representation. A better Greek alphabet regex would be:
+Why are there curly braces in the pattern? The Greek alphabet contains some letters like `Ϊ́` that are actually a string of three letters `Ι ◌̈ ◌́` &ndash; it doesn't have a single code point representation. A better Greek alphabet regex pattern would be:
 
 ```text
 ([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́|ΐ|ΰ)+
@@ -194,6 +201,8 @@ void alphabet_regex_created_from_ICU4J_locale_exemplar_set(
   assertThat(matcher.matches()).isEqualTo(expectedMatch);
 }
 ```
+
+## ICU4J alphabet regex &ndash; thorough approach
 
 To fix the invalid regex patterns, we need to manually create them from the ICU4J exemplar in a way that correctly handles strings. I have provided an example below &ndash; it is a bit more complex than the simplistic approach.
 
@@ -270,7 +279,7 @@ static String escapeCodePointIfRequired(final int codePoint) {
 
 </details>
 
-### Type Factory custom types
+# Type Factory Type Parsers
 
 Type Factory uses a `TypeParser` to define valid values, cleanup rules, and error messages in one place. Type parsers are immutable and thread-safe, so you can create one parser and reuse it across your application.
 
@@ -278,9 +287,70 @@ For example, this parser accepts English letters, hyphens, apostrophes, and spac
 
 ```java
 static final TypeParser NAME_PARSER = TypeParser.builder()
-    .messageCode(ERROR_MESSAGE)
-    .minSize(1)
-    .maxSize(60) 
+    .acceptSubset(LocaleData.getForLocale(Locale.ENGLISH).standardCharactersSubset())
+    .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
+    .build();
+```
+
+We could have used `.acceptCharRange('a', 'z')` and `.acceptCharRange('A', 'Z')` to accept English letters. Instead, we used `.acceptSubset(LocaleData.getForLocale(...))`. 
+
+Type Factory provides locale data to assist in getting standard sets of alphabet characters, auxiliary letters (used in loan words), punctuation, and numerals. Locale data is derived from the Unicode Common Locale Data Repository (CLDR) datasets:
+
+```java
+var englishAlphabetSet = LocaleData.getForLocale(Locale.ENGLISH).standardCharactersSubset();
+var frenchAlphabetSet = LocaleData.getForLocale(Locale.FRENCH).standardCharactersSubset();
+var greekAlphabetSet = LocaleData.getForLocale(Locale.of("el")).standardCharactersSubset();
+```
+
+Let's see how our `TypeParser` performs against the regular expression test cases we've been using:
+
+```java
+@ParameterizedTest
+@CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+    NAME       | LOCALE | VALID  | EXCEPTION_MESSAGE_CONTAINS                                          | NOTES
+    Nicholas   | en-EN  | true   |                                                                     | ✅ English name
+    Ŋʅʗƕᴑꝲɐƨ   | en-EN  | false  | invalid character Ŋ U+014A LATIN CAPITAL LETTER ENG                 | ✅ Not English alphabet letters
+    Νichοlas   | en-EN  | false  | invalid character Ν U+039D GREEK CAPITAL LETTER NU                  | ✅ Homoglyph, English & Greek letters
+    Νικόλαος   | el-GR  | true   |                                                                     | ✅ Greek name
+    ͶͱϏϖϡϫϙϟ   | el-GR  | false  | invalid character Ͷ U+0376 GREEK CAPITAL LETTER PAMPHYLIAN DIGAMMA  | ✅ Not Greek alphabet letters
+    Νι{κόλ}αος | el-GR  | false  | invalid character { U+007B LEFT CURLY BRACKET                       | ✅ Invalid curly braces caught
+    François   | fr-FR  | true   |                                                                     | ✅ French name
+    Begoña     | fr-FR  | false  | invalid character ñ U+00F1 LATIN SMALL LETTER N WITH TILDE          | ✅ Spanish name with ñ
+    """)
+void alphabetTypeParserCreatedFromLocaleExemplarSet(
+    final String name, final String localeTag,
+    final boolean expectedValid, final String expectedExceptionMessage) {
+
+  final var locale = Locale.forLanguageTag(localeTag);
+  
+  final TypeParser parser = TypeParser.builder()
+      .acceptSubset(org.typefactory.LocaleData.getForLocale(locale).standardCharactersSubset())
+      .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
+      .build();
+
+  if (expectedValid) {
+    assertThat(parser.parseToString(name)).isEqualTo(name);
+  } else {
+    assertThatExceptionOfType(InvalidValueException.class)
+        .isThrownBy(() -> parser.parseToString(name))
+        .withMessageContaining(expectedExceptionMessage);
+  }
+}
+```
+
+The `TypeParser` caught all the invalid values and provided meaningful error messages. The error message will always contain the invalid character if it is printable along with the Unicode code point identifier. The Unicode character name (that helps spot homoglyphs) will only be provided if you configure the Type Factory to provide them.
+
+## Normalization and cleanup with Type Factory
+
+Our `TypeParser` example can also take care of normalization and cleanup. It can transform values provided with apostrophes or dashes that are different to what our system expects. We aim for our applications to adhere to the [Robustness Principle or Postel's Law](https://en.wikipedia.org/wiki/Robustness_principle): _"Be lenient in what you expect and strict in what you provide."_:
+
+```java
+static final TypeParser NAME_PARSER = TypeParser.builder()
+    .messageCode(MessageCode.of( // Custom message key and default message for invalid values
+        "invalid.personal.name",
+        "must be made up of English letters, hyphens, apostrophes and spaces only.")) 
+    .minSize(1)             // Min-length
+    .maxSize(60)            // Max-length
     .acceptSubset(LocaleData.getForLocale(Locale.ENGLISH).standardCharactersSubset())
     .acceptChars('\'', '-') // Accept U+0027 (apostrophe) and U+002D (hyphen-minus)
     .convertChar('’', '\'') // Convert U+2019 (right single quotation mark) to U+0027 (apostrophe) for system compatibility
@@ -292,40 +362,19 @@ static final TypeParser NAME_PARSER = TypeParser.builder()
     .build();
 ```
 
-We could have used `.acceptCharRange('a', 'z')` and `.acceptCharRange('A', 'Z')` to accept English letters. Instead, we used `LocaleData.getForLocale(Locale.ENGLISH)...`. 
-
-Type Factory provides locale data to assist in getting standard sets of alphabet characters, auxiliary letters (used in loan words), punctuation, and numerals. Locale data is derived from the Unicode Common Locale Data Repository (CLDR) datasets. For example, we can get the standard and auxiliary character sets for English, French, and Greek:
-
-```java
-var englishAlphabetSet = LocaleData.getForLocale(Locale.ENGLISH).standardCharactersSubset();
-var englishAuxiliarySet = LocaleData.getForLocale(Locale.ENGLISH).auxiliaryCharactersSubset();
-
-var frenchAlphabetSet = LocaleData.getForLocale(Locale.FRENCH).standardCharactersSubset();
-var frenchAuxiliarySet = LocaleData.getForLocale(Locale.FRENCH).auxiliaryCharactersSubset();
-
-var greekLocale = Locale.of("el");
-var greekAlphabetSet = LocaleData.getForLocale(greekLocale).standardCharactersSubset();
-var greekAuxiliarySet = LocaleData.getForLocale(greekLocale).auxiliaryCharactersSubset();
-```
-
-Our `TypeParser` also provides normalization and cleanup. It will transform values that were provided with different kinds of apostrophe or dashes than our system expects. We aim for our application to adhere to the [Robustness Principle or Postel's Law](https://en.wikipedia.org/wiki/Robustness_principle): _"Be lenient in what you expect and strict in what you provide."_:
-
-```java
-static final TypeParser NAME_PARSER = TypeParser.builder()
-    ...
-    .convertChar('’', '\'') // Convert U+2019 (right single quotation mark) to U+0027 (apostrophe) for system compatibility
-    .convertChar('‐', '-')  // Convert U+2010 (hyphen) to U+002D (hyphen-minus) for system compatibility
-    .convertChar('‑', '-')  // Convert U+2011 (non-breaking hyphen) to U+002D (hyphen-minus) for system compatibility
-    .convertChar('–', '-')  // Convert U+2013 (en dash) to U+002D (hyphen-minus) for system compatibility
-    .normalizeWhitespace()  // Remove leading and trailing whitespace and convert blocks of whitespace to a single space character.
-    ...
-```
-
 This kind of cleanup is often done with the following kind of boilerplate at the application boundaries:
 
 ```java
-void doSomething(@Pattern(regexp = "^[a-zA-Z' -]{1,60}$") final String name) {
-  final var cleanedName = name.trim().replaceAll("\\s+", " ");
+void doSomething(
+    @Pattern(
+        regexp = "^[a-zA-Z' -]{1,60}$", 
+        message="must be made up of English letters, hyphens, apostrophes and spaces only.") 
+    final String name) {
+  
+  final var cleanedName = name.trim()
+      .replaceAll("\\s+", " ")
+      .replaceAll("[’]", "'")
+      .replaceAll("[‐‑–]", "-");
   // do useful work...
 }
 ```
@@ -338,7 +387,9 @@ void doSomething(final PersonalName name) {
 }
 ```
 
-We use the `TypeParser` we created to be the brains of our  `PersonalName` type:
+## Complete example of a personal name custom type
+
+Our `PersonalName` custom type uses the immutable threadsafe `TypeParser` we defined earlier. By extending `StringType`, it gets all the standard value object methods, such as: `equals()`, `hashcode()`, `compareTo()`, `toString()`:
 
 ```java
 import java.util.Locale;
@@ -347,11 +398,11 @@ import org.typefactory.MessageCode;
 import org.typefactory.StringType;
 import org.typefactory.TypeParser;
 
-public class PersonalName extends StringType {
+public final class PersonalName extends StringType {
 
   public static final MessageCode ERROR_MESSAGE = MessageCode.of(
       "invalid.personal.name",
-      "must be made up of characters in the English alphabet, hyphens, apostrophes or spaces only.");
+      "must be made up of English letters, hyphens, apostrophes and spaces only.");
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
       .messageCode(ERROR_MESSAGE)
@@ -383,4 +434,10 @@ public class PersonalName extends StringType {
   }
 }
 ```
+
+# Conclusion
+
+Regular expressions can be useful, but Unicode categories, scripts, and blocks are often too broad for real field validation. Using libraries like ICU4J and Type Factory can help create better validation rules. 
+
+Type Factory will allow you to create custom value object types that validate, normalize and clean your data at the boundary allowing you to pass safe immutable type values instead of raw strings. Any invalid values will always result in consistent error messages.
 
