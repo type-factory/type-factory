@@ -46,13 +46,18 @@ Import the Type Factory bill-of-materials (BOM), then add the modules you need.
 </dependencyManagement>
 
 <dependencies>
-  <dependency> <!-- Required: the core Type Factory module. -->
+  <dependency>  <!-- Required: the core Type Factory library. -->
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory-core</artifactId>
   </dependency>
-  <dependency> <!-- Optional: locale Unicode CLDR module. -->
+  <dependency>  <!-- Optional: the locale Unicode CLDR library. -->
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory-unicode-cldr</artifactId>
+  </dependency>
+  <dependency>  <!-- Optional: the test assertions library extending AssertJ. -->
+    <groupId>org.typefactory</groupId>
+    <artifactId>type-factory-test-assertj</artifactId>
+    <scope>test</scope>
   </dependency>
 </dependencies>
 ```
@@ -66,11 +71,14 @@ Import the Type Factory bill-of-materials (BOM), then add the modules you need.
 dependencies {
   implementation platform("org.typefactory:type-factory-bom:1.0.1")
 
-  // Required: the core Type Factory module. 
+  // Required: the core Type Factory library. 
   implementation "org.typefactory:type-factory-core"
 
-  // Optional: predefined locale-related Unicode CLDR data.
+  // Optional: the locale Unicode CLDR library.
   implementation "org.typefactory:type-factory-unicode-cldr"
+
+  // Optional: the test assertions library extending AssertJ.
+  testImplementation "org.typefactory:type-factory-test-assertj"
 }
 ```
 
