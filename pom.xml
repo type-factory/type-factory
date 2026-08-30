@@ -308,7 +308,14 @@
             </goals>
             <configuration>
               <!-- We want to keep the following POM elements in the flattened POM files because Sonatype Maven Central requires them -->
-              <pomElements><name/><description/><url/><scm/><developers/><contributors/></pomElements>
+              <pomElements>
+                <name/>
+                <description/>
+                <url/>
+                <scm/>
+                <developers/>
+                <contributors/>
+              </pomElements>
             </configuration>
           </execution>
           <execution>
@@ -410,10 +417,8 @@
                     <arg>--pinentry-mode</arg>
                     <arg>loopback</arg>
                   </gpgArguments>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <keyname>${env.GPG_KEY_ID}</keyname>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                  <keyEnvName>GPG_KEY_ID</keyEnvName>
+                  <passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName>
                 </configuration>
               </execution>
             </executions>
