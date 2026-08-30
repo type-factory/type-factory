@@ -359,7 +359,7 @@ public interface Subset {
       if (result != 0) {
         return result;
       }
-      return inclusiveTo - o.inclusiveTo;
+      return Integer.compare(inclusiveTo, o.inclusiveTo);
     }
 
     /**
