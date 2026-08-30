@@ -4,6 +4,15 @@ title: "Best practices"
 nav_order: 3010
 ---
 
+<details markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 # Best practices
 
 ## One type parser per custom type

@@ -4,6 +4,15 @@ title: "Getting Started"
 nav_order: 2000
 ---
 
+<details markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 # Getting Started
 
 Type Factory helps you replace loosely validated `String` values with small, explicit custom types.
