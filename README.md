@@ -10,25 +10,22 @@
 [![Javadoc](https://javadoc.io/badge2/org.typefactory/type-factory-core/javadoc.svg)](https://javadoc.io/doc/org.typefactory/type-factory-core)
 [![Maven Central](https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom)](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
-Type Factory
-============
+# Type Factory
 
-Easily create custom data types and remove cruft and boilerplate from your code.
+Type Factory helps Java developers replace loosely validated `String` values with small, explicit custom types.
 
-<picture>
-  <source srcset="docs/intro-video-dark.gif" media="(prefers-color-scheme: dark)"/>
-  <img src="docs/intro-video-light.gif" alt="intro video" style="border: 1px solid #AAAAAA;"/>
-</picture>
-
-Latest release
-==============
+Use it when a value has its own rules, but repeated validation logic is hard to maintain and handwritten value objects would add too much boilerplate.
 
 Type Factory requires that you are using Java 17 or later. 
 
-Consider importing the Type Factory bill-of-materials (bom) into your Maven dependency management section and then add the core and language modules as needed to your Maven dependencies section.
+### Getting Type Factory
+
+Import the Type Factory bill-of-materials (BOM), then add the modules you need.
+
+<details name="import-coordinates">
+<summary>Maven</summary>
 
 ```xml
-<!-- Import the bill-of-materials (bom) into your project -->
 <dependencyManagement>
   <dependencies>
     <dependency>
@@ -41,26 +38,47 @@ Consider importing the Type Factory bill-of-materials (bom) into your Maven depe
   </dependencies>
 </dependencyManagement>
 
-<!-- Then import the type-factory-core module and 
-     optionally the type-factory-language module. --> 
 <dependencies>
-  <dependency>
+  <dependency> <!-- Required: the core Type Factory module. -->
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory-core</artifactId>
   </dependency>
-  <dependency>
+  <dependency> <!-- Optional: locale Unicode CLDR module. -->
     <groupId>org.typefactory</groupId>
-    <artifactId>type-factory-language</artifactId>
+    <artifactId>type-factory-unicode-cldr</artifactId>
   </dependency>
 </dependencies>
 ```
 
+</details>
+
+<details name="import-coordinates">
+<summary>Gradle</summary>
+
+```groovy
+dependencies {
+  implementation platform("org.typefactory:type-factory-bom:1.0.1")
+
+  // Required: the core Type Factory module. 
+  implementation "org.typefactory:type-factory-core"
+
+  // Optional: predefined locale-related Unicode CLDR data.
+  implementation "org.typefactory:type-factory-unicode-cldr"
+}
+```
+
+</details>
+
+#### On Maven Central
+
 [<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 [<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-core?label=type-factory-core">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
-[<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-language?label=type-factory-language">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
+[<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-unicode-cldr?label=type-factory-unicode-cldr">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
-Example 1 – currency code
--------------------------
+
+# Usage examples
+
+## Example 1 – currency code
 
 This example creates a custom type for currency codes that must conform to the ISO 4217 alpha 
   format for a currency code. 
@@ -138,8 +156,7 @@ value so that a valid `CurrencyCode` can be created.
   a `CurrencyCode` using the value provided.
 
 
-Example 2 – international bank account number (IBAN)
-----------------------------------------------------
+## Example 2 – international bank account number (IBAN)
 
 This example creates a custom type for international bank account numbers that also employs:
 
@@ -226,4 +243,9 @@ public final class InternationalBankAccountNumber extends StringType {
 ⑧ The custom validation method that ensure the IBAN check digits are correct 
   as per the modulo-97 rules for an IBAN.
 
+# Next steps
 
+Read the Type Factory documentation to learn how to create your own custom types and how to use the Type Factory APIs to parse and validate values.
+
+- [Type Factory Documentation](https://www.typefactory.org/)
+- [Type Factory Javadocs](https://javadoc.io/doc/org.typefactory/type-factory-core)
