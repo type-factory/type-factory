@@ -88,7 +88,9 @@ With Type Factory, the rules move into the type:
 private CurrencyCode currencyCode;
 ```
 
-Instantiating with `CurrencyCode.of(" usd ")` will clean, validate, normalize, and return a `CurrencyCode`. Invalid input fails at the boundary instead of leaking through the application as a raw string.
+Instantiating with `CurrencyCode.of(" usd ")` will clean, validate, normalize, and return a `CurrencyCode` value-object that extends `CharSequence` with a value of `USD`. 
+
+Invalid input fails at the application boundary instead of leaking through the application as a raw string.
 
 ## Example 1: CurrencyCode
 
@@ -127,7 +129,7 @@ public final class CurrencyCode extends StringType {
 }
 ```
 
-Because `CurrencyCode` extends `StringType`, it also implements `CharSequence` and `Comparable`. Type Factory provides the usual value methods for you: `equals`, `hashCode`, `compareTo`, and `toString`.
+Our `CurrencyCode` extends `StringType`, which implements `CharSequence` and `Comparable`, and it provides the value object methods for you: `equals`, `hashCode`, `compareTo`, and `toString`.
 
 Use it like this:
 
@@ -136,6 +138,7 @@ CurrencyCode currencyCode = CurrencyCode.of(" usd ");
 
 currencyCode.toString(); // "USD"
 currencyCode.length();   // 3
+
 ```
 
 ## Example 2: PersonalName_fr
@@ -189,7 +192,12 @@ name.toString(); // "Jean-Paul d'Arcy"
 name.length();   // 16
 ```
 
-Blank input becomes `null`, which lets you use ordinary validation annotations, such as `@NotNull`, to decide whether the field is required.
+We configured the parser to `convertEmptyToNull()` along with `normalizeWhitespace()` so creating a name instance with empty or blank input results in null. We could have chosen to `preserveNullAndEmpty()` or `convertNullToEmpty()` instead, if that is what we preferred.
+
+```java
+PersonalName_fr name1 = PersonalName_fr.of("  "); // name1 is null
+PersonalName_fr name2 = PersonalName_fr.of(null); // name2 is null
+```
 
 ## Example 3: InternationalBankAccountNumber
 
@@ -215,12 +223,12 @@ public final class InternationalBankAccountNumber extends StringType {
 
   private static final TypeParser TYPE_PARSER = TypeParser.builder()
       .messageCode(ERROR_MESSAGE)
-      .acceptLettersAtoZ()
-      .acceptDigits0to9()
+      .acceptLettersAtoZ() // convenience method for ASCII a-zA-Z
+      .acceptDigits0to9()  // convenience method for ASCII 0-9
       .minSize(5)
       .maxSize(34)
       .removeAllWhitespace()
-      .removeAllChars('.', '-', '–', '—') // Remove common visual UI separators.
+      .removeAllChars('.', '-', '–', '—') // Remove common visual or UI formatting separators.
       .toUpperCase()
       .matchesRegex(VALID_IBAN_PATTERN)   // Must match the IBAN format.
       .customValidator(InternationalBankAccountNumber::isValidIBAN) // Check digit validation.
