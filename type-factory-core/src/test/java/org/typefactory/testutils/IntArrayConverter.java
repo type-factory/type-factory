@@ -52,7 +52,7 @@ public class IntArrayConverter implements ArgumentConverter {
       if (value.isBlank()) {
         return EMPTY_INT_ARRAY;
       }
-      return Arrays.stream(value.split(",\\s*"))
+      return Arrays.stream(value.split(",\\s*+"))
           .mapToInt(s -> CHARACTER_PATTERN.matcher(s).matches() ? (int)s.charAt(0) : Integer.parseInt(s))
           .toArray();
     } catch (Exception e) {
