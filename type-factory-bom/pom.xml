@@ -5,7 +5,7 @@
 
   <groupId>org.typefactory</groupId>
   <artifactId>type-factory-bom</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <name>Type Factory – Bill-of-Materials (BOM)</name>

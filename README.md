@@ -18,7 +18,14 @@ Use it when a value has its own rules, but repeated validation logic is hard to 
 
 Type Factory requires that you are using Java 17 or later. 
 
-### Getting Type Factory
+## Documentation
+
+See the Type Factory documentation to discover how to create your own custom types and how to use the Type Factory APIs to parse and validate values.
+
+- [Type Factory Documentation](https://www.typefactory.org/)
+- [Type Factory Javadocs](https://javadoc.io/doc/org.typefactory/type-factory-core)
+
+## Getting Type Factory
 
 Import the Type Factory bill-of-materials (BOM), then add the modules you need.
 
@@ -69,14 +76,16 @@ dependencies {
 
 </details>
 
-#### On Maven Central
+### On Maven Central
 
 [<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-bom?label=type-factory-bom">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 [<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-core?label=type-factory-core">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 [<img alt="Maven Central" src="https://img.shields.io/maven-central/v/org.typefactory/type-factory-unicode-cldr?label=type-factory-unicode-cldr">](https://central.sonatype.com/search?q=g%253Aorg.typefactory)
 
 
-# Usage examples
+# Using Type Factory
+
+Here are two examples to provide a taste of how Type Factory can be used to create custom types.
 
 ## Example 1 – currency code
 
