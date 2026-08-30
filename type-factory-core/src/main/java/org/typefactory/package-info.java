@@ -35,6 +35,7 @@
  *   value is invalid according to the configured rules.</li>
  *   <li>{@link org.typefactory.TypeParserBuilderException} &mdash; The exception thrown by the {@link org.typefactory.TypeParser#builder()}
  *   when a builder configuration is invalid.</li>
+ *   <li>{@link org.typefactory.Types} &mdash; A utility class providing null-safe static methods for working with strongly typed values.</li>
  * </ul>
  *
  * <p>See the Type Factory documentation for more information.</p>
