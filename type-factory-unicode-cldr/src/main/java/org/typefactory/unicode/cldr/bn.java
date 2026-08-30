@@ -20,12 +20,12 @@ import org.typefactory.Subset;
 import org.typefactory.impl.Factory;
 
 /**
- * Provides Type Factory subsets for the Bengali as defined
+ * Provides Type Factory subsets for the Bangla as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
     comments = """
-        This file for the Bengali language is generated from the
+        This file for the Bangla language is generated from the
         Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 public class bn extends root {
@@ -51,7 +51,7 @@ public class bn extends root {
   }
 
   /**
-   * <p>The standard characters for the Bengali language as defined by the
+   * <p>The standard characters for the Bangla language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters>}
@@ -85,7 +85,7 @@ public class bn extends root {
 
 
   /**
-   * <p>The auxiliary characters for the Bengali language as defined by the
+   * <p>The auxiliary characters for the Bangla language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="auxiliary">}
@@ -104,7 +104,7 @@ public class bn extends root {
 
 
   /**
-   * <p>The punctuation characters for the Bengali language as defined by the
+   * <p>The punctuation characters for the Bangla language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the characters in the {@code <exemplarCharacters type="punctuation">}
@@ -139,7 +139,7 @@ public class bn extends root {
 
 
   /**
-   * <p>The decimal digit characters for the Bengali language as defined by the
+   * <p>The decimal digit characters for the Bangla language as defined by the
    *    Unicode Common Locale Data Repository (CLDR).</p>
    *
    * <p>These are the decimal digit characters from the {@code <exemplarCharacters type="numbers">}
