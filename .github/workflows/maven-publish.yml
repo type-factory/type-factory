@@ -27,7 +27,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           # The following creates a <server> block in the Maven settings.xml
-          server-id: ossrh
+          server-id: central
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
 
