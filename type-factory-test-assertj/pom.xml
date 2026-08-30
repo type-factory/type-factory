@@ -15,6 +15,7 @@
 
   <name>Type Factory – Test Assertj</name>
   <description>The Type Factory Test AssertJ assertions library – contains the assertions classes for using AssertJ style assertions in your JUnit 5+ unit tests.</description>
+  <url>https://github.com/type-factory/type-factory</url>
 
   <properties>
     <maven.deploy.skip>false</maven.deploy.skip>

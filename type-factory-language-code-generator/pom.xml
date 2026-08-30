@@ -13,7 +13,9 @@
   <packaging>jar</packaging>
 
   <name>Type Factory – Language Code Generator</name>
-  <description>The Type Factory language library code generator – Deprecated – contains some useful language alphabets to use with the core library to make creating custom data types easy.</description>
+  <description>The Type Factory language library code generator – Deprecated – contains some useful language alphabets to use with the core library to
+    make creating custom data types easy.
+  </description>
 
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -58,5 +60,16 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>true</skipPublishing>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

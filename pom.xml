@@ -184,6 +184,27 @@
           <artifactId>sonar-maven-plugin</artifactId>
           <version>5.7.0.6970</version>
         </plugin>
+        <plugin>
+          <!-- Disable standard deploy plugin to let central-publishing-maven-plugin handle it -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.4</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <!-- We use this instead of maven-deploy-plugin.
+               Remember to log in to Sonatype Maven Central Portal and publish the artifact from the staging area. -->
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.11.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+            <autoPublish>false</autoPublish>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -345,16 +366,8 @@
       </plugin>
 
       <plugin>
-        <!-- We use this instead of maven-deploy-plugin.
-             Remember to log in to Sonatype Maven Central Portal and publish the artifact from the staging area. -->
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.11.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-          <autoPublish>false</autoPublish>
-        </configuration>
       </plugin>
 
       <plugin>
