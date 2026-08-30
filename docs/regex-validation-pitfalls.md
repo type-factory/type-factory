@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Regex Validation Pitfalls"
-nav_order: 3001
+nav_order: 3100
 ---
 
 <details markdown="block">
@@ -283,7 +283,7 @@ static String escapeCodePointIfRequired(final int codePoint) {
 
 Type Factory uses a `TypeParser` to define valid values, cleanup rules, and error messages in one place. Type parsers are immutable and thread-safe, so you can create one parser and reuse it across your application.
 
-For example, this parser accepts English letters, hyphens, apostrophes, and spaces for a personal name. It also normalizes whitespace and converts common quote and dash variants:
+For example, this parser accepts English letters, hyphens, apostrophes, and spaces for a personal name.
 
 ```java
 static final TypeParser NAME_PARSER = TypeParser.builder()
@@ -379,7 +379,7 @@ void doSomething(
 }
 ```
 
-By defining custom types and providing JSON and database and serializers/deserializers, we can ensure our values are instantiated and validated at the application boundaries. We fail-fast for invalid values and only pass around valid, cleaned, immutable values:
+We do away with the boilerplate when we define custom types. By providing serializers/deserializers for JSON and database layers, we can ensure our values are instantiated and validated at the application boundaries. We fail-fast for invalid values and only pass around valid, cleaned, immutable values:
 
 ```java
 void doSomething(final PersonalName name) {

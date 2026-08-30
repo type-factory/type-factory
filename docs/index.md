@@ -13,7 +13,7 @@ Use it when a value has its own rules, but repeated validation logic is hard to 
 ## What it provides
 
 - Immutable, thread-safe `TypeParser` definitions for cleanup, formatting, and validation.
-- Simple creation of immutable custom value-object types from `TypeParser` instances.
+- Simple creation of immutable custom value-object classes extending `CharSequence`.
 - Consistent boundary validation, so invalid values fail before spreading through your application.
 - Less repeated annotation validation, regex validation, and cleanup boilerplate.
 
@@ -21,10 +21,11 @@ Use it when a value has its own rules, but repeated validation logic is hard to 
 
 - [Getting started](getting-started) &ndash; create your first custom types.
 
-## Then continue with
+## Next steps
 
 _There is a lot more to come in this section._
 
+- [Best practices](best-practices) &ndash; how to use Type Factory effectively.
 - [Regex validation pitfalls](regex-validation-pitfalls) &ndash; some regular expression shortcomings and a comparison to TypeFactory types.
 
 ## Project
