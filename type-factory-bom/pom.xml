@@ -126,10 +126,8 @@
                     <arg>--pinentry-mode</arg>
                     <arg>loopback</arg>
                   </gpgArguments>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <keyname>${env.GPG_KEY_ID}</keyname>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                  <keyEnvName>GPG_KEY_ID</keyEnvName>
+                  <passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName>
                 </configuration>
               </execution>
             </executions>
