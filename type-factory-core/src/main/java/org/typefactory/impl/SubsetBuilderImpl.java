@@ -24,7 +24,6 @@ import static org.typefactory.impl.SubsetUtils.compactSingleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.compactTripleByteCodePointRanges;
 import static org.typefactory.impl.SubsetUtils.getInclusiveFrom;
 import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
-import static org.typefactory.impl.SubsetUtils.numberOfUnicodeCategoriesFromCategoriesFlags;
 import static org.typefactory.impl.SubsetUtils.rangeToChar;
 import static org.typefactory.impl.SubsetUtils.rangeToInt;
 import static org.typefactory.impl.SubsetUtils.rangeToLong;
@@ -37,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import org.typefactory.Category;
 import org.typefactory.Subset;
@@ -51,26 +51,37 @@ final class SubsetBuilderImpl implements SubsetBuilder {
   /**
    * Code-points to include in the set
    */
-  private final Ranges includes = new Ranges();
+  private final Ranges includeCodePointRanges = new Ranges();
 
   /**
    * Code-points to exclude from the set
    */
-  final Ranges excludes = new Ranges();
+  final Ranges excludeCodePointRanges = new Ranges();
 
   /**
-   * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
+   * Strings to include in the set
    */
-  long includeUnicodeCategoryBitFlags;
+  private final TreeSet<String> includeStrings = new TreeSet<>();
 
   /**
-   * Each bit of the following value corresponds to a {@link Category} identified by the {@link Category#bitMask};
+   * Strings to exclude from the set
    */
-  long excludeUnicodeCategoryBitFlags;
+  private final TreeSet<String> excludeStrings = new TreeSet<>();
+
+
+  /**
+   * The Unicode categories to include in the set.
+   */
+  private final TreeSet<Category> includeUnicodeCategories = new TreeSet<>();
+
+  /**
+   * The Unicode categories to exclude from the set.
+   */
+  private final TreeSet<Category> excludeUnicodeCategories = new TreeSet<>();
 
   @Override
   public SubsetBuilderImpl includeUnicodeCategory(final Category category) {
-    includeUnicodeCategoryBitFlags |= category.bitMask;
+    includeUnicodeCategories.add(category);
     return this;
   }
 
@@ -86,7 +97,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
 
   @Override
   public SubsetBuilderImpl excludeUnicodeCategory(final Category category) {
-    excludeUnicodeCategoryBitFlags |= category.bitMask;
+    excludeUnicodeCategories.add(category);
     return this;
   }
 
@@ -102,45 +113,70 @@ final class SubsetBuilderImpl implements SubsetBuilder {
 
   @Override
   public SubsetBuilderImpl includeChar(final char ch) {
-    includes.addChar(ch);
+    includeCodePointRanges.addChar(ch);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeChars(final char... chars) {
-    includes.addChars(chars);
+    includeCodePointRanges.addChars(chars);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeCharRange(final char inclusiveFrom, final char inclusiveTo) {
-    includes.addCharRange(inclusiveFrom, inclusiveTo);
+    includeCodePointRanges.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeCodePoint(final int codePoint) {
-    includes.addCodePoint(codePoint);
+    includeCodePointRanges.addCodePoint(codePoint);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeCodePoints(final int... codePoints) {
-    includes.addCodePoints(codePoints);
+    includeCodePointRanges.addCodePoints(codePoints);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeCodePointRange(int inclusiveFrom, int inclusiveTo) {
-    includes.addCodePointRange(inclusiveFrom, inclusiveTo);
+    includeCodePointRanges.addCodePointRange(inclusiveFrom, inclusiveTo);
+    return this;
+  }
+
+  @Override
+  public SubsetBuilderImpl includeString(final String string) {
+    if (string != null && !string.isEmpty()) {
+      includeStrings.add(string);
+    }
+    return this;
+  }
+
+  @Override
+  public SubsetBuilderImpl includeStrings(final String... strings) {
+    if (strings != null) {
+      for (String string : strings) {
+        includeString(string);
+      }
+    }
     return this;
   }
 
   @Override
   public SubsetBuilderImpl includeSubset(final Subset subset) {
-    includes.addSubset(subset);
-    if (subset instanceof SubsetWithCategories subsetWithCategories) {
-      includeUnicodeCategoryBitFlags |= subsetWithCategories.unicodeCategoryBitFlags();
+    if (subset != null) {
+      for (CodePointRange range : subset.ranges()) {
+        includeCodePointRanges.addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
+      }
+      for (Category category : subset.categories()) {
+        includeUnicodeCategories.add(category);
+      }
+      for (String string : subset.strings()) {
+        includeStrings.add(string);
+      }
     }
     return this;
   }
@@ -166,49 +202,77 @@ final class SubsetBuilderImpl implements SubsetBuilder {
   }
 
   public SubsetBuilderImpl includeSubset(final RangedSubset subset) {
-    includes.addSubset(subset);
+    includeCodePointRanges.addSubset(subset);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeChar(final char ch) {
-    excludes.addChar(ch);
+    excludeCodePointRanges.addChar(ch);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeChars(final char... chars) {
-    excludes.addChars(chars);
+    excludeCodePointRanges.addChars(chars);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeCharRange(final char inclusiveFrom, final char inclusiveTo) {
-    excludes.addCharRange(inclusiveFrom, inclusiveTo);
+    excludeCodePointRanges.addCharRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeCodePoint(final int codePoint) {
-    excludes.addCodePoint(codePoint);
+    excludeCodePointRanges.addCodePoint(codePoint);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeCodePoints(final int... codePoints) {
-    excludes.addCodePoints(codePoints);
+    excludeCodePointRanges.addCodePoints(codePoints);
     return this;
   }
 
   @Override
   public SubsetBuilderImpl excludeCodePointRange(int inclusiveFrom, int inclusiveTo) {
-    excludes.addCodePointRange(inclusiveFrom, inclusiveTo);
+    excludeCodePointRanges.addCodePointRange(inclusiveFrom, inclusiveTo);
     return this;
   }
 
   @Override
-  public SubsetBuilderImpl excludeSubset(final Subset subsets) {
-    excludes.addSubset(subsets);
+  public SubsetBuilderImpl excludeString(final String string) {
+    if (string != null && !string.isEmpty()) {
+      excludeStrings.add(string);
+    }
+    return this;
+  }
+
+  @Override
+  public SubsetBuilderImpl excludeStrings(final String... strings) {
+    if (strings != null) {
+      for (String string : strings) {
+        excludeString(string);
+      }
+    }
+    return this;
+  }
+
+  @Override
+  public SubsetBuilderImpl excludeSubset(final Subset subset) {
+    if (subset != null) {
+      for (CodePointRange range : subset.ranges()) {
+        excludeCodePointRanges.addCodePointRange(range.inclusiveFrom, range.inclusiveTo);
+      }
+      for (Category category : subset.categories()) {
+        excludeUnicodeCategories.add(category);
+      }
+      for (String string : subset.strings()) {
+        excludeStrings.add(string);
+      }
+    }
     return this;
   }
 
@@ -233,46 +297,58 @@ final class SubsetBuilderImpl implements SubsetBuilder {
   }
 
   public SubsetBuilderImpl excludeSubset(final RangedSubset subset) {
-    excludes.addSubset(subset);
+    excludeCodePointRanges.addSubset(subset);
     return this;
   }
 
   private boolean containsUnicodeCategories() {
-    return includeUnicodeCategoryBitFlags > 0;
+    return !includeUnicodeCategories.isEmpty();
   }
 
   private void compactCategories() {
     // remove excluded categories
-    includeUnicodeCategoryBitFlags &= ~excludeUnicodeCategoryBitFlags;
+    includeUnicodeCategories.removeAll(excludeUnicodeCategories);
   }
 
   @Override
   public Subset build() {
-    excludes.compact();
-    includes.removeCodePointRanges(excludes);
-    includes.removeCodepointCategories(excludeUnicodeCategoryBitFlags);
-    includes.compact();
+    excludeCodePointRanges.compact();
+    includeCodePointRanges.removeCodePointRanges(excludeCodePointRanges);
+    includeCodePointRanges.removeCodepointCategories(Category.getCategoryBitFlags(excludeUnicodeCategories));
+    includeCodePointRanges.compact();
+    includeStrings.removeAll(excludeStrings);
+
+    final MutablePrimitiveHashMapOfIntKeyToObjectValue<MutableSortedSetOfString> mutableStringsByFirstCodePoint =
+        new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
+    for (String includeString : includeStrings) {
+      final int firstCodePoint = includeString.codePointAt(0);
+      MutableSortedSetOfString stringsForFirstCodePoint = mutableStringsByFirstCodePoint.get(firstCodePoint);
+      if (stringsForFirstCodePoint == null) {
+        stringsForFirstCodePoint = new MutableSortedSetOfStringImpl();
+        mutableStringsByFirstCodePoint.put(firstCodePoint, stringsForFirstCodePoint);
+      }
+      stringsForFirstCodePoint.add(includeString);
+    }
+
+    // Make deeply immutable
+    final var immutableStringsByFirstCodePoint = mutableStringsByFirstCodePoint.toImmutable(MutableSortedSetOfString::toImmutable);
+
     compactCategories();
 
-    RangedSubset rangedSubset;
+    final StringSubset stringSubset = immutableStringsByFirstCodePoint.isEmpty()
+        ? StringSubset.EMPTY
+        : new StringSubsetImpl(immutableStringsByFirstCodePoint);
 
-    if (containsUnicodeCategories()) {
-      rangedSubset = new RangedSubsetWithCategoriesImpl(
-          includeUnicodeCategoryBitFlags,
-          includes.copyOfSingleByteCodePointRanges(),
-          includes.copyOfDoubleByteCodePointRanges(),
-          includes.copyOfTripleByteCodePointRanges(),
-          includes.numberOfCodePointRanges,
-          includes.numberOfCodePointsInCodePointRanges,
-          numberOfUnicodeCategoriesFromCategoriesFlags(includeUnicodeCategoryBitFlags));
-    } else {
-      rangedSubset = new RangedSubsetImpl(
-          includes.copyOfSingleByteCodePointRanges(),
-          includes.copyOfDoubleByteCodePointRanges(),
-          includes.copyOfTripleByteCodePointRanges(),
-          includes.numberOfCodePointRanges,
-          includes.numberOfCodePointsInCodePointRanges);
-    }
+    final CategorySubset categorySubset = includeUnicodeCategories.isEmpty()
+        ? CategorySubset.EMPTY
+        : new CategorySubsetImpl(includeUnicodeCategories.toArray(new Category[0]));
+
+    final RangedSubset rangedSubset = new RangedSubsetImpl(
+        includeCodePointRanges.copyOfSingleByteCodePointRanges(),
+        includeCodePointRanges.copyOfDoubleByteCodePointRanges(),
+        includeCodePointRanges.copyOfTripleByteCodePointRanges(),
+        includeCodePointRanges.numberOfCodePointRanges,
+        includeCodePointRanges.numberOfCodePointsInCodePointRanges);
 
     final SubsetOptimiser subsetOptimiser = new SubsetOptimiser(rangedSubset);
 
@@ -284,29 +360,37 @@ final class SubsetBuilderImpl implements SubsetBuilder {
         final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
         final HashedRangedSubsetData hashedRangedSubsetData = new HashedRangedSubsetData(optimalHashedSubsetOption.getNumberOfHashBuckets());
         hashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
-        return new HashedRangedSubsetImpl(
-            hashedRangedSubsetData.blockKeys,
-            hashedRangedSubsetData.codePointRangesByBlock,
-            hashedRangedSubsetData.numberOfCodePointRanges,
-            hashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
+        return new CompositeSubsetImpl(
+            new HashedRangedSubsetImpl(
+                hashedRangedSubsetData.blockKeys,
+                hashedRangedSubsetData.codePointRangesByBlock,
+                hashedRangedSubsetData.numberOfCodePointRanges,
+                hashedRangedSubsetData.numberOfCodePointsInCodePointRanges),
+            stringSubset,
+            categorySubset);
       }
       case OPTIMALLY_HASHED: {
         final HashedSubsetOption optimalHashedSubsetOption = (HashedSubsetOption) subsetOptimiser.optimalHashedSubsetOption;
         final OptimalHashedRangedSubsetData optimalHashedRangedSubsetData = new OptimalHashedRangedSubsetData(
             optimalHashedSubsetOption.getNumberOfHashBuckets());
         optimalHashedRangedSubsetData.optimiseHashMap(rangedSubset.ranges(), optimalHashedSubsetOption);
-        return new OptimalHashedRangedSubsetImpl(
-            optimalHashedRangedSubsetData.blockKeys,
-            optimalHashedRangedSubsetData.codePointRangesByBlock,
-            optimalHashedRangedSubsetData.numberOfCodePointRanges,
-            optimalHashedRangedSubsetData.numberOfCodePointsInCodePointRanges);
+        return new CompositeSubsetImpl(
+            new OptimalHashedRangedSubsetImpl(
+                optimalHashedRangedSubsetData.blockKeys,
+                optimalHashedRangedSubsetData.codePointRangesByBlock,
+                optimalHashedRangedSubsetData.numberOfCodePointRanges,
+                optimalHashedRangedSubsetData.numberOfCodePointsInCodePointRanges),
+            stringSubset,
+            categorySubset);
       }
       case RANGED:
       default:
-        return rangedSubset;
+        return new CompositeSubsetImpl(
+            rangedSubset,
+            stringSubset,
+            categorySubset);
     }
   }
-
 
   static final class Ranges {
 
@@ -324,8 +408,8 @@ final class SubsetBuilderImpl implements SubsetBuilder {
 
     boolean isEmpty() {
       return singleByteCodePointRanges.length == 0
-          && doubleByteCodePointRanges.length == 0
-          && tripleByteCodePointRanges.length == 0;
+             && doubleByteCodePointRanges.length == 0
+             && tripleByteCodePointRanges.length == 0;
     }
 
     char[] copyOfSingleByteCodePointRanges() {
@@ -461,7 +545,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
      * </pre>
      *
      * @param removeInclusiveFrom the range inclusive-from code-point
-     * @param removeInclusiveTo the range inclusive-to code-point
+     * @param removeInclusiveTo   the range inclusive-to code-point
      */
     private void removeSingleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
       for (int i = singleByteCodePointRangesSize - 1; i >= 0; --i) {
@@ -474,7 +558,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
         } else if (removeInclusiveFrom <= inclusiveFrom) {
           if (removeInclusiveTo >= inclusiveTo) {
             singleByteCodePointRangesSize = removeSingleByteElement(singleByteCodePointRanges, singleByteCodePointRangesSize, i);
-          } else if (removeInclusiveTo >= inclusiveFrom){
+          } else if (removeInclusiveTo >= inclusiveFrom) {
             singleByteCodePointRanges[i] = rangeToChar(removeInclusiveTo + 1, inclusiveTo);
           }
         } else if (removeInclusiveFrom <= inclusiveTo) {
@@ -495,7 +579,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
      * </pre>
      *
      * @param removeInclusiveFrom the range inclusive-from code-point
-     * @param removeInclusiveTo the range inclusive-to code-point
+     * @param removeInclusiveTo   the range inclusive-to code-point
      */
     private void removeDoubleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
       for (int i = doubleByteCodePointRangesSize - 1; i >= 0; --i) {
@@ -508,7 +592,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
         } else if (removeInclusiveFrom <= inclusiveFrom) {
           if (removeInclusiveTo >= inclusiveTo) {
             doubleByteCodePointRangesSize = removeDoubleByteElement(doubleByteCodePointRanges, doubleByteCodePointRangesSize, i);
-          } else if (removeInclusiveTo >= inclusiveFrom){
+          } else if (removeInclusiveTo >= inclusiveFrom) {
             doubleByteCodePointRanges[i] = rangeToInt(removeInclusiveTo + 1, inclusiveTo);
           }
         } else if (removeInclusiveFrom <= inclusiveTo) {
@@ -529,7 +613,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
      * </pre>
      *
      * @param removeInclusiveFrom the range inclusive-from code-point
-     * @param removeInclusiveTo the range inclusive-to code-point
+     * @param removeInclusiveTo   the range inclusive-to code-point
      */
     private void removeTripleByteCodePointRange(int removeInclusiveFrom, int removeInclusiveTo) {
       for (int i = tripleByteCodePointRangesSize - 1; i >= 0; --i) {
@@ -542,7 +626,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
         } else if (removeInclusiveFrom <= inclusiveFrom) {
           if (removeInclusiveTo >= inclusiveTo) {
             tripleByteCodePointRangesSize = removeTripleByteElement(tripleByteCodePointRanges, tripleByteCodePointRangesSize, i);
-          } else if (removeInclusiveTo >= inclusiveFrom){
+          } else if (removeInclusiveTo >= inclusiveFrom) {
             tripleByteCodePointRanges[i] = rangeToLong(removeInclusiveTo + 1, inclusiveTo);
           }
         } else if (removeInclusiveFrom <= inclusiveTo) {
@@ -1005,7 +1089,7 @@ final class SubsetBuilderImpl implements SubsetBuilder {
 
       private boolean containsHashBucketsWithMultipleKeys() {
         return countOfHashBucketsWith2Keys > 0
-            || countOfHashBucketsWith3OrMoreKeys > 0;
+               || countOfHashBucketsWith3OrMoreKeys > 0;
       }
 
       private boolean containsHashBucketsWithAtMostOneKey() {
@@ -1128,8 +1212,8 @@ final class SubsetBuilderImpl implements SubsetBuilder {
           final char[] hashBucket = blockKeys[hashIndex];
           int hashBucketIndex = 0;
           while (hashBucketIndex < hashBucketSizes[hashIndex]
-              && hashBucketIndex < hashBucket.length
-              && hashBucket[hashBucketIndex] != blockKey) {
+                 && hashBucketIndex < hashBucket.length
+                 && hashBucket[hashBucketIndex] != blockKey) {
             ++hashBucketIndex;
           }
           if (hashBucketIndex == hashBucketSizes[hashIndex]) {

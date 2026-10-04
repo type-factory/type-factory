@@ -15,11 +15,33 @@
  */
 package org.typefactory.impl;
 
-interface OptimalHashedRangedSubset extends CodePointSubset {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-  char[] getBlockKeySet();
+public class EmptyIterable<T> implements Iterable<T> {
 
-  char[] getBlockKeys();
+  private final Iterator<T> iterator;
 
-  char[][] getCodePointRangesByBlock();
+  public EmptyIterable(final Class<T> type) {
+    this.iterator = new EmptyIterator<>(type);
+  }
+
+  @Override
+  public Iterator<T> iterator() {
+    return iterator;
+
+  }
+
+  private record EmptyIterator<T>(Class<T> type) implements Iterator<T> {
+
+    @Override
+      public boolean hasNext() {
+        return false;
+      }
+
+      @Override
+      public T next() {
+        throw new NoSuchElementException("No more elements of type: " + type.getName());
+      }
+    }
 }

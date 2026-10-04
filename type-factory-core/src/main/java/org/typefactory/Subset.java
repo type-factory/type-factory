@@ -17,8 +17,6 @@ package org.typefactory;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static org.typefactory.Category.SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS;
-import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -106,73 +104,115 @@ public interface Subset {
   }
 
   /**
-   * <p>An iterable of code-point ranges in this subset.</p>
+   * <p>An {@link Iterable} of code-point ranges in this subset.</p>
    *
    * <p><b>Note:</b> The iterable {@link CodePointRange} instance is reused with each iteration.
    * Use {@link CodePointRange#copy()} if you need to keep references to each of the code-point ranges.</p>
    *
-   * @return an iterable of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each
+   * @return an {@link Iterable} of the code-point ranges in this subset. Note that the iterable {@link CodePointRange} instance is reused with each
    * iteration.
    * @see CodePointRange#copy()
+   * @see #categories()
+   * @see #strings()
    */
   Iterable<CodePointRange> ranges();
+
+  /**
+   * <p>An {@link Iterable} of Unicode categories in this subset.</p>
+   *
+   * @return an {@link Iterable} of the Unicode categories in this subset.
+   * @see #ranges()
+   * @see #strings()
+   */
+  Iterable<Category> categories();
+
+  /**
+   * <p>An {@link Iterable} of the strings in this subset. The subset may contain strings made up of a sequence of code points that represent,
+   * for example, a letter that cannot be represented by a single codepoint in Unicode.</p>
+   *
+   * <p>For example:</p>
+   * <ul>
+   *   <li>The Unicode CLDR defines exemplar character sets for things like standard language alphabets, pubnctuation, numbers.
+   *   Some alphabet letters like {@code Ϊ́} are actually a string of three characters {@code Ι ◌̈ ◌́} because there is no single Unicode
+   *   codepoint that represents the letter.</li>
+   *   <li>Some emoji characters are represented by a sequence of code points. For example, the character U+1F600 (GRINNING FACE 😀) can have
+   *   a Unicode Variation Selector-16 (U+FE0F) applied. This invisible formatting code tells your device and
+   *   font to render the preceding character as a colourful graphical emoji rather than a plain black-and-white text character.</li>
+   *   <li>Similarly, the Zero Width Joiner (ZWJ) U+200D is another hidden formatting character that glues together separate emoji code points
+   *   into a single composite image. Such as combining a person emoji with a skin tone modifier and an occupation:
+   *   U+1F9D1 + U+1F3FD + U+200D + U+1F4BB = 🧑 + 🏽 + ZWJ + 💻 = 👨‍💻</li>
+   * </ul>
+   *
+   * <p>The {@link #contains(int) contains(char/codepoint)} method does not consider the characters / codepoints within the strings in a subset.
+   * Call {@link #containsString(CharSequence)} to check if a string is contained within this subset.</p>
+   *
+   * @return an {@link Iterable} of the strings in this subset.
+   * @see #ranges()
+   * @see #categories()
+   */
+  Iterable<String> strings();
+
+  boolean containsString(final CharSequence charSequence);
+
+  /**
+   * <p>Check to see if any of the strings in the subset match the provided {@code charSequence} from the {@startingAtIndex} position.
+   * If a match was found it returns the index of the first character <i>after</i> the matched characters in the {@code charSequence}. Otherwise, it
+   * returns the provided {@code startingAtIndex} value if no match was found.</p>
+   *
+   * @param charSequence    the character sequence to search within for a matching string in this subset
+   * @param startingAtIndex the index to start searching from.  It is a char-based index and not a codepoint-based index. If it is not in the range
+   *                        {@code 0 <= startingAtIndex <= charSequence.length()}, then a search will not be performed and the provided
+   *                        {@code startingAtIndex} value will be returned.
+   * @return the index of the first character after the matching portion of the provided {@code charSequence} if a match is found; otherwise, returns
+   * {@code startingAtIndex}.
+   */
+  int containsString(final CharSequence charSequence, final int startingAtIndex);
 
   /**
    * Returns the number of code-point ranges in this subset.
    *
    * @return the number of code-point ranges in this subset.
    */
-  int numberOfCodePointRanges();
+  int rangesSize();
+
+  /**
+   * Returns the number of Unicode categories in this subset.
+   *
+   * @return the number of Unicode categories in this subset.
+   */
+  int categoriesSize();
+
+  /**
+   * Returns the number of strings in this subset.
+   *
+   * @return the number of strings in this subset.
+   */
+  int stringsSize();
+
+  /**
+   * Returns the number of code-point ranges in this subset.
+   *
+   * @return the number of code-point ranges in this subset.
+   * @deprecated Use {@link #rangesSize()} instead
+   */
+  @Deprecated(since = "1.1.1", forRemoval = true)
+  default int numberOfCodePointRanges() {
+    return rangesSize();
+  }
 
   /**
    * <p>Returns the number of code-points that are contained in all the code-point ranges.</p>
    *
-   * <p><b>Note</b>, depending on the implementation of the Subset, there may be extra code-points contained in
+   * <p><b>Note:</b> depending on the implementation of the Subset, there may be extra code-points contained in
    * the subset that are not necessarily contained within the set of code-point-ranges.</p>
    *
    * @return the number of code-points that are contained in all the code-point ranges.
+   * @deprecated Not being replaced by a new method. Use {@link #ranges()} and iterate through the ranges to calculate the number of code-points in the ranges if needed.
    */
+  @Deprecated(since = "1.1.1", forRemoval = true)
   int numberOfCodePointsInCodePointRanges();
 
-  default String toPattern() {
-    final var s = new StringBuilder(Math.min(numberOfCodePointRanges() * 3, numberOfCodePointsInCodePointRanges()));
-    s.append('[');
-    for (var range : ranges()) {
-      switch (range.inclusiveTo - range.inclusiveFrom) {
-        case 0:
-          appendCodePoint(s, range.inclusiveFrom);
-          break;
-        case 1:
-          appendCodePoint(s, range.inclusiveFrom);
-          appendCodePoint(s, range.inclusiveTo);
-          break;
-        default:
-          appendCodePoint(s, range.inclusiveFrom);
-          s.append('-');
-          appendCodePoint(s, range.inclusiveTo);
-          break;
-      }
-    }
-    return s.append(']').toString();
-  }
-
-  private static void appendCodePoint(final StringBuilder sb, final int cp) {
-    if (codePointIsInOneOfTheCategories(cp, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)) {
-      if (cp < 0x10) {
-        sb.append("\\u000").append(Integer.toString(cp, 16));
-      } else if (cp < 0x100) {
-        sb.append("\\u00").append(Integer.toString(cp, 16));
-      } else if (cp < 0x1000) {
-        sb.append("\\u0").append(Integer.toString(cp, 16));
-      } else if (cp < 0x10000) {
-        sb.append("\\x{0").append(Integer.toString(cp, 16)).append('}');
-      } else {
-        sb.append("\\x{").append(Integer.toString(cp, 16)).append('}');
-      }
-    } else {
-      sb.appendCodePoint(cp);
-    }
-  }
+  String toPattern();
 
   /**
    * <p>Creates a new <em>immutable</em> subset of code-point ranges from the combined code-point ranges of all the provided subsets.
@@ -220,6 +260,10 @@ public interface Subset {
 
     SubsetBuilder includeCodePointRange(int inclusiveFrom, int inclusiveTo);
 
+    SubsetBuilder includeString(final String string);
+
+    SubsetBuilder includeStrings(final String... strings);
+
     SubsetBuilder includeSubset(final Subset subset);
 
     SubsetBuilder includeSubsets(final Subset... subsets);
@@ -241,6 +285,10 @@ public interface Subset {
     SubsetBuilder excludeCodePoints(final int... codePoints);
 
     SubsetBuilder excludeCodePointRange(int inclusiveFrom, int inclusiveTo);
+
+    SubsetBuilder excludeString(final String string);
+
+    SubsetBuilder excludeStrings(final String... strings);
 
     SubsetBuilder excludeSubset(final Subset subset);
 
@@ -265,15 +313,14 @@ public interface Subset {
   final class CodePointRange implements Comparable<CodePointRange>, Serializable {
 
     /**
-     * The inclusive start code-point of the code-point range. This value will be modified with each
-     * iteration of the {@code Iterable<CodePointRange>}.
+     * The inclusive start code-point of the code-point range. This value will be modified with each iteration of the
+     * {@code Iterable<CodePointRange>}.
      */
     @SuppressWarnings("java:S1104") // 'Class variable fields should not have public accessibility' - I want this to be accessible and mutable
     public int inclusiveFrom;
 
     /**
-     * The inclusive end code-point of the code-point range. This value will be modified with each
-     * iteration of the {@code Iterable<CodePointRange>}.
+     * The inclusive end code-point of the code-point range. This value will be modified with each iteration of the {@code Iterable<CodePointRange>}.
      */
     @SuppressWarnings("java:S1104") // 'Class variable fields should not have public accessibility' - I want this to be accessible and mutable
     public int inclusiveTo;
@@ -302,8 +349,7 @@ public interface Subset {
     }
 
     /**
-     * Returns {@code true} if the specified {@code codePoint} is outside the code-point range.
-     * This is a convenience method and returns:
+     * Returns {@code true} if the specified {@code codePoint} is outside the code-point range. This is a convenience method and returns:
      * <pre>
      *   !contains(int)
      * </pre>

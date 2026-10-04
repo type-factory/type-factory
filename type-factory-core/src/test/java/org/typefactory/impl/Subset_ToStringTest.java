@@ -27,16 +27,17 @@ class Subset_ToStringTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      [a]                  | [0x61_61]
-      [a, b]               | [0x61_62]
-      [a, b, d]            | [0x61_62,0x64_64]
-      [Σ, Τ]               | [0x3a3_3a4]
-      [Σ, Τ, Ω]            | [0x3a3_3a4,0x3a9_3a9]
-      [🈂, 😀]             | [0x1f202_1f202,0x1f600_1f600]
-      [a, b, Σ, Τ]         | [0x61_62],[0x3a3_3a4]
-      [a, b, 🈂, 😀]       | [0x61_62],[0x1f202_1f202,0x1f600_1f600]
-      [Σ, Τ, 🈂, 😀]       | [0x3a3_3a4],[0x1f202_1f202,0x1f600_1f600]
-      [a, b, Σ, Τ, 🈂, 😀] | [0x61_62],[0x3a3_3a4],[0x1f202_1f202,0x1f600_1f600]
+      [a]                  | [a]
+      [a, b]               | [ab]
+      [a, b, c]            | [a-c]
+      [a, b, d]            | [abd]
+      [Σ, Τ]               | [ΣΤ]
+      [Σ, Τ, Ω]            | [ΣΤΩ]
+      [🈂, 😀]             | [🈂😀]
+      [a, b, Σ, Τ]         | [abΣΤ]
+      [a, b, 🈂, 😀]       | [ab🈂😀]
+      [Σ, Τ, 🈂, 😀]       | [ΣΤ🈂😀]
+      [a, b, Σ, Τ, 🈂, 😀] | [abΣΤ🈂😀]
       """, delimiter = '|')
   void toString_returnAsExpected(
       @ConvertWith(CodePointArrayConverter.class) final int[] codePoints,
