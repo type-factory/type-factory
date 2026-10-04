@@ -626,14 +626,15 @@ public class CldrResourceBundleClassGenerator {
     }
 
     final var subsetWrapper = optionalSubsetWrapper.get();
+    final var codePointSubset = subsetWrapper.getCodePointSubset();
 
     if (subsetWrapper.isEmpty()) {
       return sf -> appendEmptySubset().accept(sf);
-    } else if (subsetWrapper instanceof RangedSubsetWrapper rangedSubsetWrapper) {
+    } else if (codePointSubset instanceof RangedSubsetWrapper rangedSubsetWrapper) {
       return sf -> appendRangedSubset(locale, rangedSubsetWrapper).accept(sf);
-    } else if (subsetWrapper instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
+    } else if (codePointSubset instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
       return sf -> appendHashedBlockRangedSubset(hashedRangedSubsetWrapper).accept(sf);
-    } else if (subsetWrapper instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
+    } else if (codePointSubset instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
       return sf -> appendOptimalHashedBlockRangedSubset(optimalHashedRangedSubsetWrapper).accept(sf);
     } else {
       return sf -> {

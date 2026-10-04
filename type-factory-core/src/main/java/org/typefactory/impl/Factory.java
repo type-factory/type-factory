@@ -19,6 +19,7 @@ import static org.typefactory.impl.Constants.EMPTY_CHAR_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
 import static org.typefactory.impl.Constants.EMPTY_LONG_ARRAY;
 
+import org.typefactory.Category;
 import org.typefactory.InvalidValueException.ParserMessageCode;
 import org.typefactory.MessageCode;
 import org.typefactory.Subset;
@@ -46,7 +47,7 @@ public class Factory {
   }
 
   public static Subset emptySubset() {
-    return RangedSubsetImpl.EMPTY_SUBSET;
+    return EmptySubsetImpl.INSTANCE;
   }
 
   public static SubsetBuilder subsetBuilder() {
@@ -61,27 +62,36 @@ public class Factory {
       final char[] singleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        singleByteCodePointRanges, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            singleByteCodePointRanges, EMPTY_INT_ARRAY, EMPTY_LONG_ARRAY,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
       final int[] doubleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
       final long[] tripleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            EMPTY_CHAR_ARRAY, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
@@ -89,9 +99,12 @@ public class Factory {
       final int[] doubleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        singleByteCodePointRanges, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            singleByteCodePointRanges, doubleByteCodePointRanges, EMPTY_LONG_ARRAY,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
@@ -99,9 +112,12 @@ public class Factory {
       final long[] tripleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        singleByteCodePointRanges, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            singleByteCodePointRanges, EMPTY_INT_ARRAY, tripleByteCodePointRanges,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
@@ -109,9 +125,12 @@ public class Factory {
       final long[] tripleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            EMPTY_CHAR_ARRAY, doubleByteCodePointRanges, tripleByteCodePointRanges,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
@@ -120,24 +139,27 @@ public class Factory {
       final long[] tripleByteCodePointRanges,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new RangedSubsetImpl(
-        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset rangedSubset(
-      final long unicodeCategoryBitFlags,
+      final Category[] categories,
       final char[] singleByteCodePointRanges,
       final int[] doubleByteCodePointRanges,
       final long[] tripleByteCodePointRanges,
       final int numberOfCodePointRanges,
-      final int numberOfCodePointsInCodePointRanges,
-      final int numberOfUnicodeCategories) {
-    return new RangedSubsetWithCategoriesImpl(
-        unicodeCategoryBitFlags,
-        singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges,
-        numberOfUnicodeCategories);
+      final int numberOfCodePointsInCodePointRanges) {
+    return new CompositeSubsetImpl(
+        new RangedSubsetImpl(
+            singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        new CategorySubsetImpl(categories));
   }
 
   public static Subset hashedRangedSubset(
@@ -145,22 +167,26 @@ public class Factory {
       final char[][][] singleByteCodePointRangesByBlock,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new HashedRangedSubsetImpl(
-        blockKeys, singleByteCodePointRangesByBlock,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new HashedRangedSubsetImpl(
+            blockKeys, singleByteCodePointRangesByBlock,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset hashedRangedSubset(
-      final long unicodeCategoryBitFlags,
+      final Category[] categories,
       final char[][] blocks,
       final char[][][] codePointRangesByBlock,
       final int numberOfCodePointRanges,
-      final int numberOfCodePointsInCodePointRanges,
-      final int numberOfUnicodeCategories) {
-    return new HashedRangedSubsetWithCategoriesImpl(
-        unicodeCategoryBitFlags,
-        blocks, codePointRangesByBlock,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges, numberOfUnicodeCategories);
+      final int numberOfCodePointsInCodePointRanges) {
+    return new CompositeSubsetImpl(
+        new HashedRangedSubsetImpl(
+            blocks, codePointRangesByBlock,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        new CategorySubsetImpl(categories));
   }
 
 
@@ -169,22 +195,26 @@ public class Factory {
       final char[][] singleByteCodePointRangesByBlock,
       final int numberOfCodePointRanges,
       final int numberOfCodePointsInCodePointRanges) {
-    return new OptimalHashedRangedSubsetImpl(
-        blockKeys, singleByteCodePointRangesByBlock,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges);
+    return new CompositeSubsetImpl(
+        new OptimalHashedRangedSubsetImpl(
+            blockKeys, singleByteCodePointRangesByBlock,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        CategorySubset.EMPTY);
   }
 
   public static Subset optimalHashedRangedSubset(
-      final long unicodeCategoryBitFlags,
+      final Category[] categories,
       final char[] blocks,
       final char[][] codePointRangesByBlock,
       final int numberOfCodePointRanges,
-      final int numberOfCodePointsInCodePointRanges,
-      final int numberOfUnicodeCategories) {
-    return new OptimalHashedRangedSubsetWithCategoriesImpl(
-        unicodeCategoryBitFlags,
-        blocks, codePointRangesByBlock,
-        numberOfCodePointRanges, numberOfCodePointsInCodePointRanges, numberOfUnicodeCategories);
+      final int numberOfCodePointsInCodePointRanges) {
+    return new CompositeSubsetImpl(
+        new OptimalHashedRangedSubsetImpl(
+            blocks, codePointRangesByBlock,
+            numberOfCodePointRanges, numberOfCodePointsInCodePointRanges),
+        StringSubset.EMPTY,
+        new CategorySubsetImpl(categories));
   }
 
   public static MessageCode messageCode(final String messageCode, final String defaultMessage) {

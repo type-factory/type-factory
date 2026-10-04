@@ -19,22 +19,40 @@ import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
 
-public interface SubsetWrapper extends Subset {
+public interface SubsetWrapper extends CompositeSubset {
+
+  @Override
+  default String toPattern() {
+    return SubsetUtils.toPattern(
+        ranges(),
+        categories(),
+        strings());
+  }
+
+  CodePointSubsetWrapper getCodePointSubset();
+
+  static SubsetWrapper empty() {
+    return wrap(Subset.builder().build());
+  }
 
   static SubsetWrapper optimisedSubset(final UnicodeSet unicodeSet) {
+
     final SubsetBuilder subsetBuilder = Subset.builder();
     for (EntryRange range : unicodeSet.ranges()) {
       subsetBuilder.includeCodePointRange(range.codepoint, range.codepointEnd);
     }
-    final Subset subset = subsetBuilder.build();
-    if (subset instanceof RangedSubsetImpl rangedSubset) {
-      return new RangedSubsetWrapper(rangedSubset);
+    for (var s : unicodeSet.strings()) {
+      for (int cp : s.codePoints().toArray()) {
+        subsetBuilder.includeCodePoint(cp);
+      }
     }
-    if (subset instanceof HashedRangedSubsetImpl hashedRangedSubset) {
-      return new HashedRangedSubsetWrapper(hashedRangedSubset);
-    }
-    if (subset instanceof OptimalHashedRangedSubsetImpl optimalHashedRangedSubset) {
-      return new OptimalHashedRangedSubsetWrapper(optimalHashedRangedSubset);
+
+    return wrap(subsetBuilder.build());
+  }
+
+  static SubsetWrapper wrap(final Subset subset) {
+    if (subset instanceof CompositeSubsetImpl compositeSubset) {
+      return new CompositeSubsetWrapper(compositeSubset);
     }
     throw new SubsetException("Unknown subset type - " + subset.getClass().getName());
   }

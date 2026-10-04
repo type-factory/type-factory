@@ -61,7 +61,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -72,7 +72,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -83,7 +83,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -94,7 +94,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -105,7 +105,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -117,7 +117,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 
@@ -128,7 +128,7 @@ class FactoryTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubsetImpl.class)
+        .isInstanceOf(CompositeSubsetImpl.class)
         .isEmpty();
   }
 

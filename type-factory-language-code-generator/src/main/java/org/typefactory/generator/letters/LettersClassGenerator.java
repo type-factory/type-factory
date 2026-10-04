@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.typefactory.generator.unicodedata.UnicodeGroupData;
+import org.typefactory.impl.CodePointSubsetWrapper;
 import org.typefactory.impl.HashedRangedSubsetWrapper;
 import org.typefactory.impl.InternalSubsetUtils;
 import org.typefactory.impl.OptimalHashedRangedSubsetWrapper;
@@ -166,6 +167,8 @@ public class LettersClassGenerator {
     final String lettersClassName = String.format("Letters_%s_%s", displayLanguage, localeLanguageTag);
     logger.info(() -> "Creating subset for " + lettersClassName);
     final SubsetWrapper subsetWrapper = SubsetWrapper.optimisedSubset(lettersData.getUnicodeSet());
+    final CodePointSubsetWrapper codePointSubset = subsetWrapper.getCodePointSubset();
+
 
     final StringBuilder s = new StringBuilder();
 
@@ -188,10 +191,10 @@ public class LettersClassGenerator {
                 
         """, lettersClassName, lettersClassName));
 
-    if (subsetWrapper instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
+    if (codePointSubset instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
       s.append("  static final Subset SUBSET = Factory.hashedRangedSubset(").append(LINE_SEPARATOR);
       appendHashedBlockRangedSubset(s, lettersData, hashedRangedSubsetWrapper);
-    } else if (subsetWrapper instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
+    } else if (codePointSubset instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
       s.append("  static final Subset SUBSET = Factory.optimalHashedRangedSubset(").append(LINE_SEPARATOR);
       appendOptimalHashedBlockRangedSubset(s, lettersData, optimalHashedRangedSubsetWrapper);
     }

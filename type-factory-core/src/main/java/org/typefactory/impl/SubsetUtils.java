@@ -17,10 +17,14 @@ package org.typefactory.impl;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static org.typefactory.Category.MODIFIER_LETTER;
+import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
+import org.typefactory.Category;
 import org.typefactory.Subset.CodePointRange;
 
 final class SubsetUtils {
@@ -28,6 +32,17 @@ final class SubsetUtils {
   private SubsetUtils() {
     // don't instantiate me
   }
+
+  /**
+   * Category bit flags for control and format characters
+   */
+  static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          Category.CONTROL,
+          Category.FORMAT,
+          Category.SPACE_SEPARATOR,
+          Category.LINE_SEPARATOR,
+          Category.PARAGRAPH_SEPARATOR);
 
   /**
    * <p>Extracts the 8-bit 'inclusive-from' value from a code-point range comprised of two 8-bit values stored in a {@code char} primitive. The
@@ -180,7 +195,7 @@ final class SubsetUtils {
     return ((long) min(inclusiveFrom, inclusiveTo) << 32) | max(inclusiveFrom, inclusiveTo);
   }
 
-  static int numberOfCodePointsInRanges(final char [] singleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final char[] singleByteCodePointRanges) {
     if (singleByteCodePointRanges == null) {
       return 0;
     }
@@ -191,7 +206,7 @@ final class SubsetUtils {
     return count;
   }
 
-  static int numberOfCodePointsInRanges(final int [] doubleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final int[] doubleByteCodePointRanges) {
     if (doubleByteCodePointRanges == null) {
       return 0;
     }
@@ -202,7 +217,7 @@ final class SubsetUtils {
     return count;
   }
 
-  static int numberOfCodePointsInRanges(final long [] tripleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final long[] tripleByteCodePointRanges) {
     if (tripleByteCodePointRanges == null) {
       return 0;
     }
@@ -481,8 +496,8 @@ final class SubsetUtils {
   /**
    * Count how many categories have been specified using category bit flags.
    *
-   * @param categoryFlags the bit flags representing the unicode character categories
-   * @return the number categories that have been specified using category bit flags.
+   * @param categoryFlags the bit flags representing the Unicode character categories
+   * @return the number of categories that have been specified using category bit flags.
    */
   static int numberOfUnicodeCategoriesFromCategoriesFlags(final long categoryFlags) {
     int numberOfUnicodeCategories = 0;
@@ -496,4 +511,99 @@ final class SubsetUtils {
     }
     return numberOfUnicodeCategories;
   }
+
+  static String toString(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings) {
+    return toPattern(ranges, categories, strings, false);
+  }
+
+  static String toPattern(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings) {
+    return toPattern(ranges, categories, strings, true);
+  }
+
+  private static String toPattern(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings,
+      final boolean targetJavaPattern) {
+
+    final var rangesIterator = Objects.requireNonNullElse(ranges, Constants.EMPTY_CODE_POINT_RANGE_ITERABLE).iterator();
+    final var categoriesIterator = Objects.requireNonNullElse(categories, Constants.EMPTY_CATEGORY_ITERABLE).iterator();
+    final var stringsIterator = Objects.requireNonNullElse(strings, Constants.EMPTY_STRING_ITERABLE).iterator();
+
+    if (!rangesIterator.hasNext() && !categoriesIterator.hasNext() && !stringsIterator.hasNext()) {
+      return "";
+    }
+
+    final var s = new StringBuilder();
+    if (stringsIterator.hasNext() && (rangesIterator.hasNext() || categoriesIterator.hasNext())) {
+      s.append('(');
+    }
+    if (rangesIterator.hasNext() || categoriesIterator.hasNext()) {
+      s.append('[');
+      while (rangesIterator.hasNext()) {
+        final var range = rangesIterator.next();
+        switch (range.inclusiveTo - range.inclusiveFrom) {
+          case 0:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            break;
+          case 1:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            appendCodePoint(s, range.inclusiveTo, targetJavaPattern);
+            break;
+          default:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            s.append('-');
+            appendCodePoint(s, range.inclusiveTo, targetJavaPattern);
+            break;
+        }
+      }
+      while (categoriesIterator.hasNext()) {
+        final var category = categoriesIterator.next();
+        s.append("\\p{").append(category.getAbbreviation()).append('}');
+      }
+      s.append(']');
+    }
+    if (stringsIterator.hasNext()) {
+      if (!s.isEmpty()) {
+        s.append('|');
+      }
+      while (stringsIterator.hasNext()) {
+        s.append(stringsIterator.next()).append('|');
+      }
+      if (s.charAt(s.length() - 1) == '|') {
+        s.setLength(s.length() - 1);
+      }
+    }
+    if (s.charAt(0) == '(') {
+      s.append(')');
+    }
+    return s.toString();
+  }
+
+  private static void appendCodePoint(final StringBuilder sb, final int cp, final boolean targetJavaPattern) {
+    if (codePointIsInOneOfTheCategories(cp, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS) ||
+        (targetJavaPattern && codePointIsInOneOfTheCategories(cp, MODIFIER_LETTER.bitMask)) ||
+        cp > Character.MAX_CODE_POINT) {
+      if (cp < 0x10) {
+        sb.append("\\u000").append(Integer.toString(cp, 16));
+      } else if (cp < 0x100) {
+        sb.append("\\u00").append(Integer.toString(cp, 16));
+      } else if (cp < 0x1000) {
+        sb.append("\\u0").append(Integer.toString(cp, 16));
+      } else if (cp < 0x10000) {
+        sb.append("\\x{0").append(Integer.toString(cp, 16)).append('}');
+      } else {
+        sb.append("\\x{").append(Integer.toString(cp, 16)).append('}');
+      }
+    } else {
+      sb.appendCodePoint(cp);
+    }
+  }
+
 }

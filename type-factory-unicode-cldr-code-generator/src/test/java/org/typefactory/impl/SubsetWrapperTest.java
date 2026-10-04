@@ -21,12 +21,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.ibm.icu.text.UnicodeSet;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.SubsetBuilder;
 
@@ -58,8 +58,8 @@ class SubsetWrapperTest {
 
     assertThat(actual)
         .isNotNull()
-        .isInstanceOf(RangedSubset.class)
-        .isInstanceOf(RangedSubsetWrapper.class);
+        .isInstanceOf(CompositeSubset.class)
+        .isInstanceOf(CompositeSubsetWrapper.class);
 
     assertThat(actual.contains('a')).isTrue();
     assertThat(actual.contains('z')).isTrue();
@@ -70,13 +70,13 @@ class SubsetWrapperTest {
   }
 
   @Test
-  void optimisedSubset_returnsHashedRangedSubset() {
+  void optimisedSubset_returnsCompositeSubset() {
 
     final var unicodeSet = new UnicodeSet('0', '9', 'A', 'Z', 'a', 'z');
 
     final var subsetBuilder = mock(SubsetBuilder.class);
-    final var hashedRangedSubset = mock(HashedRangedSubsetImpl.class);
-    when(subsetBuilder.build()).thenReturn(hashedRangedSubset);
+    final var compositeSubset = mock(CompositeSubsetImpl.class);
+    when(subsetBuilder.build()).thenReturn(compositeSubset);
 
     try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
 
@@ -86,33 +86,33 @@ class SubsetWrapperTest {
 
       assertThat(actual)
           .isNotNull()
-          .isInstanceOf(HashedRangedSubset.class)
-          .isInstanceOf(HashedRangedSubsetWrapper.class);
+          .isInstanceOf(CompositeSubset.class)
+          .isInstanceOf(CompositeSubsetWrapper.class);
     }
   }
 
 
-  @Test
-  void optimisedSubset_returnsOptimalHashedRangedSubset() {
-
-    final var unicodeSet = new UnicodeSet('0', '9', 'A', 'Z', 'a', 'z');
-
-    final var subsetBuilder = mock(SubsetBuilder.class);
-    final var optimalHashedRangedSubset = mock(OptimalHashedRangedSubsetImpl.class);
-    when(subsetBuilder.build()).thenReturn(optimalHashedRangedSubset);
-
-    try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
-
-      subset.when(Subset::builder).thenReturn(subsetBuilder);
-
-      final var actual = SubsetWrapper.optimisedSubset(unicodeSet);
-
-      assertThat(actual)
-          .isNotNull()
-          .isInstanceOf(OptimalHashedRangedSubset.class)
-          .isInstanceOf(OptimalHashedRangedSubsetWrapper.class);
-    }
-  }
+//  @Test
+//  void optimisedSubset_returnsOptimalHashedRangedSubset() {
+//
+//    final var unicodeSet = new UnicodeSet('0', '9', 'A', 'Z', 'a', 'z');
+//
+//    final var subsetBuilder = mock(SubsetBuilder.class);
+//    final var optimalHashedRangedSubset = mock(OptimalHashedRangedSubsetImpl.class);
+//    when(subsetBuilder.build()).thenReturn(optimalHashedRangedSubset);
+//
+//    try (final MockedStatic<Subset> subset = Mockito.mockStatic(Subset.class)) {
+//
+//      subset.when(Subset::builder).thenReturn(subsetBuilder);
+//
+//      final var actual = SubsetWrapper.optimisedSubset(unicodeSet);
+//
+//      assertThat(actual)
+//          .isNotNull()
+//          .isInstanceOf(OptimalHashedRangedSubset.class)
+//          .isInstanceOf(OptimalHashedRangedSubsetWrapper.class);
+//    }
+//  }
 
   static class SomeSubset implements Subset {
 
@@ -128,17 +128,55 @@ class SubsetWrapperTest {
 
     @Override
     public Iterable<CodePointRange> ranges() {
-      return List.of();
+      return Constants.EMPTY_CODE_POINT_RANGE_ITERABLE;
     }
 
     @Override
-    public int numberOfCodePointRanges() {
+    public Iterable<Category> categories() {
+      return Constants.EMPTY_CATEGORY_ITERABLE;
+    }
+
+    @Override
+    public Iterable<String> strings() {
+      return Constants.EMPTY_STRING_ITERABLE;
+    }
+
+    @Override
+    public boolean containsString(CharSequence charSequence) {
+      return false;
+    }
+
+    @Override
+    public int containsString(CharSequence charSequence, int startingAtIndex) {
+      return startingAtIndex;
+    }
+
+    @Override
+    public int rangesSize() {
+      return 0;
+    }
+
+    @Override
+    public int categoriesSize() {
+      return 0;
+    }
+
+    @Override
+    public int stringsSize() {
       return 0;
     }
 
     @Override
     public int numberOfCodePointsInCodePointRanges() {
       return 0;
+    }
+
+    @Override
+    public String toPattern() {
+      return SubsetUtils.toPattern(
+          ranges(),
+          categories(),
+          strings());
     }
   }
 }

@@ -24,7 +24,7 @@ class SubsetBuilderImpl_SubsetOptimiserTest {
 
   @Test
   void toString_returnsAsExpectedForSmallSubset() {
-    final RangedSubset subset = (RangedSubset) Factory.rangedSubset(
+    final RangedSubset subset = new RangedSubsetImpl(
         new char[]{
             0x41_5a, //  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
             0x61_7a, //  a b c d e f g h i j k l m n o p q r s t u v w x y z
@@ -45,7 +45,7 @@ class SubsetBuilderImpl_SubsetOptimiserTest {
 
   @Test
   void toString_returnsAsExpectedForLargeSubset() {
-    final RangedSubset subset = (RangedSubset) Factory.rangedSubset(
+    final RangedSubset subset = new RangedSubsetImpl(
         new char[]{
             0x41_5a, //  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
             0x61_7a, //  a b c d e f g h i j k l m n o p q r s t u v w x y z

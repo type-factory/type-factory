@@ -20,7 +20,17 @@ import com.ibm.icu.text.UnicodeSet.EntryRange;
 import org.typefactory.Subset;
 import org.typefactory.unicode.cldr.generator.unicode.cldr.CldrExemplarCharacters;
 
-public interface SubsetWrapper extends Subset {
+public interface SubsetWrapper extends CompositeSubset {
+
+  @Override
+  default String toPattern() {
+    return SubsetUtils.toPattern(
+        ranges(),
+        categories(),
+        strings());
+  }
+
+  CodePointSubsetWrapper getCodePointSubset();
 
   static SubsetWrapper empty() {
     return wrap(Subset.builder().build());
@@ -57,14 +67,8 @@ public interface SubsetWrapper extends Subset {
   }
 
   static SubsetWrapper wrap(final Subset subset) {
-    if (subset instanceof RangedSubsetImpl rangedSubset) {
-      return new RangedSubsetWrapper(rangedSubset);
-    }
-    if (subset instanceof HashedRangedSubsetImpl hashedRangedSubset) {
-      return new HashedRangedSubsetWrapper(hashedRangedSubset);
-    }
-    if (subset instanceof OptimalHashedRangedSubsetImpl optimalHashedRangedSubset) {
-      return new OptimalHashedRangedSubsetWrapper(optimalHashedRangedSubset);
+    if (subset instanceof CompositeSubsetImpl compositeSubset) {
+      return new CompositeSubsetWrapper(compositeSubset);
     }
     throw new SubsetException("Unknown subset type - " + subset.getClass().getName());
   }

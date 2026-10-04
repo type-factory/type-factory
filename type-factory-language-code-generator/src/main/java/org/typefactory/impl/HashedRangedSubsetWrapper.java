@@ -15,7 +15,9 @@
  */
 package org.typefactory.impl;
 
-public class HashedRangedSubsetWrapper implements SubsetWrapper, HashedRangedSubset {
+import org.typefactory.Subset.CodePointRange;
+
+public class HashedRangedSubsetWrapper implements CodePointSubsetWrapper, HashedRangedSubset {
 
   private final HashedRangedSubsetImpl wrapped;
 
@@ -39,8 +41,8 @@ public class HashedRangedSubsetWrapper implements SubsetWrapper, HashedRangedSub
   }
 
   @Override
-  public int numberOfCodePointRanges() {
-    return wrapped.numberOfCodePointRanges();
+  public int rangesSize() {
+    return wrapped.rangesSize();
   }
 
   @Override

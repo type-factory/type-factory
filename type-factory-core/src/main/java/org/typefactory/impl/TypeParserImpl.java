@@ -477,7 +477,7 @@ final class TypeParserImpl implements TypeParser {
   static final class ParseResultImpl implements ParseResult {
 
     private String parsedValue;
-    private final PrimitiveSortedSetOfInt invalidCodePoints = new PrimitiveSortedSetOfInt();
+    private final MutableSortedSetOfIntImpl invalidCodePoints = new MutableSortedSetOfIntImpl();
 
     ParseResultImpl() {}
 

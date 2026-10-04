@@ -16,11 +16,11 @@
 package org.typefactory.impl;
 
 import static org.typefactory.impl.Constants.EMPTY_INT_ARRAY;
-import static org.typefactory.impl.SubsetUtils.getInclusiveFrom;
-import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 
+import java.util.Objects;
 import org.typefactory.Category;
 import org.typefactory.Subset;
+import org.typefactory.Subset.CodePointRange;
 import org.typefactory.impl.CodePointSequenceToCodePointSequenceConverter.RootTreeNode;
 
 /**
@@ -90,62 +90,32 @@ final class ConverterBuilder {
   }
 
   /**
-   * Converts any of the code-points found in the {@code subset} to the {@code toCodePointSequence}
+   * Converts any of the code-points or strings found in the {@code subset} to the {@code toCodePointSequence}
    *
    * @param subset              a subset containing the code-points that you wish to convert. May be null or empty.
    * @param toCodePointSequence the code-point sequence that you wish to convert to.
    * @return this {@link ConverterBuilder}
    */
   public ConverterBuilder addCodePointConversions(final Subset subset, final int[] toCodePointSequence) {
-    if (subset instanceof RangedSubset rangedSubset) {
-      return addRangedSubsetCodePointConversions(rangedSubset, toCodePointSequence);
+    for (CodePointRange codePointRange : subset.ranges()) {
+      for (int j = codePointRange.inclusiveFrom; j <= codePointRange.inclusiveTo; ++j) {
+        addCodePointConversion(j, toCodePointSequence);
+      }
     }
-    throw new UnsupportedOperationException("subset of type '" + subset.getClass().getSimpleName() + "' not yet supported.");
-  }
-
-  /**
-   * Converts any of the code-points found in the {@code subset} to the {@code toCodePointSequence}
-   *
-   * @param subset              a subset containing the code-points that you wish to convert. May be null or empty.
-   * @param toCodePointSequence the code-point sequence that you wish to convert to.
-   * @return this {@link ConverterBuilder}
-   */
-  private ConverterBuilder addRangedSubsetCodePointConversions(final RangedSubset subset, final int[] toCodePointSequence) {
-
-    if (subset != null) {
-      final char[] singleByteRangedSubset = subset.getSingleByteCodePointRanges();
-      for (char c : singleByteRangedSubset) {
-        final int inclusiveFrom = getInclusiveFrom(c);
-        final int inclusiveTo = getInclusiveTo(c);
-        for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePointSequence);
-        }
-      }
-      final int[] doubleByteRangedSubset = subset.getDoubleByteCodePointRanges();
-      for (int c : doubleByteRangedSubset) {
-        final int inclusiveFrom = getInclusiveFrom(c);
-        final int inclusiveTo = getInclusiveTo(c);
-        for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePointSequence);
-        }
-      }
-      final long[] tripleByteRangedSubset = subset.getTripleByteCodePointRanges();
-      for (long c : tripleByteRangedSubset) {
-        final int inclusiveFrom = getInclusiveFrom(c);
-        final int inclusiveTo = getInclusiveTo(c);
-        for (int j = inclusiveFrom; j <= inclusiveTo; ++j) {
-          addCodePointConversion(j, toCodePointSequence);
-        }
-      }
+    for (String string : subset.strings()) {
+      addCharSequenceConversion(string, toCodePointSequence);
     }
     return this;
   }
 
   public ConverterBuilder addCharSequenceConversion(final CharSequence fromCharSequence, final CharSequence toCharSequence) {
+    return addCharSequenceConversion(fromCharSequence, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
+  }
+
+  public ConverterBuilder addCharSequenceConversion(final CharSequence fromCharSequence, final int[] toCodePointSequence) {
     if (fromCharSequence != null && !fromCharSequence.isEmpty()) {
       final int[] fromCodePointSequence = fromCharSequence.codePoints().toArray();
-      final int[] toCodePointSequence = toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray();
-      addCodePointSequenceConversion(fromCodePointSequence, toCodePointSequence);
+      addCodePointSequenceConversion(fromCodePointSequence, Objects.requireNonNullElse(toCodePointSequence, EMPTY_INT_ARRAY));
     }
     return this;
   }

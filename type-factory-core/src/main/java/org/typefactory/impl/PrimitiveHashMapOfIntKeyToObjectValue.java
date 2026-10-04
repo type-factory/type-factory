@@ -15,18 +15,107 @@
  */
 package org.typefactory.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 /**
- * <p>This is a hash-map of integer keys mapped to integer-array values.</p>
+ * <p>A hash map with primitive int keys and object values. It is useful for using with Unicode codepoint keys to object values.</p>
+ *
+ * <p>This interface provides just the immutable methods and is extended by:</p>
+ * <ul>
+ *   <li>{@link ImmutablePrimitiveHashMapOfIntKeyToObjectValue}.</li>
+ *   <li>{@link MutablePrimitiveHashMapOfIntKeyToObjectValue}.</li>
+ * </ul>
+ *
+ * <p>This interface is implemented by:</p>
+ * <ul>
+ *   <li>{@link ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl}.</li>
+ *   <li>{@link MutablePrimitiveHashMapOfIntKeyToObjectValueImpl}.</li>
+ * </ul>
+ *
+ * @param <T> the type of the values
+ */
+sealed interface PrimitiveHashMapOfIntKeyToObjectValue<T>
+    permits ImmutablePrimitiveHashMapOfIntKeyToObjectValue,
+    MutablePrimitiveHashMapOfIntKeyToObjectValue {
+
+  /**
+   * Returns an empty immutable hash map of primitive int keys to object values.
+   *
+   * @param <T> the type of the values
+   * @return an empty immutable hash map of primitive int keys to object values
+   */
+  @SuppressWarnings("unchecked")
+  static <T extends PrimitiveHashMapOfIntKeyToObjectValue<?>> T empty() {
+    return (T) ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl.EMPTY;
+  }
+
+  /**
+   * Return the number of entries in this hash map.
+   *
+   * @return the number of keys in this hash map.
+   */
+  default int size() {
+    return keySet().size();
+  }
+
+  /**
+   * Returns {@code true} if there are no entries in this hash map and {@code false} otherwise.
+   *
+   * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
+   */
+  default boolean isEmpty() {
+    return size() == 0;
+  }
+
+  /**
+   * Returns the set of {@code int} keys in this hash map as an {@link ImmutableSortedSetOfInt}.
+   *
+   * @return the set of keys in this hash map.
+   */
+  ImmutableSortedSetOfInt keySet();
+
+  /**
+   * Returns the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the key.
+   *
+   * @param key the key whose associated value is to be returned
+   * @return the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the key
+   */
+  T get(int key);
+
+  Iterable<T> values();
+}
+
+sealed interface MutablePrimitiveHashMapOfIntKeyToObjectValue<T>
+    extends PrimitiveHashMapOfIntKeyToObjectValue<T>
+    permits MutablePrimitiveHashMapOfIntKeyToObjectValueImpl {
+
+  void put(int key, T value);
+
+  ImmutablePrimitiveHashMapOfIntKeyToObjectValue<T> toImmutable();
+
+  <R> ImmutablePrimitiveHashMapOfIntKeyToObjectValue<R> toImmutable(Function<T, R> immutableValueTransformer);
+}
+
+sealed interface ImmutablePrimitiveHashMapOfIntKeyToObjectValue<T>
+    extends PrimitiveHashMapOfIntKeyToObjectValue<T>
+    permits ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl {
+
+}
+
+/**
+ * <p>This is a hash-map of integer keys mapped to object values.</p>
  *
  * <p>We can use it to map:</p>
  * <ul>
  *   <li>a single code point to a sequence of code points.</li>
- *   <li>a unicode category identified by an integer to a sequence of code points.</li>
+ *   <li>a Unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
-final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
+final class MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<T extends Object>
+    implements MutablePrimitiveHashMapOfIntKeyToObjectValue<T> {
 
   static final int INITIAL_CAPACITY = 20;
 
@@ -38,10 +127,10 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
   /**
    * Use and internal struct-like class to ensure an atomic transfer after a rehash.
    */
-  private static class HashTable<T extends Object> {
+  private static class HashTable<T> {
 
     /**
-     * 2-dimensional array for the keys which is aligned with the values array:
+     * 2-dimensional array for the keys that is aligned with the value array:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map keys.</li>
      *   <li>second index/dimension to get the key values.</li>
@@ -50,7 +139,7 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
     private int[][] keys;
 
     /**
-     * 2-dimensional array for the values which is aligned with the key array. It appears to be 3-dimensional but that is because the map-values are
+     * 2-dimensional array for the values that is aligned with the key array. It appears to be 3-dimensional, but that is because the map-values are
      * actually int-arrays:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map values.</li>
@@ -67,55 +156,68 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
 
   private HashTable<T> hashTable;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private final MutableSortedSetOfIntImpl keySet = new MutableSortedSetOfIntImpl();
 
-  PrimitiveHashMapOfIntKeyToObjectValue() {
+  @SuppressWarnings("unchecked")
+  MutablePrimitiveHashMapOfIntKeyToObjectValueImpl() {
     this.hashTable = new HashTable<>();
     this.hashTable.keys = new int[INITIAL_CAPACITY][];
     this.hashTable.values = (T[][]) new Object[INITIAL_CAPACITY][];
     this.threshold = (int) (INITIAL_CAPACITY * LOAD_FACTOR);
   }
 
-  /**
-   * Return the number of entries in this hash map.
-   *
-   * @return the number of keys in this hash map.
-   */
-  int size() {
-    return keySet.size();
+  @Override
+  public ImmutableSortedSetOfInt keySet() {
+    return keySet.toImmutable();
   }
 
-  /**
-   * Returns {@code true} if there are no entries in this hash map and {@code false} otherwise.
-   *
-   * @return {@code true} if there are no entries in this hash map and {@code false} otherwise.
-   */
-  boolean isEmpty() {
-    return size() == 0;
+  @Override
+  public T get(final int key) {
+    return PrimitiveHashMapOfIntKeyToObjectValueCommon.get(key, hashTable.keys, hashTable.values);
   }
 
-  int[] keySet() {
-    return keySet.toArray();
-  }
-
-  T get(final int key) {
-    int hashIndex = (key & 0x7FFFFFFF) % hashTable.keys.length;
-    int[] bucket = hashTable.keys[hashIndex];
-    if (bucket != null) {
-      for (int bucketIndex = 0; bucketIndex < bucket.length; ++bucketIndex) {
-        if (bucket[bucketIndex] == key) {
-          return hashTable.values[hashIndex][bucketIndex];
-        }
-      }
-    }
-    return null;
-  }
-
-  void put(final int key, final T value) {
+  @Override
+  public void put(final int key, final T value) {
     if (threshold < (int) (size() * LOAD_FACTOR)) {
       rehash();
     }
     put(key, value, hashTable);
+  }
+
+  @Override
+  public ImmutablePrimitiveHashMapOfIntKeyToObjectValue<T> toImmutable() {
+    return isEmpty()
+        ? PrimitiveHashMapOfIntKeyToObjectValue.empty()
+        : new ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>(
+            keySet.toImmutable(), hashTable.keys, hashTable.values);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <R> ImmutablePrimitiveHashMapOfIntKeyToObjectValue<R> toImmutable(
+      final Function<T, R> immutableValueTransformer) {
+
+    if (isEmpty()) {
+      return PrimitiveHashMapOfIntKeyToObjectValue.empty();
+    }
+    final int[][] keys = hashTable.keys;
+    final T[][] values = hashTable.values;
+    final R[][] transformedValues = (R[][]) new Object[values.length][];
+    for (int i = 0; i < values.length; ++i) {
+      if (values[i] != null) {
+        transformedValues[i] = (R[]) new Object[values[i].length];
+        for (int j = 0; j < values[i].length; ++j) {
+          transformedValues[i][j] = immutableValueTransformer.apply(values[i][j]);
+        }
+      }
+    }
+    return new ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>(
+        keySet.toImmutable(), keys, transformedValues);
+  }
+
+  @Override
+  public Iterable<T> values() {
+    return PrimitiveHashMapOfIntKeyToObjectValueCommon.values(hashTable.values);
   }
 
   private void put(final int key, final T value, final HashTable<T> hashTable) {
@@ -153,5 +255,101 @@ final class PrimitiveHashMapOfIntKeyToObjectValue<T extends Object> {
       }
     }
     this.hashTable = newHashTable;
+  }
+}
+
+/**
+ * <p>This is a hash-map of integer keys mapped to object values.</p>
+ *
+ * <p>We can use it to map:</p>
+ * <ul>
+ *   <li>a single code point to a sequence of code points.</li>
+ *   <li>a Unicode category identified by an integer to a sequence of code points.</li>
+ * </ul>
+ */
+final class ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl<T>
+    implements ImmutablePrimitiveHashMapOfIntKeyToObjectValue<T> {
+
+  static final ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl<?> EMPTY =
+      new ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>(
+          SortedSetOfInt.empty(), new int[0][], new Object[0][]);
+
+  private final ImmutableSortedSetOfInt keySet;
+
+  /**
+   * 2-dimensional array for the keys that is aligned with the value array:
+   * <ul>
+   *   <li>first index/dimension to get the hash bucket containing the map keys.</li>
+   *   <li>second index/dimension to get the key values.</li>
+   * </ul>
+   */
+  private final int[][] keys;
+
+  /**
+   * 2-dimensional array for the values that is aligned with the key array. It appears to be 3-dimensional, but that is because the map-values are
+   * actually int-arrays:
+   * <ul>
+   *   <li>first index/dimension to get the hash bucket containing the map values.</li>
+   *   <li>second index/dimension to get the value objects which are objects of type T.</li>
+   * </ul>
+   */
+  private final T[][] values;
+
+  ImmutablePrimitiveHashMapOfIntKeyToObjectValueImpl(
+      final ImmutableSortedSetOfInt keyset, final int[][] keys, final T[][] values) {
+
+    this.keySet = keyset;
+
+    // Perform deep copies of the arrays to ensure immutability
+    this.keys = ArrayUtils.deepCopy(keys);
+    this.values = ArrayUtils.deepCopy(values);
+  }
+
+  @Override
+  public ImmutableSortedSetOfInt keySet() {
+    return keySet;
+  }
+
+  @Override
+  public T get(final int key) {
+    return PrimitiveHashMapOfIntKeyToObjectValueCommon.get(key, keys, values);
+  }
+
+  @Override
+  public Iterable<T> values() {
+    return PrimitiveHashMapOfIntKeyToObjectValueCommon.values(values);
+  }
+}
+
+final class PrimitiveHashMapOfIntKeyToObjectValueCommon {
+
+  private PrimitiveHashMapOfIntKeyToObjectValueCommon() {
+    // Prevent instantiation
+  }
+
+  static <T> T get(int key, int[][] keys, T[][] values) {
+    int hashIndex = (key & 0x7FFFFFFF) % keys.length;
+    int[] bucket = keys[hashIndex];
+    if (bucket != null) {
+      for (int bucketIndex = 0; bucketIndex < bucket.length; ++bucketIndex) {
+        if (bucket[bucketIndex] == key) {
+          return values[hashIndex][bucketIndex];
+        }
+      }
+    }
+    return null;
+  }
+
+  static <T> Iterable<T> values(T[][] values) {
+    List<T> allValues = new ArrayList<>();
+    for (int i = 0; i < values.length; ++i) {
+      final var bucket = values[i];
+      if (bucket != null) {
+        for (int j = 0; j < bucket.length; ++j) {
+          allValues.add(bucket[j]);
+        }
+      }
+    }
+    return allValues;
   }
 }

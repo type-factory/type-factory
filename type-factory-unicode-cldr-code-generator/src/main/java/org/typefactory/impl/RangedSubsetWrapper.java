@@ -17,7 +17,9 @@ package org.typefactory.impl;
 
 import static org.typefactory.impl.RangedSubsetImpl.EMPTY_SUBSET;
 
-public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
+import org.typefactory.Subset.CodePointRange;
+
+public class RangedSubsetWrapper implements CodePointSubsetWrapper, RangedSubset {
 
   private final RangedSubsetImpl wrapped;
 
@@ -41,8 +43,8 @@ public class RangedSubsetWrapper implements SubsetWrapper, RangedSubset {
   }
 
   @Override
-  public int numberOfCodePointRanges() {
-    return wrapped.numberOfCodePointRanges();
+  public int rangesSize() {
+    return wrapped.rangesSize();
   }
 
   @Override
