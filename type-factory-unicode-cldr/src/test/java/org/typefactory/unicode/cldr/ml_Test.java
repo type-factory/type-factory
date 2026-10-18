@@ -165,7 +165,7 @@ class ml_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000d02   | 0x000d02
+      0x000d02   | 0x000d03
       0x000d0c   | 0x000d0c
       0x000d3e   | 0x000d43
       0x000d46   | 0x000d48
@@ -174,7 +174,7 @@ class ml_Test extends root_Test {
       0x000d57   | 0x000d57
       0x000d60   | 0x000d61
       0x000d7a   | 0x000d7f
-      0x00200c   | 0x00200c
+      0x00200c   | 0x00200d
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -190,14 +190,14 @@ class ml_Test extends root_Test {
 
   @Test
   void getAuxiliarySubset_toString_returnsExpectedValue() {
-    final var expected = "([ംഌ ാ-ൃ െ-ൈ ൊ ോ ് ൗൠൡൺ-ൿ\\u200c]|‍ഃ)";
+    final var expected = "[ം ഃഌ ാ-ൃ െ-ൈ ൊ ോ ് ൗൠൡൺ-ൿ\\u200c\\u200d]";
     final var actual = new ml().getAuxiliarySubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getAuxiliarySubset_toPattern_returnsExpectedValue() {
-    final var expected = "([\\u0d02ഌ\\u0d3e-\\u0d43\\u0d46-\\u0d48\\u0d4a\\u0d4b\\u0d4d\\u0d57ൠൡൺ-ൿ\\u200c]|‍ഃ)";
+    final var expected = "[\\u0d02\\u0d03ഌ\\u0d3e-\\u0d43\\u0d46-\\u0d48\\u0d4a\\u0d4b\\u0d4d\\u0d57ൠൡൺ-ൿ\\u200c\\u200d]";
     final var actual = new ml().getAuxiliarySubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

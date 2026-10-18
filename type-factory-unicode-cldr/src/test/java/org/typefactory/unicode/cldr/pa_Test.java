@@ -175,7 +175,8 @@ class pa_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x00200c   | 0x00200c
+      0x000a03   | 0x000a03
+      0x00200c   | 0x00200d
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -191,14 +192,14 @@ class pa_Test extends root_Test {
 
   @Test
   void getAuxiliarySubset_toString_returnsExpectedValue() {
-    final var expected = "([\\u200c]|‍ਃ)";
+    final var expected = "[ਃ\\u200c\\u200d]";
     final var actual = new pa().getAuxiliarySubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getAuxiliarySubset_toPattern_returnsExpectedValue() {
-    final var expected = "([\\u200c]|‍ਃ)";
+    final var expected = "[\\u0a03\\u200c\\u200d]";
     final var actual = new pa().getAuxiliarySubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

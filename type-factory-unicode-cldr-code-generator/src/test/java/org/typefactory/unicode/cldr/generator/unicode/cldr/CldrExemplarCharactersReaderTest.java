@@ -74,6 +74,7 @@ class CldrExemplarCharactersReaderTest {
       [अ आ इ ई उ ऊ ऋ ऌ ऍ ए ऐ ऑ ओ औ क ख]  ~ [ अ आ इ ई उ ऊ ऋ ऌ ऍ ए ऐ ऑ ओ औ क ख ]
       [़ ॐ ं ँ ः  ा ि ी]                 ~ [ ़ ॐ ं ँ ः ा ि ी ]
       [ु ू ृ ॅ े ै ॉ ो ौ ्]               ~ [ ु ू ृ ॅ े ै ॉ ो ौ ् ]
+      [\\u200C\\u200Dഃ ൠ ഌ ൡ]              ~ [ \u200C \u200D ഃ ൠ ഌ ൡ ]
       """)
   void parseExemplarCharacters_parsesBracketedTokensWithStringsAndCodePoints(
       final String exemplarCharactersText,

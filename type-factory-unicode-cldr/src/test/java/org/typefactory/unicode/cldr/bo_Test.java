@@ -140,8 +140,8 @@ class bo_Test extends root_Test {
       0x000f72   | 0x000f72
       0x000f74   | 0x000f74
       0x000f77   | 0x000f77
-      0x000f79   | 0x000f7e
-      0x000f80   | 0x000f80
+      0x000f79   | 0x000f80
+      0x000f84   | 0x000f84
       0x000f90   | 0x000f92
       0x000f94   | 0x000f97
       0x000f99   | 0x000f9c
@@ -165,14 +165,14 @@ class bo_Test extends root_Test {
 
   @Test
   void getStandardSubset_toString_returnsExpectedValue() {
-    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ ི ུ ཷ ཹ-ཾ ྀ ྐ-ྒ ྔ-ྗ ྙ-ྜ ྞ-ྡ ྣ-ྦ ྨ-ྫ ྭ-ྸ ྺ-ྼ]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|྄ཿ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
+    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ ི ུ ཷ ཹ-ྀ ྄ ྐ-ྒ ྔ-ྗ ྙ-ྜ ྞ-ྡ ྣ-ྦ ྨ-ྫ ྭ-ྸ ྺ-ྼ]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
     final var actual = new bo().getStandardSubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getStandardSubset_toPattern_returnsExpectedValue() {
-    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ\\u0f72\\u0f74\\u0f77\\u0f79-\\u0f7e\\u0f80\\u0f90-\\u0f92\\u0f94-\\u0f97\\u0f99-\\u0f9c\\u0f9e-\\u0fa1\\u0fa3-\\u0fa6\\u0fa8-\\u0fab\\u0fad-\\u0fb8\\u0fba-\\u0fbc]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|྄ཿ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
+    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ\\u0f72\\u0f74\\u0f77\\u0f79-\\u0f80\\u0f84\\u0f90-\\u0f92\\u0f94-\\u0f97\\u0f99-\\u0f9c\\u0f9e-\\u0fa1\\u0fa3-\\u0fa6\\u0fa8-\\u0fab\\u0fad-\\u0fb8\\u0fba-\\u0fbc]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
     final var actual = new bo().getStandardSubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

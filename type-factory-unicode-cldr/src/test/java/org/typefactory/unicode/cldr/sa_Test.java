@@ -129,7 +129,7 @@ class sa_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000901   | 0x000901
+      0x000901   | 0x000903
       0x000905   | 0x00090c
       0x00090f   | 0x000910
       0x000913   | 0x000928
@@ -156,14 +156,14 @@ class sa_Test extends root_Test {
 
   @Test
   void getStandardSubset_toString_returnsExpectedValue() {
-    final var expected = "([ँअ-ऌएऐओ-नप-रलळव-ह ़-ॄ े ै ो-्ॐ-◌॒ॠ-ॣ]|ंः)";
+    final var expected = "[ँ-ःअ-ऌएऐओ-नप-रलळव-ह ़-ॄ े ै ो-्ॐ-◌॒ॠ-ॣ]";
     final var actual = new sa().getStandardSubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getStandardSubset_toPattern_returnsExpectedValue() {
-    final var expected = "([\\u0901अ-ऌएऐओ-नप-रलळव-ह\\u093c-\\u0944\\u0947\\u0948\\u094b-\\u094dॐ-\\u0952ॠ-\\u0963]|ंः)";
+    final var expected = "[\\u0901-\\u0903अ-ऌएऐओ-नप-रलळव-ह\\u093c-\\u0944\\u0947\\u0948\\u094b-\\u094dॐ-\\u0952ॠ-\\u0963]";
     final var actual = new sa().getStandardSubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

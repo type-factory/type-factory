@@ -94,9 +94,10 @@ public class pa extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x200c_200c, //  ‌
+          0x0a03_0a03, //  ਃ
+          0x200c_200d, //  ‌ ‍
       },
-      1, 1);
+      2, 3);
 
 
   /**

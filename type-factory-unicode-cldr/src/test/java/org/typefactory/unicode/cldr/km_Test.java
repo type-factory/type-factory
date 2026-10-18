@@ -133,9 +133,9 @@ class km_Test extends root_Test {
       0x00179f   | 0x0017a2
       0x0017a5   | 0x0017a7
       0x0017a9   | 0x0017b3
-      0x0017b6   | 0x0017c7
-      0x0017c9   | 0x0017cb
+      0x0017b6   | 0x0017cb
       0x0017cd   | 0x0017cd
+      0x0017d0   | 0x0017d0
       0x0017d2   | 0x0017d2
       """)
   void getStandardSubset_containsExpectedCodePoints(
@@ -152,14 +152,14 @@ class km_Test extends root_Test {
 
   @Test
   void getStandardSubset_toString_returnsExpectedValue() {
-    final var expected = "([ក-វស-អឥ-ឧឩ-ឳ ា-ះ ៉-់ ៍ ្]|អា|ឧក|័ៈ)";
+    final var expected = "([ក-វស-អឥ-ឧឩ-ឳ ា-់ ៍ ័ ្]|អា|ឧក)";
     final var actual = new km().getStandardSubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getStandardSubset_toPattern_returnsExpectedValue() {
-    final var expected = "([ក-វស-អឥ-ឧឩ-ឳ\\u17b6-\\u17c7\\u17c9-\\u17cb\\u17cd\\u17d2]|អា|ឧក|័ៈ)";
+    final var expected = "([ក-វស-អឥ-ឧឩ-ឳ\\u17b6-\\u17cb\\u17cd\\u17d0\\u17d2]|អា|ឧក)";
     final var actual = new km().getStandardSubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

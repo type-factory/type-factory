@@ -129,7 +129,7 @@ class ne_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000901   | 0x000901
+      0x000901   | 0x000903
       0x000905   | 0x00090d
       0x00090f   | 0x000911
       0x000913   | 0x000928
@@ -156,14 +156,14 @@ class ne_Test extends root_Test {
 
   @Test
   void getStandardSubset_toString_returnsExpectedValue() {
-    final var expected = "([ँअ-ऍए-ऑओ-नप-रलळव-ह ़-ृ ॅ े-ॉ ो-्ॐ]|ंः)";
+    final var expected = "[ँ-ःअ-ऍए-ऑओ-नप-रलळव-ह ़-ृ ॅ े-ॉ ो-्ॐ]";
     final var actual = new ne().getStandardSubset().toString();
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void getStandardSubset_toPattern_returnsExpectedValue() {
-    final var expected = "([\\u0901अ-ऍए-ऑओ-नप-रलळव-ह\\u093c-\\u0943\\u0945\\u0947-\\u0949\\u094b-\\u094dॐ]|ंः)";
+    final var expected = "[\\u0901-\\u0903अ-ऍए-ऑओ-नप-रलळव-ह\\u093c-\\u0943\\u0945\\u0947-\\u0949\\u094b-\\u094dॐ]";
     final var actual = new ne().getStandardSubset().toPattern();
     assertThat(actual).isEqualTo(expected);
     assertThatNoException().isThrownBy(() -> Pattern.compile(actual));

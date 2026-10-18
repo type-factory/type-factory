@@ -158,8 +158,9 @@ final class CldrExemplarCharactersReader {
         continue;
       }
 
+      final boolean codePointIsLetter = Character.isLetter(codePoint);
       final boolean nextCodePointIsModifierOrCombiningMark = (i + 1 < contentCodePoints.length) && isCombiningMark(contentCodePoints[i + 1]);
-      if (nextCodePointIsModifierOrCombiningMark) {
+      if (codePointIsLetter && nextCodePointIsModifierOrCombiningMark) {
         final StringBuilder token = new StringBuilder();
         token.appendCodePoint(codePoint);
         while (i + 1 < contentCodePoints.length && isCombiningMark(contentCodePoints[i + 1])) {

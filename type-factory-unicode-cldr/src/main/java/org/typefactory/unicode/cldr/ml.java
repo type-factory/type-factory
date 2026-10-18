@@ -84,7 +84,7 @@ public class ml extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0d02_0d02, //  ം
+          0x0d02_0d03, //  ം ഃ
           0x0d0c_0d0c, //  ഌ
           0x0d3e_0d43, //  ാ ി ീ ു ൂ ൃ
           0x0d46_0d48, //  െ േ ൈ
@@ -93,9 +93,9 @@ public class ml extends root {
           0x0d57_0d57, //  ൗ
           0x0d60_0d61, //  ൠ ൡ
           0x0d7a_0d7f, //  ൺ ൻ ർ ൽ ൾ ൿ
-          0x200c_200c, //  ‌
+          0x200c_200d, //  ‌ ‍
       },
-      10, 24);
+      10, 26);
 
 
   /**
