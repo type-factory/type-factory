@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,10 +129,12 @@ class ig_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000041   | 0x000050
+      0x000041   | 0x000042
+      0x000044   | 0x000050
       0x000052   | 0x000057
       0x000059   | 0x00005a
-      0x000061   | 0x000070
+      0x000061   | 0x000062
+      0x000064   | 0x000070
       0x000072   | 0x000077
       0x000079   | 0x00007a
       0x001e44   | 0x001e45
@@ -150,20 +153,31 @@ class ig_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ABD-PR-WYZabd-pr-wyzṄṅỊ-ọỤụ]|CH|GB|GH|GW|KP|KW|NW|NY|SH|ch|gb|gh|gw|kp|kw|nw|ny|sh)";
+    final var actual = new ig().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ABD-PR-WYZabd-pr-wyzṄṅỊ-ọỤụ]|CH|GB|GH|GW|KP|KW|NW|NY|SH|ch|gb|gh|gw|kp|kw|nw|ny|sh)";
+    final var actual = new ig().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
       0x000043   | 0x000043
-      0x00004d   | 0x00004d
       0x000051   | 0x000051
       0x000058   | 0x000058
       0x000063   | 0x000063
-      0x00006d   | 0x00006d
       0x000071   | 0x000071
       0x000078   | 0x000078
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
       0x0000c0   | 0x0000c1
       0x0000c8   | 0x0000c9
       0x0000cc   | 0x0000cd
@@ -181,10 +195,7 @@ class ig_Test extends root_Test {
       0x00014c   | 0x00014d
       0x00016a   | 0x00016b
       0x0001f8   | 0x0001f9
-      0x000300   | 0x000301
       0x001e3e   | 0x001e3f
-      0x001eca   | 0x001ecd
-      0x001ee4   | 0x001ee5
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -196,6 +207,21 @@ class ig_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([CQXcqxÀÁÈÉÌÍÒÓÙÚàáèéìíòóùúĀāĒēĪīŃńŌōŪūǸǹḾḿ]|M̀|m̀|Ị̀|Ị́|ị̀|ị́|Ọ̀|Ọ́|ọ̀|ọ́|Ụ̀|Ụ́|ụ̀|ụ́)";
+    final var actual = new ig().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([CQXcqxÀÁÈÉÌÍÒÓÙÚàáèéìíòóùúĀāĒēĪīŃńŌōŪūǸǹḾḿ]|M̀|m̀|Ị̀|Ị́|ị̀|ị́|Ọ̀|Ọ́|ọ̀|ọ́|Ụ̀|Ụ́|ụ̀|ụ́)";
+    final var actual = new ig().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -225,6 +251,21 @@ class ig_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!(),-.:;?[]{}‑‘’“”]";
+    final var actual = new ig().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\\(\\),-\\.:;\\?\\[\\]\\{\\}‑‘’“”]";
+    final var actual = new ig().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

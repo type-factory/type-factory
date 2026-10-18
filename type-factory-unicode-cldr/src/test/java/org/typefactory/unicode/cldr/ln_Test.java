@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -135,8 +136,7 @@ class ln_Test extends root_Test {
       0x000061   | 0x000069
       0x00006b   | 0x000070
       0x000072   | 0x000077
-      0x000079   | 0x00007b
-      0x00007d   | 0x00007d
+      0x000079   | 0x00007a
       0x0000c1   | 0x0000c2
       0x0000c9   | 0x0000ca
       0x0000cd   | 0x0000ce
@@ -153,8 +153,6 @@ class ln_Test extends root_Test {
       0x0001cd   | 0x0001d2
       0x000254   | 0x000254
       0x00025b   | 0x00025b
-      0x000301   | 0x000302
-      0x00030c   | 0x00030c
       """)
   void getStandardSubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -166,6 +164,21 @@ class ln_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([A-IK-PR-WYZa-ik-pr-wyzÁÂÉÊÍÎÓÔÚáâéêíîóôúĚěƆƐǍ-ǒɔɛ]|GB|MB|MP|ND|NG|NK|NS|NT|NY|NZ|gb|mb|mp|nd|ng|nk|ns|nt|ny|nz|Ɔ́|Ɔ̂|Ɔ̌|Ɛ́|Ɛ̂|Ɛ̌|ɔ́|ɔ̂|ɔ̌|ɛ́|ɛ̂|ɛ̌)";
+    final var actual = new ln().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([A-IK-PR-WYZa-ik-pr-wyzÁÂÉÊÍÎÓÔÚáâéêíîóôúĚěƆƐǍ-ǒɔɛ]|GB|MB|MP|ND|NG|NK|NS|NT|NY|NZ|gb|mb|mp|nd|ng|nk|ns|nt|ny|nz|Ɔ́|Ɔ̂|Ɔ̌|Ɛ́|Ɛ̂|Ɛ̌|ɔ́|ɔ̂|ɔ̌|ɛ́|ɛ̂|ɛ̌)";
+    final var actual = new ln().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -189,6 +202,21 @@ class ln_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[JQXjqx]";
+    final var actual = new ln().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[JQXjqx]";
+    final var actual = new ln().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

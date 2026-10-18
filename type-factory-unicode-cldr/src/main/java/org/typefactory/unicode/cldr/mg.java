@@ -104,12 +104,10 @@ public class mg extends root {
 
       new char[]{
           0x43_43, //  C
-          0x4e_4e, //  N
           0x51_51, //  Q
           0x55_55, //  U
           0x57_58, //  W X
           0x63_63, //  c
-          0x6e_6e, //  n
           0x71_71, //  q
           0x75_75, //  u
           0x77_78, //  w x
@@ -131,10 +129,8 @@ public class mg extends root {
       },
       new int[]{
           0x0178_0178, //  Ÿ
-          0x0302_0302, //  ̂
-          0x0308_0308, //  ̈
       },
-      28, 40);
+      24, 36);
 
 
   /**

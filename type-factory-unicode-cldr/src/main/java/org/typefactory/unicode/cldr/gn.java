@@ -63,16 +63,16 @@ public class gn extends root {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x41_45, //  A B C D E
+          0x41_41, //  A
+          0x45_45, //  E
           0x47_50, //  G H I J K L M N O P
           0x52_56, //  R S T U V
           0x59_59, //  Y
-          0x61_65, //  a b c d e
+          0x61_61, //  a
+          0x65_65, //  e
           0x67_70, //  g h i j k l m n o p
           0x72_76, //  r s t u v
           0x79_79, //  y
-          0x7b_7b, //  {
-          0x7d_7d, //  }
           0xc3_c3, //  Ã
           0xd1_d1, //  Ñ
           0xd5_d5, //  Õ
@@ -84,11 +84,10 @@ public class gn extends root {
           0x0128_0129, //  Ĩ ĩ
           0x0168_0169, //  Ũ ũ
           0x02bc_02bc, //  ʼ
-          0x0303_0303, //  ̃
           0x1ebc_1ebd, //  Ẽ ẽ
           0x1ef8_1ef9, //  Ỹ ỹ
       },
-      22, 60);
+      21, 51);
 
 
   /**

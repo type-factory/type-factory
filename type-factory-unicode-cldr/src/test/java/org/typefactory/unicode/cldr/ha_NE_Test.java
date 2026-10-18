@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,12 +129,12 @@ class ha_NE_Test extends ha_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000050   | 0x000052
+      0x000050   | 0x000051
       0x000056   | 0x000056
-      0x000058   | 0x000059
-      0x000070   | 0x000072
+      0x000058   | 0x000058
+      0x000070   | 0x000071
       0x000076   | 0x000076
-      0x000078   | 0x000079
+      0x000078   | 0x000078
       0x0000c0   | 0x0000c2
       0x0000c8   | 0x0000ca
       0x0000cc   | 0x0000ce
@@ -144,8 +145,6 @@ class ha_NE_Test extends ha_Test {
       0x0000ec   | 0x0000ee
       0x0000f2   | 0x0000f4
       0x0000f9   | 0x0000fb
-      0x0002bc   | 0x0002bc
-      0x000303   | 0x000303
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -157,6 +156,21 @@ class ha_NE_Test extends ha_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([PQVXpqvxÀ-ÂÈ-ÊÌ-ÎÒ-ÔÙ-Ûà-âè-êì-îò-ôù-û]|R̃|r̃|ʼY|ʼy)";
+    final var actual = new ha_NE().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([PQVXpqvxÀ-ÂÈ-ÊÌ-ÎÒ-ÔÙ-Ûà-âè-êì-îò-ôù-û]|R̃|r̃|ʼY|ʼy)";
+    final var actual = new ha_NE().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -163,6 +164,21 @@ class dz_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[ཀ-གང-ཇཉཏ-དན-བམ-ཛཝ-ཤས-ཨ ི ུ ེ ོ ྐ-ྒ ྔ ྗ ྙ ྟ-ྡ ྣ-ྦ ྨ-ྫ ྭ ྱ-ླ ྵ-ྷ]";
+    final var actual = new dz().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ཀ-གང-ཇཉཏ-དན-བམ-ཛཝ-ཤས-ཨ\\u0f72\\u0f74\\u0f7a\\u0f7c\\u0f90-\\u0f92\\u0f94\\u0f97\\u0f99\\u0f9f-\\u0fa1\\u0fa3-\\u0fa6\\u0fa8-\\u0fab\\u0fad\\u0fb1-\\u0fb3\\u0fb5-\\u0fb7]";
+    final var actual = new dz().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -188,6 +204,21 @@ class dz_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[ཊ-ཌཎཥ ཻ ཽ ཾ ྀ ྄ ྚ-ྜ ྞ ྺ-ྼ]";
+    final var actual = new dz().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ཊ-ཌཎཥ\\u0f7b\\u0f7d\\u0f7e\\u0f80\\u0f84\\u0f9a-\\u0f9c\\u0f9e\\u0fba-\\u0fbc]";
+    final var actual = new dz().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -230,6 +261,21 @@ class dz_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]§༄-༆༈-༊༌-༒༔༴༶༼༽྾྿࿐-࿔‐‑–—‘’“”†‡…]";
+    final var actual = new dz().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]§༄-༆༈-༊༌-༒༔༴༶༼༽྾྿࿐-࿔‐‑–—‘’“”†‡…]";
+    final var actual = new dz().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -247,6 +293,21 @@ class dz_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9༠-༩]";
+    final var actual = new dz().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9༠-༩]";
+    final var actual = new dz().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

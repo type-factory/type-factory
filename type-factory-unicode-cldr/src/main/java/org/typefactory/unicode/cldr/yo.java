@@ -73,8 +73,6 @@ public class yo extends root {
           0x72_75, //  r s t u
           0x77_77, //  w
           0x79_79, //  y
-          0x7b_7b, //  {
-          0x7d_7d, //  }
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -89,14 +87,12 @@ public class yo extends root {
       new int[]{
           0x0143_0144, //  Ń ń
           0x01f8_01f9, //  Ǹ ǹ
-          0x0300_0301, //  ̀ ́
-          0x0304_0304, //  ̄
           0x1e3e_1e3f, //  Ḿ ḿ
           0x1e62_1e63, //  Ṣ ṣ
           0x1eb8_1eb9, //  Ẹ ẹ
           0x1ecc_1ecd, //  Ọ ọ
       },
-      30, 79);
+      26, 74);
 
 
   /**

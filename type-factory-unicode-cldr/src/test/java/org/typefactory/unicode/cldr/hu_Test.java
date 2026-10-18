@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -130,10 +131,10 @@ class hu_Test extends root_Test {
       VALID_FROM | VALID_TO
       0x000041   | 0x000050
       0x000052   | 0x000056
-      0x000059   | 0x00005a
+      0x00005a   | 0x00005a
       0x000061   | 0x000070
       0x000072   | 0x000076
-      0x000079   | 0x00007a
+      0x00007a   | 0x00007a
       0x0000c1   | 0x0000c1
       0x0000c9   | 0x0000c9
       0x0000cd   | 0x0000cd
@@ -161,6 +162,21 @@ class hu_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([A-PR-VZa-pr-vzÁÉÍÓÖÚÜáéíóöúüŐőŰű]|CCS|CS|DDZ|DDZS|DZ|DZS|GGY|GY|LLY|LY|NNY|NY|SSZ|SZ|TTY|TY|ZS|ZZS|ccs|cs|ddz|ddzs|dz|dzs|ggy|gy|lly|ly|nny|ny|ssz|sz|tty|ty|zs|zzs)";
+    final var actual = new hu().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([A-PR-VZa-pr-vzÁÉÍÓÖÚÜáéíóöúüŐőŰű]|CCS|CS|DDZ|DDZS|DZ|DZS|GGY|GY|LLY|LY|NNY|NY|SSZ|SZ|TTY|TY|ZS|ZZS|ccs|cs|ddz|ddzs|dz|dzs|ggy|gy|lly|ly|nny|ny|ssz|sz|tty|ty|zs|zzs)";
+    final var actual = new hu().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -208,6 +224,21 @@ class hu_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[QW-Yqw-yÀÂ-ÈÊ-ÌÎÏÑÒÔØÙÛàâ-èê-ìîïñòôøùûÿĀ-ăĒ-ĕĪ-ĭŌ-ŏŒœŪ-ŭŸ]";
+    final var actual = new hu().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[QW-Yqw-yÀÂ-ÈÊ-ÌÎÏÑÒÔØÙÛàâ-èê-ìîïñòôøùûÿĀ-ăĒ-ĕĪ-ĭŌ-ŏŒœŪ-ŭŸ]";
+    final var actual = new hu().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -244,6 +275,21 @@ class hu_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]{}~§«»‑–’”„…⁒⟨⟩]";
+    final var actual = new hu().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]\\{\\}~§«»‑–’”„…⁒⟨⟩]";
+    final var actual = new hu().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -260,6 +306,21 @@ class hu_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new hu().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new hu().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

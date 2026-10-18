@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,8 +129,6 @@ class el_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000301   | 0x000301
-      0x000308   | 0x000308
       0x000386   | 0x000386
       0x000388   | 0x00038a
       0x00038c   | 0x00038c
@@ -148,19 +147,25 @@ class el_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́)";
+    final var actual = new el().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ΆΈ-ΊΌΎ-ΡΣ-ώ]|Ϊ́|Ϋ́)";
+    final var actual = new el().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000300   | 0x000301
-      0x000308   | 0x000308
-      0x000313   | 0x000313
-      0x000342   | 0x000342
-      0x000391   | 0x000391
-      0x000397   | 0x000397
-      0x000399   | 0x000399
-      0x0003a5   | 0x0003a5
-      0x0003a9   | 0x0003a9
       0x001f00   | 0x001f15
       0x001f18   | 0x001f1d
       0x001f20   | 0x001f3f
@@ -206,6 +211,21 @@ class el_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([ἀ-ἕἘ-Ἕἠ-Ἷὂ-ὄὊ-Ὄὐ-ὗὙὛὝὟὢ-ὧὪ-ὰὲὴὶὸὺὼᾶᾺῆῈῊῒῖῗῚῢῦῧῪῶῸῺ]|Α͂|Η͂|Ϊ̀|Ϊ͂|Ι͂|Ϋ̀|Ϋ͂|Υ̓|Υ̓̀|Υ̓́|Υ̓͂|Υ͂|Ω͂)";
+    final var actual = new el().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ἀ-ἕἘ-Ἕἠ-Ἷὂ-ὄὊ-Ὄὐ-ὗὙὛὝὟὢ-ὧὪ-ὰὲὴὶὸὺὼᾶᾺῆῈῊῒῖῗῚῢῦῧῪῶῸῺ]|Α͂|Η͂|Ϊ̀|Ϊ͂|Ι͂|Ϋ̀|Ϋ͂|Υ̓|Υ̓̀|Υ̓́|Υ̓͂|Υ͂|Ω͂)";
+    final var actual = new el().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -234,6 +254,21 @@ class el_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!\"&(-*,-/:;@[-]§«»‐‑–—…]";
+    final var actual = new el().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\"&\\(-\\*,-/:;@\\[-\\]§«»‐‑–—…]";
+    final var actual = new el().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

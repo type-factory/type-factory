@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -149,12 +150,26 @@ class fi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[A-Za-zÄÅÖäåöŠšŽž]";
+    final var actual = new fi().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[A-Za-zÄÅÖäåöŠšŽž]";
+    final var actual = new fi().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
       0x000049   | 0x000049
-      0x000053   | 0x000053
       0x0000c0   | 0x0000c3
       0x0000c6   | 0x0000cb
       0x0000cd   | 0x0000d5
@@ -199,6 +214,21 @@ class fi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([IÀ-ÃÆ-ËÍ-ÕØ-ãæ-ëí-õø-ÿĀ-ćĊ-ēĖ-ěĞğĢģĦħĪīĮ-ıĶķĹ-ľŁ-ňŊŋŐ-ŕŘ-şŢ-ŧŪūŮ-ųŸ-żƷǤ-ǩǮǯȘ-țȞȟʒ]|SS)";
+    final var actual = new fi().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([IÀ-ÃÆ-ËÍ-ÕØ-ãæ-ëí-õø-ÿĀ-ćĊ-ēĖ-ěĞğĢģĦħĪīĮ-ıĶķĹ-ľŁ-ňŊŋŐ-ŕŘ-şŢ-ŧŪūŮ-ųŸ-żƷǤ-ǩǮǯȘ-țȞȟʒ]|SS)";
+    final var actual = new fi().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -231,6 +261,21 @@ class fi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!#&(-*,-/:;?@[-]§»‐‑–’”…]";
+    final var actual = new fi().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!#&\\(-\\*,-/:;\\?@\\[-\\]§»‐‑–’”…]";
+    final var actual = new fi().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -247,6 +292,21 @@ class fi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new fi().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new fi().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

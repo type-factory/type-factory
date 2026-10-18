@@ -56,11 +56,7 @@ public interface SubsetWrapper extends CompositeSubset {
 
     if (exemplarCharacters != null) {
       exemplarCharacters.codePoints().forEach(subsetBuilder::includeCodePoint);
-      for (String string : exemplarCharacters.strings()) {
-        for (int cp : string.codePoints().toArray()) {
-          subsetBuilder.includeCodePoint(cp);
-        }
-      }
+      exemplarCharacters.strings().forEach(subsetBuilder::includeString);
     }
 
     return wrap(subsetBuilder.build());

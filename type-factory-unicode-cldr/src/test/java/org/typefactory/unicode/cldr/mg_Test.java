@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -162,17 +163,30 @@ class mg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[ABD-PR-TVYZabd-pr-tvyzÀÈÌÒÔàèìòôỲỳ]";
+    final var actual = new mg().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ABD-PR-TVYZabd-pr-tvyzÀÈÌÒÔàèìòôỲỳ]";
+    final var actual = new mg().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
       0x000043   | 0x000043
-      0x00004e   | 0x00004e
       0x000051   | 0x000051
       0x000055   | 0x000055
       0x000057   | 0x000058
       0x000063   | 0x000063
-      0x00006e   | 0x00006e
       0x000071   | 0x000071
       0x000075   | 0x000075
       0x000077   | 0x000078
@@ -192,8 +206,6 @@ class mg_Test extends root_Test {
       0x0000fd   | 0x0000fd
       0x0000ff   | 0x0000ff
       0x000178   | 0x000178
-      0x000302   | 0x000302
-      0x000308   | 0x000308
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -205,6 +217,21 @@ class mg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([CQUWXcquwxÁ-ÃÉ-ËÎÏÑÓÖÝá-ãé-ëîïñóöýÿŸ]|N̂|N̈|n̂|n̈)";
+    final var actual = new mg().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([CQUWXcquwxÁ-ÃÉ-ËÎÏÑÓÖÝá-ãé-ëîïñóöýÿŸ]|N̂|N̈|n̂|n̈)";
+    final var actual = new mg().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

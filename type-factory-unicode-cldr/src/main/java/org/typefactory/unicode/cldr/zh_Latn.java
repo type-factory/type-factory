@@ -60,44 +60,44 @@ public class zh_Latn extends zh {
    * <p>A {@code null} value indicates that the standard characters
    *    are inherited from the superclass.</p>
    */
-  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.optimalHashedRangedSubset(
+  static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      // Optimised hashing has one less level of indirection.
-      // Hash-buckets contain 0..1 keys – 0xffff indicates an empty hash-bucket.
-      //
-      //       ┌─ hashIndex - an index to the hash-bucket which has at most one key
-      //       │
-      //  char[ ] blockKeys
-      new char[ ] {
-
-        0x0000, 0x0001, 0x001e, 0x0003  },
-
-      // Optimised hashing has one less level of indirection.
-      //
-      //       ┌──── hashIndex           - an index to the hash-bucket
-      //       │  ┌─ codePointRangeIndex - an index to the range within the array of ranges
-      //       │  │
-      //  char[ ][ ] codePointRanges
-      new char[ ][ ] {
-
-        { // 0x0000__ codePoint ranges
-          0x41_55, 0x57_5a, 0x61_75, 0x77_7b, 0x7d_7d, 0xc0_c1, 0xc8_ca, 0xcc_cd,  // A B C D E F G H I J K L M N O P Q R S T
-                                                                                   // U W X Y Z a b c d e f g h i j k l m n o
-                                                                                   // p q r s t u w x y z { } À Á È É Ê Ì Í
-          0xd2_d3, 0xd9_da, 0xdc_dc, 0xe0_e1, 0xe8_ea, 0xec_ed, 0xf2_f3, 0xf9_fa,  // Ò Ó Ù Ú Ü à á è é ê ì í ò ó ù ú
-          0xfc_fc },                                                               // ü
-        { // 0x0001__ codePoint ranges
-          0x00_01, 0x08_09, 0x12_13, 0x1a_1b, 0x2a_2b, 0x43_44, 0x47_48, 0x4a_4d,  // Ā ā Ĉ ĉ Ē ē Ě ě Ī ī Ń ń Ň ň Ŋ ŋ Ō ō
-          0x5c_5d, 0x6a_6b, 0xcd_dc, 0xf8_f9 },                                    // Ŝ ŝ Ū ū Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ Ǖ ǖ Ǘ ǘ Ǚ ǚ Ǜ ǜ
-                                                                                   // Ǹ ǹ
-        { // 0x001e__ codePoint ranges
-          0x3e_3f, 0x90_91, 0xbe_c1 },                                             // Ḿ ḿ Ẑ ẑ Ế ế Ề ề
-        { // 0x0003__ codePoint ranges
-          0x00_00, 0x04_04, 0x0c_0c } },                                           // ̀ ̄ ̌
-        // number of code-point ranges
-        35,
-        // number of code-points
-        127);
+      new char[]{
+          0x41_55, //  A B C D E F G H I J K L M N O P Q R S T U
+          0x57_5a, //  W X Y Z
+          0x61_75, //  a b c d e f g h i j k l m n o p q r s t u
+          0x77_7a, //  w x y z
+          0xc0_c1, //  À Á
+          0xc8_ca, //  È É Ê
+          0xcc_cd, //  Ì Í
+          0xd2_d3, //  Ò Ó
+          0xd9_da, //  Ù Ú
+          0xdc_dc, //  Ü
+          0xe0_e1, //  à á
+          0xe8_ea, //  è é ê
+          0xec_ed, //  ì í
+          0xf2_f3, //  ò ó
+          0xf9_fa, //  ù ú
+          0xfc_fc, //  ü
+      },
+      new int[]{
+          0x0100_0101, //  Ā ā
+          0x0108_0109, //  Ĉ ĉ
+          0x0112_0113, //  Ē ē
+          0x011a_011b, //  Ě ě
+          0x012a_012b, //  Ī ī
+          0x0143_0144, //  Ń ń
+          0x0147_0148, //  Ň ň
+          0x014a_014d, //  Ŋ ŋ Ō ō
+          0x015c_015d, //  Ŝ ŝ
+          0x016a_016b, //  Ū ū
+          0x01cd_01dc, //  Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ Ǖ ǖ Ǘ ǘ Ǚ ǚ Ǜ ǜ
+          0x01f8_01f9, //  Ǹ ǹ
+          0x1e3e_1e3f, //  Ḿ ḿ
+          0x1e90_1e91, //  Ẑ ẑ
+          0x1ebe_1ec1, //  Ế ế Ề ề
+      },
+      31, 122);
 
 
   /**

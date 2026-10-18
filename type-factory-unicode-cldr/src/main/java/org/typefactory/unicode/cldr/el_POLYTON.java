@@ -63,10 +63,6 @@ public class el_POLYTON extends el {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0300_0301, //  ̀ ́
-          0x0308_0308, //  ̈
-          0x0313_0313, //  ̓
-          0x0342_0342, //  ͂
           0x0386_0386, //  Ά
           0x0388_038a, //  Έ Ή Ί
           0x038c_038c, //  Ό
@@ -106,7 +102,7 @@ public class el_POLYTON extends el {
           0x1ff8_1ff8, //  Ὸ
           0x1ffa_1ffa, //  Ὼ
       },
-      41, 187);
+      37, 182);
 
 
   /**

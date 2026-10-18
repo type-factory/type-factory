@@ -62,18 +62,13 @@ public class ml extends root {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      new char[]{
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
       new int[]{
-          0x0d02_0d03, //  ം ഃ
           0x0d05_0d0b, //  അ ആ ഇ ഈ ഉ ഊ ഋ
           0x0d0e_0d10, //  എ ഏ ഐ
           0x0d12_0d28, //  ഒ ഓ ഔ ക ഖ ഗ ഘ ങ ച ഛ ജ ഝ ഞ ട ഠ ഡ ഢ ണ ത ഥ ദ ധ ന
           0x0d2a_0d39, //  പ ഫ ബ ഭ മ യ ര റ ല ള ഴ വ ശ ഷ സ ഹ
       },
-      7, 53);
+      4, 49);
 
 
   /**
@@ -89,7 +84,7 @@ public class ml extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0d02_0d03, //  ം ഃ
+          0x0d02_0d02, //  ം
           0x0d0c_0d0c, //  ഌ
           0x0d3e_0d43, //  ാ ി ീ ു ൂ ൃ
           0x0d46_0d48, //  െ േ ൈ
@@ -98,9 +93,9 @@ public class ml extends root {
           0x0d57_0d57, //  ൗ
           0x0d60_0d61, //  ൠ ൡ
           0x0d7a_0d7f, //  ൺ ൻ ർ ൽ ൾ ൿ
-          0x200c_200d, //  ‌ ‍
+          0x200c_200c, //  ‌
       },
-      10, 26);
+      10, 24);
 
 
   /**

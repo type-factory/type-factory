@@ -97,24 +97,10 @@ public class ab extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0301_0301, //  ́
-          0x0410_0410, //  А
-          0x0415_0415, //  Е
-          0x0418_0418, //  И
-          0x041e_041e, //  О
-          0x0423_0423, //  У
-          0x042b_042c, //  Ы Ь
-          0x0430_0430, //  а
-          0x0435_0435, //  е
-          0x0438_0438, //  и
-          0x043e_043e, //  о
-          0x0443_0443, //  у
-          0x044b_044c, //  ы ь
           0x0494_0495, //  Ҕ ҕ
           0x04a6_04a7, //  Ҧ ҧ
-          0x04d8_04d9, //  Ә ә
       },
-      16, 21);
+      2, 4);
 
 
   /**

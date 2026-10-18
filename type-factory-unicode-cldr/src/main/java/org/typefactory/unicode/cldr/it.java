@@ -92,7 +92,6 @@ public class it extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x53_53, //  S
           0xaa_aa, //  ª
           0xba_ba, //  º
           0xc1_c7, //  Á Â Ã Ä Å Æ Ç
@@ -116,7 +115,7 @@ public class it extends root {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      21, 50);
+      20, 49);
 
 
   /**

@@ -62,10 +62,6 @@ public class ks_Deva extends ks {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      new char[]{
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
       new int[]{
           0x0901_0902, //  ँ ं
           0x0905_090a, //  अ आ इ ई उ ऊ
@@ -87,7 +83,7 @@ public class ks_Deva extends ks {
           0x0947_0949, //  े ै ॉ
           0x094b_094d, //  ो ौ ्
       },
-      21, 52);
+      19, 50);
 
 
   /**

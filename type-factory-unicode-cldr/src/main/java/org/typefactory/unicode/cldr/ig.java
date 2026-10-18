@@ -63,10 +63,12 @@ public class ig extends root {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x41_50, //  A B C D E F G H I J K L M N O P
+          0x41_42, //  A B
+          0x44_50, //  D E F G H I J K L M N O P
           0x52_57, //  R S T U V W
           0x59_5a, //  Y Z
-          0x61_70, //  a b c d e f g h i j k l m n o p
+          0x61_62, //  a b
+          0x64_70, //  d e f g h i j k l m n o p
           0x72_77, //  r s t u v w
           0x79_7a, //  y z
       },
@@ -75,7 +77,7 @@ public class ig extends root {
           0x1eca_1ecd, //  Ị ị Ọ ọ
           0x1ee4_1ee5, //  Ụ ụ
       },
-      9, 56);
+      11, 54);
 
 
   /**
@@ -92,15 +94,11 @@ public class ig extends root {
 
       new char[]{
           0x43_43, //  C
-          0x4d_4d, //  M
           0x51_51, //  Q
           0x58_58, //  X
           0x63_63, //  c
-          0x6d_6d, //  m
           0x71_71, //  q
           0x78_78, //  x
-          0x7b_7b, //  {
-          0x7d_7d, //  }
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -120,12 +118,9 @@ public class ig extends root {
           0x014c_014d, //  Ō ō
           0x016a_016b, //  Ū ū
           0x01f8_01f9, //  Ǹ ǹ
-          0x0300_0301, //  ̀ ́
           0x1e3e_1e3f, //  Ḿ ḿ
-          0x1eca_1ecd, //  Ị ị Ọ ọ
-          0x1ee4_1ee5, //  Ụ ụ
       },
-      31, 54);
+      24, 42);
 
 
   /**

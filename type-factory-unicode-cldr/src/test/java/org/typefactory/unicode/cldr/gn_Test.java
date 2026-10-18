@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,16 +129,16 @@ class gn_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000041   | 0x000045
+      0x000041   | 0x000041
+      0x000045   | 0x000045
       0x000047   | 0x000050
       0x000052   | 0x000056
       0x000059   | 0x000059
-      0x000061   | 0x000065
+      0x000061   | 0x000061
+      0x000065   | 0x000065
       0x000067   | 0x000070
       0x000072   | 0x000076
       0x000079   | 0x000079
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
       0x0000c3   | 0x0000c3
       0x0000d1   | 0x0000d1
       0x0000d5   | 0x0000d5
@@ -147,7 +148,6 @@ class gn_Test extends root_Test {
       0x000128   | 0x000129
       0x000168   | 0x000169
       0x0002bc   | 0x0002bc
-      0x000303   | 0x000303
       0x001ebc   | 0x001ebd
       0x001ef8   | 0x001ef9
       """)
@@ -161,6 +161,21 @@ class gn_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([AEG-PR-VYaeg-pr-vyÃÑÕãñõĨĩŨũ◌ʼẼẽỸỹ]|CH|G̃|MB|ND|NG|NT|RR|ch|g̃|mb|nd|ng|nt|rr)";
+    final var actual = new gn().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([AEG-PR-VYaeg-pr-vyÃÑÕãñõĨĩŨũ\\u02bcẼẽỸỹ]|CH|G̃|MB|ND|NG|NT|RR|ch|g̃|mb|nd|ng|nt|rr)";
+    final var actual = new gn().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -188,6 +203,21 @@ class gn_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[B-DFQWXZb-dfqwxz]";
+    final var actual = new gn().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[B-DFQWXZb-dfqwxz]";
+    final var actual = new gn().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

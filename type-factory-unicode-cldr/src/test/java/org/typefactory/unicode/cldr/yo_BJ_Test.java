@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -138,8 +139,6 @@ class yo_BJ_Test extends yo_Test {
       0x000072   | 0x000075
       0x000077   | 0x000077
       0x000079   | 0x000079
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
       0x0000c0   | 0x0000c1
       0x0000c8   | 0x0000c9
       0x0000cc   | 0x0000cd
@@ -154,7 +153,6 @@ class yo_BJ_Test extends yo_Test {
       0x000190   | 0x000190
       0x000254   | 0x000254
       0x00025b   | 0x00025b
-      0x000300   | 0x000301
       """)
   void getStandardSubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -166,6 +164,21 @@ class yo_BJ_Test extends yo_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ABD-PR-UWYabd-pr-uwyÀÁÈÉÌÍÒÓÙÚàáèéìíòóùúƆƐɔɛ]|GB|SH|gb|sh|Ɔ̀|Ɔ́|Ɛ̀|Ɛ́|ɔ̀|ɔ́|ɛ̀|ɛ́)";
+    final var actual = new yo_BJ().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ABD-PR-UWYabd-pr-uwyÀÁÈÉÌÍÒÓÙÚàáèéìíòóùúƆƐɔɛ]|GB|SH|gb|sh|Ɔ̀|Ɔ́|Ɛ̀|Ɛ́|ɔ̀|ɔ́|ɛ̀|ɛ́)";
+    final var actual = new yo_BJ().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

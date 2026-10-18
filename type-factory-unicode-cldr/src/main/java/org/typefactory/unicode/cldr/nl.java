@@ -86,10 +86,7 @@ public class nl extends root {
           0xfa_fa, //  ú
           0xfc_fc, //  ü
       },
-      new int[]{
-          0x0301_0301, //  ́
-      },
-      23, 73);
+      22, 72);
 
 
   /**

@@ -196,7 +196,7 @@ final class MutableSortedSetOfStringImpl implements MutableSortedSetOfString {
   public ImmutableSortedSetOfString toImmutable() {
     return isEmpty()
         ? SortedSetOfString.empty()
-        : new ImmutableSortedSetOfStringImpl(strings);
+        : new ImmutableSortedSetOfStringImpl(strings, size);
   }
 
   private void ensureCapacity() {
@@ -246,9 +246,9 @@ final class ImmutableSortedSetOfStringImpl implements ImmutableSortedSetOfString
 
   private final String[] strings;
 
-  ImmutableSortedSetOfStringImpl(final String[] strings) {
+  ImmutableSortedSetOfStringImpl(final String[] strings, final int size) {
     // Defensive copy to ensure immutability
-    this.strings = Arrays.copyOf(strings, strings.length);
+    this.strings = Arrays.copyOf(strings, size);
   }
 
   @Override

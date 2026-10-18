@@ -63,15 +63,17 @@ public class uz extends root {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x41_56, //  A B C D E F G H I J K L M N O P Q R S T U V
+          0x41_42, //  A B
+          0x44_56, //  D E F G H I J K L M N O P Q R S T U V
           0x58_5a, //  X Y Z
-          0x61_76, //  a b c d e f g h i j k l m n o p q r s t u v
+          0x61_62, //  a b
+          0x64_76, //  d e f g h i j k l m n o p q r s t u v
           0x78_7a, //  x y z
       },
       new int[]{
-          0x02bb_02bc, //  ʻ ʼ
+          0x02bc_02bc, //  ʼ
       },
-      5, 52);
+      7, 49);
 
 
   /**

@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,15 +129,8 @@ class yi_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
-      0x0005b4   | 0x0005b4
-      0x0005b7   | 0x0005b8
-      0x0005bc   | 0x0005bc
-      0x0005bf   | 0x0005bf
-      0x0005c2   | 0x0005c2
-      0x0005d0   | 0x0005ea
-      0x0005f2   | 0x0005f2
+      0x0005d0   | 0x0005e3
+      0x0005e5   | 0x0005ea
       """)
   void getStandardSubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -148,6 +142,21 @@ class yi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([א-ףץ-ת]|אַ|אָ|בֿ|דזש|וּ|וו|וי|זש|טש|יִ|יי|כּ|פּ|פֿ|שׂ|תּ|ײַ)";
+    final var actual = new yi().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([\\u05d0-\\u05e3\\u05e5-\\u05ea]|אַ|אָ|בֿ|דזש|וּ|וו|וי|זש|טש|יִ|יי|כּ|פּ|פֿ|שׂ|תּ|ײַ)";
+    final var actual = new yi().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -166,6 +175,21 @@ class yi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[\\u200e\\u200f]";
+    final var actual = new yi().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\u200e\\u200f]";
+    final var actual = new yi().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -194,6 +218,21 @@ class yi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!\"'-),-/:;?[]־׳״‐‑–—]";
+    final var actual = new yi().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\"'-\\),-/:;\\?\\[\\]\\u05be\\u05f3\\u05f4‐‑–—]";
+    final var actual = new yi().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -65,7 +65,7 @@ public class mi extends root {
       new char[]{
           0x41_41, //  A
           0x45_45, //  E
-          0x47_49, //  G H I
+          0x48_49, //  H I
           0x4b_4b, //  K
           0x4d_50, //  M N O P
           0x52_52, //  R
@@ -73,7 +73,7 @@ public class mi extends root {
           0x57_57, //  W
           0x61_61, //  a
           0x65_65, //  e
-          0x67_69, //  g h i
+          0x68_69, //  h i
           0x6b_6b, //  k
           0x6d_70, //  m n o p
           0x72_72, //  r
@@ -87,7 +87,7 @@ public class mi extends root {
           0x014c_014d, //  Ō ō
           0x016a_016b, //  Ū ū
       },
-      21, 38);
+      21, 36);
 
 
   /**

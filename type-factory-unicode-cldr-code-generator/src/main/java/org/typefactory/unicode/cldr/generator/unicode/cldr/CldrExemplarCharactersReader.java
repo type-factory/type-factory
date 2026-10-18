@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,6 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -72,8 +75,7 @@ final class CldrExemplarCharactersReader {
         final String exemplarCharactersText = exemplarCharacterElement.getTextContent();
 
         switch (type) {
-          case TYPE_STANDARD, TYPE_AUXILIARY, TYPE_PUNCTUATION ->
-              exemplarCharactersByType.put(type,parseExemplarCharacters(exemplarCharactersText));
+          case TYPE_STANDARD, TYPE_AUXILIARY, TYPE_PUNCTUATION -> exemplarCharactersByType.put(type, parseExemplarCharacters(exemplarCharactersText));
           default -> {
             // Ignore other exemplar character types such as index and numbers.
           }
@@ -110,44 +112,67 @@ final class CldrExemplarCharactersReader {
       content = content.substring(1, content.length() - 1);
     }
 
+    if (content.isEmpty()) {
+      return CldrExemplarCharacters.empty();
+    }
+
+    content = StringEscapeUtils.unescapeXml(content);
+
     final LinkedHashSet<Integer> codePoints = new LinkedHashSet<>();
     final LinkedHashSet<String> strings = new LinkedHashSet<>();
 
-    int index = 0;
-    while (index < content.length()) {
-      index = skipWhitespace(content, index);
-      if (index >= content.length()) {
-        break;
+    final int[] contentCodePoints = content.codePoints().toArray();
+
+    for (int i = 0; i < contentCodePoints.length; ++i) {
+      boolean escapedCodePoint = false;
+      int codePoint = contentCodePoints[i];
+      if (codePoint == ' ') {
+        continue; // skip whitespace
       }
 
-      final char current = content.charAt(index);
+      if (codePoint == '\\' && (i + 1 < contentCodePoints.length)) {
+        final int escapeEndIndex = skipEscape(contentCodePoints, i);
+        codePoint = decodeEscapedCodePoint(contentCodePoints, i, escapeEndIndex);
+        i = escapeEndIndex - 1; // move to the last character of the escape sequence
+        escapedCodePoint = true;
+      }
 
-      if (current == '{') {
-        final int tokenStart = ++index;
-        while (index < content.length() && content.charAt(index) != '}') {
-          index++;
+      if (codePoint == '{' && !escapedCodePoint) {
+        // Handle string tokens, e.g. {ch}, {ll}, {dz}, {o\:}, {n\-}, {l̃}, {i̇̃}, {\\\-}, {&lt;LRM&gt;}, {&lt;&gt;\\|/#\&amp;} etc.
+        boolean cldrExemplarStringTerminated = false;
+        final StringBuilder token = new StringBuilder();
+        for (++i; cldrExemplarStringTerminated || i < contentCodePoints.length; ++i) {
+          if (contentCodePoints[i] == '\\' && i + 1 < contentCodePoints.length) {
+            token.appendCodePoint(contentCodePoints[++i]); // skip the escape
+          } else if (contentCodePoints[i] == '}') {
+            cldrExemplarStringTerminated = true;
+            break; // end of token
+          } else {
+            token.appendCodePoint(contentCodePoints[i]);
+          }
         }
-        if (index >= content.length()) {
+        if (!cldrExemplarStringTerminated) {
           throw new IllegalArgumentException("Unterminated CLDR exemplar string: " + exemplarCharactersText);
         }
-        final String decodedToken = decodeToken(content.substring(tokenStart, index));
-        addCasedVariants(decodedToken, codePoints, strings);
-        index++;
+        addCasedVariants(token.toString(), codePoints, strings);
         continue;
       }
 
-      final int tokenStart = index;
-      while (index < content.length() && !Character.isWhitespace(content.charAt(index))) {
-        index++;
+      final boolean nextCodePointIsModifierOrCombiningMark = (i + 1 < contentCodePoints.length) && isCombiningMark(contentCodePoints[i + 1]);
+      if (nextCodePointIsModifierOrCombiningMark) {
+        final StringBuilder token = new StringBuilder();
+        token.appendCodePoint(codePoint);
+        while (i + 1 < contentCodePoints.length && isCombiningMark(contentCodePoints[i + 1])) {
+          token.appendCodePoint(contentCodePoints[++i]);
+        }
+        addCasedVariants(token.toString(), codePoints, strings);
+        continue;
       }
 
-      final String token = content.substring(tokenStart, index);
-      final String decodedToken = decodeToken(token);
-      for (String unit : splitIntoUnits(decodedToken)) {
-        addCasedVariants(unit, codePoints, strings);
-      }
+      final StringBuilder token = new StringBuilder();
+      token.appendCodePoint(codePoint);
+      addCasedVariants(token.toString(), codePoints, strings);
     }
-
     return new CldrExemplarCharacters(exemplarCharactersText, List.copyOf(codePoints), List.copyOf(strings));
   }
 
@@ -177,7 +202,7 @@ final class CldrExemplarCharactersReader {
   }
 
   static List<String> splitIntoUnits(final String decodedToken) {
-    final List<String> units = new java.util.ArrayList<>();
+    final List<String> units = new ArrayList<>();
     final StringBuilder currentUnit = new StringBuilder();
 
     for (int index = 0; index < decodedToken.length(); ) {
@@ -205,7 +230,9 @@ final class CldrExemplarCharactersReader {
     final String upperCased = value.toUpperCase(Locale.ROOT);
 
     addCasedVariant(lowerCased, codePoints, strings);
-    addCasedVariant(upperCased, codePoints, strings);
+    if (!lowerCased.equals(upperCased)) {
+      addCasedVariant(upperCased, codePoints, strings);
+    }
   }
 
   static void addCasedVariant(
@@ -213,7 +240,7 @@ final class CldrExemplarCharactersReader {
       final LinkedHashSet<Integer> codePoints,
       final LinkedHashSet<String> strings) {
 
-    if (value.isBlank()) {
+    if (value.isEmpty()) {
       return;
     }
 
@@ -223,6 +250,14 @@ final class CldrExemplarCharactersReader {
     } else {
       strings.add(value);
     }
+  }
+
+  static boolean isCombiningMarkOrModifierLetter(final int codePoint) {
+    return isCombiningMark(codePoint) || isModifierLetter(codePoint);
+  }
+
+  static boolean isModifierLetter(final int codePoint) {
+    return Character.getType(codePoint) == Character.MODIFIER_LETTER;
   }
 
   static boolean isCombiningMark(final int codePoint) {
@@ -251,8 +286,37 @@ final class CldrExemplarCharactersReader {
     return token.codePointAt(escapeStart + 1);
   }
 
+  static int decodeEscapedCodePoint(final int [] codePoints, final int escapeStart, final int escapeEnd) {
+    final int escapeType = codePoints[escapeStart + 1];
+    if (escapeType == 'n') {
+      return '\n';
+    }
+    if (escapeType == 'r') {
+      return '\r';
+    }
+    if (escapeType == 't') {
+      return '\t';
+    }
+    if (escapeType == 'u' && escapeEnd - escapeStart >= 6) {
+      return Integer.parseInt(new String(codePoints, escapeStart + 2, 4), 16);
+    }
+    if (escapeType == 'U' && escapeEnd - escapeStart >= 10) {
+      return Integer.parseInt(new String(codePoints, escapeStart + 2, 8), 16);
+    }
+    if (escapeType == 'x' && escapeStart + 2 < codePoints.length && codePoints[escapeStart + 2] == '{') {
+      final int closingBraceIndex = ArrayUtils.indexOf(codePoints, '}', escapeStart + 3);
+      if (closingBraceIndex > 0) {
+        return Integer.parseInt(new String(codePoints, escapeStart + 3, closingBraceIndex - escapeStart - 3), 16);
+      }
+    }
+    return codePoints[escapeStart + 1];
+  }
+
   static int skipEscape(final String token, final int escapeStart) {
     final char escapeType = token.charAt(escapeStart + 1);
+    if (escapeType == 'n' || escapeType == 'r' || escapeType == 't') {
+      return escapeStart + 2;
+    }
     if (escapeType == 'u' && escapeStart + 6 <= token.length()) {
       return escapeStart + 6;
     }
@@ -261,6 +325,24 @@ final class CldrExemplarCharactersReader {
     }
     if (escapeType == 'x' && escapeStart + 2 < token.length() && token.charAt(escapeStart + 2) == '{') {
       final int closingBraceIndex = token.indexOf('}', escapeStart + 3);
+      if (closingBraceIndex > 0) {
+        return closingBraceIndex + 1;
+      }
+    }
+    return escapeStart + 2;
+  }
+
+
+  static int skipEscape(final int [] codePoints, final int escapeStart) {
+    final int escapeType = codePoints[escapeStart + 1];
+    if (escapeType == 'u' && escapeStart + 6 <= codePoints.length) {
+      return escapeStart + 6;
+    }
+    if (escapeType == 'U' && escapeStart + 10 <= codePoints.length) {
+      return escapeStart + 10;
+    }
+    if (escapeType == 'x' && escapeStart + 2 < codePoints.length && codePoints[escapeStart + 2] == '{') {
+      final int closingBraceIndex = ArrayUtils.indexOf(codePoints, '}', escapeStart + 3);
       if (closingBraceIndex > 0) {
         return closingBraceIndex + 1;
       }

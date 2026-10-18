@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -146,22 +147,32 @@ class bg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[А-ЪЬЮ-ъьюя]";
+    final var actual = new bg().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[А-ЪЬЮ-ъьюя]";
+    final var actual = new bg().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000300   | 0x000300
       0x000400   | 0x000401
       0x00040d   | 0x00040d
-      0x000410   | 0x000410
-      0x00041e   | 0x00041e
-      0x000423   | 0x000423
-      0x00042a   | 0x00042b
-      0x00042d   | 0x000430
-      0x00043e   | 0x00043e
-      0x000443   | 0x000443
-      0x00044a   | 0x00044b
-      0x00044d   | 0x000451
+      0x00042b   | 0x00042b
+      0x00042d   | 0x00042d
+      0x00044b   | 0x00044b
+      0x00044d   | 0x00044d
+      0x000450   | 0x000451
       0x00045d   | 0x00045d
       0x000462   | 0x000463
       0x00046a   | 0x00046b
@@ -176,6 +187,21 @@ class bg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([ЀЁЍЫЭыэѐёѝѢѣѪѫ]|А̀|О̀|У̀|Ъ̀|Ю̀|Я̀|а̀|о̀|у̀|ъ̀|ю̀|я̀)";
+    final var actual = new bg().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ЀЁЍЫЭыэѐёѝѢѣѪѫ]|А̀|О̀|У̀|Ъ̀|Ю̀|Я̀|а̀|о̀|у̀|ъ̀|ю̀|я̀)";
+    final var actual = new bg().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -212,6 +238,21 @@ class bg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!\"'-*,-/:;?@[]§‐‑–—‘‚“„…″№]";
+    final var actual = new bg().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\"'-\\*,-/:;\\?@\\[\\]§‐‑–—‘‚“„…″№]";
+    final var actual = new bg().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -228,6 +269,21 @@ class bg_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new bg().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new bg().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

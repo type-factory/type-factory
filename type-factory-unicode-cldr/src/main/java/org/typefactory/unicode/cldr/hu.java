@@ -65,10 +65,10 @@ public class hu extends root {
       new char[]{
           0x41_50, //  A B C D E F G H I J K L M N O P
           0x52_56, //  R S T U V
-          0x59_5a, //  Y Z
+          0x5a_5a, //  Z
           0x61_70, //  a b c d e f g h i j k l m n o p
           0x72_76, //  r s t u v
-          0x79_7a, //  y z
+          0x7a_7a, //  z
           0xc1_c1, //  Á
           0xc9_c9, //  É
           0xcd_cd, //  Í
@@ -88,7 +88,7 @@ public class hu extends root {
           0x0150_0151, //  Ő ő
           0x0170_0171, //  Ű ű
       },
-      22, 64);
+      22, 62);
 
 
   /**
