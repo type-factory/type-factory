@@ -71,7 +71,7 @@ public class bo extends root {
           0x0f58_0f5b, //  མ ཙ ཚ ཛ
           0x0f5d_0f68, //  ཝ ཞ ཟ འ ཡ ར ལ ཤ ཥ ས ཧ ཨ
           0x0f6a_0f6a, //  ཪ
-          0x0f71_0f72, //  ཱ ི
+          0x0f72_0f72, //  ི
           0x0f74_0f74, //  ུ
           0x0f77_0f77, //  ཷ
           0x0f79_0f80, //  ཹ ེ ཻ ོ ཽ ཾ ཿ ྀ
@@ -85,7 +85,7 @@ public class bo extends root {
           0x0fad_0fb8, //  ྭ ྮ ྯ ྰ ྱ ྲ ླ ྴ ྵ ྶ ྷ ྸ
           0x0fba_0fbc, //  ྺ ྻ ྼ
       },
-      21, 87);
+      21, 86);
 
 
   /**

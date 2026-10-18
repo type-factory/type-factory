@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -145,6 +146,21 @@ class ff_Adlm_Test extends ff_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[𞤀-𞤛𞤢-𞤽 𞥄-𞥆 𞥋]";
+    final var actual = new ff_Adlm().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\x{1e900}-\\x{1e91b}\\x{1e922}-\\x{1e93d}\\x{1e944}-\\x{1e946}\\x{1e94b}]";
+    final var actual = new ff_Adlm().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -162,6 +178,21 @@ class ff_Adlm_Test extends ff_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[𞤜-𞤡𞤾-𞥃]";
+    final var actual = new ff_Adlm().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\x{1e91c}-\\x{1e921}\\x{1e93e}-\\x{1e943}]";
+    final var actual = new ff_Adlm().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -186,6 +217,21 @@ class ff_Adlm_Test extends ff_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[%-.‑‰𞥞𞥟]";
+    final var actual = new ff_Adlm().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[%-\\.‑‰\\x{1e95e}\\x{1e95f}]";
+    final var actual = new ff_Adlm().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -202,6 +248,21 @@ class ff_Adlm_Test extends ff_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[𞥐-𞥙]";
+    final var actual = new ff_Adlm().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\x{1e950}-\\x{1e959}]";
+    final var actual = new ff_Adlm().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -15,6 +15,9 @@
  */
 package org.typefactory.impl;
 
+import org.typefactory.Category;
+import org.typefactory.Subset.CodePointRange;
+
 final class Constants {
 
   private Constants() {
@@ -31,6 +34,10 @@ final class Constants {
   static final int[] EMPTY_INT_ARRAY = new int[0];
   static final long[] EMPTY_LONG_ARRAY = new long[0];
 
+  static final Iterable<Category> EMPTY_CATEGORY_ITERABLE = new EmptyIterable<>(Category.class);
+  static final Iterable<CodePointRange> EMPTY_CODE_POINT_RANGE_ITERABLE = new EmptyIterable<>(CodePointRange.class);
+  static final Iterable<String> EMPTY_STRING_ITERABLE = new EmptyIterable<>(String.class);
+
   static final String SYSTEM_LINE_SEPARATOR = System.lineSeparator();
 
   /**
@@ -42,5 +49,6 @@ final class Constants {
    * <p>The Unicode code point for a paragraph separator.</p>
    */
   static final int UNICODE_PARAGRAPH_SEPARATOR = '\u2029';
+
 
 }

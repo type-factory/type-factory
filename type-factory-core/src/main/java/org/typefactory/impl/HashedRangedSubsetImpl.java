@@ -24,6 +24,7 @@ import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.typefactory.Subset.CodePointRange;
 
 class HashedRangedSubsetImpl implements HashedRangedSubset {
 
@@ -82,7 +83,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
   }
 
   @Override
-  public final int numberOfCodePointRanges() {
+  public final int rangesSize() {
     return numberOfCodePointRanges;
   }
 
@@ -135,7 +136,7 @@ class HashedRangedSubsetImpl implements HashedRangedSubset {
       blockKeySet = Arrays.copyOf(tempBlockKeySet, tempBlockKeySetSize);
       Arrays.sort(blockKeySet);
     }
-    // return a copy so as not to jeopardise the state of our internal array.
+    // return a copy so as not to jeopardize the state of our internal array.
     return Arrays.copyOf(blockKeySet, blockKeySet.length);
   }
 

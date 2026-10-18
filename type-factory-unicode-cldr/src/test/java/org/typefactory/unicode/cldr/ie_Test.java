@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -153,14 +154,25 @@ class ie_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[A-Za-zÁÉÍÓÚáéíóú]";
+    final var actual = new ie().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[A-Za-zÁÉÍÓÚáéíóú]";
+    final var actual = new ie().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x00004c   | 0x00004c
-      0x00004e   | 0x00004e
-      0x00006c   | 0x00006c
-      0x00006e   | 0x00006e
       0x0000c0   | 0x0000c0
       0x0000c2   | 0x0000c8
       0x0000ca   | 0x0000cc
@@ -187,7 +199,6 @@ class ie_Test extends root_Test {
       0x000152   | 0x000153
       0x00016a   | 0x00016d
       0x000178   | 0x000178
-      0x0002bc   | 0x0002bc
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -199,6 +210,21 @@ class ie_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([ÀÂ-ÈÊ-ÌÎÏÑÒÔÖØÙÛ-Ýàâ-èê-ìîïñòôöøùû-ýÿĀ-ăĒ-ĕĪ-ĭŌ-ŏŒœŪ-ŭŸ]|Lʼ|Nʼ|lʼ|nʼ)";
+    final var actual = new ie().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ÀÂ-ÈÊ-ÌÎÏÑÒÔÖØÙÛ-Ýàâ-èê-ìîïñòôöøùû-ýÿĀ-ăĒ-ĕĪ-ĭŌ-ŏŒœŪ-ŭŸ]|Lʼ|Nʼ|lʼ|nʼ)";
+    final var actual = new ie().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -234,6 +260,21 @@ class ie_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!\"&-*,-/:;?@[]§«»‐‑–—‘’“-„†‡…]";
+    final var actual = new ie().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\"&-\\*,-/:;\\?@\\[\\]§«»‐‑–—‘’“-„†‡…]";
+    final var actual = new ie().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -250,6 +291,21 @@ class ie_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ie().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ie().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -15,7 +15,9 @@
  */
 package org.typefactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Provides typesafe versions of the Unicode character categories defined in the {@link Character Character} class for use with the
@@ -309,6 +311,9 @@ public enum Category {
    */
   OTHER("C", "Other", CONTROL, FORMAT, SURROGATE, PRIVATE_USE, UNASSIGNED);
 
+  // Cache values in an array rather calling values() each time to avoid creating a new array each time.
+  private static final Category[] VALUES = values();
+
   final int[] characterCategories;
   final String abbreviation;
   final String alias;
@@ -349,9 +354,13 @@ public enum Category {
     this.bitMask = tempBitMask;
   }
 
+  public String getAbbreviation() {
+    return abbreviation;
+  }
+
   /**
-   * <p>Returns the {@code int} value for the category as defined in the {@link Character} class. May
-   * return multiple {@code int} values if this category is a composite category.</p> {@link Character#UPPERCASE_LETTER}
+   * <p>Returns the {@code int} value for the category as defined in the Java {@link Character} class. May
+   * return multiple {@code int} values if this category is a composite category.</p>
    *
    * @return one or more {@code int} value for the category, or the composed categories, as defined in the {@link Character} class.
    * @see #isCompositeCategory()
@@ -416,6 +425,21 @@ public enum Category {
   }
 
   /**
+   * <p>Returns the category bit flags in a {@code long} value where each bit represents one Unicode Category.</p>
+   *
+   * @param categories the categories to get the bit flags for.
+   * @return the category bit flags.
+   * @see #codePointIsInOneOfTheCategories(int, long)
+   */
+  public static long getCategoryBitFlags(final Iterable<Category> categories) {
+    long categoryBitFlags = 0;
+    for (Category category : categories) {
+      categoryBitFlags |= category.bitMask;
+    }
+    return categoryBitFlags;
+  }
+
+  /**
    * <p>Checks if the specified code point is in one of the Unicode categories specified with the {@code categoryBitFlags}.</p>
    *
    * <p>Example – check if a code point is in the Unicode letter or decimal digit category:</p>
@@ -440,14 +464,30 @@ public enum Category {
   }
 
   /**
-   * Category bit flags for control and format characters
+   * <p>Returns the leaf categories represented by the specified category bit flags.</p>
+   *
+   * @param categoryBitFlags the category bit flags to convert to categories.
+   * @return the leaf categories represented by the specified category bit flags.
+   * @see #getCategoryBitFlags(Category...)
    */
-  static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
-      Category.getCategoryBitFlags(
-          Category.CONTROL,
-          Category.FORMAT,
-          Category.SPACE_SEPARATOR,
-          Category.LINE_SEPARATOR,
-          Category.PARAGRAPH_SEPARATOR);
+  public static List<Category> categoriesFromBitFlags(final long categoryBitFlags) {
+    final var categories = new ArrayList<Category>(16);
+    for (Category category : VALUES) {
+      if (!category.isCompositeCategory() && (categoryBitFlags & category.bitMask) != 0) {
+        categories.add(category);
+      }
+    }
+    return categories;
+  }
+
+  public static int countOfUnicodeCategoriesFromBitFlags(final long categoryBitFlags) {
+    int count = 0;
+    for (Category category : VALUES) {
+      if (!category.isCompositeCategory() && (categoryBitFlags & category.bitMask) != 0) {
+        count++;
+      }
+    }
+    return count;
+  }
 
 }

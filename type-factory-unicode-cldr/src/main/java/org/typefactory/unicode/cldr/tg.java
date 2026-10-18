@@ -126,7 +126,6 @@ public class tg extends root {
           0x5b_5b, //  [
           0x5d_5d, //  ]
           0xa7_a7, //  §
-          0xab_ab, //  «
           0xbb_bb, //  »
       },
       new int[]{
@@ -136,9 +135,9 @@ public class tg extends root {
           0x201c_201d, //  “ ”
           0x2020_2021, //  † ‡
           0x2026_2026, //  …
-          0x2032_2033, //  ′ ″
+          0x2032_2032, //  ′
       },
-      17, 34);
+      16, 32);
 
 
   /**

@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -154,6 +155,21 @@ class ar_MA_Test extends ar_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[ٯپچژڜڢڤڥڧ-کڭگیݣ‎\\u200c-\\u200f]";
+    final var actual = new ar_MA().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\u066f\\u067e\\u0686\\u0698\\u069c\\u06a2\\u06a4\\u06a5\\u06a7-\\u06a9\\u06ad\\u06af\\u06cc\\u0763\\u200c-\\u200f]";
+    final var actual = new ar_MA().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -170,6 +186,21 @@ class ar_MA_Test extends ar_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ar_MA().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ar_MA().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

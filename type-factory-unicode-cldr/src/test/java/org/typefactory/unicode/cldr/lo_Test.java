@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -158,6 +159,21 @@ class lo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[ກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ູ ົ-ຽເ-ໄ ໆ ່-ໍໜໝ]";
+    final var actual = new lo().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-\\u0eb9\\u0ebb-ຽເ-ໄ\\u0ec6\\u0ec8-\\u0ecdໜໝ]";
+    final var actual = new lo().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -175,6 +191,21 @@ class lo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[໐-໙\\u200b]";
+    final var actual = new lo().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[໐-໙\\u200b]";
+    final var actual = new lo().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -207,6 +238,21 @@ class lo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]§‐‑–—‘’“”†‡…′″]";
+    final var actual = new lo().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]§‐‑–—‘’“”†‡…′″]";
+    final var actual = new lo().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

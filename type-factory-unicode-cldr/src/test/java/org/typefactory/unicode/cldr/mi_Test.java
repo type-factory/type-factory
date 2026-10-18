@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -130,7 +131,7 @@ class mi_Test extends root_Test {
       VALID_FROM | VALID_TO
       0x000041   | 0x000041
       0x000045   | 0x000045
-      0x000047   | 0x000049
+      0x000048   | 0x000049
       0x00004b   | 0x00004b
       0x00004d   | 0x000050
       0x000052   | 0x000052
@@ -138,7 +139,7 @@ class mi_Test extends root_Test {
       0x000057   | 0x000057
       0x000061   | 0x000061
       0x000065   | 0x000065
-      0x000067   | 0x000069
+      0x000068   | 0x000069
       0x00006b   | 0x00006b
       0x00006d   | 0x000070
       0x000072   | 0x000072
@@ -160,6 +161,21 @@ class mi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([AEHIKM-PRTUWaehikm-prtuwĀāĒēĪīŌōŪū]|NG|WH|ng|wh)";
+    final var actual = new mi().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([AEHIKM-PRTUWaehikm-prtuwĀāĒēĪīŌōŪū]|NG|WH|ng|wh)";
+    final var actual = new mi().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -193,6 +209,21 @@ class mi_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[B-DFGJLQSVX-Zb-dfgjlqsvx-z]";
+    final var actual = new mi().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[B-DFGJLQSVX-Zb-dfgjlqsvx-z]";
+    final var actual = new mi().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

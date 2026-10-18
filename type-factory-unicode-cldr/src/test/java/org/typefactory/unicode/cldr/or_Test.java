@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,8 +129,6 @@ class or_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
       0x000b01   | 0x000b03
       0x000b05   | 0x000b0b
       0x000b0f   | 0x000b10
@@ -156,6 +155,21 @@ class or_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ଁ-ଃଅ-ଋଏଐଓ-ନପ-ରଲଳଵ-ହ ଼ ା-ୃ େ ୈ ୋ-୍ୟୱ]|କ୍ଷ|ଡ଼|ଢ଼)";
+    final var actual = new or().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([\\u0b01-\\u0b03ଅ-ଋଏଐଓ-ନପ-ରଲଳଵ-ହ\\u0b3c\\u0b3e-\\u0b43\\u0b47\\u0b48\\u0b4b-\\u0b4dୟୱ]|କ୍ଷ|ଡ଼|ଢ଼)";
+    final var actual = new or().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -172,6 +186,21 @@ class or_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[\\u200c\\u200d]";
+    final var actual = new or().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\u200c\\u200d]";
+    final var actual = new or().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -207,6 +236,21 @@ class or_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]§।‐‑–—‘’“”†‡…′″]";
+    final var actual = new or().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]§।‐‑–—‘’“”†‡…′″]";
+    final var actual = new or().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -224,6 +268,21 @@ class or_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9୦-୯]";
+    final var actual = new or().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9୦-୯]";
+    final var actual = new or().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

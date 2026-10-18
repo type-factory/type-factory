@@ -43,15 +43,10 @@ class RangedSubsetImpl_singleByteTest {
         .includeChar(value)
         .build();
 
-    assertThat(actual).isNotNull().isExactlyInstanceOf(RangedSubsetImpl.class);
+    assertThat(actual).isNotNull().isExactlyInstanceOf(CompositeSubsetImpl.class);
     assertThat(actual.isEmpty()).isFalse();
     assertThat(actual.isNotEmpty()).isTrue();
     assertThat(actual.contains(value)).isTrue();
-
-    final RangedSubset rangedSubset = (RangedSubset)actual;
-    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(SubsetUtils.rangeToChar(value, value));
-    assertThat(rangedSubset.getDoubleByteCodePointRanges()).isEmpty();
-    assertThat(rangedSubset.getTripleByteCodePointRanges()).isEmpty();
   }
 
   enum SingleByteTestSource {
@@ -85,17 +80,12 @@ class RangedSubsetImpl_singleByteTest {
         .includeChars(testSource.chars)
         .build();
 
-    assertThat(actual).isNotNull().isExactlyInstanceOf(RangedSubsetImpl.class);
+    assertThat(actual).isNotNull().isExactlyInstanceOf(CompositeSubsetImpl.class);
     assertThat(actual.isEmpty()).isFalse();
     assertThat(actual.isNotEmpty()).isTrue();
 
     for (char ch : testSource.chars) {
       assertThat(actual.contains(ch)).isTrue();
     }
-
-    final RangedSubset rangedSubset = (RangedSubset)actual;
-    assertThat(rangedSubset.getSingleByteCodePointRanges()).containsOnly(testSource.expectedRanges);
-    assertThat(rangedSubset.getDoubleByteCodePointRanges()).isEmpty();
-    assertThat(rangedSubset.getTripleByteCodePointRanges()).isEmpty();
   }
 }

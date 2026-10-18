@@ -73,8 +73,6 @@ public class yo_BJ extends yo {
           0x72_75, //  r s t u
           0x77_77, //  w
           0x79_79, //  y
-          0x7b_7b, //  {
-          0x7d_7d, //  }
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -91,9 +89,8 @@ public class yo_BJ extends yo {
           0x0190_0190, //  Ɛ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
-          0x0300_0301, //  ̀ ́
       },
-      27, 70);
+      24, 66);
 
 
   /**

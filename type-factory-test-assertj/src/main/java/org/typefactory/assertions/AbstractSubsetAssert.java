@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.typefactory.Category;
 import org.typefactory.Subset;
-import org.typefactory.impl.SubsetWithCategories;
 
 /**
  * Abstract base class for {@link Subset} specific assertions.
@@ -294,10 +293,11 @@ public abstract class AbstractSubsetAssert<
 
     private static SortedSet<Category> getActualSubsetCategories(final Subset subset) {
       final var result = new TreeSet<>(comparing(Category::ordinal));
-      if (subset instanceof SubsetWithCategories subsetWithCategories) {
-        final long subsetCategoryBitFlags = subsetWithCategories.unicodeCategoryBitFlags();
-        for (Category category : Category.values()) {
-          if (((subsetCategoryBitFlags & category.bitMask) == category.bitMask) && !category.isCompositeCategory()) {
+      if (subset != null) {
+        for (Category category : subset.categories()) {
+          if (category.isCompositeCategory()) {
+            result.addAll(Category.categoriesFromBitFlags(category.bitMask));
+          } else {
             result.add(category);
           }
         }

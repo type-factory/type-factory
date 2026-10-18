@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -158,26 +159,27 @@ class ab_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([Џ-ИК-ШЫЬа-ик-шыьџҚқҞҟҨҩҬҭҲ-ҷҼ-ҿӘәӠӡӶӷԤԥ]|ЏЬ|ГЬ|ГӘ|ДӘ|ЖЬ|ЖӘ|КЬ|КӘ|ТӘ|ХЬ|ХӘ|ЦӘ|ШЬ|ШӘ|гь|гә|дә|жь|жә|кь|кә|тә|хь|хә|цә|шь|шә|џь|ҚЬ|ҚӘ|қь|қә|ҞЬ|ҞӘ|ҟь|ҟә|ҬӘ|ҭә|ҲӘ|ҳә|ҴӘ|ҵә|ӠӘ|ӡә|ӶЬ|ӶӘ|ӷь|ӷә)";
+    final var actual = new ab().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([Џ-ИК-ШЫЬа-ик-шыьџҚқҞҟҨҩҬҭҲ-ҷҼ-ҿӘәӠӡӶӷԤԥ]|ЏЬ|ГЬ|ГӘ|ДӘ|ЖЬ|ЖӘ|КЬ|КӘ|ТӘ|ХЬ|ХӘ|ЦӘ|ШЬ|ШӘ|гь|гә|дә|жь|жә|кь|кә|тә|хь|хә|цә|шь|шә|џь|ҚЬ|ҚӘ|қь|қә|ҞЬ|ҞӘ|ҟь|ҟә|ҬӘ|ҭә|ҲӘ|ҳә|ҴӘ|ҵә|ӠӘ|ӡә|ӶЬ|ӶӘ|ӷь|ӷә)";
+    final var actual = new ab().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000301   | 0x000301
-      0x000410   | 0x000410
-      0x000415   | 0x000415
-      0x000418   | 0x000418
-      0x00041e   | 0x00041e
-      0x000423   | 0x000423
-      0x00042b   | 0x00042c
-      0x000430   | 0x000430
-      0x000435   | 0x000435
-      0x000438   | 0x000438
-      0x00043e   | 0x00043e
-      0x000443   | 0x000443
-      0x00044b   | 0x00044c
       0x000494   | 0x000495
       0x0004a6   | 0x0004a7
-      0x0004d8   | 0x0004d9
       """)
   void getAuxiliarySubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -189,6 +191,21 @@ class ab_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([ҔҕҦҧ]|А́|Е́|И́|О́|У́|Ы́|а́|е́|и́|о́|у́|ы́|ҔЬ|ҔӘ|ҕь|ҕә)";
+    final var actual = new ab().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ҔҕҦҧ]|А́|Е́|И́|О́|У́|Ы́|а́|е́|и́|о́|у́|ы́|ҔЬ|ҔӘ|ҕь|ҕә)";
+    final var actual = new ab().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -227,6 +244,21 @@ class ab_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]{}§«»‐‑–—‘‚“„…]";
+    final var actual = new ab().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]\\{\\}§«»‐‑–—‘‚“„…]";
+    final var actual = new ab().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -243,6 +275,21 @@ class ab_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ab().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new ab().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -63,13 +63,14 @@ public class lu extends root {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x41_51, //  A B C D E F G H I J K L M N O P Q
+          0x41_46, //  A B C D E F
+          0x48_51, //  H I J K L M N O P Q
           0x53_57, //  S T U V W
           0x59_5a, //  Y Z
-          0x61_71, //  a b c d e f g h i j k l m n o p q
+          0x61_66, //  a b c d e f
+          0x68_71, //  h i j k l m n o p q
           0x73_77, //  s t u v w
-          0x79_7b, //  y z {
-          0x7d_7d, //  }
+          0x79_7a, //  y z
           0xc0_c1, //  À Á
           0xc8_c9, //  È É
           0xcc_cd, //  Ì Í
@@ -86,9 +87,8 @@ public class lu extends root {
           0x0190_0190, //  Ɛ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
-          0x0300_0301, //  ̀ ́
       },
-      22, 76);
+      22, 70);
 
 
   /**

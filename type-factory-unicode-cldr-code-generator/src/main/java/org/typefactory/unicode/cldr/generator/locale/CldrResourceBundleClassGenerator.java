@@ -312,6 +312,7 @@ public class CldrResourceBundleClassGenerator {
           
           import java.util.MissingResourceException;
           import java.util.ResourceBundle;
+          import java.util.regex.Pattern;
           import javax.annotation.processing.Generated;
           import org.junit.jupiter.api.Test;
           import org.junit.jupiter.params.ParameterizedTest;
@@ -462,7 +463,31 @@ public class CldrResourceBundleClassGenerator {
                             .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
                       }
                     
-                    """, resourceBundleClassName))
+                      @Test
+                      void getStandardSubset_toString_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getStandardSubset().toString();
+                        assertThat(actual).isEqualTo(expected);
+                      }
+                    
+                      @Test
+                      void getStandardSubset_toPattern_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getStandardSubset().toPattern();
+                        assertThat(actual).isEqualTo(expected);
+                        assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+                      }
+                    
+                    """,
+                    resourceBundleClassName,
+                    standardCharactersSubset.get().toString()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName,
+                    standardCharactersSubset.get().toPattern()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName))
                 .appendNewline())
         .when(auxiliaryCharactersSubset.isPresent() && auxiliaryCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
@@ -493,7 +518,31 @@ public class CldrResourceBundleClassGenerator {
                             .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
                       }
                     
-                    """, resourceBundleClassName))
+                      @Test
+                      void getAuxiliarySubset_toString_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getAuxiliarySubset().toString();
+                        assertThat(actual).isEqualTo(expected);
+                      }
+                    
+                      @Test
+                      void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getAuxiliarySubset().toPattern();
+                        assertThat(actual).isEqualTo(expected);
+                        assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+                      }
+                    
+                    """, 
+                    resourceBundleClassName,
+                    auxiliaryCharactersSubset.get().toString()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName,
+                    auxiliaryCharactersSubset.get().toPattern()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName))
                 .appendNewline())
         .when(punctuationCharactersSubset.isPresent() && punctuationCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
@@ -524,7 +573,31 @@ public class CldrResourceBundleClassGenerator {
                             .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
                       }
                     
-                    """, resourceBundleClassName))
+                      @Test
+                      void getPunctuationSubset_toString_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getPunctuationSubset().toString();
+                        assertThat(actual).isEqualTo(expected);
+                      }
+                    
+                      @Test
+                      void getPunctuationSubset_toPattern_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getPunctuationSubset().toPattern();
+                        assertThat(actual).isEqualTo(expected);
+                        assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+                      }
+                    
+                    """, 
+                    resourceBundleClassName,
+                    punctuationCharactersSubset.get().toString()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName,
+                    punctuationCharactersSubset.get().toPattern()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName))
                 .appendNewline())
         .when(decimalDigitsCharactersSubset.isPresent() && decimalDigitsCharactersSubset.get().isNotEmpty(), sf1 ->
             sf1.append(String.format("""
@@ -555,7 +628,31 @@ public class CldrResourceBundleClassGenerator {
                             .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
                       }
                     
-                    """, resourceBundleClassName))
+                      @Test
+                      void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getDecimalDigitsSubset().toString();
+                        assertThat(actual).isEqualTo(expected);
+                      }
+                    
+                      @Test
+                      void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+                        final var expected = "%s";
+                        final var actual = new %s().getDecimalDigitsSubset().toPattern();
+                        assertThat(actual).isEqualTo(expected);
+                        assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+                      }
+                    
+                    """, 
+                    resourceBundleClassName,
+                    decimalDigitsCharactersSubset.get().toString()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName,
+                    decimalDigitsCharactersSubset.get().toPattern()
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("\\\"", "\\\\\\\""),
+                    resourceBundleClassName))
                 .appendNewline())
         .append('}')
         .appendNewline();
@@ -626,14 +723,15 @@ public class CldrResourceBundleClassGenerator {
     }
 
     final var subsetWrapper = optionalSubsetWrapper.get();
+    final var codePointSubset = subsetWrapper.getCodePointSubset();
 
     if (subsetWrapper.isEmpty()) {
       return sf -> appendEmptySubset().accept(sf);
-    } else if (subsetWrapper instanceof RangedSubsetWrapper rangedSubsetWrapper) {
+    } else if (codePointSubset instanceof RangedSubsetWrapper rangedSubsetWrapper) {
       return sf -> appendRangedSubset(locale, rangedSubsetWrapper).accept(sf);
-    } else if (subsetWrapper instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
+    } else if (codePointSubset instanceof HashedRangedSubsetWrapper hashedRangedSubsetWrapper) {
       return sf -> appendHashedBlockRangedSubset(hashedRangedSubsetWrapper).accept(sf);
-    } else if (subsetWrapper instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
+    } else if (codePointSubset instanceof OptimalHashedRangedSubsetWrapper optimalHashedRangedSubsetWrapper) {
       return sf -> appendOptimalHashedBlockRangedSubset(optimalHashedRangedSubsetWrapper).accept(sf);
     } else {
       return sf -> {

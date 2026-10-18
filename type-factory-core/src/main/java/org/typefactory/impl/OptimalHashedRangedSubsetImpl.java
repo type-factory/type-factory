@@ -24,6 +24,7 @@ import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.typefactory.Subset.CodePointRange;
 
 class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
 
@@ -80,7 +81,7 @@ class OptimalHashedRangedSubsetImpl implements OptimalHashedRangedSubset {
   }
 
   @Override
-  public int numberOfCodePointRanges() {
+  public int rangesSize() {
     return numberOfCodePointRanges;
   }
 

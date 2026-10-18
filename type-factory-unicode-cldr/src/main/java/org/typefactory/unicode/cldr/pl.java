@@ -98,7 +98,6 @@ public class pl extends root {
 
       new char[]{
           0x51_51, //  Q
-          0x53_53, //  S
           0x56_56, //  V
           0x58_58, //  X
           0x71_71, //  q
@@ -126,7 +125,7 @@ public class pl extends root {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      26, 46);
+      25, 45);
 
 
   /**

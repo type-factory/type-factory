@@ -84,11 +84,9 @@ public class hy extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0535_0535, //  Ե
-          0x0552_0552, //  Ւ
           0x0587_0587, //  և
       },
-      3, 3);
+      1, 1);
 
 
   /**

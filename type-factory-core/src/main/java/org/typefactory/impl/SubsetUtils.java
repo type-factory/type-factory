@@ -17,10 +17,17 @@ package org.typefactory.impl;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static org.typefactory.Category.MARK;
+import static org.typefactory.Category.MODIFIER_LETTER;
+import static org.typefactory.Category.codePointIsInOneOfTheCategories;
 
+import java.lang.Character.UnicodeScript;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
+import org.typefactory.Category;
 import org.typefactory.Subset.CodePointRange;
 
 final class SubsetUtils {
@@ -28,6 +35,129 @@ final class SubsetUtils {
   private SubsetUtils() {
     // don't instantiate me
   }
+
+  /**
+   * Category bit flags for control and format characters
+   */
+  static final long SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          Category.CONTROL,
+          Category.FORMAT,
+          Category.SPACE_SEPARATOR,
+          Category.LINE_SEPARATOR,
+          Category.PARAGRAPH_SEPARATOR);
+
+  static final long MODIFIER_AND_MARK_CATEGORY_BIT_FLAGS =
+      Category.getCategoryBitFlags(
+          MODIFIER_LETTER,
+          MARK);
+
+  static final char DOTTED_CIRCLE = '\u25CC';
+  static final char NBSP = '\u00A0';
+
+  // Set of scripts managed by complex shaping engines that auto-inject Unicode Dotted Circle ◌ (U+25CC)
+  static final Set<UnicodeScript> COMPLEX_FONT_SHAPED_SCRIPTS = Set.of(
+
+      // Indic / South Asian Scripts (Dedicated Indic Engine)
+      // These Abugida scripts feature complex consonant conjuncts, split vowel signs (matras)
+      // that reorder visually before preceding letters, and automatic fallback base injection (U+25CC).
+      Character.UnicodeScript.DEVANAGARI,
+      Character.UnicodeScript.BENGALI,
+      Character.UnicodeScript.GURMUKHI,
+      Character.UnicodeScript.GUJARATI,
+      Character.UnicodeScript.ORIYA, // (Odia)
+      Character.UnicodeScript.TAMIL,
+      Character.UnicodeScript.TELUGU,
+      Character.UnicodeScript.KANNADA,
+      Character.UnicodeScript.MALAYALAM,
+      Character.UnicodeScript.SINHALA,
+
+      // Cursive & Right-To-Left Scripts (Arabic Engine)
+      // These scripts require dynamic joining states (isolated, initial, medial, final glyph forms)
+      // based on adjacent code points, along with mark positioning.
+      Character.UnicodeScript.ARABIC,
+      Character.UnicodeScript.SYRIAC,
+      Character.UnicodeScript.NKO,
+      Character.UnicodeScript.MONGOLIAN, // (Vertical cursive joining)
+      Character.UnicodeScript.THAANA,
+      Character.UnicodeScript.ADLAM,
+      Character.UnicodeScript.HANIFI_ROHINGYA,
+      Character.UnicodeScript.SOGDIAN,
+      Character.UnicodeScript.OLD_SOGDIAN,
+      Character.UnicodeScript.MANICHAEAN,
+      Character.UnicodeScript.MANDAIC,
+      Character.UnicodeScript.CHORASMIAN,
+      Character.UnicodeScript.ELYMAIC,
+      Character.UnicodeScript.SAMARITAN,
+
+      // Southeast Asian & Specialized Scripts
+      // Scripts with unique, highly specialized rules for vertical stacking,
+      // cluster formation, or non-linear vowel positioning:
+      Character.UnicodeScript.THAI, // (Logical-to-visual mark stacking)
+      Character.UnicodeScript.LAO,
+      Character.UnicodeScript.KHMER, // (Subjoined consonants and reordering)
+      Character.UnicodeScript.MYANMAR, // (Kinzi and medial reordering)
+      Character.UnicodeScript.TIBETAN, // (Vertical glyph stacking)
+      Character.UnicodeScript.HANGUL, // (Jamo-to-syllable block composition)
+      Character.UnicodeScript.HEBREW, // (Niqqud and Cantillation mark positioning)
+
+      // Southeast Asian, Indonesian & Philippine
+      // Universal Shaping Engine (USE) uses a generalized finite-state machine to shape all
+      // remaining modern, regional, and historical complex scripts
+      Character.UnicodeScript.BALINESE,
+      Character.UnicodeScript.BATAK,
+      Character.UnicodeScript.BUGINESE,
+      Character.UnicodeScript.BUHID,
+      Character.UnicodeScript.CHAM,
+      Character.UnicodeScript.HANUNOO,
+      Character.UnicodeScript.JAVANESE,
+      Character.UnicodeScript.KAYAH_LI,
+      Character.UnicodeScript.LEPCHA,
+      Character.UnicodeScript.LIMBU,
+      Character.UnicodeScript.MAKASAR,
+      Character.UnicodeScript.NEW_TAI_LUE,
+      Character.UnicodeScript.REJANG,
+      Character.UnicodeScript.SUNDANESE,
+      Character.UnicodeScript.TAGALOG, //(Baybayin)
+      Character.UnicodeScript.TAGBANWA,
+      Character.UnicodeScript.TAI_LE,
+      Character.UnicodeScript.TAI_THAM,
+      Character.UnicodeScript.TAI_VIET,
+
+      // Historical & Regional South Asian / Himalayan
+      Character.UnicodeScript.AHOM,
+      Character.UnicodeScript.BHAIKSUKI,
+      Character.UnicodeScript.BRAHMI,
+      Character.UnicodeScript.CHAKMA,
+      Character.UnicodeScript.DIVES_AKURU,
+      Character.UnicodeScript.DOGRA,
+      Character.UnicodeScript.GRANTHA,
+      Character.UnicodeScript.GUNJALA_GONDI,
+      Character.UnicodeScript.KAITHI,
+      Character.UnicodeScript.KHOJKI,
+      Character.UnicodeScript.KHUDAWADI,
+      Character.UnicodeScript.MAHAJANI,
+      Character.UnicodeScript.MARCHEN,
+      Character.UnicodeScript.MASARAM_GONDI,
+      Character.UnicodeScript.MEETEI_MAYEK,
+      Character.UnicodeScript.MODI,
+      Character.UnicodeScript.MULTANI,
+      Character.UnicodeScript.NANDINAGARI,
+      Character.UnicodeScript.NEWA,
+      Character.UnicodeScript.SHARADA,
+      Character.UnicodeScript.SIDDHAM,
+      Character.UnicodeScript.SORA_SOMPENG,
+      Character.UnicodeScript.SOYOMBO,
+      Character.UnicodeScript.SYLOTI_NAGRI,
+      Character.UnicodeScript.TAKRI,
+      Character.UnicodeScript.TIRHUTA,
+      Character.UnicodeScript.ZANABAZAR_SQUARE,
+
+      // Hieroglyphic & Complex Joiner Scripts
+      Character.UnicodeScript.ANATOLIAN_HIEROGLYPHS,
+      Character.UnicodeScript.DUPLOYAN,
+      Character.UnicodeScript.EGYPTIAN_HIEROGLYPHS
+  );
 
   /**
    * <p>Extracts the 8-bit 'inclusive-from' value from a code-point range comprised of two 8-bit values stored in a {@code char} primitive. The
@@ -180,7 +310,7 @@ final class SubsetUtils {
     return ((long) min(inclusiveFrom, inclusiveTo) << 32) | max(inclusiveFrom, inclusiveTo);
   }
 
-  static int numberOfCodePointsInRanges(final char [] singleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final char[] singleByteCodePointRanges) {
     if (singleByteCodePointRanges == null) {
       return 0;
     }
@@ -191,7 +321,7 @@ final class SubsetUtils {
     return count;
   }
 
-  static int numberOfCodePointsInRanges(final int [] doubleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final int[] doubleByteCodePointRanges) {
     if (doubleByteCodePointRanges == null) {
       return 0;
     }
@@ -202,7 +332,7 @@ final class SubsetUtils {
     return count;
   }
 
-  static int numberOfCodePointsInRanges(final long [] tripleByteCodePointRanges) {
+  static int numberOfCodePointsInRanges(final long[] tripleByteCodePointRanges) {
     if (tripleByteCodePointRanges == null) {
       return 0;
     }
@@ -481,8 +611,8 @@ final class SubsetUtils {
   /**
    * Count how many categories have been specified using category bit flags.
    *
-   * @param categoryFlags the bit flags representing the unicode character categories
-   * @return the number categories that have been specified using category bit flags.
+   * @param categoryFlags the bit flags representing the Unicode character categories
+   * @return the number of categories that have been specified using category bit flags.
    */
   static int numberOfUnicodeCategoriesFromCategoriesFlags(final long categoryFlags) {
     int numberOfUnicodeCategories = 0;
@@ -496,4 +626,162 @@ final class SubsetUtils {
     }
     return numberOfUnicodeCategories;
   }
+
+  static String toString(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings) {
+    return toPattern(ranges, categories, strings, false);
+  }
+
+  static String toPattern(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings) {
+    return toPattern(ranges, categories, strings, true);
+  }
+
+  private static String toPattern(
+      final Iterable<CodePointRange> ranges,
+      final Iterable<Category> categories,
+      final Iterable<String> strings,
+      final boolean targetJavaPattern) {
+
+    final var rangesIterator = Objects.requireNonNullElse(ranges, Constants.EMPTY_CODE_POINT_RANGE_ITERABLE).iterator();
+    final var categoriesIterator = Objects.requireNonNullElse(categories, Constants.EMPTY_CATEGORY_ITERABLE).iterator();
+    final var stringsIterator = Objects.requireNonNullElse(strings, Constants.EMPTY_STRING_ITERABLE).iterator();
+
+    if (!rangesIterator.hasNext() && !categoriesIterator.hasNext() && !stringsIterator.hasNext()) {
+      return "";
+    }
+
+    final var s = new StringBuilder();
+    if (stringsIterator.hasNext() && (rangesIterator.hasNext() || categoriesIterator.hasNext())) {
+      s.append('(');
+    }
+    if (rangesIterator.hasNext() || categoriesIterator.hasNext()) {
+      s.append('[');
+      while (rangesIterator.hasNext()) {
+        final var range = rangesIterator.next();
+        switch (range.inclusiveTo - range.inclusiveFrom) {
+          case 0:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            break;
+          case 1:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            appendCodePoint(s, range.inclusiveTo, targetJavaPattern);
+            break;
+          default:
+            appendCodePoint(s, range.inclusiveFrom, targetJavaPattern);
+            s.append('-');
+            appendCodePoint(s, range.inclusiveTo, targetJavaPattern);
+            break;
+        }
+      }
+      while (categoriesIterator.hasNext()) {
+        final var category = categoriesIterator.next();
+        s.append("\\p{").append(category.getAbbreviation()).append('}');
+      }
+      s.append(']');
+    }
+    if (stringsIterator.hasNext()) {
+      if (!s.isEmpty()) {
+        s.append('|');
+      }
+      while (stringsIterator.hasNext()) {
+        s.append(stringsIterator.next()).append('|');
+      }
+      if (s.charAt(s.length() - 1) == '|') {
+        s.setLength(s.length() - 1);
+      }
+    }
+    if (s.charAt(0) == '(') {
+      s.append(')');
+    }
+    return s.toString();
+  }
+
+  private static void appendCodePoint(final StringBuilder sb, final int cp, final boolean targetJavaPattern) {
+    if (targetJavaPattern) {
+      appendCodePointForToPattern(sb, cp);
+    } else {
+      appendCodePointForToString(sb, cp);
+    }
+  }
+
+  private static void appendCodePointForToPattern(final StringBuilder sb, final int cp) {
+    if (codePointIsInOneOfTheCategories(cp, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS)
+        || cp > Character.MAX_CODE_POINT
+        || codePointIsInOneOfTheCategories(cp, MODIFIER_AND_MARK_CATEGORY_BIT_FLAGS)
+        || isRightToLeft(cp)) {
+      appendEscapedCodePoint(sb, cp);
+    } else {
+      if (codepointIsRegexMetaCharacter(cp)) {
+        sb.append('\\');
+      }
+      sb.appendCodePoint(cp);
+    }
+  }
+
+  private static boolean codepointIsRegexMetaCharacter(final int cp) {
+    return switch(cp) {
+      case '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')', '[', ']', '{', '}' -> true;
+      default -> false;
+    };
+  }
+
+  private static void appendCodePointForToString(final StringBuilder sb, final int cp) {
+    if (codePointIsInOneOfTheCategories(cp, SPACE_CONTROL_AND_FORMAT_CATEGORY_BIT_FLAGS) || cp > Character.MAX_CODE_POINT) {
+      if (!sb.isEmpty() && isRightToLeft(sb.codePointBefore(sb.length()))) {
+        sb.append('\u200E'); // Left-to-right mark (U+200E) to prevent right-to-left text from affecting the display of the escaped code point
+      }
+      appendEscapedCodePoint(sb, cp);
+    } else if (codePointIsInOneOfTheCategories(cp, MODIFIER_AND_MARK_CATEGORY_BIT_FLAGS)) {
+      final Character.UnicodeScript script = Character.UnicodeScript.of(cp);
+      if (COMPLEX_FONT_SHAPED_SCRIPTS.contains(script) || cp == 'ـ') { // Arabic Tatweel ـ (U+0640) is a modifier that does not need a Dotted Circle ◌ (U+25CC) to break combining, but it is a complex script
+        // For complex scripts, if the preceding character is neither a hyphen nor an open-square-bracket,
+        // we prepend a NBSP to break combining. The font-shaping engines will auto-inject
+        // the Dotted Circle ◌ (U+25CC).
+        var previousChar = sb.isEmpty() ? 0 : sb.charAt(sb.length() - 1);
+        if (previousChar == '-' || previousChar == '[') {
+          sb.appendCodePoint(cp);
+        } else {
+          sb.append(NBSP).appendCodePoint(cp);
+        }
+      } else {
+        // For simple scripts (for example, Latin, Greek, Cyrillic, Common), we explicitly prepend
+        // the Dotted Circle ◌ (U+25CC) so the modifier or mark doesn't attach to the preceding character
+        sb.append(DOTTED_CIRCLE).appendCodePoint(cp);
+      }
+    } else {
+      sb.appendCodePoint(cp);
+    }
+  }
+
+
+  private static void appendEscapedCodePoint(final StringBuilder sb, final int cp) {
+    if (cp < 0x10) {
+      sb.append("\\u000").append(Integer.toString(cp, 16));
+    } else if (cp < 0x100) {
+      sb.append("\\u00").append(Integer.toString(cp, 16));
+    } else if (cp < 0x1000) {
+      sb.append("\\u0").append(Integer.toString(cp, 16));
+    } else if (cp < 0x10000) {
+      sb.append("\\u").append(Integer.toString(cp, 16));
+    } else {
+      sb.append("\\x{").append(Integer.toString(cp, 16)).append('}');
+    }
+  }
+
+  private static boolean isRightToLeft(final int codePoint) {
+    byte directionality = Character.getDirectionality(codePoint);
+
+    return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ISOLATE;
+  }
+
+
 }

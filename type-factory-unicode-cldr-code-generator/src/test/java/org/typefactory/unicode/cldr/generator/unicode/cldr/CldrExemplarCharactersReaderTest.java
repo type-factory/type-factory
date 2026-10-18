@@ -45,13 +45,44 @@ class CldrExemplarCharactersReaderTest {
     assertThat(actual.isEmpty()).isEqualTo(expectedEmpty);
   }
 
-  @Test
-  void parseExemplarCharacters_parsesBracketedTokensWithStringsAndCodePoints() {
-    final CldrExemplarCharacters actual = CldrExemplarCharactersReader.parseExemplarCharacters("[eéèêë {ch} ΐ]");
+  @ParameterizedTest
+  @CsvSource(delimiter = '~', textBlock = """
+      [abc]                                 ~ [ a A b B c C ]
+      [abc123]                              ~ [ a A b B c C 1 2 3 ]
+      [abc123!@#$%^*()]                     ~ [ a A b B c C 1 2 3 ! @ # $ % ^ * ( ) ]
+      [a{ab}c]                              ~ [ a A c C ]|ab|AB
+      [a {ab} c]                            ~ [ a A c C ]|ab|AB
+      [a{ab}{cd}e]                          ~ [ a A e E ]|ab|AB|cd|CD
+      [a {ab} {cd} e]                       ~ [ a A e E ]|ab|AB|cd|CD
+      [a {\\{-} {-\\}} c]                   ~ [ a A c C ]|{-|-}
+      [\\{ \\} a {ab} {cd} e]               ~ [ { } a A e E ]|ab|AB|cd|CD
+      [ɛɛ́ɛ̀ɛ̃]                                ~ [ ɛ Ɛ ]|ɛ́|Ɛ́|ɛ̀|Ɛ̀|ɛ̃|Ɛ̃
+      [ɛ{ɛ́}{ɛ̀}{ɛ̃}]                          ~ [ ɛ Ɛ ]|ɛ́|Ɛ́|ɛ̀|Ɛ̀|ɛ̃|Ɛ̃
+      [{dz} {ch}]                           ~ dz|DZ|ch|CH
+      [iîΐ]                                 ~ [ i I î Î ΐ ]|Ϊ́
+      [\\&amp;\\&lt;\\&gt;\\&quot;\\&apos;] ~ [ & < > " ' ]
+      [a \\&quot; b]                        ~ [ a A " b B ]
+      [a \\{ \\} \\&amp; \\\\ b]            ~ [ a A { } & \\ b B ]
+      [a\\n\\r\\tb]                         ~ '[ a A \\u000A \\u000D \\u0009 b B ]'
+      [a\u00a0b]                            ~ [ a A \u00a0 b B ]
+      [\\u200C\\u200D]                      ~ [ \u200C \u200D ]
+      [\\U0000200C\\U0000200D]              ~ [ \u200C \u200D ]
+      [\\x{200C}\\x{200D}]                  ~ [ \u200C \u200D ]
+      [\\x{00200C}\\x{00200D}]              ~ [ \u200C \u200D ]
+      [\\x{0000200C}\\x{0000200D}]          ~ [ \u200C \u200D ]
+      [0० 1१ 2२ 3३ 4४ 5५ 6६ 7७ 8८ 9९]         ~ [ 0 ० 1 १ 2 २ 3 ३ 4 ४ 5 ५ 6 ६ 7 ७ 8 ८ 9 ९ ]
+      [अ आ इ ई उ ऊ ऋ ऌ ऍ ए ऐ ऑ ओ औ क ख]  ~ [ अ आ इ ई उ ऊ ऋ ऌ ऍ ए ऐ ऑ ओ औ क ख ]
+      [़ ॐ ं ँ ः  ा ि ी]                 ~ [ ़ ॐ ं ँ ः ा ि ी ]
+      [ु ू ृ ॅ े ै ॉ ो ौ ्]               ~ [ ु ू ृ ॅ े ै ॉ ो ौ ् ]
+      [\\u200C\\u200Dഃ ൠ ഌ ൡ]              ~ [ \u200C \u200D ഃ ൠ ഌ ൡ ]
+      """)
+  void parseExemplarCharacters_parsesBracketedTokensWithStringsAndCodePoints(
+      final String exemplarCharactersText,
+      final String expectedToString) {
 
-    assertThat(actual.codePoints())
-        .contains((int) 'e', (int) 'E', (int) 'é', (int) 'É', (int) 'è', (int) 'È', (int) 'ê', (int) 'Ê', (int) 'ë', (int) 'Ë', (int) 'ΐ');
-    assertThat(actual.strings()).contains("ch", "CH", "Ϊ́");
+    final CldrExemplarCharacters actual = CldrExemplarCharactersReader.parseExemplarCharacters(exemplarCharactersText);
+
+    assertThat(actual).hasToString(expectedToString);
   }
 
   @Test
@@ -121,7 +152,7 @@ class CldrExemplarCharactersReaderTest {
   }
 
   @Test
-  void addCasedVariant_ignoresBlankInput() {
+  void addCasedVariant_ignoresEmptyInput() {
     final LinkedHashSet<Integer> codePoints = new LinkedHashSet<>();
     final LinkedHashSet<String> strings = new LinkedHashSet<>();
 

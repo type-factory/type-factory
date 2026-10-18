@@ -68,4 +68,30 @@ public class Utils {
   public static String tokenize(final String locale) {
     return locale.replaceAll("\\W+", "_");
   }
+
+  private static boolean isCodePointRightToLeft(final int codePoint) {
+    byte directionality = Character.getDirectionality(codePoint);
+
+    return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE ||
+           directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ISOLATE;
+  }
+
+
+  public static boolean containsRightToLeftCodePoint(String str) {
+    if (str == null) {
+      return false;
+    }
+
+    final int [] codePoints = str.codePoints().toArray();
+    for (int codePoint : codePoints) {
+      if (isCodePointRightToLeft(codePoint)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

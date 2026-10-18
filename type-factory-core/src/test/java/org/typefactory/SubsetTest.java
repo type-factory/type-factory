@@ -62,7 +62,7 @@ class SubsetTest {
     final Subset actual = Subset.builder().build();
 
     assertThat(actual).isEmpty();
-    assertThat(actual.toPattern()).isEqualTo("[]");
+    assertThat(actual.toPattern()).isEmpty();
   }
 
   @ParameterizedTest(name = "{0}")

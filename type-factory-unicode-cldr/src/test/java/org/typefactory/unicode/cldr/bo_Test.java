@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -136,7 +137,7 @@ class bo_Test extends root_Test {
       0x000f58   | 0x000f5b
       0x000f5d   | 0x000f68
       0x000f6a   | 0x000f6a
-      0x000f71   | 0x000f72
+      0x000f72   | 0x000f72
       0x000f74   | 0x000f74
       0x000f77   | 0x000f77
       0x000f79   | 0x000f80
@@ -162,6 +163,21 @@ class bo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ ི ུ ཷ ཹ-ྀ ྄ ྐ-ྒ ྔ-ྗ ྙ-ྜ ྞ-ྡ ྣ-ྦ ྨ-ྫ ྭ-ྸ ྺ-ྼ]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
+    final var actual = new bo().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ཀ-གང-ཇཉ-ཌཎ-དན-བམ-ཛཝ-ཨཪ\\u0f72\\u0f74\\u0f77\\u0f79-\\u0f80\\u0f84\\u0f90-\\u0f92\\u0f94-\\u0f97\\u0f99-\\u0f9c\\u0f9e-\\u0fa1\\u0fa3-\\u0fa6\\u0fa8-\\u0fab\\u0fad-\\u0fb8\\u0fba-\\u0fbc]|ཀྵ|གྷ|ཌྷ|དྷ|བྷ|ཛྷ|ཱི|ཱུ|ཱྀ|ྐྵ|ྒྷ|ྜྷ|ྡྷ|ྦྷ|ྫྷ|ྲྀ|ླྀ)";
+    final var actual = new bo().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -178,6 +194,21 @@ class bo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[ༀ]";
+    final var actual = new bo().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ༀ]";
+    final var actual = new bo().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -200,6 +231,21 @@ class bo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[:་།]";
+    final var actual = new bo().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[:་།]";
+    final var actual = new bo().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -217,6 +263,21 @@ class bo_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9༠-༩]";
+    final var actual = new bo().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9༠-༩]";
+    final var actual = new bo().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

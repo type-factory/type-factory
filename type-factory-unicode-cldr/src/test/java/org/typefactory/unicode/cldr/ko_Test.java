@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -140,6 +141,21 @@ class ko_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[가-힣]";
+    final var actual = new ko().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[가-힣]";
+    final var actual = new ko().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -891,6 +907,21 @@ class ko_Test extends root_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[ᄀ-하-ᅵᆨ-ᇂ丘串乃久乖九乞乫乾亂亘交京仇今介件价企伋伎伽佳佶侃來侊供係俓俱個倞倦倨假偈健傀傑傾僅僑價儆儉儺光克兢內公共其具兼冀冠凱刊刮券刻剋剛劇劍劒功加劤劫勁勍勘勤勸勻勾匡匣區南卦却卵卷卿厥去及口句叩叫可各吉君告呱呵咎咬哥哭啓喀喇喝喫喬嗜嘉嘔器囊困固圈國圭圻均坎坑坤坰坵垢基埼堀堅堈堪堺塊塏境墾壙壞夔奇奈奎契奸妓妗姑姜姦娘娜嫁嬌孔季孤宏官客宮家寄寇寡寬尻局居屆屈岐岡岬崎崑崗嵌嵐嶇嶠工巧巨己巾干幹幾庚庫康廊廐廓廣建弓强彊徑忌急怪怯恐恝恪恭悸愆感愧愷愾慊慣慤慨慶慷憩憬憾懃懇懦懶懼戈戒戟戡扱技抉拉拏拐拒拘括拮拱拳拷拿捏据捲捺掘掛控揀揆揭擊擎擒據擧攪攷改攻故敎救敢敬敲斛斤旗旣昆昑景晷暇暖暠暻曠曲更曷朗朞期机杆杞杰枏果枯架枸柑柩柬柯校根格桀桂桔桿梏梗械梱棄棋棍棘棨棺楗楠極槁構槐槨槪槻槿樂橄橋橘機檄檎檢櫃欄權欺款歌歐歸殼毆毬氣求江汨汲決汽沂沽洛洸浪涇淃淇減渠渴湳溝溪滑滾漑潔潰澗激濫灌灸炅炚炬烙烱煖爛牽犬狂狗狡狼獗玖玘珂珏珖珙珞珪球琦琨琪琯琴瑾璂璟璣璥瓊瓘瓜甄甘甲男畇界畸畺畿疆疥疳痂痙痼癎癩癸皆皎皐盖監看眷睾瞰瞼瞿矜矩矯硅硬碁碣磎磬磯磵祁祇祈祛祺禁禽科稈稼稽稿穀究穹空窘窟窮窺竅竟竭競竿筋筐筠箇箕箝管簡粳糠系糾紀納紘級紺絅結絞給絳絹絿經綱綺緊繫繭繼缺罐罫羅羈羌羔群羹翹考耆耉耕耭耿肌肝股肩肯肱胛胱脚脛腔腱膈膏膠臘臼舅舊舡艮艱芎芥芩芹苛苟苦苽茄莖菅菊菌菓菫菰落葛葵蓋蕎蕨薑藁藍藿蘭蘿虔蚣蛟蝎螺蠟蠱街衢衲衾衿袈袞袴裙裸褐襁襟襤見規覡覲覺觀角計記訣訶詭誇誡誥課諫諾謙講謳謹譏警譴谷谿豈貢貫貴賈購赳起跏距跨踞蹇蹶躬軀車軌軍軻較輕轎轟辜近迦迲适逑逕逵過遣遽邏那邯邱郊郎郡郭酪醵金鈐鈞鉀鉅鉗鉤銶鋸鋼錡錤錦錮鍋鍵鎌鎧鏡鑑鑒鑛開間閘閣閨闕關降階隔隙雇難鞏鞠鞨鞫頃頸顆顧飢餃館饉饋饑駒駕駱騎騏騫驅驕驚驥骨高鬼魁鮫鯤鯨鱇鳩鵑鵠鷄鷗鸞麒麴黔鼓龕龜]";
+    final var actual = new ko().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ᄀ-하-ᅵᆨ-ᇂ丘串乃久乖九乞乫乾亂亘交京仇今介件价企伋伎伽佳佶侃來侊供係俓俱個倞倦倨假偈健傀傑傾僅僑價儆儉儺光克兢內公共其具兼冀冠凱刊刮券刻剋剛劇劍劒功加劤劫勁勍勘勤勸勻勾匡匣區南卦却卵卷卿厥去及口句叩叫可各吉君告呱呵咎咬哥哭啓喀喇喝喫喬嗜嘉嘔器囊困固圈國圭圻均坎坑坤坰坵垢基埼堀堅堈堪堺塊塏境墾壙壞夔奇奈奎契奸妓妗姑姜姦娘娜嫁嬌孔季孤宏官客宮家寄寇寡寬尻局居屆屈岐岡岬崎崑崗嵌嵐嶇嶠工巧巨己巾干幹幾庚庫康廊廐廓廣建弓强彊徑忌急怪怯恐恝恪恭悸愆感愧愷愾慊慣慤慨慶慷憩憬憾懃懇懦懶懼戈戒戟戡扱技抉拉拏拐拒拘括拮拱拳拷拿捏据捲捺掘掛控揀揆揭擊擎擒據擧攪攷改攻故敎救敢敬敲斛斤旗旣昆昑景晷暇暖暠暻曠曲更曷朗朞期机杆杞杰枏果枯架枸柑柩柬柯校根格桀桂桔桿梏梗械梱棄棋棍棘棨棺楗楠極槁構槐槨槪槻槿樂橄橋橘機檄檎檢櫃欄權欺款歌歐歸殼毆毬氣求江汨汲決汽沂沽洛洸浪涇淃淇減渠渴湳溝溪滑滾漑潔潰澗激濫灌灸炅炚炬烙烱煖爛牽犬狂狗狡狼獗玖玘珂珏珖珙珞珪球琦琨琪琯琴瑾璂璟璣璥瓊瓘瓜甄甘甲男畇界畸畺畿疆疥疳痂痙痼癎癩癸皆皎皐盖監看眷睾瞰瞼瞿矜矩矯硅硬碁碣磎磬磯磵祁祇祈祛祺禁禽科稈稼稽稿穀究穹空窘窟窮窺竅竟竭競竿筋筐筠箇箕箝管簡粳糠系糾紀納紘級紺絅結絞給絳絹絿經綱綺緊繫繭繼缺罐罫羅羈羌羔群羹翹考耆耉耕耭耿肌肝股肩肯肱胛胱脚脛腔腱膈膏膠臘臼舅舊舡艮艱芎芥芩芹苛苟苦苽茄莖菅菊菌菓菫菰落葛葵蓋蕎蕨薑藁藍藿蘭蘿虔蚣蛟蝎螺蠟蠱街衢衲衾衿袈袞袴裙裸褐襁襟襤見規覡覲覺觀角計記訣訶詭誇誡誥課諫諾謙講謳謹譏警譴谷谿豈貢貫貴賈購赳起跏距跨踞蹇蹶躬軀車軌軍軻較輕轎轟辜近迦迲适逑逕逵過遣遽邏那邯邱郊郎郡郭酪醵金鈐鈞鉀鉅鉗鉤銶鋸鋼錡錤錦錮鍋鍵鎌鎧鏡鑑鑒鑛開間閘閣閨闕關降階隔隙雇難鞏鞠鞨鞫頃頸顆顧飢餃館饉饋饑駒駕駱騎騏騫驅驕驚驥骨高鬼魁鮫鯤鯨鱇鳩鵑鵠鷄鷗鸞麒麴黔鼓龕龜]";
+    final var actual = new ko().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -944,6 +975,21 @@ class ko_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#%&(-*,-/:;?@[-]_{}¡§¶·¿‐‑—―‘’“”†‡‥…‰′″※‾、-〃〈-】〔〕〜・！-＃％-＊，-／：；？＠［-］＿｛｝]";
+    final var actual = new ko().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#%&\\(-\\*,-/:;\\?@\\[-\\]_\\{\\}¡§¶·¿‐‑—―‘’“”†‡‥…‰′″※‾、-〃〈-】〔〕〜・！-＃％-＊，-／：；？＠［-］＿｛｝]";
+    final var actual = new ko().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

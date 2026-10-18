@@ -25,6 +25,7 @@ import static org.typefactory.impl.SubsetUtils.getInclusiveTo;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.typefactory.Subset.CodePointRange;
 
 class RangedSubsetImpl implements RangedSubset {
 
@@ -41,7 +42,6 @@ class RangedSubsetImpl implements RangedSubset {
   private final int numberOfCodePointRanges;
 
   private final int numberOfCodePointsInCodePointRanges;
-
 
   RangedSubsetImpl(
       final char[] singleByteCodePointRanges,
@@ -113,7 +113,7 @@ class RangedSubsetImpl implements RangedSubset {
   }
 
   @Override
-  public final int numberOfCodePointRanges() {
+  public final int rangesSize() {
     return numberOfCodePointRanges;
   }
 
@@ -171,61 +171,59 @@ class RangedSubsetImpl implements RangedSubset {
   }
 
   @Override
-  public final String toString() {
-    final StringBuilder s = new StringBuilder();
-    if (singleByteCodePointRanges.length > 0) {
-      s.append('[');
-      for (char singleByteCodePointRange : singleByteCodePointRanges) {
-        s.append("0x").append(Integer.toString(getInclusiveFrom(singleByteCodePointRange), 16)).append('_')
-            .append(Integer.toString(getInclusiveTo(singleByteCodePointRange), 16)).append(',');
-      }
-      s.setLength(s.length() - 1); // remove final comma
-      s.append("],");
-    }
-    if (doubleByteCodePointRanges.length > 0) {
-      s.append("[");
-      for (int doubleByteCodePointRange : doubleByteCodePointRanges) {
-        s.append("0x").append(Integer.toString(getInclusiveFrom(doubleByteCodePointRange), 16)).append('_')
-            .append(Integer.toString(getInclusiveTo(doubleByteCodePointRange), 16)).append(',');
-      }
-      s.setLength(s.length() - 1); // remove final comma
-      s.append("],");
-    }
-    if (tripleByteCodePointRanges.length > 0) {
-      s.append("[");
-      for (long tripleByteCodePointRange : tripleByteCodePointRanges) {
-        s.append("0x").append(Integer.toString(getInclusiveFrom(tripleByteCodePointRange), 16)).append('_')
-            .append(Integer.toString(getInclusiveTo(tripleByteCodePointRange), 16)).append(',');
-      }
-      s.setLength(s.length() - 1); // remove final comma
-      s.append(']');
-    }
-    if (!s.isEmpty() && s.charAt(s.length() - 1) == ',') {
-      s.setLength(s.length() - 1);
-    }
-    return s.toString();
+  public String toString() {
+    return SubsetUtils.toString(
+        ranges(),
+        Constants.EMPTY_CATEGORY_ITERABLE,
+        Constants.EMPTY_STRING_ITERABLE);
   }
 
   public final Iterable<CodePointRange> ranges() {
-    return new CodePointRangeIterable();
+    return new CodePointRangeIterable(singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges);
   }
 
-  private final class CodePointRangeIterable implements Iterable<CodePointRange> {
+  private static class CodePointRangeIterable implements Iterable<CodePointRange> {
+
+    private final char[] singleByteCodePointRanges;
+    private final int[] doubleByteCodePointRanges;
+    private final long[] tripleByteCodePointRanges;
+
+    public CodePointRangeIterable(
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      this.singleByteCodePointRanges = singleByteCodePointRanges;
+      this.doubleByteCodePointRanges = doubleByteCodePointRanges;
+      this.tripleByteCodePointRanges = tripleByteCodePointRanges;
+    }
 
     @Override
     public Iterator<CodePointRange> iterator() {
-      return isEmpty()
-          ? new EmptyCodePointRangeIterator()
-          : new CodePointRangeIterator();
+      return singleByteCodePointRanges.length > 0 || doubleByteCodePointRanges.length > 0 || tripleByteCodePointRanges.length > 0
+          ? new CodePointRangeIterator(singleByteCodePointRanges, doubleByteCodePointRanges, tripleByteCodePointRanges)
+          : new EmptyCodePointRangeIterator();
     }
   }
 
-  private final class CodePointRangeIterator implements Iterator<CodePointRange> {
+  private static class CodePointRangeIterator implements Iterator<CodePointRange> {
+
+    private final char[] singleByteCodePointRanges;
+    private final int[] doubleByteCodePointRanges;
+    private final long[] tripleByteCodePointRanges;
 
     private int singleByteIndex = 0;
     private int doubleByteIndex = 0;
     private int tripleByteIndex = 0;
     private CodePointRange result = new CodePointRange(0, 0);
+
+    public CodePointRangeIterator(
+        final char[] singleByteCodePointRanges,
+        final int[] doubleByteCodePointRanges,
+        final long[] tripleByteCodePointRanges) {
+      this.singleByteCodePointRanges = singleByteCodePointRanges;
+      this.doubleByteCodePointRanges = doubleByteCodePointRanges;
+      this.tripleByteCodePointRanges = tripleByteCodePointRanges;
+    }
 
     @Override
     public boolean hasNext() {

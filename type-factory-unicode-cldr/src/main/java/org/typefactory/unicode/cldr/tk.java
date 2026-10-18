@@ -129,7 +129,7 @@ public class tk extends root {
 
       new char[]{
           0x21_23, //  ! " #
-          0x26_2a, //  & ' ( ) *
+          0x27_2a, //  ' ( ) *
           0x2c_2f, //  , - . /
           0x3a_3b, //  : ;
           0x3f_40, //  ? @
@@ -145,7 +145,7 @@ public class tk extends root {
           0x201c_201d, //  “ ”
           0x2026_2026, //  …
       },
-      14, 27);
+      14, 26);
 
 
   /**

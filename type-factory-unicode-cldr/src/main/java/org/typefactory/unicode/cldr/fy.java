@@ -86,10 +86,7 @@ public class fy extends root {
           0xf6_f6, //  ö
           0xfa_fd, //  ú û ü ý
       },
-      new int[]{
-          0x0301_0301, //  ́
-      },
-      23, 83);
+      22, 82);
 
 
   /**

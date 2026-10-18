@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,12 +129,6 @@ class hi_Latn_Test extends hi_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x00004c   | 0x00004d
-      0x000052   | 0x000052
-      0x00006c   | 0x00006d
-      0x000072   | 0x000072
-      0x00007b   | 0x00007b
-      0x00007d   | 0x00007d
       0x0000d1   | 0x0000d1
       0x0000f1   | 0x0000f1
       0x000100   | 0x000101
@@ -142,9 +137,6 @@ class hi_Latn_Test extends hi_Test {
       0x00014c   | 0x00014f
       0x00015a   | 0x00015b
       0x00016a   | 0x00016b
-      0x000304   | 0x000304
-      0x000310   | 0x000310
-      0x000325   | 0x000325
       0x001e0c   | 0x001e0d
       0x001e24   | 0x001e25
       0x001e36   | 0x001e37
@@ -164,6 +156,21 @@ class hi_Latn_Test extends hi_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "([ÑñĀāĒ-ĕĪīŌ-ŏŚśŪūḌḍḤḥḶḷṀṁṄ-ṇṚṛṢṣṬṭ]|L̥|M̐|R̥|R̥̄|l̥|m̐|r̥|r̥̄)";
+    final var actual = new hi_Latn().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ÑñĀāĒ-ĕĪīŌ-ŏŚśŪūḌḍḤḥḶḷṀṁṄ-ṇṚṛṢṣṬṭ]|L̥|M̐|R̥|R̥̄|l̥|m̐|r̥|r̥̄)";
+    final var actual = new hi_Latn().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

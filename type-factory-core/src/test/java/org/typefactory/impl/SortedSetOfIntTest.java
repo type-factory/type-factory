@@ -22,7 +22,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.testutils.IntArrayConverter;
 
-class PrimitiveSortedSetOfIntTest {
+class SortedSetOfIntTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
@@ -52,7 +52,7 @@ class PrimitiveSortedSetOfIntTest {
       @ConvertWith(IntArrayConverter.class) final int [] values,
       @ConvertWith(IntArrayConverter.class) final int [] expected) {
 
-    final var primitiveSortedSetOfInt = new PrimitiveSortedSetOfInt();
+    final var primitiveSortedSetOfInt = new MutableSortedSetOfIntImpl();
     for (int value : values) {
       primitiveSortedSetOfInt.add(value);
     }

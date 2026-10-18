@@ -15,9 +15,7 @@
  */
 package org.typefactory.impl;
 
-import org.typefactory.Subset;
-
-interface OptimalHashedRangedSubset extends Subset {
+interface OptimalHashedRangedSubset extends CodePointSubset {
 
   char[] getBlockKeySet();
 

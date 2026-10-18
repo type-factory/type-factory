@@ -15,7 +15,9 @@
  */
 package org.typefactory.impl;
 
-public class OptimalHashedRangedSubsetWrapper implements SubsetWrapper, OptimalHashedRangedSubset {
+import org.typefactory.Subset.CodePointRange;
+
+public class OptimalHashedRangedSubsetWrapper implements CodePointSubsetWrapper, OptimalHashedRangedSubset {
 
   private final OptimalHashedRangedSubsetImpl wrapped;
 
@@ -39,8 +41,8 @@ public class OptimalHashedRangedSubsetWrapper implements SubsetWrapper, OptimalH
   }
 
   @Override
-  public int numberOfCodePointRanges() {
-    return wrapped.numberOfCodePointRanges();
+  public int rangesSize() {
+    return wrapped.rangesSize();
   }
 
   @Override

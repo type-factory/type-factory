@@ -437,4 +437,49 @@ class CategoryTest {
     }
   }
 
+  @Test
+  void getCategoriesFromBitFlags_zeroBitFlags_returnsEmptyIterable() {
+    assertThat(Category.categoriesFromBitFlags(0L))
+        .isEmpty();
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @EnumSource(Category.class)
+  void getCategoriesFromBitFlags_singleLeafCategory_returnsCategory(final Category category) {
+    if (category.isCompositeCategory()) {
+      return;
+    }
+
+    assertThat(Category.categoriesFromBitFlags(category.bitMask))
+        .containsExactly(category);
+  }
+
+  @ParameterizedTest(name = "[{index}] {arguments}")
+  @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
+      CATEGORY     | EXPECTED_CATEGORIES
+      CASED_LETTER | [UPPERCASE_LETTER,LOWERCASE_LETTER,TITLECASE_LETTER]
+      LETTER       | [UPPERCASE_LETTER,LOWERCASE_LETTER,TITLECASE_LETTER,MODIFIER_LETTER,OTHER_LETTER]
+      MARK         | [NON_SPACING_MARK,COMBINING_SPACING_MARK,ENCLOSING_MARK]
+      NUMBER       | [DECIMAL_DIGIT_NUMBER,LETTER_NUMBER,OTHER_NUMBER]
+      PUNCTUATION  | [CONNECTOR_PUNCTUATION,DASH_PUNCTUATION,START_PUNCTUATION,END_PUNCTUATION,INITIAL_QUOTE_PUNCTUATION,FINAL_QUOTE_PUNCTUATION,OTHER_PUNCTUATION]
+      SYMBOL       | [MATH_SYMBOL,CURRENCY_SYMBOL,MODIFIER_SYMBOL,OTHER_SYMBOL]
+      SEPARATOR    | [SPACE_SEPARATOR,LINE_SEPARATOR,PARAGRAPH_SEPARATOR]
+      OTHER        | [CONTROL,FORMAT,SURROGATE,PRIVATE_USE,UNASSIGNED]
+      """)
+  void getCategoriesFromBitFlags_compositeCategory_returnsLeafCategories(
+      final Category category,
+      @ConvertWith(CategoryArrayConverter.class) final Category[] expectedCategories) {
+
+    assertThat(Category.categoriesFromBitFlags(category.bitMask))
+        .containsExactly(expectedCategories);
+  }
+
+  @Test
+  void getCategoriesFromBitFlags_unknownBits_returnsOnlyKnownLeafCategories() {
+    final long categoryBitFlags = Long.MIN_VALUE | Category.UPPERCASE_LETTER.bitMask;
+
+    assertThat(Category.categoriesFromBitFlags(categoryBitFlags))
+        .containsExactly(Category.UPPERCASE_LETTER);
+  }
+
 }

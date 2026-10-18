@@ -62,20 +62,11 @@ public class yi extends root {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      new char[]{
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
       new int[]{
-          0x05b4_05b4, //  ִ
-          0x05b7_05b8, //  ַ ָ
-          0x05bc_05bc, //  ּ
-          0x05bf_05bf, //  ֿ
-          0x05c2_05c2, //  ׂ
-          0x05d0_05ea, //  א ב ג ד ה ו ז ח ט י ך כ ל ם מ ן נ ס ע ף פ ץ צ ק ר ש ת
-          0x05f2_05f2, //  ײ
+          0x05d0_05e3, //  א ב ג ד ה ו ז ח ט י ך כ ל ם מ ן נ ס ע ף
+          0x05e5_05ea, //  ץ צ ק ר ש ת
       },
-      9, 36);
+      2, 26);
 
 
   /**

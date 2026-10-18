@@ -100,7 +100,6 @@ public class sc extends root {
       new char[]{
           0x4b_4b, //  K
           0x51_51, //  Q
-          0x53_53, //  S
           0x57_59, //  W X Y
           0x6b_6b, //  k
           0x71_71, //  q
@@ -128,7 +127,7 @@ public class sc extends root {
           0x0152_0153, //  Œ œ
           0x0178_0178, //  Ÿ
       },
-      27, 62);
+      26, 61);
 
 
   /**

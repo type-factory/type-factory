@@ -43,6 +43,35 @@ public record CldrExemplarCharacters(
 
   @Override
   public String toString() {
-    return raw;
+    final StringBuilder s = new StringBuilder();
+    if (!codePoints.isEmpty()) {
+      s.append("[ ");
+      for (Integer codePoint : codePoints) {
+        if (codePoint == '\n' || codePoint == '\r' || codePoint == '\t') {
+          s.append(String.format("\\u%04X", codePoint));
+        } else {
+          s.appendCodePoint(codePoint);
+        }
+        s.append(' ');
+      }
+      s.append(']');
+    }
+    if (!strings.isEmpty()) {
+      if (s.length() > 1) {
+        s.append('|');
+      }
+      for (String string : strings) {
+        s.append(string);
+        s.append('|');
+      }
+      s.setLength(s.length() - 1); // Remove the last '|'
+    }
+    return s.toString();
+  }
+
+  public String codePointsAsString() {
+    final int [] codePointsArray = codePoints.stream().mapToInt(Integer::intValue).toArray();
+    final String codePointsString = new String(codePointsArray, 0, codePointsArray.length);
+    return codePointsString;
   }
 }

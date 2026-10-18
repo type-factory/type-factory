@@ -93,7 +93,6 @@ public class ku extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x53_53, //  S
           0xc0_c6, //  À Á Â Ã Ä Å Æ
           0xc8_c9, //  È É
           0xcb_cd, //  Ë Ì Í
@@ -117,7 +116,7 @@ public class ku extends root {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      21, 66);
+      20, 65);
 
 
   /**

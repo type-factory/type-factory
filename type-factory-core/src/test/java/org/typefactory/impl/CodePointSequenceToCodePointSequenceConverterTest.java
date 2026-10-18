@@ -149,13 +149,15 @@ class CodePointSequenceToCodePointSequenceConverterTest {
 
     assertThat(rootTreeNode.isEmpty()).isFalse();
     assertThat(rootTreeNode.isLeafNode()).isFalse();
-    assertThat(rootTreeNode.codePoints()).contains('a', 'f', 'l');
+    assertThat(rootTreeNode.codePoints().contains('a')).isTrue();
+    assertThat(rootTreeNode.codePoints().contains('f')).isTrue();
+    assertThat(rootTreeNode.codePoints().contains('l')).isTrue();
     assertThat(rootTreeNode.size()).isEqualTo(10); // 10 separate sequences
     assertThat(rootTreeNode.getMaxToSequenceLength()).isEqualTo(6);
 
     final TreeNode node = rootTreeNode.get('a');
     assertThat(node.isLeafNode()).isFalse();
-    assertThat(node.codePoints()).contains('b');
+    assertThat(node.codePoints().contains('b')).isTrue();
 
     assertThat(rootTreeNode).hasToString("""
         •

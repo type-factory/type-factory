@@ -18,11 +18,11 @@ package org.typefactory.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.Category;
 import org.typefactory.Subset;
 import org.typefactory.Subset.CodePointRange;
 import org.typefactory.Subset.SubsetBuilder;
@@ -35,30 +35,10 @@ class Subset_Test {
       true
   })
   void isNotEmpty_returnOppositeOfIsEmpty(final boolean isEmptyValue) {
-    final Subset subset = new Subset() {
-      @Override
-      public Collection<CodePointRange> ranges() {
-        return null;
-      }
-
+    final Subset subset = new SomeSubset() {
       @Override
       public boolean isEmpty() {
         return isEmptyValue;
-      }
-
-      @Override
-      public boolean contains(int codePoint) {
-        return false;
-      }
-
-      @Override
-      public int numberOfCodePointRanges() {
-        return 0;
-      }
-
-      @Override
-      public int numberOfCodePointsInCodePointRanges() {
-        return 0;
       }
     };
     assertThat(subset.isEmpty()).isEqualTo(isEmptyValue);
@@ -71,30 +51,10 @@ class Subset_Test {
       false
   })
   void contains_char_returnConsistentWithContainsInt(final boolean containsValue) {
-    final Subset subset = new Subset() {
-      @Override
-      public Collection<CodePointRange> ranges() {
-        return null;
-      }
-
-      @Override
-      public boolean isEmpty() {
-        return false;
-      }
-
+    final Subset subset = new SomeSubset() {
       @Override
       public boolean contains(int codePoint) {
         return containsValue;
-      }
-
-      @Override
-      public int numberOfCodePointRanges() {
-        return 0;
-      }
-
-      @Override
-      public int numberOfCodePointsInCodePointRanges() {
-        return 0;
       }
     };
     assertThat(subset.contains('A')).isEqualTo(containsValue);
@@ -107,30 +67,10 @@ class Subset_Test {
       false
   })
   void doesNotContain_returnOppositeOfContains(final boolean containsValue) {
-    final Subset subset = new Subset() {
-      @Override
-      public Collection<CodePointRange> ranges() {
-        return null;
-      }
-
-      @Override
-      public boolean isEmpty() {
-        return false;
-      }
-
+    final Subset subset = new SomeSubset() {
       @Override
       public boolean contains(int codePoint) {
         return containsValue;
-      }
-
-      @Override
-      public int numberOfCodePointRanges() {
-        return 0;
-      }
-
-      @Override
-      public int numberOfCodePointsInCodePointRanges() {
-        return 0;
       }
     };
     assertThat(subset.doesNotContain('A')).isEqualTo(!containsValue);
@@ -149,30 +89,10 @@ class Subset_Test {
   @Test
   void toBuilder_returnsEmptySubsetWhenTheInitialSubsetIsItselfEmpty() {
 
-    final Subset subset = new Subset() {
-      @Override
-      public Collection<CodePointRange> ranges() {
-        return null;
-      }
-
+    final Subset subset = new SomeSubset() {
       @Override
       public boolean isEmpty() {
         return true;
-      }
-
-      @Override
-      public boolean contains(int codePoint) {
-        return false;
-      }
-
-      @Override
-      public int numberOfCodePointRanges() {
-        return 0;
-      }
-
-      @Override
-      public int numberOfCodePointsInCodePointRanges() {
-        return 0;
       }
     };
 
@@ -200,5 +120,84 @@ class Subset_Test {
             new CodePointRange('A', 'C'),
             new CodePointRange('X', 'Z')
         );
+  }
+
+  private static class SomeSubset implements Subset {
+
+    @Override
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public boolean contains(final int codePoint) {
+      return false;
+    }
+
+    @Override
+    public Iterable<CodePointRange> ranges() {
+      return Constants.EMPTY_CODE_POINT_RANGE_ITERABLE;
+    }
+
+    @Override
+    public Iterable<Category> categories() {
+      return Constants.EMPTY_CATEGORY_ITERABLE;
+    }
+
+    @Override
+    public Iterable<String> strings() {
+      return Constants.EMPTY_STRING_ITERABLE;
+    }
+
+    @Override
+    public boolean containsString(final CharSequence charSequence) {
+      return false;
+    }
+
+    @Override
+    public int containsString(final CharSequence charSequence, final int startingAtIndex) {
+      return startingAtIndex;
+    }
+
+    @Override
+    public int rangesSize() {
+      return 0;
+    }
+
+    @Override
+    public int categoriesSize() {
+      return 0;
+    }
+
+    @Override
+    public int stringsSize() {
+      return 0;
+    }
+
+    @Override
+    public int numberOfCodePointRanges() {
+      return 0;
+    }
+
+    @Override
+    public int numberOfCodePointsInCodePointRanges() {
+      return 0;
+    }
+
+    @Override
+    public String toPattern() {
+      return SubsetUtils.toPattern(
+          ranges(),
+          categories(),
+          strings());
+    }
+
+    @Override
+    public String toString() {
+      return SubsetUtils.toString(
+          ranges(),
+          categories(),
+          strings());
+    }
   }
 }

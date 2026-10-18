@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,10 +129,6 @@ class el_POLYTON_Test extends el_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000300   | 0x000301
-      0x000308   | 0x000308
-      0x000313   | 0x000313
-      0x000342   | 0x000342
       0x000386   | 0x000386
       0x000388   | 0x00038a
       0x00038c   | 0x00038c
@@ -180,6 +177,21 @@ class el_POLYTON_Test extends el_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ΆΈ-ΊΌΎ-ΡΣ-ώἀ-ἕἘ-Ἕἠ-Ἷὂ-ὄὊ-Ὄὐ-ὗὙὛὝὟὢ-ὧὪ-ὰὲὴὶὸὺὼᾶᾺῆῈῊῒῖῗῚῢῦῧῪῶῸῺ]|Α͂|Η͂|Ϊ̀|Ϊ́|Ϊ͂|Ι͂|Ϋ̀|Ϋ́|Ϋ͂|Υ̓|Υ̓̀|Υ̓́|Υ̓͂|Υ͂|Ω͂)";
+    final var actual = new el_POLYTON().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ΆΈ-ΊΌΎ-ΡΣ-ώἀ-ἕἘ-Ἕἠ-Ἷὂ-ὄὊ-Ὄὐ-ὗὙὛὝὟὢ-ὧὪ-ὰὲὴὶὸὺὼᾶᾺῆῈῊῒῖῗῚῢῦῧῪῶῸῺ]|Α͂|Η͂|Ϊ̀|Ϊ́|Ϊ͂|Ι͂|Ϋ̀|Ϋ́|Ϋ͂|Υ̓|Υ̓̀|Υ̓́|Υ̓͂|Υ͂|Ω͂)";
+    final var actual = new el_POLYTON().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

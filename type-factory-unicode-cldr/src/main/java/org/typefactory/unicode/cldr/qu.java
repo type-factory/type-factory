@@ -64,7 +64,6 @@ public class qu extends root {
 
       new char[]{
           0x41_41, //  A
-          0x43_43, //  C
           0x48_49, //  H I
           0x4b_4e, //  K L M N
           0x50_51, //  P Q
@@ -72,7 +71,6 @@ public class qu extends root {
           0x57_57, //  W
           0x59_59, //  Y
           0x61_61, //  a
-          0x63_63, //  c
           0x68_69, //  h i
           0x6b_6e, //  k l m n
           0x70_71, //  p q
@@ -82,10 +80,7 @@ public class qu extends root {
           0xd1_d1, //  Ñ
           0xf1_f1, //  ñ
       },
-      new int[]{
-          0x02bc_02bc, //  ʼ
-      },
-      19, 33);
+      16, 30);
 
 
   /**
@@ -101,15 +96,17 @@ public class qu extends root {
   static final Subset AUXILIARY_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new char[]{
-          0x42_48, //  B C D E F G H
+          0x42_47, //  B C D E F G
           0x4a_4a, //  J
-          0x4f_52, //  O P Q R
+          0x4f_4f, //  O
+          0x52_52, //  R
           0x56_56, //  V
           0x58_58, //  X
           0x5a_5a, //  Z
-          0x62_68, //  b c d e f g h
+          0x62_67, //  b c d e f g
           0x6a_6a, //  j
-          0x6f_72, //  o p q r
+          0x6f_6f, //  o
+          0x72_72, //  r
           0x76_76, //  v
           0x78_78, //  x
           0x7a_7a, //  z
@@ -132,7 +129,7 @@ public class qu extends root {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      28, 104);
+      30, 98);
 
 
   /**

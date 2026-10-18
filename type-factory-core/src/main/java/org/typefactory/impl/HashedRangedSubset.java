@@ -15,9 +15,7 @@
  */
 package org.typefactory.impl;
 
-import org.typefactory.Subset;
-
-interface HashedRangedSubset extends Subset {
+interface HashedRangedSubset extends CodePointSubset {
 
   char[] getBlockKeySet();
 

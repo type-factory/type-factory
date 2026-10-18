@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -131,8 +132,7 @@ class zh_Latn_Test extends zh_Test {
       0x000041   | 0x000055
       0x000057   | 0x00005a
       0x000061   | 0x000075
-      0x000077   | 0x00007b
-      0x00007d   | 0x00007d
+      0x000077   | 0x00007a
       0x0000c0   | 0x0000c1
       0x0000c8   | 0x0000ca
       0x0000cc   | 0x0000cd
@@ -157,9 +157,6 @@ class zh_Latn_Test extends zh_Test {
       0x00016a   | 0x00016b
       0x0001cd   | 0x0001dc
       0x0001f8   | 0x0001f9
-      0x000300   | 0x000300
-      0x000304   | 0x000304
-      0x00030c   | 0x00030c
       0x001e3e   | 0x001e3f
       0x001e90   | 0x001e91
       0x001ebe   | 0x001ec1
@@ -174,6 +171,21 @@ class zh_Latn_Test extends zh_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([A-UW-Za-uw-zÀÁÈ-ÊÌÍÒÓÙÚÜàáè-êìíòóùúüĀāĈĉĒēĚěĪīŃńŇňŊ-ōŜŝŪūǍ-ǜǸǹḾḿẐẑẾ-ề]|M̀|M̄|m̀|m̄|Ê̄|Ê̌|ê̄|ê̌)";
+    final var actual = new zh_Latn().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([A-UW-Za-uw-zÀÁÈ-ÊÌÍÒÓÙÚÜàáè-êìíòóùúüĀāĈĉĒēĚěĪīŃńŇňŊ-ōŜŝŪūǍ-ǜǸǹḾḿẐẑẾ-ề]|M̀|M̄|m̀|m̄|Ê̄|Ê̌|ê̄|ê̌)";
+    final var actual = new zh_Latn().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -193,6 +205,21 @@ class zh_Latn_Test extends zh_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[Vv]";
+    final var actual = new zh_Latn().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[Vv]";
+    final var actual = new zh_Latn().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -218,6 +245,21 @@ class zh_Latn_Test extends zh_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!\"',-.?·‑]";
+    final var actual = new zh_Latn().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!\"',-\\.\\?·‑]";
+    final var actual = new zh_Latn().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -234,6 +276,21 @@ class zh_Latn_Test extends zh_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toString_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new zh_Latn().getDecimalDigitsSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getDecimalDigitsSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[0-9]";
+    final var actual = new zh_Latn().getDecimalDigitsSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

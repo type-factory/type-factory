@@ -25,7 +25,7 @@ import java.util.Arrays;
  * <p>We can use it to map:</p>
  * <ul>
  *   <li>a single code point to a sequence of code points.</li>
- *   <li>a unicode category identified by an integer to a sequence of code points.</li>
+ *   <li>a Unicode category identified by an integer to a sequence of code points.</li>
  * </ul>
  */
 final class PrimitiveHashMapOfIntKeyToIntArrayValue {
@@ -43,7 +43,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
   private static class HashTable {
 
     /**
-     * 2-dimensional array for the keys which is aligned with the values array:
+     * 2-dimensional array for the keys that is aligned with the values array:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map keys.</li>
      *   <li>second index/dimension to get the key values.</li>
@@ -52,7 +52,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
     private int[][] keys;
 
     /**
-     * 2-dimensional array for the values which is aligned with the key array. It appears to be 3-dimensional but that is because the map-values are
+     * 2-dimensional array for the values that is aligned with the key array. It appears to be 3-dimensional, but that is because the map-values are
      * actually int-arrays:
      * <ul>
      *   <li>first index/dimension to get the hash bucket containing the map values.</li>
@@ -71,7 +71,7 @@ final class PrimitiveHashMapOfIntKeyToIntArrayValue {
 
   private int maxValueArrayLength = 0;
 
-  private PrimitiveSortedSetOfInt keySet = new PrimitiveSortedSetOfInt();
+  private MutableSortedSetOfIntImpl keySet = new MutableSortedSetOfIntImpl();
 
   PrimitiveHashMapOfIntKeyToIntArrayValue() {
     this.hashTable = new HashTable();

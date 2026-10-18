@@ -63,13 +63,14 @@ public class ug extends root {
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
       new int[]{
-          0x0626_0628, //  ئ ا ب
+          0x0627_0628, //  ا ب
           0x062a_062a, //  ت
           0x062c_062c, //  ج
           0x062e_062f, //  خ د
           0x0631_0634, //  ر ز س ش
           0x063a_063a, //  غ
-          0x0641_064a, //  ف ق ك ل م ن ه و ى ي
+          0x0641_0646, //  ف ق ك ل م ن
+          0x0648_064a, //  و ى ي
           0x067e_067e, //  پ
           0x0686_0686, //  چ
           0x0698_0698, //  ژ
@@ -81,7 +82,7 @@ public class ug extends root {
           0x06d0_06d0, //  ې
           0x06d5_06d5, //  ە
       },
-      17, 34);
+      18, 32);
 
 
   /**

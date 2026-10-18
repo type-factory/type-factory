@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -158,6 +159,21 @@ class kk_Arab_Test extends kk_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[ءابتجحدر-شعف-نو-يپچڭگھۆۇۋە]";
+    final var actual = new kk_Arab().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\u0621\\u0627\\u0628\\u062a\\u062c\\u062d\\u062f\\u0631-\\u0634\\u0639\\u0641-\\u0646\\u0648-\\u064a\\u067e\\u0686\\u06ad\\u06af\\u06be\\u06c6\\u06c7\\u06cb\\u06d5]";
+    final var actual = new kk_Arab().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -193,6 +209,21 @@ class kk_Arab_Test extends kk_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*--/:@[]{}§«»،؛؟‐‑–—‘’“”…]";
+    final var actual = new kk_Arab().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*--/:@\\[\\]\\{\\}§«»،\\u061b\\u061f‐‑–—‘’“”…]";
+    final var actual = new kk_Arab().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -169,6 +170,21 @@ class ti_ER_Test extends ti_Test {
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
   }
 
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "[ሀ-ሆለ-ሟረ-ቆቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኆኈኊ-ኍነ-ኮኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዎዐ-ዖዘ-ዮደ-ዷጀ-ጎጐጒ-ጕጠ-ጯጸ-ጿፈ-ፗ◌፟-፼]";
+    final var actual = new ti_ER().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ሀ-ሆለ-ሟረ-ቆቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኆኈኊ-ኍነ-ኮኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዎዐ-ዖዘ-ዮደ-ዷጀ-ጎጐጒ-ጕጠ-ጯጸ-ጿፈ-ፗ\\u135f-፼]";
+    final var actual = new ti_ER().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
+  }
+
 
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
@@ -206,6 +222,21 @@ class ti_ER_Test extends ti_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[ሇሠ-ሧቇኇኯዏዯዸ-ዿጏጘ-ጟፀ-ፇፘ-ፚᎀ-᎙ⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ]";
+    final var actual = new ti_ER().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[ሇሠ-ሧቇኇኯዏዯዸ-ዿጏጘ-ጟፀ-ፇፘ-ፚᎀ-᎙ⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ]";
+    final var actual = new ti_ER().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

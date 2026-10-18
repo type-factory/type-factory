@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -131,8 +132,6 @@ class ce_Test extends root_Test {
       0x000401   | 0x000401
       0x000410   | 0x00044f
       0x000451   | 0x000451
-      0x0004c0   | 0x0004c0
-      0x0004cf   | 0x0004cf
       """)
   void getStandardSubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -144,6 +143,21 @@ class ce_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ЁА-яё]|АЬ|ГӀ|ИЙ|КК|ККХ|КХ|КЬ|КӀ|ОВ|ОЬ|ПП|ПӀ|РХӀ|СС|ТТ|ТӀ|УВ|УЬ|УЬЙ|ХЬ|ХӀ|ЦӀ|ЧӀ|ЮЬ|ЯЬ|аь|гӏ|ий|кк|ккх|кх|кь|кӏ|ов|оь|пп|пӏ|рхӏ|сс|тт|тӏ|ув|уь|уьй|хь|хӏ|цӏ|чӏ|юь|яь)";
+    final var actual = new ce().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ЁА-яё]|АЬ|ГӀ|ИЙ|КК|ККХ|КХ|КЬ|КӀ|ОВ|ОЬ|ПП|ПӀ|РХӀ|СС|ТТ|ТӀ|УВ|УЬ|УЬЙ|ХЬ|ХӀ|ЦӀ|ЧӀ|ЮЬ|ЯЬ|аь|гӏ|ий|кк|ккх|кх|кь|кӏ|ов|оь|пп|пӏ|рхӏ|сс|тт|тӏ|ув|уь|уьй|хь|хӏ|цӏ|чӏ|юь|яь)";
+    final var actual = new ce().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -180,6 +194,21 @@ class ce_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]{}§«»‐‑–—‘‚“„…]";
+    final var actual = new ce().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]\\{\\}§«»‐‑–—‘‚“„…]";
+    final var actual = new ce().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

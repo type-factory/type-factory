@@ -22,33 +22,43 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.typefactory.Subset;
 import org.typefactory.testutils.CodePointArrayConverter;
+import org.typefactory.testutils.StringArrayConverter;
 
 class Subset_ToStringTest {
 
   @ParameterizedTest
   @CsvSource(textBlock = """
-      [a]                  | [0x61_61]
-      [a, b]               | [0x61_62]
-      [a, b, d]            | [0x61_62,0x64_64]
-      [Σ, Τ]               | [0x3a3_3a4]
-      [Σ, Τ, Ω]            | [0x3a3_3a4,0x3a9_3a9]
-      [🈂, 😀]             | [0x1f202_1f202,0x1f600_1f600]
-      [a, b, Σ, Τ]         | [0x61_62],[0x3a3_3a4]
-      [a, b, 🈂, 😀]       | [0x61_62],[0x1f202_1f202,0x1f600_1f600]
-      [Σ, Τ, 🈂, 😀]       | [0x3a3_3a4],[0x1f202_1f202,0x1f600_1f600]
-      [a, b, Σ, Τ, 🈂, 😀] | [0x61_62],[0x3a3_3a4],[0x1f202_1f202,0x1f600_1f600]
-      """, delimiter = '|')
+      [a]                   ┃       ┃ [a]
+      [a, b]                ┃       ┃ [ab]
+      [a, b, c]             ┃       ┃ [a-c]
+      [c, b, a]             ┃       ┃ [a-c]
+      [a, b, d, f, e,  ̈,  ́] ┃       ┃ [abd-f◌́◌̈]
+      [Σ, Τ]                ┃       ┃ [ΣΤ]
+      [Α, Β, Γ, Δ, Σ, Τ, Ω] ┃       ┃ [Α-ΔΣΤΩ]
+      [a, b, Σ, Τ]          ┃       ┃ [abΣΤ]
+      [a, b, c]             ┃ [Ϊ́]   ┃ ([a-c]|Ϊ́)
+      [a, b, d, e, f]       ┃ [कि]  ┃ ([abd-f]|कि)
+      [Σ, Τ]                ┃ [कु]   ┃ ([ΣΤ]|कु)
+      [Α, Γ, Δ, Β, Ω, Σ, Τ] ┃ [कु,कॊ] ┃ ([Α-ΔΣΤΩ]|कु|कॊ)
+      [🈂, 😀]              ┃        ┃ [🈂😀]
+      [a, b, 🈂, 😀]        ┃        ┃ [ab🈂😀]
+      [Σ, Τ, 🈂, 😀]        ┃        ┃ [ΣΤ🈂😀]
+      [a, b, Σ, Τ, 🈂, 😀]  ┃        ┃ [abΣΤ🈂😀]
+      """, delimiter = '┃')
   void toString_returnAsExpected(
       @ConvertWith(CodePointArrayConverter.class) final int[] codePoints,
+      @ConvertWith(StringArrayConverter.class) final String[] strings,
       final String expectedToStringValue) {
 
     final var subsetBuilder = Subset.builder();
     for (final int codePoint : codePoints) {
       subsetBuilder.includeCodePoint(codePoint);
+      subsetBuilder.includeStrings(strings);
     }
 
     final var subset = subsetBuilder.build();
+    final var actual = subset.toString();
 
-    assertThat(subset).hasToString(expectedToStringValue);
+    assertThat(actual).isEqualTo(expectedToStringValue);
   }
 }

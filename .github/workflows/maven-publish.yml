@@ -8,6 +8,10 @@ name: Publish to Maven Central Repository
 on:
   workflow_dispatch:
 
+concurrency:
+  group: maven-java-build
+  cancel-in-progress: false
+
 jobs:
   publish:
 

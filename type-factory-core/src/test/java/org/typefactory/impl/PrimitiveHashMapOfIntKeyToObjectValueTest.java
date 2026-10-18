@@ -17,7 +17,7 @@ package org.typefactory.impl;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.typefactory.impl.PrimitiveHashMapOfIntKeyToObjectValue.INITIAL_CAPACITY;
+import static org.typefactory.impl.MutablePrimitiveHashMapOfIntKeyToObjectValueImpl.INITIAL_CAPACITY;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -28,13 +28,13 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
 
   @Test
   void isEmpty_returnsTrue() {
-    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+    final var actual = new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
     assertThat(actual.isEmpty()).isTrue();
   }
 
   @Test
   void isEmpty_returnsFalse() {
-    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+    final var actual = new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
     actual.put(131, "aaa");
 
     assertThat(actual.isEmpty()).isFalse();
@@ -43,7 +43,7 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
 
   @Test
   void get_returnsAsExpected() {
-    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+    final var actual = new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
     actual.put(131, "aaa");
 
     assertThat(actual.get(131)).isNotNull().isEqualTo("aaa");
@@ -53,14 +53,16 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
 
   @Test
   void put_canOverrideWithNullValue() {
-    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+    final var actual = new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
 
     actual.put(131, "aaa");
-    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.keySet().size()).isOne();
+    assertThat(actual.keySet().contains(131)).isTrue();
     assertThat(actual.get(131)).isNotNull().isEqualTo("aaa");
 
     actual.put(131, null);
-    assertThat(actual.keySet()).containsExactly(131);
+    assertThat(actual.keySet().size()).isOne();
+    assertThat(actual.keySet().contains(131)).isTrue();
     assertThat(actual.get(131)).isNull();
   }
 
@@ -68,14 +70,17 @@ class PrimitiveHashMapOfIntKeyToObjectValueTest {
   @EnumSource(TestSource.class)
   void setContainsAllValuesSorted(TestSource testSource) {
 
-    final var actual = new PrimitiveHashMapOfIntKeyToObjectValue();
+    final var actual = new MutablePrimitiveHashMapOfIntKeyToObjectValueImpl<>();
     for (Map.Entry<Integer, String> entry : testSource.map.entrySet()) {
       actual.put(entry.getKey(), entry.getValue());
     }
 
     assertThat(actual.size()).isEqualTo(testSource.expectedSize);
     assertThat(actual.isEmpty()).isEqualTo(testSource.expectedIsEmpty);
-    assertThat(actual.keySet()).containsExactly(testSource.expectedKeys);
+    assertThat(actual.keySet().size()).isEqualTo(testSource.expectedKeys.length);
+    for (int expectedKey : testSource.expectedKeys) {
+      assertThat(actual.keySet().contains(expectedKey)).isTrue();
+    }
 
     for (Map.Entry<Integer, String> entry : testSource.map.entrySet()) {
       assertThat(actual.get(entry.getKey()))

@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,15 +129,16 @@ class nv_Test extends root_Test {
   @ParameterizedTest
   @CsvSource(delimiter = '|', useHeadersInDisplayName = true, textBlock = """
       VALID_FROM | VALID_TO
-      0x000041   | 0x000045
+      0x000041   | 0x000042
+      0x000044   | 0x000045
       0x000047   | 0x00004f
       0x000053   | 0x000054
       0x000057   | 0x00005a
-      0x000061   | 0x000065
+      0x000061   | 0x000062
+      0x000064   | 0x000065
       0x000067   | 0x00006f
       0x000073   | 0x000074
-      0x000077   | 0x00007b
-      0x00007d   | 0x00007d
+      0x000077   | 0x00007a
       0x0000c1   | 0x0000c1
       0x0000c9   | 0x0000c9
       0x0000cd   | 0x0000cd
@@ -150,8 +152,6 @@ class nv_Test extends root_Test {
       0x00012e   | 0x00012f
       0x000141   | 0x000142
       0x0001ea   | 0x0001eb
-      0x000301   | 0x000301
-      0x002019   | 0x002019
       """)
   void getStandardSubset_containsExpectedCodePoints(
       final int validFromCodePoint,
@@ -163,6 +163,21 @@ class nv_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getStandardSubset_toString_returnsExpectedValue() {
+    final var expected = "([ABDEG-OSTW-Zabdeg-ostw-zÁÉÍÓáéíóĄąĘęĮįŁłǪǫ]|CH|CH’|DL|DZ|GH|HW|KW|K’|SH|TS|TS’|TŁ|TŁ’|T’|ZH|ch|ch’|dl|dz|gh|hw|kw|k’|sh|ts|ts’|tł|tł’|t’|zh|Ą́|ą́|Ę́|ę́|Į́|į́|Ǫ́|ǫ́)";
+    final var actual = new nv().getStandardSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getStandardSubset_toPattern_returnsExpectedValue() {
+    final var expected = "([ABDEG-OSTW-Zabdeg-ostw-zÁÉÍÓáéíóĄąĘęĮįŁłǪǫ]|CH|CH’|DL|DZ|GH|HW|KW|K’|SH|TS|TS’|TŁ|TŁ’|T’|ZH|ch|ch’|dl|dz|gh|hw|kw|k’|sh|ts|ts’|tł|tł’|t’|zh|Ą́|ą́|Ę́|ę́|Į́|į́|Ǫ́|ǫ́)";
+    final var actual = new nv().getStandardSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 
@@ -195,6 +210,21 @@ class nv_Test extends root_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getPunctuationSubset_toString_returnsExpectedValue() {
+    final var expected = "[!-#&-*,-/:;?@[]§‐‑–—‘’“”†‡…′″]";
+    final var actual = new nv().getPunctuationSubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getPunctuationSubset_toPattern_returnsExpectedValue() {
+    final var expected = "[!-#&-\\*,-/:;\\?@\\[\\]§‐‑–—‘’“”†‡…′″]";
+    final var actual = new nv().getPunctuationSubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

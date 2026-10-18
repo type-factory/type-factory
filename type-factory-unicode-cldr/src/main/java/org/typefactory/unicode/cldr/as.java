@@ -62,10 +62,6 @@ public class as extends root {
    */
   static final Subset STANDARD_CHARACTERS_SUBSET = Factory.rangedSubset(
 
-      new char[]{
-          0x7b_7b, //  {
-          0x7d_7d, //  }
-      },
       new int[]{
           0x0981_0983, //  ঁ ং ঃ
           0x0985_098b, //  অ আ ই ঈ উ ঊ ঋ
@@ -80,7 +76,7 @@ public class as extends root {
           0x09cb_09cd, //  ো ৌ ্
           0x09f0_09f1, //  ৰ ৱ
       },
-      14, 61);
+      12, 59);
 
 
   /**

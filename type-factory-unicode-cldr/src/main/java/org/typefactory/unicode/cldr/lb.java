@@ -89,7 +89,6 @@ public class lb extends root {
 
       new char[]{
           0x49_49, //  I
-          0x53_53, //  S
           0xc0_c3, //  À Á Â Ã
           0xc5_c8, //  Å Æ Ç È
           0xca_ca, //  Ê
@@ -118,7 +117,7 @@ public class lb extends root {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      27, 79);
+      26, 78);
 
 
   /**

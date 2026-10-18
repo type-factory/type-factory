@@ -98,7 +98,6 @@ public class tr extends root {
 
       new char[]{
           0x51_51, //  Q
-          0x53_53, //  S
           0x57_58, //  W X
           0x71_71, //  q
           0x77_78, //  w x
@@ -121,7 +120,7 @@ public class tr extends root {
           0x016a_016d, //  Ū ū Ŭ ŭ
           0x0178_0178, //  Ÿ
       },
-      21, 78);
+      20, 77);
 
 
   /**

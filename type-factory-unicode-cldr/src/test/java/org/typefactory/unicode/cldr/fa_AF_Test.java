@@ -21,6 +21,7 @@ import static org.typefactory.assertions.TypeFactoryAssertions.assertThatNoExcep
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Generated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -156,6 +157,21 @@ class fa_AF_Test extends fa_Test {
         .containsCodePoint(validFromCodePoint)
         .containsCodePoint(validToCodePoint)
         .containsCodePoint(validFromCodePoint + (validToCodePoint - validFromCodePoint) / 2);
+  }
+
+  @Test
+  void getAuxiliarySubset_toString_returnsExpectedValue() {
+    final var expected = "[إكىي◌َ-◌ِ◌ْ ٖ◌ٰټځڅډړږښګڼ‎\\u200c-\\u200f]";
+    final var actual = new fa_AF().getAuxiliarySubset().toString();
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void getAuxiliarySubset_toPattern_returnsExpectedValue() {
+    final var expected = "[\\u0625\\u0643\\u0649\\u064a\\u064e-\\u0650\\u0652\\u0656\\u0670\\u067c\\u0681\\u0685\\u0689\\u0693\\u0696\\u069a\\u06ab\\u06bc\\u200c-\\u200f]";
+    final var actual = new fa_AF().getAuxiliarySubset().toPattern();
+    assertThat(actual).isEqualTo(expected);
+    assertThatNoException().isThrownBy(() -> Pattern.compile(actual));
   }
 
 

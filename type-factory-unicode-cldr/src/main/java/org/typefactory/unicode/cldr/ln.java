@@ -70,8 +70,7 @@ public class ln extends root {
           0x61_69, //  a b c d e f g h i
           0x6b_70, //  k l m n o p
           0x72_77, //  r s t u v w
-          0x79_7b, //  y z {
-          0x7d_7d, //  }
+          0x79_7a, //  y z
           0xc1_c2, //  Á Â
           0xc9_ca, //  É Ê
           0xcd_ce, //  Í Î
@@ -90,10 +89,8 @@ public class ln extends root {
           0x01cd_01d2, //  Ǎ ǎ Ǐ ǐ Ǒ ǒ
           0x0254_0254, //  ɔ
           0x025b_025b, //  ɛ
-          0x0301_0302, //  ́ ̂
-          0x030c_030c, //  ̌
       },
-      27, 81);
+      24, 76);
 
 
   /**
