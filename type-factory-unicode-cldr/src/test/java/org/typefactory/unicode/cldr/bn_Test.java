@@ -29,12 +29,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.typefactory.Subset;
 
 /**
- * Unit tests for the Bengali language 'bn' resource bundle as defined
+ * Unit tests for the Bangla language 'bn' resource bundle as defined
  * by the Unicode Common Locale Data Repository (CLDR).
  */
 @Generated(
     comments = """
-        This file of unit tests for the Bengali language 'bn' resource bundle is generated
+        This file of unit tests for the Bangla language 'bn' resource bundle is generated
         from the Unicode Common Locale Data Repository (CLDR) datasets.""",
     value = "org.typefactory:type-factory-unicode-cldr-code-generator")
 class bn_Test extends root_Test {
