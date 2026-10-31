@@ -20,9 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Locale;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.typefactory.LocaleData;
 import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
+import org.typefactory.unicode.LocaleData;
 
 class TypeParser_LanguageArmenianTest extends AbstractTypeParserTest {
 

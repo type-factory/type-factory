@@ -40,7 +40,7 @@ public class StringArrayConverter implements ArgumentConverter {
       if (value.isBlank()) {
         return EMPTY_STRING_ARRAY;
       }
-      return Arrays.stream(value.split(",\\s*"))
+      return Arrays.stream(value.split(",\\s*+"))
           .map(v -> "null".equals(v.trim()) ? null : v)
           .toList()
           .toArray(EMPTY_STRING_ARRAY);

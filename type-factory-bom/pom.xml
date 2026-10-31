@@ -5,7 +5,7 @@
 
   <groupId>org.typefactory</groupId>
   <artifactId>type-factory-bom</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Type Factory – Bill-of-Materials (BOM)</name>
@@ -102,6 +102,14 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>false</skipPublishing>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -126,10 +134,8 @@
                     <arg>--pinentry-mode</arg>
                     <arg>loopback</arg>
                   </gpgArguments>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <keyname>${env.GPG_KEY_ID}</keyname>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                  <keyEnvName>GPG_KEY_ID</keyEnvName>
+                  <passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName>
                 </configuration>
               </execution>
             </executions>

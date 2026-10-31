@@ -40,7 +40,7 @@ public class CategoryArrayConverter implements ArgumentConverter {
       if (value.isBlank()) {
         return EMPTY_CATEGORY_ARRAY;
       }
-      return Arrays.stream(value.split("\\s*,\\s*"))
+      return Arrays.stream(value.split("\\s*+,\\s*+"))
           .map(v -> "null".equals(v.trim()) ? null : v)
           .map(Category::valueOf)
           .toList()

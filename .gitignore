@@ -10,6 +10,10 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
+/docs/.jekyll-cache
+/docs/_site/
+/docs/Gemfile.lock
+
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 

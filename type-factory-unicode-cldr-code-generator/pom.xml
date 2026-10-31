@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>type-factory-unicode-cldr-code-generator</artifactId>
@@ -93,6 +93,13 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>true</skipPublishing>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

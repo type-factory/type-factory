@@ -82,7 +82,7 @@ class TypeFactoryConfigTest {
   void codePointNamesCacheSize_defaultsTo499() {
     System.clearProperty(PROP_CACHE_SIZE);
     final var config = new InternalConfiguration();
-    assertThat(config.codePointNamesCacheSize).isEqualTo(499);
+    assertThat(config.codePointNamesCacheSize).isEqualTo(500); // ConfigKey.CODE_POINT_NAME_CACHE_SIZE default
   }
 
   // ─── System-property overrides ───────────────────────────────────────────
@@ -119,7 +119,7 @@ class TypeFactoryConfigTest {
   void codePointNamesCacheSize_invalidSystemPropertyFallsBackToDefault() {
     System.setProperty(PROP_CACHE_SIZE, "not-a-number");
     final var config = new InternalConfiguration();
-    assertThat(config.codePointNamesCacheSize).isEqualTo(499);
+    assertThat(config.codePointNamesCacheSize).isEqualTo(500); // ConfigKey.CODE_POINT_NAME_CACHE_SIZE default
   }
 
   // ─── type-factory.properties file loading ────────────────────────────────
@@ -177,7 +177,7 @@ class TypeFactoryConfigTest {
 
     final var result = InternalConfiguration.getConfigValue(CODE_POINT_NAME_CACHE_SIZE, envVars, sysProps, fileProps);
 
-    assertThat(result).isEqualTo("499");
+    assertThat(result).isEqualTo("500"); // ConfigKey.CODE_POINT_NAME_CACHE_SIZE default
   }
 
   // ─── getStringConfigValue() ──────────────────────────────────────────────
@@ -284,7 +284,7 @@ class TypeFactoryConfigTest {
 
     final var result = InternalConfiguration.getIntegerConfigValue(configKey, envVars, sysProps, fileProps);
 
-    assertThat(result).isEqualTo(499); // ConfigKey.CODE_POINT_NAME_CACHE_SIZE default
+    assertThat(result).isEqualTo(500); // ConfigKey.CODE_POINT_NAME_CACHE_SIZE default
   }
 
   // ─── helpers ─────────────────────────────────────────────────────────────

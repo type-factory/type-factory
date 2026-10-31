@@ -46,7 +46,7 @@ final class ConverterBuilder {
   }
 
   public ConverterBuilder addCategoryConversion(final Category category, final CharSequence toCharSequence) {
-    return addCategoryConversion(category, toCharSequence.codePoints().toArray());
+    return addCategoryConversion(category, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
   }
 
   private ConverterBuilder addCategoryConversion(final Category category, final int[] toCodePointSequence) {
@@ -61,7 +61,7 @@ final class ConverterBuilder {
   }
 
   public ConverterBuilder addCharConversion(final char fromChar, final CharSequence toCharSequence) {
-    return addCodePointConversion(fromChar, toCharSequence.codePoints().toArray());
+    return addCodePointConversion(fromChar, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
   }
 
   public ConverterBuilder addCodePointConversion(final int fromCodePoint, final int toCodePoint) {
@@ -78,7 +78,7 @@ final class ConverterBuilder {
   }
 
   public ConverterBuilder addCodePointConversions(final Subset subset, final CharSequence toCharSequence) {
-    return addCodePointConversions(subset, toCharSequence.codePoints().toArray());
+    return addCodePointConversions(subset, toCharSequence == null ? EMPTY_INT_ARRAY : toCharSequence.codePoints().toArray());
   }
 
   public ConverterBuilder addCodePointConversions(final Subset subset, final char toChar) {

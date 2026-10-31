@@ -7,14 +7,14 @@
   <parent>
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>type-factory-language</artifactId>
   <packaging>jar</packaging>
 
   <name>Type Factory – Language</name>
-  <description>The Type Factory language library – Deprecated – contains some useful language alphabets to use with the core library to make creating custom data types easy.</description>
+  <description>Deprecated – use the `type-factory-unicode-cldr` library instead. The Type Factory language library contained some useful language alphabets to use with the core library to make creating custom data types easy.</description>
   <url>https://github.com/type-factory/type-factory</url>
 
   <properties>
@@ -85,6 +85,14 @@
             <version>77.1</version>
           </dependency>
         </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>false</skipPublishing>
+        </configuration>
       </plugin>
 
     </plugins>

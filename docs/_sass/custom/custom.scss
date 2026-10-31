@@ -1,0 +1,6 @@
+
+/* Tighten the line height inside Jekyll-generated code blocks */
+.main-content pre.highlight,
+.main-content code {
+  line-height: 1.1 !important;
+}

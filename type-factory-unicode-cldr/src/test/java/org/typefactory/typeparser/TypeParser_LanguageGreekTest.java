@@ -23,9 +23,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.typefactory.InvalidValueException;
-import org.typefactory.LocaleData;
 import org.typefactory.MessageCode;
 import org.typefactory.TypeParser;
+import org.typefactory.unicode.LocaleData;
 
 class TypeParser_LanguageGreekTest extends AbstractTypeParserTest {
 

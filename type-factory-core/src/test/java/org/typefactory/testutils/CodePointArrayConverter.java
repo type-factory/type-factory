@@ -40,7 +40,7 @@ public class CodePointArrayConverter implements ArgumentConverter {
       if (value.isBlank()) {
         return EMPTY_INT_ARRAY;
       }
-      return Arrays.stream(value.split(",\\s*"))
+      return Arrays.stream(value.split(",\\s*+"))
           .mapToInt(s -> s.codePoints().toArray()[0])
           .toArray();
     } catch (Exception e) {

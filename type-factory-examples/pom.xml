@@ -6,11 +6,15 @@
   <parent>
     <groupId>org.typefactory</groupId>
     <artifactId>type-factory</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>type-factory-examples</artifactId>
   <packaging>jar</packaging>
+
+  <name>Type Factory – Examples</name>
+  <description>The Type Factory examples library.</description>
+  <url>https://github.com/type-factory/type-factory</url>
 
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -21,6 +25,16 @@
     <dependency>
       <groupId>org.typefactory</groupId>
       <artifactId>type-factory-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.typefactory</groupId>
+      <artifactId>type-factory-unicode-cldr</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
     </dependency>
 
     <dependency>
@@ -37,4 +51,15 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>true</skipPublishing>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
