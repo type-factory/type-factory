@@ -307,7 +307,9 @@ final class TypeParserImpl implements TypeParser {
       if (converter != null && converter.codePointConversionIsRequired(codePoint, targetIndex, converterResults)) {
         targetIndex = converterResults.getConvertFromIndex();
         toCodePoints = converterResults.getConvertToCodePointSequence();
-        if (toCodePoints.length == 0 && (targetIndex > 0 && Character.isWhitespace(target[targetIndex - 1]))) {
+        if (toCodePoints == null) {
+          toCodePoints = Constants.EMPTY_INT_ARRAY;
+        } else if (toCodePoints.length == 0 && (targetIndex > 0 && Character.isWhitespace(target[targetIndex - 1]))) {
           codePointWasWhitespace = true;
         }
       } else {
