@@ -18,11 +18,14 @@ package org.typefactory.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatObject;
 
+import java.text.Normalizer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.typefactory.Subset;
 import org.typefactory.ShortType;
 import org.typefactory.TypeParser;
 import org.typefactory.testutils.CodePointSequenceConverter;
@@ -84,6 +87,60 @@ class TypeParserImpl_Test {
     assertThat(actualEndIndex).isEqualTo(expectedExclusiveEndIndex);
     assertThat(actualStartIndex).isEqualTo(expectedInclusiveStartIndex);
   }
+
+  @Test
+  void parseToString_withConverterReturningNullCodePointSequence_returnsEmptyString() {
+    final Converter converter = new Converter() {
+      @Override
+      public boolean isEmpty() {
+        return false;
+      }
+
+      @Override
+      public int getMaxConvertedLength() {
+        return 0;
+      }
+
+      @Override
+      public ConverterResults createConverterResults() {
+        return new ConverterResults() {
+          @Override
+          public int getConvertFromIndex() {
+            return 0;
+          }
+
+          @Override
+          public int[] getConvertToCodePointSequence() {
+            return null;
+          }
+        };
+      }
+
+      @Override
+      public boolean codePointConversionIsRequired(
+          final int currentCodePoint, final int currentIndex, final ConverterResults converterResults) {
+        return true;
+      }
+    };
+
+    final var parser = new TypeParserImpl(
+        String.class,
+        Factory.parserMessageCode("test", "test"),
+        TargetCase.PRESERVE_CASE,
+        WhiteSpace.FORBID_WHITESPACE,
+        NullHandling.PRESERVE_NULL_AND_EMPTY,
+        Normalizer.Form.NFC,
+        0,
+        64,
+        -1,
+        null,
+        null,
+        Subset.builder().includeCodePoint('a').build(),
+        converter);
+
+    assertThat(parser.parseToString("a")).isEmpty();
+  }
+
 
   static class SomeShortType extends ShortType {
     public SomeShortType(Short value) {
